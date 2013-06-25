@@ -1,0 +1,9 @@
+ReDiablo/bin
+ReDiablo/bin/*
+ReDiablo/bin/Debug/*
+ReDiablo/bin/Release/*
+ReDiablo/obj
+ReDiablo/obj/*
+ReDiablo/obj/*/*
+ReDiablo/ReDiablo.suo
+ReDiablo/ReDiablo.csproj.user
