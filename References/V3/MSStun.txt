@@ -1,0 +1,109 @@
+Below is the Hellfire-routine where life is restored and mana reduced if damage has been taken with a Manashield.
+
+
+Adjusted so that:
+
+- Mana := Mana - damage*(1+1/(slvl+1)*2), up to slvl=15
+- No life is lost if mana gets depleted
+- Character can be stunned if this was avoided by 'death'
+
+
+:00437B1E 33D2                    xor edx, edx				edx:=0
+:00437B20 3991AC010000            cmp dword ptr [ecx+000001AC], edx
+:00437B26 7E05                    jle 00437B2D				jmp if no mana
+:00437B28 38511D                  cmp byte ptr [ecx+1D], dl
+:00437B2B 7506                    jne 00437B33
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B26(C)
+|
+:00437B2D 8996C87A6900            mov dword ptr [esi+00697AC8], edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B2B(C)
+|
+:00437B33 8B8198010000            mov eax, dword ptr [ecx+00000198]	eax:=current life
+:00437B39 8B9EE87A6900            mov ebx, dword ptr [esi+00697AE8]	ebx:=stored life
+:00437B3F 3BC3                    cmp eax, ebx
+:00437B41 0F8D31010000            jnl 00437C78				jmp if no damage
+:00437B47 2BD8                    sub ebx, eax				ebx:=damage
+:00437B49 53                      push ebx				
+:00437B4A 50                      push eax
+:00437B4B 8B86887A6900            mov eax, dword ptr [esi+00697A88]	eax:=slvl (*)
+:00437B51 8955F8                  mov dword ptr [ebp-08], edx		init to 0
+:00437B54 8955FC                  mov dword ptr [ebp-04], edx		init to 0
+:00437B57 90                      nop
+:00437B58 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B69(C)
+|
+:00437B59 837DFC0F                cmp dword ptr [ebp-04], 0000000F
+:00437B5D 7D0C                    jge 00437B6B				jmp if slvl>15
+:00437B5F 8345F802                add dword ptr [ebp-08], 00000002
+:00437B63 FF45FC                  inc [ebp-04]
+:00437B66 3945FC                  cmp dword ptr [ebp-04], eax
+:00437B69 7CEE                    jl 00437B59
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B5D(C)
+|
+:00437B6B 837DF800                cmp dword ptr [ebp-08], 00000000
+:00437B6F 7E08                    jle 00437B79
+:00437B71 8BC3                    mov eax, ebx
+:00437B73 99                      cdq
+:00437B74 F77DF8                  idiv [ebp-08]
+:00437B77 03D8                    add ebx, eax		ebx:=damage*(1+1/(slvl+1)*2)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B6F(C)
+|
+:00437B79 85DB                    test ebx, ebx
+:00437B7B 7D02                    jge 00437B7F
+:00437B7D 33DB                    xor ebx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B7B(C)
+|
+:00437B7F 6A01                    push 00000001
+:00437B81 58                      pop eax
+:00437B82 A30C114D00              mov dword ptr [004D110C], eax
+:00437B87 A3400E4D00              mov dword ptr [004D0E40], eax
+:00437B8C 8B96E87A6900            mov edx, dword ptr [esi+00697AE8]	edx:=stored life
+:00437B92 899198010000            mov dword ptr [ecx+00000198], edx	restore life
+:00437B98 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00437B9E 8B8EEC7A6900            mov ecx, dword ptr [esi+00697AEC]
+:00437BA4 898C3A90010000          mov dword ptr [edx+edi+00000190], ecx
+:00437BAB 58                      pop eax				eax:=old life
+:00437BAC 5A                      pop edx				edx:=unmod. damage
+:00437BAD 85C0                    test eax, eax
+:00437BAF 7F0E                    jg 00437BBF				jmp if no 'death'
+:00437BB1 8B8ECC7A6900            mov ecx, dword ptr [esi+00697ACC]	ecx:=char.number
+:00437BB7 6A00                    push 00000000				(2)
+:00437BB9 E88A220200              call 00459E48				(3)
+:00437BBE 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437BAF(C)
+|
+:00437BBF 90                      nop
+:00437BC0 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437BC6 8B9439AC010000          mov edx, dword ptr [ecx+edi+000001AC]	edx:=current mana
+:00437BCD 3BD3                    cmp edx, ebx
+:00437BCF 7E2E                    jle 00437BFF				jmp if mana short
+:00437BD1 299C39AC010000          sub dword ptr [ecx+edi+000001AC], ebx	decrease mana
+:00437BD8 8D8C39AC010000          lea ecx, dword ptr [ecx+edi+000001AC]
+:00437BDF 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437BE5 299C39A4010000          sub dword ptr [ecx+edi+000001A4], ebx
+:00437BEC 8D8C39A4010000          lea ecx, dword ptr [ecx+edi+000001A4]
+and so on ...
+
+
+Notes:
+
+(1) The slvl used seems to be the slvl of the 'active' spell. A (unknown) bug?
+
+(2) This statement seems to control multiple executions of the stun routine. Without it,        the game will crash if the character is hit several times hard enough to be stunned at      the same moment.
+
+(3) This is the normal stun routine, used in other places. It checks for damage>clvl, and it     needs the player number and the damage that is inflicted.
+

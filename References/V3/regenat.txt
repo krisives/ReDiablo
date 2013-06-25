@@ -1,0 +1,20 @@
+Make a monster Immune to Stone Curse?
+
+Varaya and Khan did this in their D1.07 mod but I do not know if they plan/can in HF v1.01.
+
+How to change Monster Regneration?
+
+42C6A Monster Regeneration 83FB 03
+42C71 Monster Regeneration 14 508B C18A 0DC0 7060 00D3 E059
+
+How to edit how much gold is in a pile?
+
+A4020 Gold Stack Limit 5000
+
+These answers were cut and pasted from Loklorns Beta.doc if you dl Purgatory Beta from http://www.geocities.com/SunsetStrip/Cabaret/3659/index.html it will include this info plus a lot more that is very helpful in hex editing the HF 1.01 .exe.
+
+I never played with monster regen but the gold stack limit info enabled me to make aurin.elp a file for use with Crystalion's Patchelp. I increased the gp cap to 50,000 and it works fine as long as you don't use the Auric Amulet. The AA allows stacks to go up to 100,000 but they morph down to 30k or so when you start a new game.
+
+ETA
+
+

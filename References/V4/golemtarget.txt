@@ -1,0 +1,27 @@
+In Hellfire 
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: 
+|:0040A043(C) 
+| 
+:0040A078 A12C164D00              mov eax, dword ptr [004D162C] 
+:0040A07D 83F8FF                  cmp eax, FFFFFFFF 
+:0040A080 7405                    je 0040A087 
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: 
+|:0040A05F(U) 
+| 
+:0040A082 50                      push eax 
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: 
+|:0040A020(C) 
+| 
+:0040A083 B212                    mov dl, 12 
+
+
+
+
+mov eax, dword ptr [004BAC54]
+cmp eax, 04
+jb +1
+or eax, FFFFFFFF
+ret

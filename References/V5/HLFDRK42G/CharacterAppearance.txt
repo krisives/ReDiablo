@@ -1,0 +1,62 @@
+Changing character appearances
+
+Warrior	(0)	1-1-1 (always Mail)
+rogue	(1)	0-0-0 (always Leather)
+sorc	(2)	1-2-2 (as before: Mail-Plate-Plate)
+monk	(3)	0-1-2 (unchanged: Leather-Mail-Plate)
+bard	(4)	1-1-1 (always Mail)
+barb	(5)	0-0-0 (always Leather)
+
+Plate animations for Warrior/Barbarian and Rogue/Bard are now unused.
+
+File Offset 00050CE0
+
+:004518E0 C1F804                  sar eax, 04
+:004518E3 83E003                  and eax, 00000003
+:004518E6 83E20F                  and edx, 0000000F
+:004518E9 3C02                    cmp al, 02
+:004518EB 740B                    je 004518F8			jmp if Plate
+:004518ED 80F902                  cmp cl, 02
+:004518F0 7405                    je 004518F7			jmp if sorc
+:004518F2 80F902                  cmp cl, 02	
+:004518F5 7501                    jne 004518F8			jmp if not sorc
+:004518F7 40                      inc eax
+:004518F8 C3                      ret
+:004518F9 90                      nop
+:004518FA 90                      nop
+:004518FB 90                      nop
+:004518FC 90                      nop
+:004518FD 90                      nop
+changed into
+:004518E0 C1F804                  sar eax, 04
+:004518E3 83E003                  and eax, 00000003
+:004518E6 83E20F                  and edx, 0000000F
+:004518E9 80F903                  cmp cl, 03
+:004518EC 740E                    je 004518FC			jmp if monk
+:004518EE 80F902                  cmp cl, 02
+:004518F1 0F8597F9FFFF            jne 0045128E			jmp if not sorc
+:004518F7 3C02                    cmp al, 02
+:004518F9 7401                    je 004518FC			jmp if Plate
+:004518FB 40                      inc eax
+:004518FC C3                      ret
+:004518FD 90                      nop
+
+Using last free available space from fixed Slain Hero Quest:
+
+file offset 0005068E
+
+:0045128E 90                      nop
+:0045128F 90                      nop
+:00451290 90                      nop
+:00451291 90                      nop
+:00451292 90                      nop
+:00451293 90                      nop
+:00451294 90                      nop
+:00451295 90                      nop
+:00451296 90                      nop
+changed into
+:0045128E 32C0                    xor al, al
+:00451290 F6C101                  test cl, 01
+:00451293 7501                    jne 00451296			jmp if rogue or barb
+:00451295 40                      inc eax
+:00451296 C3                      ret

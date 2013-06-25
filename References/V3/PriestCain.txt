@@ -1,0 +1,9 @@
+Using the Priest graphics for Cain
+
+Priest's unk00068.cel from Ted Powell added to Dark.MPQ as Towners\priest.CEL
+
+Changing "Towners\Strytell\Strytell.CEL" to "Towners\priest.CEL"
+
+000CA2E0 2045 6C64 6572 0000 546F 776E 6572 735C  Elder..Towners\
+000CA2F0 7072 6965 7374 2E43 454C 0072 7974 656C priest.CEL.rytel
+

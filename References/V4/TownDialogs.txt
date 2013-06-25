@@ -1,0 +1,110 @@
+Dialogs in Town
+
+:0046F275 83F816                  cmp eax, 00000016
+:0046F278 0F87DC000000            ja 0046F35A
+:0046F27E FF2485A3F34600          jmp dword ptr [4*eax+0046F3A3]
+:0046F285 E8A0DAFFFF              call 0046CD2A				Griz' menu
+:0046F28A E9CB000000              jmp 0046F35A
+:0046F28F 39359CE86E00            cmp dword ptr [006EE89C], esi
+:0046F295 0F8EBF000000            jle 0046F35A
+:0046F29B E885DEFFFF              call 0046D125				Griz' base items
+:0046F2A0 E9B5000000              jmp 0046F35A
+:0046F2A5 E895E2FFFF              call 0046D53F				Griz' selling
+:0046F2AA E9AB000000              jmp 0046F35A
+:0046F2AF E89EE5FFFF              call 0046D852				Griz' repair
+:0046F2B4 E9A1000000              jmp 0046F35A
+:0046F2B9 E8A0E8FFFF              call 0046DB5E				Adria menu
+:0046F2BE E997000000              jmp 0046F35A
+:0046F2C3 39359CE86E00            cmp dword ptr [006EE89C], esi
+:0046F2C9 0F8E8B000000            jle 0046F35A
+:0046F2CF E8ECE9FFFF              call 0046DCC0				Adria buying	
+:0046F2D4 E981000000              jmp 0046F35A
+:0046F2D9 E851EBFFFF              call 0046DE2F				Adria selling
+:0046F2DE EB7A                    jmp 0046F35A
+:0046F2E0 E82EEFFFFF              call 0046E213				Adria recharge
+:0046F2E5 EB73                    jmp 0046F35A
+:0046F2E7 E813F1FFFF              call 0046E3FF				not enough gold	
+:0046F2EC EB6C                    jmp 0046F35A
+:0046F2EE E846F1FFFF              call 0046E439				no room in inventory
+:0046F2F3 EB65                    jmp 0046F35A
+:0046F2F5 E872F1FFFF              call 0046E46C				are you sure?
+:0046F2FA EB5E                    jmp 0046F35A
+:0046F2FC E802F3FFFF              call 0046E603				Wirt menu
+:0046F301 EB57                    jmp 0046F35A
+:0046F303 E8BAF3FFFF              call 0046E6C2				Wirt buying
+:0046F308 EB50                    jmp 0046F35A
+:0046F30A E88AF4FFFF              call 0046E799				Pepin menu + Heal
+:0046F30F EB49                    jmp 0046F35A
+:0046F311 E8FFF6FFFF              call 0046EA15				Cain menu
+:0046F316 EB42                    jmp 0046F35A
+:0046F318 39359CE86E00            cmp dword ptr [006EE89C], esi
+:0046F31E 7E3A                    jle 0046F35A
+:0046F320 E829F6FFFF              call 0046E94E				Pepin buying
+:0046F325 EB33                    jmp 0046F35A
+:0046F327 E8BFF7FFFF              call 0046EAEB				Cain identify
+:0046F32C EB2C                    jmp 0046F35A
+:0046F32E E8A2DFFFFF              call 0046D2D5				Griz' premium items
+:0046F333 85C0                    test eax, eax
+:0046F335 7469                    je 0046F3A0
+:0046F337 EB21                    jmp 0046F35A
+:0046F339 E86EFCFFFF              call 0046EFAC				Quests + Gossip
+:0046F33E EB1A                    jmp 0046F35A
+:0046F340 E8A0FBFFFF              call 0046EEE5				ID result
+:0046F345 EB13                    jmp 0046F35A
+:0046F347 E88AFDFFFF              call 0046F0D6				Ogden menu
+:0046F34C EB0C                    jmp 0046F35A
+:0046F34E E879FEFFFF              call 0046F1CC				Farnham menu
+:0046F353 EB05                    jmp 0046F35A
+:0046F355 E800FEFFFF              call 0046F15A				Gillian menu
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0046F278(C), :0046F28A(U), :0046F295(C), :0046F2A0(U), :0046F2AA(U)
+|:0046F2B4(U), :0046F2BE(U), :0046F2C9(C), :0046F2D4(U), :0046F2DE(U)
+|:0046F2E5(U), :0046F2EC(U), :0046F2F3(U), :0046F2FA(U), :0046F301(U)
+|:0046F308(U), :0046F30F(U), :0046F316(U), :0046F31E(C), :0046F325(U)
+|:0046F32C(U), :0046F337(U), :0046F33E(U), :0046F345(U), :0046F34C(U)
+|:0046F353(U)
+|
+:0046F35A 33C9                    xor ecx, ecx
+:0046F35C B88C006F00              mov eax, 006F008C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046F370(C)
+|
+:0046F361 3930                    cmp dword ptr [eax], esi
+:0046F363 750D                    jne 0046F372
+:0046F365 059C000000              add eax, 0000009C
+:0046F36A 41                      inc ecx
+:0046F36B 3DEC3F6F00              cmp eax, 006F3FEC
+:0046F370 7CEF                    jl 0046F361
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046F363(C)
+|
+:0046F372 83F968                  cmp ecx, 00000068
+:0046F375 7509                    jne 0046F380
+:0046F377 830D50C86F00FF          or dword ptr [006FC850], FFFFFFFF
+:0046F37E EB06                    jmp 0046F386
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046F375(C)
+|
+:0046F380 890D50C86F00            mov dword ptr [006FC850], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046F37E(U)
+|
+:0046F386 80FB02                  cmp bl, 02
+:0046F389 881DC4EC6F00            mov byte ptr [006FECC4], bl
+:0046F38F 750F                    jne 0046F3A0
+:0046F391 39359CE86E00            cmp dword ptr [006EE89C], esi
+:0046F397 7507                    jne 0046F3A0
+:0046F399 FECB                    dec bl
+:0046F39B E9A4FEFFFF              jmp 0046F244
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0046F335(C), :0046F38F(C), :0046F397(C)
+|
+:0046F3A0 5E                      pop esi
+:0046F3A1 5B                      pop ebx
+:0046F3A2 C3                      ret

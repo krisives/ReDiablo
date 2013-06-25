@@ -1,0 +1,53 @@
+Random monster creation on level 16 for Diablo
+
+Old:
+:0043202F 6A01                    push 00000001
+:00432031 5A                      pop edx
+
+* Possible Reference to Dialog: DialogID_006C 
+                                  |
+:00432032 6A6C                    push 0000006C		Advocate
+:00432034 59                      pop ecx
+:00432035 E84FFFFFFF              call 00431F89		Place monster ??
+:0043203A 6A01                    push 00000001
+:0043203C 5A                      pop edx
+:0043203D 6A60                    push 00000060		Blood Knight
+:0043203F 59                      pop ecx
+:00432040 E844FFFFFF              call 00431F89		Place monster ??
+:00432045 8BD6                    mov edx, esi
+
+* Possible Reference to Dialog: DialogID_006E 
+                                  |
+:00432047 6A6E                    push 0000006E		Diablo
+:00432049 E9A3020000              jmp 004322F1
+
+
+Changed to:
+:0043202F 90                      nop
+:00432030 90                      nop
+:00432031 90                      nop
+:00432032 90                      nop
+:00432033 90                      nop
+:00432034 90                      nop
+:00432035 90                      nop
+:00432036 90                      nop
+:00432037 90                      nop
+:00432038 90                      nop
+:00432039 90                      nop
+:0043203A 90                      nop
+:0043203B 8BD6                    mov edx, esi
+
+* Possible Reference to Dialog: DialogID_006E 
+                                  |
+:0043203D 6A6E                    push 0000006E
+:0043203F 59                      pop ecx
+:00432040 E844FFFFFF              call 00431F89
+:00432045 90                      nop
+:00432046 90                      nop
+:00432047 90                      nop
+:00432048 90                      nop
+:00432049 90                      nop
+:0043204A 90                      nop
+:0043204B 90                      nop
+:0043204C 90                      nop
+:0043204D 90                      nop

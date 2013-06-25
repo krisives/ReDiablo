@@ -1,0 +1,72 @@
+Familiar attack
+
+Damage according to JG = 1..10
+
+Changing damage to 1..MaxDam (which is 16 for Familiars), and enabling Spark Worms for this attacktype:
+
+File Offset 0003F865
+
+:00440465 7575                    jne 004404DC		
+:00440467 0FB67E50                movzx edi, byte ptr [esi+50]
+:0044046B 6A00                    push 00000000
+:0044046D 6A0A                    push 0000000A
+:0044046F 5A                      pop edx
+:00440470 B16D                    mov cl, 6D
+:00440472 E8E39AFDFF              call 00419F5A
+:00440477 40                      inc eax			
+wordt
+:00440465 7405                    je 0044046C
+:00440467 833839                  cmp dword ptr [eax], 00000039		Spark Worm
+:0044046A 7570                    jne 004404DC		
+:0044046C 0FB67E50                movzx edi, byte ptr [esi+50]
+:00440470 6A00                    push 00000000
+:00440472 E858140100              call 004518CF
+:00440477 40                      inc eax			
+
+
+Code space used from Mysterious Shrine:
+
+File Offset 00050CCF
+
+:004518CF 90                      nop
+:004518D0 6A06                    push 00000006
+:004518D2 8BCE                    mov ecx, esi
+:004518D4 5A                      pop edx
+:004518D5 E8E0CF0000              call 0045E8BA
+:004518DA EB22                    jmp 004518FE
+:004518DC 6A06                    push 00000006
+:004518DE 8BCE                    mov ecx, esi
+wordt
+:004518CF 0FB686C6000000          movzx eax, byte ptr [esi+000000C6]
+:004518D6 8BD0                    mov edx, eax				edx := maxdam
+:004518D8 B16D                    mov cl, 6D
+:004518DA E87B86FCFF              call 00419F5A
+:004518DF C3                      ret
+
+
+Original code:
+
+:00440454 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:0044045A 83660C00                and dword ptr [esi+0C], 00000000
+:0044045E C6460802                mov [esi+08], 02
+:00440462 833829                  cmp dword ptr [eax], 00000029	
+:00440465 7575                    jne 004404DC			jmp if not monster #41
+:00440467 0FB67E50                movzx edi, byte ptr [esi+50]
+:0044046B 6A00                    push 00000000
+:0044046D 6A0A                    push 0000000A
+:0044046F 5A                      pop edx
+:00440470 B16D                    mov cl, 6D
+:00440472 E8E39AFDFF              call 00419F5A
+:00440477 40                      inc eax			damage := 1..10
+:00440478 8BCF                    mov ecx, edi
+:0044047A 0FB65651                movzx edx, byte ptr [esi+51]
+:0044047E 50                      push eax			store damage
+:0044047F 8D4701                  lea eax, dword ptr [edi+01]
+:00440482 FF75FC                  push [ebp-04]
+:00440485 6A01                    push 00000001
+:00440487 6A08                    push 00000008			set ChargedBolt
+:00440489 6AFF                    push FFFFFFFF
+:0044048B 6A00                    push 00000000
+:0044048D 50                      push eax
+:0044048E E89C52FFFF              call 0043572F			do spelleffect
+:00440493 EB47                    jmp 004404DC

@@ -1,0 +1,53 @@
+Renegade Warriors appear together with Fallen Rogues in Abyss, without appearing randomly by themselves. This is done by replacing half of the normally created Rogues by Warriors (so both will be less common as other monsters).
+
+See also MonsterSelection52M
+
+
+File offset 0003B8A9
+
+:0043C4A9 E827FBFFFF              call 0043BFD5					create single monster
+changed into
+:0043C4A9 E9C65F0100              jmp 00452474
+:0043C4AE
+
+Using free space from obsolete Divine Shrine code:
+
+File offset 00051874
+
+:00452474 90                      nop
+:00452475 90                      nop
+:00452476 90                      nop
+:00452477 8BC3                    mov eax, ebx
+:00452479 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045247F 69C0C8550000            imul eax, 000055C8
+:00452485 8B9401B0010000          mov edx, dword ptr [ecx+eax+000001B0]
+:0045248C 03C8                    add ecx, eax
+:0045248E 8991AC010000            mov dword ptr [ecx+000001AC], edx
+:00452494 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045249A 03C8                    add ecx, eax
+:0045249C 8B91A8010000            mov edx, dword ptr [ecx+000001A8]
+:004524A2 8991A4010000            mov dword ptr [ecx+000001A4], edx
+changed into
+:00452474 F6C101                  test cl, 01					if one in two
+:00452477 7521                    jne 0045249A
+:00452479 A0D8B16000              mov al, byte ptr [0060B1D8]
+:0045247E 3C16                    cmp al, 16
+:00452480 7218                    jb 0045249A
+:00452482 3C17                    cmp al, 17					if DLVL 22-23
+:00452484 7714                    ja 0045249A					
+:00452486 8BC2                    mov eax, edx
+:00452488 69C050010000            imul eax, 00000150
+:0045248E 83B8B08E6A006B          cmp dword ptr [eax+006A8EB0], 0000006B	if Fallen Rogue
+:00452495 7503                    jne 0045249A
+:00452497 6A03                    push 00000003					Renegade Warrior
+:00452499 5A                      pop edx
+:0045249A E8369BFEFF              call 0043BFD5					create single monster
+:0045249F E90AA0FEFF              jmp 0043C4AE
+:004524A4 90909090                4*nop
+
+
+Disabling Renegade Warriors as random appearing monster by setting high seeding size:
+
+000AC5F4 0100 0000                               ....
+changed into
+000AC5F4 8813 0000                               ....

@@ -1,0 +1,5 @@
+Improving Block speed for Monk, so that it is the same as for Warriors and Barbarians. Because this is as fast as possible, FastBlock items will no longer have any use for a Monk. 
+
+000B46BC 03                                      .
+wordt
+000B46BC 02                                      .

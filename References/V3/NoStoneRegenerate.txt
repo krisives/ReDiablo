@@ -1,0 +1,13 @@
+Stone Cursed monsters do not Regenerate
+
+
+Oude disabled 'Vileness' check veranderd in 'StoneCursed' check.
+
+File Offset 00042C46
+
+:00443846 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044384D 7500                    jne 0044384F
+wordt
+:00443846 83BE8CDC69000F          cmp dword ptr [esi+0069DC8C], 0000000F
+:0044384D 7437                    je 00443886
+

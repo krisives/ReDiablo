@@ -1,0 +1,19 @@
+Enhance Ring of Fire trap
+
+
+Increase damage
+
+File Offset 000381AE
+
+:00438DAE 8D440302                lea eax, dword ptr [ebx+eax+02]
+wordt
+:00438DAE 8D440310                lea eax, dword ptr [ebx+eax+10]
+
+
+Decrease duration Lightning Wall (at spell effect 46h)
+
+File Offset 00031098
+
+:00431C98 69C080000000            imul eax, 00000080	duration = (slvl+1)*128 (HF 256)
+wordt
+:00431C98 69C001000000            imul eax, 00000001 -> heeeel kort.

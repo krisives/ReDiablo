@@ -1,0 +1,173 @@
+Monsters will be activated if a (very) recent activated monster comes within 1 space distance. Also, monsters withing visual range of a character will continually check for the best target.
+
+
+file offset 00042C95
+
+:00443895 F684080069610002        test byte ptr [eax+ecx+00616900], 02
+:0044389D 8DBC0800696100          lea edi, dword ptr [eax+ecx+00616900]
+:004438A4 746C                    je 00443912					no player in range
+:004438A6 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:004438AD 7563                    jne 00443912					already active
+changed into
+:00443895 8DBC0800696100          lea edi, dword ptr [eax+ecx+00616900]
+:0044389C F60702                  test byte ptr [edi], 02
+:0044389F 0F84A62B0300            je 0047644B					no player in range
+:004438A5 8BCB                    mov ecx, ebx				
+:004438A7 E9B82C0300              jmp 00476564					find a target
+:004438AC 909090                  3*nop
+
+file offset 00042D0B
+
+:0044390B 8BCB                    mov ecx, ebx
+:0044390D E8BC8FFFFF              call 0043C8CE
+changed into
+:0044390B C3                      ret
+:0044390C 90                      nop
+:0044390D E89DFFFFFF              call 004438AF					check sounds
+:00443912
+
+
+Using the codespace for loading of Celia's animation:
+
+file offset 00075962
+
+:00476562 381DD4535700            cmp byte ptr [005753D4], bl
+:00476568 7412                    je 0047657C
+:0047656A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0047656F 389805020000            cmp byte ptr [eax+00000205], bl
+:00476575 7405                    je 0047657C
+:00476577 E8CFFEFFFF              call 0047644B
+:0047657C 5B                      pop ebx
+:0047657D C3                      ret
+changed into
+:00476562 5B                      pop ebx
+:00476563 C3                      ret
+:00476564 E86563FCFF              call 0043C8CE					find a target
+:00476569 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:00476570 0F8497D3FCFF            je 0044390D					check sounds	
+:00476576 E997D3FCFF              jmp 00443912					jmp past sounds
+:0047657B 909090                  3*nop
+
+
+Using free code from obsolete Celia's animation:
+
+file offset 0007584B
+
+:0047644B 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:00476452 0F85BAD4FCFF            jne 00443912					already active, jmp past sounds
+
+:00476458 53                      push ebx
+:00476459 57                      push edi
+
+:0047645A A180DC6900              mov eax, dword ptr [0069DC80]
+:0047645F 85C0                    test eax, eax
+
+:00476461 7E51                    jle 004764B4					
+
+:00476463 BF60D96900              mov edi, 0069D960
+:00476468 8BD8                    mov ebx, eax
+
+:0047646A 8B07                    mov eax, dword ptr [edi]
+:0047646C 69C0E4000000            imul eax, 000000E4
+
+:00476472 80B828DD6900FE          cmp byte ptr [eax+0069DD28], FE
+:00476479 7409                    je 00476484
+:0047647B E8CA4DFCFF              call 0043B24A
+:00476480 85D2                    test edx, edx
+:00476482 7426                    je 004764AA
+
+:00476484 8B96A8DC6900            mov edx, dword ptr [esi+0069DCA8]
+:0047648A 2B90A8DC6900            sub edx, dword ptr [eax+0069DCA8]
+:00476490 E84C000000              call 004764E2
+:00476495 7D13                    jge 004764AB
+
+:00476497 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0047649D 2B90ACDC6900            sub edx, dword ptr [eax+0069DCAC]
+:004764A3 E839000000              call 004764E2
+:004764A8 7C11                    jl 004764BB
+
+:004764AA 83C704                  add edi, 00000004
+:004764AD 4B                      dec ebx
+:004764AE 0F85B6FFFFFF            jne 0047646A					
+
+:004764B4 5F                      pop edi
+:004764B5 5B                      pop ebx
+
+:004764B6 E957D4FCFF              jmp 00443912					jmp past sounds 
+
+:004764BB 8B9030DD6900            mov edx, dword ptr [eax+0069DD30]
+:004764C1 899630DD6900            mov dword ptr [esi+0069DD30], edx
+:004764C7 8B9034DD6900            mov edx, dword ptr [eax+0069DD34]
+:004764CD 899634DD6900            mov dword ptr [esi+0069DD34], edx
+:004764D3 808E28DD6900FF          or byte ptr [esi+0069DD28], FF		
+
+:004764DA 5F                      pop edi
+:004764DB 5B                      pop ebx
+
+:004764DC E92CD4FCFF              jmp 0044390D					check sounds 
+
+:004764E1 50                      push eax
+:004764E2 52                      push edx
+:004764E3 E8E8460000              call 0047ABD0					
+:004764E8 83F802                  cmp eax, 00000002
+:004764EB 5A                      pop edx
+:004764EC 58                      pop eax
+:004765ED C3                      ret
+
+:004765EE 909090909090909090      9*nop
+
+Using free space from HP correction for normal monsters in SP:
+
+file offset 0003A64A
+
+:0043B24A 90                      nop
+:0043B24B 90                      nop
+:0043B24C 90                      nop
+:0043B24D 90                      nop
+:0043B24E 90                      nop
+:0043B24F 898618DD6900            mov dword ptr [esi+0069DD18], eax
+:0043B255 7519                    jne 0043B270
+:0043B257 D1BE18DD6900            sar dword ptr [esi+0069DD18], 1
+:0043B25D 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:0043B263 6A40                    push 00000040
+:0043B265 59                      pop ecx
+:0043B266 3BC1                    cmp eax, ecx
+:0043B268 7D06                    jge 0043B270
+changed into
+:0043B24A 8B90A8DC6900            mov edx, dword ptr [eax+0069DCA8]
+:0043B24A 6BD270                  imul edx, 00000070
+:0043B24A 0390ACDC6900            add edx, dword ptr [eax+0069DCAC]
+:0043B24A 80BA0069610002          cmp byte ptr [edx+00616900], 02
+:0043B24A 7403                    je 00??????
+:0043B24A 33D2                    xor edx, edx
+:0043B24A C3                      ret
+:0043B24A 6A01                    push 00000001
+:0043B24A 5A                      pop edx
+:0043B24A C3                      ret
+:0043B24A 90                      nop
+
+
+Adding sound to activation by hit from player missile:
+
+file offset 0002E9C0
+
+:0042F5C0 898634DD6900            mov dword ptr [esi+0069DD34], eax
+changed into
+:0042F5C0 E9888EFFFF              jmp 0042844D
+:0042F5C5 90                      nop
+
+Using 16 bytes free space from Improved Oils:
+
+file offset 0002784D
+
+:0042844D 90                      nop
+:0042844E 90                      nop
+:0042844F 0F8D56010000            jnl 004285AB
+:00428455 41                      inc ecx
+:00428456 8908                    mov dword ptr [eax], ecx
+:00428458 E94E010000              jmp 004285AB
+changed into
+:0042844D 898634DD6900            mov dword ptr [esi+0069DD34], eax
+:00428453 E857B40100              call 004438AF
+:00428458 E93A10FEFF              jmp 00409497					
+:0042845D

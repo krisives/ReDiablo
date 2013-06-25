@@ -1,0 +1,51 @@
+Dynamic addresses, starting at [4*ecx+00453073]
+
+		Start at:	Message:	Notes:
+
+Mysterious	0045187A	0C		updates str, mag, dex, vit
+Hidden		0045190C	0D
+Gloomy		00451A7D	0E		adds to AC, substracts to max.damage
+Weird		00451BD9	0F
+Magical		00451C8B	10
+Stone		00451CDB	11
+Religious	00451D90	12
+Enchanted	00451E2C	13
+Thaumaturgic	00451F57	14		comparing with 5, 6 and 7 ?
+Fascinating	00451FDB	15
+Cryptic		0045210F	16		Nova and Mana restore
+Eldritch	00452185	18
+Eerie		004523D5	19		updates mag: +2
+Divine		00452404	1A
+Holy		004524D7	1B
+Sacred		0045259D	1C
+Spiritual	004526D1	1D
+Spooky		004527D9	1E		do nothing for user
+Spooky		004527F3	1F		others get full life and mana
+Abandoned	00452867	20		updates dex: +2
+Creepy		004528A2	21		updates str: +2
+Quiet		004528DD	22		updates vit: +2
+Secluded	00452918	23
+Ornate		00452950	24
+Glimmering	00452A84	25		identifies all items
+Tainted		00452B4C	26		do nothing for user
+Tainted		00452B6B	27		updates str, mag, dex, vit for others
+Oily		00452BEA	2C		updates str, mag, dex, vit by class
+Glowing		00452CB6	2D		checks char.01BC for 5000
+Mendicant	00452D43	2E		adds gold/2 to Xp
+Sparkling	00452D9F	2F		add 1000*dlvl to Xp, do Flash
+Town		00452E34	30
+Shimmering	00452E8D	31		restores Mana&Life
+Solar		00452EE1	34		updates mag: +2
+Solar		00452F35	33		updates str: +2
+Solar		00452F51	32		updates dex: +2
+Solar		00452F6D	35		updates vit: +2
+Murphy		00452F8E	36
+
+
+
+General check on Shrine user:
+
+:00452B54 8B45FC                  mov eax, dword ptr [ebp-04]
+:00452B57 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00452B5D 750C                    jne 00452B6B		jmp if not user
+

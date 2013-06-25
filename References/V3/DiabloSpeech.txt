@@ -1,0 +1,130 @@
+Hierin code voor een 'Diablo Speech'. 
+
+
+()Play Diablo Speech
+
+Re-activeert routine aanroep:
+
+:0043D19F 8338E6                  cmp dword ptr [eax], FFFFFFE6
+:0043D1A2 750C                    jne 0043D1B0
+:0043D1A4 6A01                    push 00000001
+:0043D1A6 8BCF                    mov ecx, edi
+:0043D1A8 5A                      pop edx
+:0043D1A9 E803010000              call 0043D2B1
+:0043D1AE EB0A                    jmp 0043D1BA
+wordt
+:0043D19F 83386E                  cmp dword ptr [eax], 0000006E
+:0043D1A2 750C                    jne 0043D1B0
+:0043D1A4 909090                  3*nop
+:0043D1A7 50                      push eax
+:0043D1A8 51                      push ecx
+:0043D1A9 E803010000              call 0043D2B1
+:0043D1AE 59                      pop ecx
+:0043D1AF 58                      pop eax
+
+en:
+
+:0043DE60 8338E6                  cmp dword ptr [eax], FFFFFFE6
+:0043DE63 750C                    jne 0043DE71
+:0043DE65 6A01                    push 00000001
+:0043DE67 8BCF                    mov ecx, edi
+:0043DE69 5A                      pop edx
+:0043DE6A E842F4FFFF              call 0043D2B1
+:0043DE6F EB0A                    jmp 0043DE7B
+wordt
+:0043DE60 83386E                  cmp dword ptr [eax], 0000006E
+:0043DE63 750C                    jne 0043DE71
+:0043DE65 909090                  3*nop
+:0043DE68 50                      push eax
+:0043DE69 51                      push ecx
+:0043DE6A E842F4FFFF              call 0043D2B1
+:0043DE6F 59                      pop ecx
+:0043DE70 58                      pop eax
+
+
+()Play the sound:
+
+Oude DiabloDeath routine, wordt weer aangeroepen door bovenstaande wijzigingen.
+Wordt gewijzigd voor alleen een sound.
+
+* Referenced by a CALL at Addresses:
+|:0043D1A9   , :0043DE6A   
+|
+:0043D2B1 55                      push ebp
+:0043D2B2 8BEC                    mov ebp, esp
+:0043D2B4 83EC0C                  sub esp, 0000000C
+:0043D2B7 53                      push ebx
+:0043D2B8 56                      push esi
+:0043D2B9 57                      push edi
+:0043D2BA 8BF9                    mov edi, ecx
+:0043D2BC 8BF2                    mov esi, edx
+:0043D2BE 897DF4                  mov dword ptr [ebp-0C], edi
+:0043D2C1 B9CA030000              mov ecx, 000003CA
+:0043D2C6 69FFE4000000            imul edi, 000000E4
+:0043D2CC E83CB2FDFF              call 0041850D
+:0043D2D1 33DB                    xor ebx, ebx
+:0043D2D3 C605E6B36E0003          mov byte ptr [006EB3E6], 03	Deze misschien ook nodig?
+:0043D2DA 3BF3                    cmp esi, ebx
+:0043D2DC 740A                    je 0043D2E8
+:0043D2DE 6A01                    push 00000001
+:0043D2E0 B205                    mov dl, 05
+:0043D2E2 59                      pop ecx
+:0043D2E3 E8609C0000              call 00446F48
+enz.
+
+wordt:
+:0043D2B1 90                      nop				disable: nop -> ret
+:0043D2B2 C70514A257001E000000    mov dword ptr [0057A214], 0000001E
+:0043D2BC C70518A25700CA030000    mov dword ptr [0057A218], 000003CA
+:0043D2C6 B20C                    mov dl, 0C
+:0043D2C8 6A01                    push 00000001
+:0043D2CA 59                      pop ecx
+:0043D2CB E87E9C0000   (?)        call 00446F48			Play the WAV
+:0043D2D0 C3                      ret
+
+Bovenstaande speelt (als het goed is) Diablo's oude deathcry af. Als het werkt kunnen we een betere WAV zoeken.
+
+
+
+
+Voorbeeld voor Leoric: "...I'll find your son"
+
+:0045FAEF A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045FAF4 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045FAFA 69C0C8550000            imul eax, 000055C8
+:0045FB00 C605AAB46E0003          mov byte ptr [006EB4AA], 03		anders bij Butcher
+:0045FB07 C70514A257001E000000    mov dword ptr [0057A214], 0000001E
+:0045FB11 8A840860010000          mov al, byte ptr [eax+ecx+00000160]
+:0045FB18 84C0                    test al, al
+:0045FB1A 7438                    je 0045FB54
+:0045FB1C 3C01                    cmp al, 01
+:0045FB1E 7424                    je 0045FB44
+:0045FB20 3C02                    cmp al, 02
+:0045FB22 750C                    jne 0045FB30
+:0045FB24 C70518A2570058020000    mov dword ptr [0057A218], 00000258	Mage
+:0045FB2E EB2E                    jmp 0045FB5E
+
+:0045FB30 3C03                    cmp al, 03
+:0045FB32 750C                    jne 0045FB40
+:0045FB34 C70518A2570098030000    mov dword ptr [0057A218], 00000398	Monk
+:0045FB3E EB1E                    jmp 0045FB5E
+
+:0045FB40 3C04                    cmp al, 04
+:0045FB42 750C                    jne 0045FB50		jmp if not Bard
+
+:0045FB44 C70518A25700BF020000    mov dword ptr [0057A218], 000002BF	Rogue, Bard
+:0045FB4E EB0E                    jmp 0045FB5E
+
+:0045FB50 3C05                    cmp al, 05
+:0045FB52 750A                    jne 0045FB5E		jmp if not Barbarian
+
+:0045FB54 C70518A257002C030000    mov dword ptr [0057A218], 0000032C	Warrior, Barbarian
+
+:0045FB5E 85D2                    test edx, edx			soms niet blijkbaar?
+:0045FB60 0F84EE030000            je 0045FF54			jmp ret
+:0045FB66 B20C                    mov dl, 0C
+
+:0045FE0C 6A01                    push 00000001
+:0045FE0E 59                      pop ecx
+:0045FE0F E83471FEFF              call 00446F48			Play the WAV
+

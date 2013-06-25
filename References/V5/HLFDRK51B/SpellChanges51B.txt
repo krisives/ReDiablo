@@ -1,0 +1,136 @@
+Improved Repair Skill for Warriors:
+
+It will now always repair fully, and always lower durability by one.
+
+
+file offset 000275F9 
+
+:004281F9 0FBE96B8010000          movsx edx, byte ptr [esi+000001B8]
+changed into
+:004281F9 90909090909090          7*nop
+
+file offset 00027630
+
+:00428230 8BDA                    mov ebx, edx
+changed into
+:00428230 9090                    2*nop
+
+file offset 00027640 
+
+:00428240 85C0                    test eax, eax
+:00428242 7E3F                    jle 00428283
+:00428244 33FF                    xor edi, edi
+:00428246 8D6B09                  lea ebp, dword ptr [ebx+09]
+:00428249 8BD3                    mov edx, ebx
+:0042824B B125                    mov cl, 25
+:0042824D E8081DFFFF              call 00419F5A
+:00428252 03C3                    add eax, ebx
+:00428254 03F8                    add edi, eax
+:00428256 8B86F0000000            mov eax, dword ptr [esi+000000F0]
+:0042825C 99                      cdq
+:0042825D F7FD                    idiv ebp
+:0042825F 83F801                  cmp eax, 00000001
+:00428262 7D03                    jge 00428267
+:00428264 6A01                    push 00000001
+:00428266 58                      pop eax
+:00428267 2986F0000000            sub dword ptr [esi+000000F0], eax
+:0042826D 8B86F0000000            mov eax, dword ptr [esi+000000F0]
+:00428273 740E                    je 00428283
+:00428275 8BCF                    mov ecx, edi
+:00428277 038EEC000000            add ecx, dword ptr [esi+000000EC]
+:0042827D 3BC8                    cmp ecx, eax
+:0042827F 7D08                    jge 00428289
+:00428281 EBC6                    jmp 00428249
+:00428283 834E08FF                or dword ptr [esi+08], FFFFFFFF
+:00428287 EB14                    jmp 0042829D
+:00428289 01BEEC000000            add dword ptr [esi+000000EC], edi
+:0042828F 3986EC000000            cmp dword ptr [esi+000000EC], eax
+:00428295 7E06                    jle 0042829D
+:00428297 8986EC000000            mov dword ptr [esi+000000EC], eax
+changed into
+:00428240 48                      dec eax
+:00428241 7F4E                    jg 00428291
+:00428243 834E08FF                or dword ptr [esi+08], FFFFFFFF
+:00428247 EB54                    jmp 0042829D
+:00428249 ...                     free space
+:0042828F 9090                    2*nop
+:00428291 8986F0000000            mov dword ptr [esi+000000F0], eax
+:00428297 8986EC000000            mov dword ptr [esi+000000EC], eax
+
+
+
+Slightly less damage for Inferno and Guardian:
+
+Damage = 1 + (RND[clvl]+RND[5*clvl])/4, for each attack (20 attacks per second)
+      -> 1 + (RND[clvl]+RND[4*clvl])/4, also for each attack.
+
+file offset 00034451
+
+:00435051 6BD205                  imul edx, 00000005
+changed into
+:00435051 C1E202                  shl edx, 02
+
+Spellbook damage for Guardian is a rough estimate for the total 'breath', and still accurate enough.
+
+
+Improved damage for Holy Bolt
+
+Damage = 5 + Magic/8 + Rnd[CLVL] 
+      -> 5 + Magic/8 + Rnd[CLVL + SLVL]
+
+Holy Bolt real damage:
+
+file offset 000347B2
+
+:004353B2 B145                    mov cl, 45
+:004353B4 E8A14BFEFF              call 00419F5A                         eax = rnd[clvl]
+:004353B9 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353BC E8DD370500              call 00488B9E
+:004353C1 C1FA03                  sar edx, 03				edx = mag/8
+:004353C4 8D441005                lea eax, dword ptr [eax+edx+05]
+:004353C8 6A1F                    push 0000001F
+:004353CA 90                      nop
+:004353CB 90                      nop
+:004353CC 90                      nop
+:004353CD 90                      nop
+:004353CE 90                      nop
+:004353CF 90                      nop
+:004353D0 90                      nop
+:004353D1 90                      nop
+:004353D2 90                      nop
+changed into
+:004353B2 8B86887A6900            mov eax, dword ptr [esi+00697A88]	eax = slvl
+:004353B8 03D0                    add edx, eax
+:004353BA B145                    mov cl, 45
+:004353BC E8994BFEFF              call 00419F5A                         eax = rnd[clvl+slvl]
+:004353C1 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353C4 E8D5370500              call 00488B9E
+:004353C9 C1FA03                  sar edx, 03				edx = mag/8
+:004353CC 8D441005                lea eax, dword ptr [eax+edx+05]
+:004353D0 90                      nop
+:004353D1 6A1F                    push 0000001F
+
+Holy Bolt Spellbook damage:
+
+file offset 0002E127
+
+:0042ED27 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]	clvl
+:0042ED2E 52                      push edx
+:0042ED2F 57                      push edi
+:0042ED30 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0042ED36 E8639E0500              call 00488B9E
+:0042ED3B C1FA03                  sar edx, 03
+:0042ED3E 83C205                  add edx, 00000005
+:0042ED41 8BCA                    mov ecx, edx				5 + mag/8
+:0042ED43 5F                      pop edi
+:0042ED44 5A                      pop edx
+:0042ED45 EB04                    jmp 0042ED4B
+changed into
+:0042ED27 8B886C010000            mov ecx, dword ptr [eax+0000016C]	mag
+:0042ED2D C1E903                  shr ecx, 03				mag/8
+:0042ED30 83C105                  add ecx, 00000005			5 + mag/8
+:0042ED33 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]	clvl
+:0042ED3A 03C6                    add eax, esi				clvl + slvl
+:0042ED3C EB0D                    jmp 0042ED4B
+:0042ED3E 909090909090909090      9*nop
+:0042ED47 

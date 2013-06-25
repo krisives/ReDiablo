@@ -1,0 +1,69 @@
+Jester
+
+:0043076A 55                      push ebp
+:0043076B 8BEC                    mov ebp, esp
+:0043076D 51                      push ecx
+:0043076E 56                      push esi
+:0043076F 57                      push edi
+:00430770 6A01                    push 00000001
+:00430772 8955FC                  mov dword ptr [ebp-04], edx
+:00430775 5F                      pop edi
+:00430776 8BF1                    mov esi, ecx
+:00430778 6A0A                    push 0000000A
+:0043077A 80C9FF                  or cl, FF
+:0043077D 5A                      pop edx
+:0043077E E8D797FEFF              call 00419F5A
+:00430783 83F809                  cmp eax, 00000009
+:00430786 7736                    ja 004307BE
+:00430788 FF248505084300          jmp dword ptr [4*eax+00430805]
+:0043078F 6A01                    push 00000001
+:00430791 EB2A                    jmp 004307BD
+:00430793 6A06                    push 00000006
+:00430795 EB26                    jmp 004307BD
+:00430797 6A26                    push 00000026
+:00430799 EB22                    jmp 004307BD
+:0043079B 6A02                    push 00000002
+:0043079D EB1E                    jmp 004307BD
+:0043079F 6A0F                    push 0000000F
+:004307A1 EB1A                    jmp 004307BD
+:004307A3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004307A6 6A0A                    push 0000000A
+:004307A8 5F                      pop edi
+:004307A9 6A07                    push 00000007
+:004307AB 5A                      pop edx
+:004307AC E84BB80300              call 0046BFFC
+:004307B1 EB0B                    jmp 004307BE
+:004307B3 6A1A                    push 0000001A
+:004307B5 EB06                    jmp 004307BD
+:004307B7 6A2C                    push 0000002C
+:004307B9 EB02                    jmp 004307BD
+:004307BB 6A1E                    push 0000001E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00430791(U), :00430795(U), :00430799(U), :0043079D(U), :004307A1(U)
+|:004307B5(U), :004307B9(U)
+|
+:004307BD 5F                      pop edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00430786(C), :004307B1(U)
+|
+:004307BE 69F6B0000000            imul esi, 000000B0
+:004307C4 8B5508                  mov edx, dword ptr [ebp+08]
+:004307C7 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004307CA FFB6887A6900            push dword ptr [esi+00697A88]
+:004307D0 8A86D07A6900            mov al, byte ptr [esi+00697AD0]
+:004307D6 6A00                    push 00000000
+:004307D8 FFB6CC7A6900            push dword ptr [esi+00697ACC]
+:004307DE 50                      push eax
+:004307DF 57                      push edi
+:004307E0 FF7514                  push [ebp+14]
+:004307E3 FF7510                  push [ebp+10]
+:004307E6 FF750C                  push [ebp+0C]
+:004307E9 E8414F0000              call 0043572F
+:004307EE C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:004307F8 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+:004307FF 5F                      pop edi
+:00430800 5E                      pop esi
+:00430801 C9                      leave
+:00430802 C21C00                  ret 001C

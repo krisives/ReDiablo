@@ -1,0 +1,131 @@
+Barbarian has now -1 (previously -2), and Sorcerer +1 to spell levels: 
+
+
+file offset 00023434
+
+:00424034 E951E80200              jmp 0045288A
+changed into
+:00424034 E9AAE70200              jmp 004527E3
+:00424039 
+
+file offset 00051BE3
+
+:004527E3 16*90                   16*nop
+changed into
+:004527E3 80B96001000002          cmp byte ptr [ecx+00000160], 02
+:004527EA 7502                    jne 004527EE
+:004527EC FEC0                    inc al
+:004527EE E997000000              jmp 0045288A
+:004527F3
+
+file offset 00051C93
+
+:00452893 2C02                    sub al, 02
+changed into
+:00452893 FEC8                    dec al
+
+
+Greater Vitality bonus to damage for Barbarian: Vit*clvl / 125  is now  Vit*clvl / 75
+
+file offset 00023349
+
+:00423F49 6A7D                    push 0000007D
+changed into
+:00423F49 6A4B                    push 0000004B
+
+
+Vitality bonus to damage for Barbarian only with axes:
+
+file offset 00023328
+
+:00423F28 83F80A                  cmp eax, 0000000A
+:00423F2B 7453                    je 00423F80
+:00423F2D 83FA0A                  cmp edx, 0000000A
+:00423F30 744E                    je 00423F80
+:00423F32 83F803                  cmp eax, 00000003
+:00423F35 7449                    je 00423F80
+:00423F37 83FA03                  cmp edx, 00000003
+:00423F3A 7444                    je 00423F80
+changed into
+:00423F28 83F802                  cmp eax, 00000002
+:00423F2B 740F                    je 00423F3C
+:00423F2D 83FA02                  cmp edx, 00000002
+:00423F30 754E                    jne 00423F80
+:00423F32 10*90                   10*nop
+
+
+Increased speed for Bard's sword:
+
+file offset 00056FC3
+
+:00457BC3 C781A40200000A000000    mov dword ptr [ebx+000002A4], 0000000A
+changed into
+:00457BC3 C781A402000009000000    mov dword ptr [ebx+000002A4], 00000009
+
+
+Lower speed for Barbarian's axe:
+
+file offset 00056FEB
+
+:00457BEB C78401A402000008000000  mov dword ptr [ecx+eax+000002A4], 00000008
+changed into
+:00457BEB C78401A402000009000000  mov dword ptr [ecx+eax+000002A4], 00000009
+
+
+Lower speed for Monk's feet to match his staff:
+
+file offset 00056ECE
+
+:00457ACE 0F8C7F010000            jl 00457C53
+:00457AD4 83FA01                  cmp edx, 00000001
+:00457AD7 7E72                    jle 00457B4B
+:00457AD9 83FA04                  cmp edx, 00000004
+:00457ADC 7446                    je 00457B24
+:00457ADE 83FA05                  cmp edx, 00000005
+:00457AE1 742E                    je 00457B11
+:00457AE3 6A08                    push 00000008
+:00457AE5 5E                      pop esi
+:00457AE6 3BD6                    cmp edx, esi
+:00457AE8 0F8565010000            jne 00457C53
+:00457AEE 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457AF4 C784019C0200000D000000  mov dword ptr [ecx+eax+0000029C], 0000000D
+:00457AFF 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+changed into
+:00457ACE 7C3C                    jl 00457B0C
+:00457AD0 8BCE                    mov ecx, esi
+:00457AD2 9090                    2*nop
+:00457AD4 6A08                    push 00000008
+:00457AD6 5E                      pop esi
+:00457AD7 83FA01                  cmp edx, 00000001
+:00457ADA 7E11                    jle 00457AED
+:00457ADC 83FA04                  cmp edx, 00000004
+:00457ADF 7443                    je 00457B24
+:00457AE1 83FA05                  cmp edx, 00000005
+:00457AE4 742B                    je 00457B11
+:00457AE6 3BD6                    cmp edx, esi
+:00457AE8 7522                    jne 00457B0C
+:00457AEA 909090                  3*nop
+:00457AED C784019C0200000C000000  mov dword ptr [ecx+eax+0000029C], 0000000C
+:00457AF8 EB0B                    jmp 00457B05
+:00457AFA C784019C0200000D000000  mov dword ptr [ecx+eax+0000029C], 0000000D
+
+
+Increased ToHit penalty for Sweep attacks: 30+2*(mlvl-clvl) is now 40+2*(mlvl-clvl), with 40 as minimum
+
+file offset 0005ACE7
+
+:0045B8E7 8D44091E                lea eax, dword ptr [ecx+ecx+1E]
+changed into
+:0045B8E7 8D440928                lea eax, dword ptr [ecx+ecx+28]
+
+
+Increased spell casting speed for Bard:
+
+000B4698 0A10 0802 1414 0614 0809 0E08 1208 0414 ................
+000B46A8 1007 1408 0A0C 0810 0806 140D 0814 080C ................
+000B46B8 0A08 1008 0214 1006 1408 0C0C 0812 0804 ................
+000B46C8 140E 0714 080A 0B0A 1008 0214 1406 1408 ................
+000B46D8 0913                                    ..
+changed into
+000B46CE 0A                                      .
+

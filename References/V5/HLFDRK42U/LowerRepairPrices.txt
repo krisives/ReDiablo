@@ -1,0 +1,121 @@
+Lower repair prices at Grizwold
+
+
+Jarulf:
+
+Griswold uses the following formulas to calculate the repair cost:
+RpC = 0.15 · Price · (1 - CurDur/MaxDur) For magical and unique items
+RpC = 0.50 · Price · (1 - CurDur/MaxDur) For non magical and unidentified items
+where:
+RpC = Repair Cost
+Price = Buying price of the item
+MaxDur = Maximum durability of item
+CurDur = Current durability of item
+
+If the repair cost is less than 1 gold Griswold won’t repair it. That makes many of the cursed items irreparable. There also seems to be a bug so that when the ratio CurDur/MaxDur is greater than 99%, the repair cost is rounded down to 0 along the way and is thus not repairable until it takes more damage.
+
+
+Changed into:
+
+RpC = 0.10 · Price · (1 - CurDur/MaxDur) For magical and unique items
+RpC = 0.25 · Price · (1 - CurDur/MaxDur) For non magical and unidentified items
+
+
+file offset 0006CEF1
+
+:0046DAF1 6BC01E                  imul eax, 0000001E
+changed into
+:0046DAF1 6BC028                  imul eax, 00000028
+
+file offset 0006CF0E
+
+:0046DB0E 6BC064                  imul eax, 00000064
+changed into
+:0046DB0E 6BC032                  imul eax, 00000032
+
+
+
+
+Original code to calculate repair price:
+
+:0046DAB9 51                      push ecx
+:0046DABA A19CE86E00              mov eax, dword ptr [006EE89C]
+:0046DABF 53                      push ebx
+:0046DAC0 69C074010000            imul eax, 00000174
+:0046DAC6 55                      push ebp
+:0046DAC7 56                      push esi
+:0046DAC8 57                      push edi
+:0046DAC9 8BF1                    mov esi, ecx
+:0046DACB 8DA8683F6F00            lea ebp, dword ptr [eax+006F3F68]
+:0046DAD1 6A5D                    push 0000005D
+:0046DAD3 59                      pop ecx
+:0046DAD4 8BFD                    mov edi, ebp
+:0046DAD6 F3                      repz
+:0046DAD7 A5                      movsd
+:0046DAD8 8A5D3C                  mov bl, byte ptr [ebp+3C]
+:0046DADB 89542410                mov dword ptr [esp+10], edx
+:0046DADF 84DB                    test bl, bl
+:0046DAE1 741B                    je 0046DAFE
+:0046DAE3 837D3800                cmp dword ptr [ebp+38], 00000000
+:0046DAE7 7415                    je 0046DAFE					jmp if not identified
+:0046DAE9 8B85C8000000            mov eax, dword ptr [ebp+000000C8]
+:0046DAEF 6A64                    push 00000064
+:0046DAF1 6BC01E                  imul eax, 0000001E
+:0046DAF4 99                      cdq
+:0046DAF5 59                      pop ecx
+:0046DAF6 F7F9                    idiv ecx
+:0046DAF8 8985C4000000            mov dword ptr [ebp+000000C4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0046DAE1(C), :0046DAE7(C)
+|
+:0046DAFE 8B8DF0000000            mov ecx, dword ptr [ebp+000000F0]
+:0046DB04 6A64                    push 00000064
+:0046DB06 8BC1                    mov eax, ecx
+:0046DB08 2B85EC000000            sub eax, dword ptr [ebp+000000EC]
+:0046DB0E 6BC064                  imul eax, 00000064
+:0046DB11 99                      cdq
+:0046DB12 F7F9                    idiv ecx
+:0046DB14 59                      pop ecx
+:0046DB15 0FAF85C4000000          imul eax, dword ptr [ebp+000000C4]
+:0046DB1C 99                      cdq
+:0046DB1D F7F9                    idiv ecx
+:0046DB1F 85C0                    test eax, eax
+:0046DB21 750C                    jne 0046DB2F
+:0046DB23 84DB                    test bl, bl
+:0046DB25 7405                    je 0046DB2C
+:0046DB27 394538                  cmp dword ptr [ebp+38], eax
+:0046DB2A 752C                    jne 0046DB58
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046DB25(C)
+|
+:0046DB2C 6A01                    push 00000001
+:0046DB2E 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046DB21(C)
+|
+:0046DB2F 83F801                  cmp eax, 00000001
+:0046DB32 7E02                    jle 0046DB36
+:0046DB34 D1F8                    sar eax, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046DB32(C)
+|
+:0046DB36 8985C8000000            mov dword ptr [ebp+000000C8], eax
+:0046DB3C 8985C4000000            mov dword ptr [ebp+000000C4], eax
+:0046DB42 8B0D9CE86E00            mov ecx, dword ptr [006EE89C]
+:0046DB48 8A442410                mov al, byte ptr [esp+10]
+:0046DB4C FF059CE86E00            inc dword ptr [006EE89C]
+:0046DB52 888118C86F00            mov byte ptr [ecx+006FC818], al
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046DB2A(C)
+|
+:0046DB58 5F                      pop edi
+:0046DB59 5E                      pop esi
+:0046DB5A 5D                      pop ebp
+:0046DB5B 5B                      pop ebx
+:0046DB5C 59                      pop ecx
+:0046DB5D C3                      ret

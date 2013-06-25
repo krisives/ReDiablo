@@ -1,0 +1,7 @@
+Lowering maximum duration of Stone Curse (12 secs -> 9.6 secs):
+
+File Offset 00032F34
+
+:00433B34 6A0F                    push 0000000F
+wordt
+:00433B34 6A0C                    push 0000000C

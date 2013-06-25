@@ -1,0 +1,75 @@
+Initial procedure: 
+
+:00452600 55                      push ebp
+:00452601 8BEC                    mov ebp, esp
+:00452603 51                      push ecx
+:00452604 51                      push ecx
+:00452605 53                      push ebx
+:00452606 8B5D0C                  mov ebx, dword ptr [ebp+0C]
+:00452609 56                      push esi
+:0045260A 57                      push edi
+:0045260B 8B7D10                  mov edi, dword ptr [ebp+10]
+:0045260E 3BD3                    cmp edx, ebx
+:00452610 8955FC                  mov dword ptr [ebp-04], edx
+:00452613 894DF8                  mov dword ptr [ebp-08], ecx
+:00452616 7517                    jne 0045262F
+:00452618 397D08                  cmp dword ptr [ebp+08], edi
+:0045261B 7512                    jne 0045262F
+:0045261D 8B4514                  mov eax, dword ptr [ebp+14]
+:00452620 C1E002                  shl eax, 02
+:00452623 039888BE4A00            add ebx, dword ptr [eax+004ABE88]
+:00452629 03B8A8BE4A00            add edi, dword ptr [eax+004ABEA8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00452616(C), :0045261B(C)
+|
+:0045262F 8BF1                    mov esi, ecx
+:00452631 6A10                    push 00000010
+:00452633 69F6B0000000            imul esi, 000000B0
+:00452639 57                      push edi
+:0045263A 53                      push ebx
+:0045263B FF7508                  push [ebp+08]
+:0045263E 83A6D47A690000          and dword ptr [esi+00697AD4], 00000000
+:00452645 E817E0FDFF              call 00430661
+:0045264A 8B5508                  mov edx, dword ptr [ebp+08]
+:0045264D 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00452650 57                      push edi
+:00452651 53                      push ebx
+:00452652 E8611BFEFF              call 004341B8
+:00452657 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0045265A 8BD0                    mov edx, eax
+:0045265C E825D4FDFF              call 0042FA86
+:00452661 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00452664 8B5508                  mov edx, dword ptr [ebp+08]
+:00452667 C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:00452671 898EE87A6900            mov dword ptr [esi+00697AE8], ecx
+:00452677 8996EC7A6900            mov dword ptr [esi+00697AEC], edx
+:0045267D 83A6F07A690000          and dword ptr [esi+00697AF0], 00000000
+:00452684 899EF47A6900            mov dword ptr [esi+00697AF4], ebx
+:0045268A 6A08                    push 00000008
+:0045268C 89BEF87A6900            mov dword ptr [esi+00697AF8], edi
+:00452692 E8DDA1FDFF              call 0042C874
+:00452697 807D1800                cmp byte ptr [ebp+18], 00
+:0045269B 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:004526A1 7520                    jne 004526C3
+:004526A3 8B7D1C                  mov edi, dword ptr [ebp+1C]
+:004526A6 57                      push edi
+:004526A7 6A2D                    push 0000002D
+:004526A9 5A                      pop edx
+:004526AA 8BCA                    mov ecx, edx
+:004526AC 69FFC8550000            imul edi, 000055C8
+:004526B2 E887F9FFFF              call 0045203E					Apo dam procedure
+:004526B7 899ED47A6900            mov dword ptr [esi+00697AD4], ebx
+:004526BD 59                      pop ecx
+:004526BE E839990100              call 0046BFFC					mana cost
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004526A1(C)
+|
+:004526C3 5F                      pop edi
+:004526C4 5E                      pop esi
+:004526C5 5B                      pop ebx
+:004526C6 C9                      leave
+:004526C7 C21C00                  ret 001C
+
+Update procedure: see bone spirit

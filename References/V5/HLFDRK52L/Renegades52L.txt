@@ -1,0 +1,441 @@
+Renegade Warriors
+
+
+These creatures look and sound like warrior characters. 
+They appear to have a very high AC and can block any (not resisted) attack. 
+Like Fallen Rogues, they are immune to Charm and Stone Curse, can evade arrows and spells, and do not avoid Fire or Lightning Walls.
+Despite being from the Animal domain, damage inflicted upon Renegade Warriors (and Fallen Rogues) is not modified for weapon type.
+
+
+New animation files added to MPQ (made with TDG program):
+
+filename frames		original	function	
+
+Rwn.CL2	 6		WHHAS 		idle
+Rwa.CL2	 16		WHHAT 		attack
+Rww.CL2	 8		WHHAW 		walk
+Rwh.CL2	 6		WHHHT 		stun
+Rws.CL2	 2		WHHBL 		block
+Rwd.CL2	 8		WHNDT 		dying
+
+These new animations are all 128 pixels wide.
+
+
+Renegade Warrior sound files, added to MPQ:
+
+Rwa1.WAV	swing				attack
+Rwa2.WAV	swing2				attack
+Rwh1.WAV	warrior68			Getting hit
+Rwh2.WAV	warrior69			Getting hit
+Rwd1.WAV	warrior71			Dying
+Rwd2.WAV	dead				Dying
+Rws1.WAV	invsword			Blocking
+Rws2.WAV	invsword			Blocking
+
+
+Providing name (000B012F/004B172F):
+
+000B012F 0000 0000 0057 6562 204C 7572 6B65 7200 .....Web Lurker.
+000B013F 0042 726F 6B65 6E73 746F 726D           .Brokenstorm
+changed into
+000B012F 5265 6E65 6761 6465 2057 6172 7269 6F72 Renegade Warrior
+000B013F 0000 0000 0000 0000 0000 0000           ............
+
+
+Providing filenames (sound = 000B23F2/004B39F2, image = 000B23DD/004B39DD):
+
+000B23DD 0000 0053 6F6D 6520 4D61 6769 6320 496D ...Some Magic Im
+000B23ED 6D75 6E69 7469 6573 0000 0053 6F6D 6520 munities...Some 
+000B23FD 4D61 6769 6320 5265 7369 7374 616E 6365 Magic Resistance
+000B240D 7300                                    s.
+changed into
+000B23DD 4D6F 6E73 7465 7273 5C52 775C 5277 2563 Monsters\Rw\Rw%c
+000B23ED 2E43 4C32 004D 6F6E 7374 6572 735C 5277 .CL2.Monsters\Rw
+000B23FD 5C52 7725 6325 692E 5741 5600 0000 0000 \Rw%c%i.WAV.....
+000B240D 0000                                    ..
+
+
+Renegade Warriors:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size    stand walk  attk1 frame   hr  death attk2 frame    playback speed
+
+ 58 Hork Spawn (red)      animal   11 Winged Fiend    20  H1-H4    23    20-  25   25   60   20- 30    -      -    I--/I--   1000     1      15    12    14     8    11    14     -     -     0   0   0   0   0   -
+    Renegade Warrior (thinv2)       2 Skeleton         4  C1-C2    34   125- 150  120  135   20- 45    0      0    RRR/RRR   6000     1       6     8    16     8     6     8     2     1     2   0   0   0   3   0
+
+000AC5F0 A400 0000 0100 0000 B020 4B00 0000 0000 ......... K.....
+000AC600 9020 4B00 0100 0000 0100 0000 7426 4B00 . K.........t&K.
+000AC610 0F00 0000 0C00 0000 0E00 0000 0B00 0000 ................
+000AC620 0E00 0000 0000 0000 0000 0000 0000 0000 ................
+000AC630 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AC640 5417 4B00 2026 1700 1400 0000 1900 0000 T.K. &..........
+000AC650 0B00 0000 0000 0000 143C 0814 1E00 0000 .........<......
+000AC660 0019 0200 0800 0800 0040 0300 E803 0000 .........@......
+changed into
+000AC5F0 8000 0000 0100 0000 DD39 4B00 0100 0000 .........9K.....
+000AC600 F239 4B00 0100 0000 0100 0000 6428 4B00 .9K...........K.
+000AC610 0600 0000 0800 0000 1000 0000 0600 0000 ................
+000AC620 0800 0000 0200 0000 0200 0000 0000 0000 ................
+000AC630 0000 0000 0000 0000 0300 0000 0000 0000 ................
+000AC640 2F17 4B00 282A 2200 7D00 0000 9600 0000 /.K...".\...b...
+000AC650 0200 0000 0003 0000 0487 0814 2D00 0100 ............2...
+000AC660 007D 0200 4700 4700 0000 0700 7017 0000 .}..G.G.....p...
+
+
+Rewriting code that lets certain monsters ignore Fire and Lightning walls, so it can also be used for Evasion and Charm checks:
+
+File offset 00043E56
+
+:00444A56 8B8064DD6900            mov eax, dword ptr [eax+0069DD64]
+:00444A5C 83386D                  cmp dword ptr [eax], 0000006D
+:00444A5F 7435                    je 00444A96
+:00444A61 83386B                  cmp dword ptr [eax], 0000006B
+:00444A64 7430                    je 00444A96
+:00444A66 83386B                  cmp dword ptr [eax], 0000006B
+:00444A69 742B                    je 00444A96
+:00444A6B 83387C                  cmp dword ptr [eax], 0000007C
+:00444A6E 7426                    je 00444A96
+:00444A70 EB20                    jmp 00444A92
+:00444A72 F68054DD690020          test byte ptr [eax+0069DD54], 20
+:00444A79 7417                    je 00444A92
+:00444A7B 807DFF00                cmp byte ptr [ebp-01], 00
+:00444A7F 7415                    je 00444A96
+:00444A81 69DBE4000000            imul ebx, 000000E4
+:00444A87 8B8364DD6900            mov eax, dword ptr [ebx+0069DD64]
+:00444A8D 83386E                  cmp dword ptr [eax], 0000006E
+:00444A90 7504                    jne 00444A96
+changed into
+:00444A56 E810000000              call 00444A6B					Check for wall crossing
+:00444A5B 85C0                    test eax, eax
+:00444A5D 7433                    je 00444A92
+:00444A5F EB35                    jmp 00444A96
+:00444A61 8B8064DD6900            mov eax, dword ptr [eax+0069DD64]		Start check for evasion
+:00444A67 8B00                    mov eax, dword ptr [eax]
+:00444A69 EB12                    jmp 00444A7D
+:00444A6B 8B8064DD6900            mov eax, dword ptr [eax+0069DD64]		Start check for wall crossing
+:00444A71 8B00                    mov eax, dword ptr [eax]
+:00444A73 83F86D                  cmp eax, 0000006D				Golem
+:00444A76 7411                    je 00444A89
+:00444A78 83F87C                  cmp eax, 0000007C				Defiler
+:00444A7B 740C                    je 00444A89
+:00444A7D 83F86B                  cmp eax, 0000006B				Fallen Rogue
+:00444A80 7407                    je 00444A89
+:00444A82 83F83A                  cmp eax, 0000003A				Renegade
+:00444A85 7402                    je 00444A89
+:00444A87 33C0                    xor eax, eax
+:00444A89 C3                      ret
+:00444A8A 909090                  3*nop
+:00444A8D 9090909090              5*nop
+
+Now 8 bytes free space from 00444A8A to 00444A92.
+
+
+Charm spell - Exclude both Renegades and Fallen Rogues:
+
+File offset 0002F863
+
+:00430463 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:00430469 80787202                cmp byte ptr [eax+72], 02
+:0043046D 7524                    jne 00430493
+:0043046F 8BC7                    mov eax, edi
+:00430471 E8DEF30000              call 0043F854
+:00430476 751B                    jne 00430493
+:00430478 80BF20DD690020          cmp byte ptr [edi+0069DD20], 20
+:0043047F 7412                    je 00430493
+:00430481 80BF20DD69001C          cmp byte ptr [edi+0069DD20], 1C		Lazarus attacktype (to check for Fallen Rogue)
+:00430488 7409                    je 00430493
+:0043048A 83BF8CDC69000E          cmp dword ptr [edi+0069DC8C], 0000000E
+:00430491 7514                    jne 004304A7
+changed into
+:00430463 83F80E                  cmp eax, 0000000E
+:00430466 742B                    je 00430493
+:00430468 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:0043046E 80787202                cmp byte ptr [eax+72], 02
+:00430472 751F                    jne 00430493
+:00430474 80BF20DD690020          cmp byte ptr [edi+0069DD20], 20
+:0043047B 7416                    je 00430493
+:0043047D 8BC7                    mov eax, edi
+:0043047F E8D0F30000              call 0043F854
+:00430484 750D                    jne 00430493
+:00430486 8BC7                    mov eax, edi
+:00430488 E8D4450100              call 00444A61					Check for Renegade or Fallen Rogue
+:0043048D 85C0                    test eax, eax
+:0043048F 7416                    je 004304A7
+:00430491 9090                    2*nop
+
+
+Player Missile vs. Monster - Evasion for both Renegades and Fallen Rogues, now at 54% Auto Miss (was 50%):
+
+File offset 0003C984
+
+:0043D584 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043D58A 83386B                  cmp dword ptr [eax], 0000006B			Fallen Rogue
+:0043D58D 7508                    jne 0043D597
+:0043D58F 83FF32                  cmp edi, 00000032
+:0043D592 7E03                    jle 0043D597
+:0043D594 6A32                    push 00000032
+:0043D596 5F                      pop edi
+changed into
+:0043D584 8BC6                    mov eax, esi
+:0043D586 E8D6740000              call 00444A61					Check for Renegade or Fallen Rogue
+:0043D58B 85C0                    test eax, eax
+:0043D58D 7408                    je 0043D597
+:0043D58F 83FF2E                  cmp edi, 0000002E
+:0043D592 7E03                    jle 0043D597
+:0043D594 6A2E                    push 0000002E
+:0043D596 5F                      pop edi
+
+Player Missile vs. Monster - Blocking for Renegades:
+
+File offset 0002E824
+
+:0042F424 0F84A1010000            je 0042F5CB					exit if miss
+:0042F42A 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0042F42D 8D55EC                  lea edx, dword ptr [ebp-14]
+:0042F430 E8805C0100              call 004450B5
+:0042F435 85C0                    test eax, eax
+:0042F437 7408                    je 0042F441
+:0042F439 8B45EC                  mov eax, dword ptr [ebp-14]
+:0042F43C E98C010000              jmp 0042F5CD					exit if immune
+:0042F441 397DF0                  cmp dword ptr [ebp-10], edi
+:0042F444 0F8D81010000            jnl 0042F5CB					exit if miss
+:0042F44A 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0042F44E 7513                    jne 0042F463					jmp if not Bone Spirit
+:0042F450 8B861CDD6900            mov eax, dword ptr [esi+0069DD1C]
+:0042F456 6A08                    push 00000008
+:0042F458 99                      cdq
+:0042F459 59                      pop ecx
+:0042F45A F7F9                    idiv ecx
+:0042F45C 8BF8                    mov edi, eax
+:0042F45E C1FF06                  sar edi, 06
+changed into
+:0042F424 741C                    je 0042F442
+:0042F426 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0042F429 8D55EC                  lea edx, dword ptr [ebp-14]
+:0042F42C E8845C0100              call 004450B5
+:0042F431 85C0                    test eax, eax
+:0042F433 7408                    je 0042F43D
+:0042F435 8B45EC                  mov eax, dword ptr [ebp-14]
+:0042F438 E990010000              jmp 0042F5CD					exit if immune
+:0042F43D 397DF0                  cmp dword ptr [ebp-10], edi
+:0042F440 7C05                    jl 0042F447
+:0042F442 E984010000              jmp 0042F5CB					exit if miss
+:0042F447 837DF400                cmp dword ptr [ebp-0C], 00000000
+:0043D44B 0F840D620200            je 0045565E					check for blocking if not resisted
+:0042F451 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0042F455 750C                    jne 0042F463					jmp if not Bone Spirit
+:0042F457 8BBE1CDD6900            mov edi, dword ptr [esi+0069DD1C]
+:0042F45D 90                      nop
+:0042F45E C1FF09                  sar edi, 09
+
+
+
+Monster Melee vs. Monster - Blocking for Renegades:
+
+File offset 0003CF6F
+
+:0043DB6F 3B5D08                  cmp ebx, dword ptr [ebp+08]
+:0043DB72 7D63                    jge 0043DBD7					exit if miss
+changed into
+:0043DB6F E93860FEFF              jmp 00423BAC
+:0043DB74 
+
+
+Player Melee vs. Monster - Blocking for Renegades:
+
+File offset 0005ADBD
+
+:0045B9BD 395DE8                  cmp dword ptr [ebp-18], ebx
+:0045B9C0 0F8D98040000            jnl 0045BE5E
+changed into
+:0045B9BD 8B45E8                  mov eax, dword ptr [ebp-18]
+:0045B9C0 90                      nop
+:0045B9C1 E97C9CFFFF              jmp 00455642
+:0045B9C6 
+
+
+Player Melee vs. Monster - no modified damage for Renegades and Fallen Rogues as Animal class:
+
+File offset 0005AEC7
+
+:0045BAC7 8B8968DD6900            mov ecx, dword ptr [ecx+0069DD68]
+changed into
+:0045BAC7 E92CE5FCFF              jmp 00429FF8
+:0045BACC 90                      nop
+
+
+Using free space from new hotkeys:
+
+File offset 000293F0
+
+:00429FF0 83EB40                  sub ebx, 00000040
+:00429FF3 0F84C00BFEFF            je 0040ABB9
+:00429FF9 E8AD0B0500              call 0047ABAB
+:00429FFE E9AF0BFEFF              jmp 0040ABB2
+* Referenced by a (U)nconditional or (C)onditional Jump at Address::00429F85(C)
+:0042A003 6A2F                    push 0000002F
+:0042A005 5F                      pop edi
+:0042A006 E9F0FCFFFF              jmp 00429CFB
+:0042A00B 0F84CF0CFEFF            je 0040ACE0
+:0042A011 53                      push ebx
+:0042A012 E8670B0500              call 0047AB7E
+:0042A017 E9150CFEFF              jmp 0040AC31
+:0042A01C 
+changed into
+:00429FF0 6A2F                    push 0000002F
+:00429FF2 5F                      pop edi
+:00429FF3 E903FDFFFF              jmp 00429CFB
+:00429FF8 50                      push eax
+:00429FF9 8BC1                    mov eax, ecx
+:00429FFB E861AA0100              call 00444A61					Check for Renegade or Fallen Rogue
+:0042A000 85C0                    test eax, eax
+:0042A002 58                      pop eax
+:0042A003 0F851A1B0300            jne 0045BB23
+:0042A009 8B8968DD6900            mov ecx, dword ptr [ecx+0069DD68]
+:0042A00F E9B91A0300              jmp 0045BACD
+:0042A014 9090909090909090        8*nop
+:0042A01C 
+
+Now 8 bytes free space from 0042A014 to 0042A01C.
+
+Correcting jump:
+
+File offset 00029385
+
+:00429F85 747C                    je 0042A003
+changed into
+:00429F85 7469                    je 00429FF0
+:00429F87 
+
+
+Using free space from Rage52H:
+
+File offset 00022FAC
+
+:00423BAC 90                      nop
+:00423BAD 2404                    and al, 04
+:00423BAF 3C04                    cmp al, 04
+:00423BB1 7518                    jne 00423BCB
+:00423BB3 68FFFDFFFF              push FFFFFDFF
+:00423BB8 58                      pop eax
+:00423BB9 2145CC                  and dword ptr [ebp-34], eax
+:00423BBC EB0D                    jmp 00423BCB
+:00423BBE 90                      nop
+:00423BBF 90                      nop
+:00423BC0 D1F8                    sar eax, 1
+:00423BC2 F7D9                    neg ecx
+:00423BC4 2BC8                    sub ecx, eax
+:00423BC6 014DE8                  add dword ptr [ebp-18], ecx
+:00423BC9 33D2                    xor edx, edx
+changed into
+:00423BAC 3B5D08                  cmp ebx, dword ptr [ebp+08]
+:00423BAF 7D14                    jge 00423BC5					exit if miss
+:00423BB1 8BC3                    mov eax, ebx
+:00423BB3 8BCE                    mov ecx, esi
+:00423BB5 8B55FC                  mov edx, dword ptr [ebp-04]
+:00423BB8 E86A5E0100              call 00439A27					Check for Renegade High AC and Block
+:00423BBD 85C0                    test eax, eax
+:00423BBF 0F84AF9F0100            je 0043DB74					continue for damage
+:00423BC5 E90DA00100              jmp 0043DBD7					exit to miss
+:00423BCA 90                      nop
+
+
+Using free space from new hotkeys:
+
+File offset 00054A42
+
+:00455642 6A64                    push 00000064
+:00455644 58                      pop eax
+:00455645 3905F4594B00            cmp dword ptr [004B59F4], eax
+:0045564B 7D2D                    jge 0045567A
+:0045564D 8305F4594B0005          add dword ptr [004B59F4], 00000005
+:00455654 3905F4594B00            cmp dword ptr [004B59F4], eax
+:0045565A 7E05                    jle 00455661
+:0045565C A3F4594B00              mov dword ptr [004B59F4], eax
+:00455661 6800010000              push 00000100
+:00455666 BA50216E00              mov edx, 006E2150
+:0045566B B950256E00              mov ecx, 006E2550
+:00455670 E841000000              call 004556B6
+:00455675 E901000000              jmp 0045567B
+:0045567A C3                      ret
+changed into
+:00455642 3BC3                    cmp eax, ebx
+:00455644 7D13                    jge 00455659					exit if miss
+:00455646 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00455649 8B55F4                  mov edx, dword ptr [ebp-0C]
+:0045564C E8D643FEFF              call 00439A27					Check for Renegade High AC and Block
+:00455651 85C0                    test eax, eax
+:00455653 0F846D630000            je 0045B9C6					continue for damage
+:00455659 E900680000              jmp 0045BE5E					exit to miss
+:0045565E 8BCE                    mov ecx, esi
+:00455660 8B55F8                  mov edx, dword ptr [ebp-08]
+:00455663 8B45F0                  mov eax, dword ptr [ebp-10]
+:00455666 E8BC43FEFF              call 00439A27					Check for Renegade High AC and Block
+:0045566B 85C0                    test eax, eax
+:0045566D 0F84DE9DFDFF            je 0042F451					continue for damage
+:00455673 E9539FFDFF              jmp 0042F5CB					exit to miss
+:00455678 909090                  3*nop
+
+
+Check for Renegade High AC and Block, using remaining space from Rage after Trapview52H:
+
+File offset 00038E27
+
+:00439A27 895DF0                  mov dword ptr [ebp-10], ebx
+:00439A2A 0F9FC0                  setg al
+:00439A2D D1E0                    shl eax, 1
+:00439A2F 5A                      pop edx
+:00439A30 740A                    je 00439A3C
+:00439A32 0FBE9C31B8010000        movsx ebx, byte ptr [ecx+esi+000001B8]
+:00439A3A EB02                    jmp 00439A3E
+:00439A3C 8BDA                    mov ebx, edx
+:00439A3E 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00439A44 8D0480                  lea eax, dword ptr [eax+4*eax]
+:00439A47 8D8443F5000000          lea eax, dword ptr [ebx+2*eax+000000F5]
+:00439A4E 8997C87A6900            mov dword ptr [edi+00697AC8], edx
+:00439A54 8BBC319C010000          mov edi, dword ptr [ecx+esi+0000019C]
+:00439A5B 2BBC3198010000          sub edi, dword ptr [ecx+esi+00000198]
+:00439A62 8D0431                  lea eax, dword ptr [ecx+esi]
+:00439A65 90                      nop
+:00439A66 90                      nop
+changed into
+:00439A27 83F808                  cmp eax, 00000008
+:00439A2A 7C2D                    jl 00439A59					8% chance for normal hit
+:00439A2C 50                      push eax
+:00439A2D 8B8164DD6900            mov eax, dword ptr [ecx+0069DD64]
+:00439A33 83383A                  cmp dword ptr [eax], 0000003A
+:00439A36 58                      pop eax
+:00439A37 7520                    jne 00439A59					normal hit if not Renegade Warrior
+:00439A39 83F840                  cmp eax, 00000040
+:00439A3C 7F1D                    jg 00439A5B					36% Auto Miss
+:00439A3E 83B9ECDC690002          cmp dword ptr [ecx+0069DCEC], 00000002
+:00439A45 7E12                    jle 00439A59					normal hit if in last 2 frames of any animation
+:00439A47 8B818CDC6900            mov eax, dword ptr [ecx+0069DC8C]
+:00439A4D 85C0                    test eax, eax					
+:00439A4F 740B                    je 00439A5C					start Block if Idle 
+:00439A51 3C04                    cmp al, 04					
+:00439A53 7407                    je 00439A5C					start Block if Attacking
+:00439A55 3C0D                    cmp al, 0D					
+:00439A57 7403                    je 00439A5C					start Block if Delaying
+:00439A59 33C0                    xor eax, eax
+:00439A5B C3                      ret
+:00439A5C E9D4400000              jmp 0043DB35					Monster Block
+:00439A61 90909090                4*nop
+
+
+Monster Block:
+
+File offset 0003CF35
+
+:0043DB35 83381B                  cmp dword ptr [eax], 0000001B
+:0043DB38 750D                    jne 0043DB47
+:0043DB3A 80BE90DC690002          cmp byte ptr [esi+0069DC90], 02
+:0043DB41 0F8490000000            je 0043DBD7
+changed into
+:0043DB35 52                      push edx
+:0043DB36 8B91D0DC6900            mov edx, dword ptr [ecx+0069DCD0]		facing direction
+:0043DB3C 59                      pop ecx					monster ID
+:0043DB3D E817350000              call 00441059					start 0B state (Special animation)
+:0043DB42 6A01                    push 00000001					
+:0043DB44 58                      pop eax
+:0043DB45 C3                      ret
+:0043DB46 90                      nop

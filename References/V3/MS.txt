@@ -1,0 +1,260 @@
+Mana shield - Update effect
+
+Nu:
+
+:00435CD9 C7054CD0690001000000    mov dword ptr [0069D04C], 00000001
+:00435CE3 C3                      ret
+
+Voorstel: 
+
+Constantly lose mana (ong. 0.5 % per seconde, met een nauwkeurigheid van 1/64 mana-punt), waarbij er vanuit gegaan wordt dat character-updating automatisch erna plaatsvindt. Uit andere update-spell effects blijkt dat caster.id als ECX beschikbaar is. Testen is noodzakelijk.
+Gezien een crash bevat ECX niet altijd het caster.id
+
+:00435CD9 E8A8C30100              call 00452086         UPDATE_MANASHIELD
+:00435CDE C3                      ret
+:00435CDF 9090909090              5xnop, tm. :00435CE3
+
+UPDATE_MANASHIELD 
+
+Nieuwe versie, met min. 20/64 mana drain per seconde, en bijwerken van mana globe (hoop ik)
+
+* Referenced by a CALL at Address:
+|:00435CD9   
+|
+:00452086 50                      push eax
+:00452087 51                      push ecx
+:00452088 57                      push edi
+:00452089 6A01                    push 00000001
+:0045208B 58                      pop eax
+:0045208C A34CD06900              mov dword ptr [0069D04C], eax
+:00452091 8B3D68766900            mov edi, dword ptr [00697668]
+:00452097 69FFB0000000            imul edi, 000000B0
+:0045209D 8B8FCC7A6900            mov ecx, dword ptr [edi+00697ACC]
+:004520A3 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004520A9 7538                    jne 004520E3
+:004520AB 83BF587A69000D          cmp dword ptr [edi+00697A58], 0000000D
+:004520B2 752F                    jne 004520E3
+:004520B4 A30C114D00              mov dword ptr [004D110C], eax
+:004520B9 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:004520BF 69C9C8550000            imul ecx, 000055C8
+:004520C5 8B8439AC010000          mov eax, dword ptr [ecx+edi+000001AC]
+:004520CC 83F800                  cmp eax, 00000000
+:004520CF 7C12                    jl 004520E3
+:004520D1 C1E80C                  shr eax, 0C
+:004520D4 40                      inc eax
+:004520D5 298439AC010000          sub dword ptr [ecx+edi+000001AC], eax
+:004520DC 298439A4010000          sub dword ptr [ecx+edi+000001A4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004520A9(C), :004520B2(C), :004520CF(C)
+|
+:004520E3 5F                      pop edi
+:004520E4 59                      pop ecx
+:004520E5 58                      pop eax
+:004520E6 C3                      ret
+
+
+Version with mana drain fix for multiple players
+
+* Referenced by a CALL at Address:
+|:00435CD9   
+|
+:0045208E 50                      push eax
+:0045208F 51                      push ecx
+:00452090 57                      push edi
+:00452091 52                      push edx
+:00452092 53                      push ebx
+:00452093 6A01                    push 00000001
+:00452095 58                      pop eax
+:00452096 A34CD06900              mov dword ptr [0069D04C], eax			MS-globe update flag
+:0045209B BA68766900              mov edx, 00697668
+:004520A0 33DB                    xor ebx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004520FD(C)
+|
+:004520A2 8B3A                    mov edi, dword ptr [edx]
+:004520A4 69FFB0000000            imul edi, 000000B0
+:004520AA 83BF587A69000D          cmp dword ptr [edi+00697A58], 0000000D	Effect = MS ?
+:004520B1 7542                    jne 004520F5
+:004520B3 8B8FCC7A6900            mov ecx, dword ptr [edi+00697ACC]		Current char #
+:004520B9 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]			Local Char #
+:004520BF 7534                    jne 004520F5
+:004520C1 6A01                    push 00000001
+:004520C3 58                      pop eax
+:004520C4 A30C114D00              mov dword ptr [004D110C], eax			mana-globe update flag
+:004520C9 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:004520CF 69C9C8550000            imul ecx, 000055C8
+:004520D5 8B8439AC010000          mov eax, dword ptr [ecx+edi+000001AC]		Current mod mana
+:004520DC 83F800                  cmp eax, 00000000
+:004520DF 7C14                    jl 004520F5
+:004520E1 C1E80D                  shr eax, 0D
+:004520E4 40                      inc eax					(drain = 1/64 + mana/4096 
+:004520E5 298439AC010000          sub dword ptr [ecx+edi+000001AC], eax		Current mod mana
+:004520EC 298439A4010000          sub dword ptr [ecx+edi+000001A4], eax		Base mod mana
+:004520F3 EB0C                    jmp 00452101
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004520B1(C), :004520BF(C), :004520DF(C)
+|
+:004520F5 43                      inc ebx
+:004520F6 83C204                  add edx, 00000004
+:004520F9 3B1D48D06900            cmp ebx, dword ptr [0069D048]			# Active SpellEffects?
+:004520FF 7CA1                    jl 004520A2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004520F3(U)
+|
+:00452101 5B                      pop ebx
+:00452102 5A                      pop edx
+:00452103 5F                      pop edi
+:00452104 59                      pop ecx
+:00452105 58                      pop eax
+:00452106 C3                      ret
+
+:00452107 90                      nop
+
+
+
+Mana Shield - Getting hit
+
+Nu:
+
+:00437B49 8B86887A6900            mov eax, dword ptr [esi+00697A88]		Spell lvl
+:00437B4F 3BC2                    cmp eax, edx
+:00437B51 8955F8                  mov dword ptr [ebp-08], edx
+:00437B54 8955FC                  mov dword ptr [ebp-04], edx
+:00437B57 7E12                    jle 00437B6B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B69(C)
+|
+:00437B59 837DFC07                cmp dword ptr [ebp-04], 00000007
+:00437B5D 7D0C                    jge 00437B6B
+:00437B5F 8345F802                add dword ptr [ebp-08], 00000002
+:00437B63 FF45FC                  inc [ebp-04]
+:00437B66 3945FC                  cmp dword ptr [ebp-04], eax
+:00437B69 7CEE                    jl 00437B59
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00437B57(C), :00437B5D(C)
+|
+:00437B6B 837DF800                cmp dword ptr [ebp-08], 00000000
+:00437B6F 7E08                    jle 00437B79
+:00437B71 8BC3                    mov eax, ebx
+:00437B73 99                      cdq
+:00437B74 F77DF8                  idiv [ebp-08]
+:00437B77 03D8                    add ebx, eax					Mod damage
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B6F(C)
+|
+:00437B79 85DB                    test ebx, ebx
+:00437B7B 7D02                    jge 00437B7F
+:00437B7D 33DB                    xor ebx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437B7B(C)
+|
+:00437B7F 6A01                    push 00000001
+:00437B81 58                      pop eax
+:00437B82 A30C114D00              mov dword ptr [004D110C], eax
+:00437B87 A3400E4D00              mov dword ptr [004D0E40], eax
+:00437B8C 8B91AC010000            mov edx, dword ptr [ecx+000001AC]		mod mana
+:00437B92 3BD3                    cmp edx, ebx
+:00437B94 8B96E87A6900            mov edx, dword ptr [esi+00697AE8]		prev. mod life
+:00437B9A 899198010000            mov dword ptr [ecx+00000198], edx		restore mod life
+:00437BA0 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00437BA6 8B8EEC7A6900            mov ecx, dword ptr [esi+00697AEC]
+:00437BAC 898C3A90010000          mov dword ptr [edx+edi+00000190], ecx		restore base life
+:00437BB3 7E2D                    jle 00437BE2
+:00437BB5 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437BBB 299C39AC010000          sub dword ptr [ecx+edi+000001AC], ebx		Sub mod mana
+:00437BC2 8D8C39AC010000          lea ecx, dword ptr [ecx+edi+000001AC]
+:00437BC9 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437BCF 299C39A4010000          sub dword ptr [ecx+edi+000001A4], ebx		Sub base mana
+:00437BD6 8D8C39A4010000          lea ecx, dword ptr [ecx+edi+000001A4]
+:00437BDD E999000000              jmp 00437C7B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437BB3(C)
+|
+:00437BE2 90                      nop
+:00437BE3 90                      nop
+:00437BE4 90                      nop
+:00437BE5 90                      nop
+:00437BE6 90                      nop
+:00437BE7 90                      nop
+:00437BE8 90                      nop
+:00437BE9 90                      nop
+:00437BEA 90                      nop
+:00437BEB 90                      nop
+:00437BEC 90                      nop
+:00437BED 90                      nop
+:00437BEE 90                      nop
+:00437BEF 90                      nop
+:00437BF0 90                      nop
+:00437BF1 90                      nop
+:00437BF2 90                      nop
+:00437BF3 90                      nop
+:00437BF4 90                      nop
+:00437BF5 90                      nop
+:00437BF6 90                      nop
+:00437BF7 90                      nop
+:00437BF8 90                      nop
+:00437BF9 90                      nop
+:00437BFA 90                      nop
+:00437BFB 90                      nop
+:00437BFC 90                      nop
+:00437BFD 90                      nop
+:00437BFE 90                      nop
+:00437BFF 90                      nop
+:00437C00 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437C06 33D2                    xor edx, edx
+:00437C08 899439AC010000          mov dword ptr [ecx+edi+000001AC], edx		Mod mana := 0
+
+Voorstel:
+
+Langer nut van hogere spell-levels
+
+:00437B59 837DFC0F                cmp dword ptr [ebp-04], 0000000F
+
+Voorstel:
+
+Get stunned if damage>clvl
+
+nog uitzoeken
+
+
+Loop voor checken van hebben MS
+
+:0042457D 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00424583 897D94                  mov dword ptr [ebp-6C], edi			edi:= 0
+:00424586 8B3D48D06900            mov edi, dword ptr [0069D048]			# players ?
+:0042458C 85FF                    test edi, edi
+:0042458E 7E5C                    jle 004245EC
+:00424590 C7459068766900          mov [ebp-70], 00697668			base char pntr
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004245C5(C)
+|
+:00424597 8B4590                  mov eax, dword ptr [ebp-70]
+:0042459A 8B00                    mov eax, dword ptr [eax]
+:0042459C 8BD0                    mov edx, eax
+:0042459E 69D2B0000000            imul edx, 000000B0
+:004245A4 83BA587A69000D          cmp dword ptr [edx+00697A58], 0000000D	Mana shield
+:004245AB 750E                    jne 004245BB
+:004245AD 8B5DE0                  mov ebx, dword ptr [ebp-20]			local char# ?
+:004245B0 399ACC7A6900            cmp dword ptr [edx+00697ACC], ebx		Current char#
+:004245B6 7411                    je 004245C9
+:004245B8 6A01                    push 00000001
+:004245BA 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004245AB(C)
+|
+:004245BB FF4594                  inc [ebp-6C]
+:004245BE 83459004                add dword ptr [ebp-70], 00000004
+:004245C2 397D94                  cmp dword ptr [ebp-6C], edi
+:004245C5 7CD0                    jl 00424597
+:004245C7 EB23                    jmp 004245EC

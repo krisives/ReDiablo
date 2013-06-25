@@ -1,0 +1,51 @@
+Show Mana and Damage for Staves also
+
+Nu valt de damage display in Spellbook weg als Staff wordt gedragen, ook voor Apo en Doomserpents. 
+
+
+2 mogelijkheden, eerst de simpelste:
+
+
+()Always show normal spell statistics
+
+:00406D8E 0F84D6000000            je 00406E6A
+wordt
+:00406D8E 0F8400000000            je 00406D94
+
+Aangezien dit mooi werkt is het hiernakomende niet meer nodig.
+
+
+(*)Show Staff and charges and normal spell statistics:
+
+Deze pas uitvoeren als vorige niet voldoet.
+
+:00406D8C 3C03                    cmp al, 03
+:00406D8E 0F84D6000000            je 00406E6A
+wordt
+:00406D8C 0FBEC8                  movsx ecx, al
+:00406D8F 6A03                    push 00000003
+:00406D91 51                      push ecx
+:00406D92 9090                    2*nop
+
+:00406E24 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00406E29 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+wordt
+:00406E24 59                      pop ecx
+:00406E25 58                      pop eax
+:00406E26 E8C18B0200              call 0042F9EC
+:00406E2B 85C9                    test ecx, ecx
+:00406E2D 753B                    jne 00406E6A
+
+Nieuwe routine over laatste restje van 'auw' met Resist, na de MaxAttributeFix en wat reserve-ruimte:
+
+:0042F9EC 17*90                   17*nop
+:0042F9FD EB79                    jmp 0042FA78
+wordt
+:0042F9EC 3BC8                    cmp ecx, eax
+:0042F9EE 7501                    jne 0042F9F1
+:0042F9F0 C3                      ret
+:0042F9F1 33C9                    xor ecx, ecx
+:0042F9F3 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042F9F8 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0042F9FE C3                      ret
+

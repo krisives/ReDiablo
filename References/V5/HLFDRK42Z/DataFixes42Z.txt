@@ -1,0 +1,1005 @@
+Monsters:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 
+
+  0 Zombie                undead    0 Zombie           0   1- 2     1    15-  22    5   15    3-  6  
+                                                                         20-  24
+000AA948 0F00 0000 1600 0000                     ........
+changed into
+000AA948 1400 0000 1800 0000                     ........
+
+
+  1 Ghoul                 undead    0 Zombie           1   2- 3     3    23-  30   10   25    5- 10  
+                                                                         30-  36
+000AA9C8 1700 0000 1E00 0000                     ........
+changed into
+000AA9C8 1E00 0000 2400 0000                     ....$...
+
+
+  2 Rotting Carcass       undead    0 Zombie           2   2- 4     4    30-  40   15   30    8- 15 
+                                                                         42-  48
+000AAA48 1E00 0000 2800 0000                     ....(...
+changed into
+000AAA48 2A00 0000 3000 0000                     *...0...
+
+
+116 Vile Crawler          animal    2 Skeleton         2   3- 6    10    70- 100   10   50   10- 18 
+                                                                         60-  90             12- 16
+000AE348 4600 0000 6400 0000                     F...d...
+changed into
+000AE348 3C00 0000 5A00 0000                     <...Z...
+
+000AE35B 0A12                                    ..
+changed into
+000AE35B 0C10                                    ..
+
+
+ 56 Hork Spawn            animal   11 Winged Fiend     3  H1-H4    23    25-  30   25   60   10- 25
+                                                                                             20- 25
+000AC55B 0A19                                    ..
+changed into
+000AC55B 1419                                    ..
+
+
+58 Hork Spawn            animal   11 Winged Fiend     1  H1-H4    23    20-  25   25   60   10- 25
+                                                                                            15- 25
+000AC65B 0A19                                    ..
+changed into
+000AC65B 0F19                                    ..
+
+                                                                                                     walk
+129 Champion              undead   13 Butcher          5  C3-C4    32   275- 275  125  135   40- 50   7  
+                                                                                                      8
+000AE994 0700 0000                               ....
+changed into
+000AE994 0800 0000                               ....
+
+
+136 Fallen Angel          demon    26 Balrog           5  C2-C4    32   270- 300  100  135   35- 45   6
+                                                                                                      7
+000AED14 0600 0000                               ....
+changed into
+000AED14 0700 0000                               ....
+
+
+ 75 Storm Master          demon    16 Lightning Demon  4  14-16    25   130- 160   55  104   16- 30  RRI/RRI
+                                                                                                     -II/RII
+000ACEE4 2300 2300                               #.#.
+changed into
+000ACEE4 3000 3100                               0.1.
+
+ 76 Thunder Lord          demon    16 Lightning Demon  5  C1-C3    28   190- 210   75  127   25- 40  RRI/RRI
+                                                                                                     RII/RII
+000ACF64 2300 2300                               #.#.
+changed into
+000ACF64 3100 3100                               1.1.
+
+ 77 Storm Rider           demon    16 Lightning Demon  1  10-12    20    90- 120   30   80    8- 18  --I/--I
+                                                                                                     -RI/-II
+000ACFE4 2000 2000                                . .
+changed into
+000ACFE4 2200 3000                               ".0.
+
+ 78 Storm Lord            demon    16 Lightning Demon  2  11-13    22   105- 135   35   85   12- 24  -RI/-RI
+                                                                                                     -RI/-II
+000AD064 2200 2200                               ".".
+changed into
+000AD064 2200 3000                               ".0.
+
+ 79 Maelstorm             demon    16 Lightning Demon  3  12-14    24   120- 150   40   90   12- 28  -RI/-RI
+                                                                                                     -II/RII
+000AD0E4 2200 2200                               ".".
+changed into
+000AD0E4 3000 3100                               0.1.
+
+ 80 Hellstorm             demon    16 Lightning Demon  4  C1-C2    26   150- 180   65  122   20- 30  RRI/RRI
+                                                                                                     RII/RII
+000AD164 2300 2300                               #.#.
+changed into
+000AD164 3100 3100                               1.1.
+
+
+131 Hellbat               animal   32 Firebat          2  13-14    22   100- 140   40  110    8- 21 
+                                                          13-13
+000AEAC4 181A                                    ..
+changed into
+000AEAC4 1818                                    ..
+
+
+  4 Wizard                demon    28 Lazarus          3  C1-C3    31   150- 150   60  120   17- 30 
+                                                                        120- 200
+000AAB48 9600 0000 9600 0000                     ........
+changed into
+000AAB48 7800 0000 C800 0000                     x.......
+
+ 12 Counselor             demon    25 Mage             3  13-14    25    70-  70    0   90    8- 20 
+                                                                         60-  90
+000AAF48 4600 0000 4600 0000                     F...F...
+changed into
+000AAF48 3C00 0000 5A00 0000                     <...Z...
+
+ 29 Dark Mage             demon    28 Lazarus          3  C2-C4    32   165- 165  120  130   20- 35 
+                                                                        140- 220
+000AB7C8 A500 0000 A500 0000                     ........
+changed into
+000AB7C8 8C00 0000 DC00 0000                     ........
+
+106 Magistrate            demon    25 Mage             3  14-15    27    85-  85    0  100   10- 22 
+                                                                         70- 120
+000ADE48 5500 0000 5500 0000                     U...U...
+changed into
+000ADE48 4600 0000 7800 0000                     F...x...
+
+108 Advocate              demon    28 Lazarus          3  16-16    30   145- 145  100  120   15- 25 
+                                                                        120- 180
+000ADF48 9100 0000 9100 0000                     ........
+changed into
+000ADF48 7800 0000 B400 0000                     x.......
+
+
+ 20 Horror                undead    7 Goat Archer      1   4- 6     9    15-  45   15   35    2-  9 
+                                   35 Lich                          8    15-  35              2-  5  
+
+000AB346 0900 0F00 0000 2D00 0000 0700 0000 0001 ......#...#.....
+000AB356 0000 0123 0A02 09                       ...#...
+changed into
+000AB346 0800 0F00 0000 2300 0000 2300 0000 0001 ......#...#.....
+000AB356 0000 0123 0A02 05                       ...#...
+
+ 21 Corpse Bow            undead    7 Goat Archer      0   2- 5     5     8-  16    0   25    1-  4 
+                                                           2- 4
+000AB3C4 0208                                    ..
+changed into
+000AB3C4 0206                                    ..
+
+Relocated Shadowdrinker:
+
+pos name                type          attacktype        sub  pack  dlvl      HP   damage  MFL 
+ 40 Shadowdrinker       Horror Capt   15 Hidden          2    3Y     6      300   20- 30  RII
+                                                                     5            18- 26
+000AF78C 0600                                    ..
+changed into
+000AF78C 0500                                    ..
+
+000AF792 141E                                    ..
+changed into
+000AF792 121A                                    ..
+
+
+Shadowcrow is now a Dark One boss on Church 4:
+
+ 35 Shadowcrow               Brave One             15 Hidden           2   3Y     3       6        8   150   14- 18  IRR
+                             Dark One                                             4                    180
+
+000AF6E0 7100 0000 5C19 4B00 841B 4B00 0300 9600 q...\.K...K.....
+000AF6F0 0F02 0E12 0E00 0300 0000 0000 0000 0000 ................
+changed into
+000AF6E0 0500 0000                               ....
+000AF6EC 0400 B400                               ....
+
+Brave Ones always appear:
+
+000AE174 1F02 0000                               ....
+changed into
+000AE174 0100 0000                               ....
+
+Scissorclaw the Chimera is now a Brave One leading the Plague Eaters on Church 3:
+
+pos name                type          attacktype        sub  pack  dlvl      HP   damage  MFL 
+ 90 Scissorclaw         Chimera       6 Goat Man         5   3Y    H3      1400   20- 40  IRI
+    Nightcrow           Plague Eater  8 Fallen One       3   1      3       150   11- 14  IRR
+
+000AFDC0 7B00 0000 202B 4B00 B41A 4B00 1300 7805 {... +K...K...x.
+000AFDD0 0605 1428 2A00 0300 0000 0000 0000 0000 ...(*...........
+changed into
+000AFDC0 1100 0000 202B 4B00 841B 4B00 0300 9600 .... +K...K.....
+000AFDD0 0803 0B0E 0E00 0100 7100 0000 0000 0000 ........q.......
+
+000B1520 5363 6973 736F 7263 6C61 7700           Scissorclaw.
+changed into
+000B1520 4E69 6768 7463 726F 7700 0000           Nightcrow...
+
+
+New name for Shadows:
+
+000B0A0D 0000 0053 6861 646F 7700 0000 0000 00   ...Shadow......
+changed into
+000B0A0D 426C 6163 6B20 5368 6164 6F77 0000 00   Black Shadow...
+
+000AE4C0 1020 4B00                               . K.
+changed into
+000AE4C0 0D20 4B00                               . K.
+
+
+New colour for Dark Servants:
+
+000ACC88 0100 0000 2035 4B00                     .... 5K.
+changed into
+000ACC88 0100 0000 9031 4B00                     .....1K.
+
+
+Better attacktype for Dark Servant boss:
+
+000AF6D0 0003                                    ..
+changed into
+000AF6D0 0204                                    ..
+
+
+Adjusted colours and resistances for winged skeletons:
+
+ 59 Skull Wing            undead   39 Unknown          3  C1-C2    29   200- 240  100  122   35- 40  IRI/IRI
+                                                                                                     RRI/RRI
+000AC6E4 6A00 6A00                               j.j.
+changed into
+000AC6E4 6300 6300                               c.c.
+
+000AC688 0000 0000 3829 4B00                     ....8)K.
+changed into
+000AC688 0100 0000 C833 4B00                     .....3K.
+
+ 96 Bone Lord             undead   39 Unknown          3  16-16    31   250- 280  100  135   40- 50  IRI/IRI
+                                                                                                     RRI/RRI
+000AD964 6A00 6A00                               j.j.
+changed into
+000AD964 6300 6300                               c.c.
+
+000AD908 0100 0000 1031 4B00                     .....1K.
+changed into
+000AD908 0000 0000 0000 0000                     ........
+
+Lionskull the Bent:
+
+000AFB88 CC19 4B00                               ..K.
+changed into
+000AFB88 D41A 4B00                               ..K.
+
+
+Relocated Death Clan to Hell now that Fallen Rogues appear in Abyss:
+
+pos name                  type        attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 MFL/MFL
+ 86 Death Clan            demon       35 Lich            2  C2-C3    26   140- 180   80   95   10- 20  RIR/IIR
+    Hell Clan                         33 Torchant        3  14-14         120- 140   60   90    9- 18  RI-/IIR
+
+000AD3F0 8000 0000 BC02 0000 B42D 4B00 0000 0000 .........-K.....
+000AD400 942D 4B00 0000 0000 0100 0000 CC29 4B00 .-K..........)K.
+000AD410 0C00 0000 0800 0000 0E00 0000 0600 0000 ................
+000AD420 1400 0000 0000 0000 0300 0000 0000 0000 ................
+000AD430 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AD440 2051 4900 2A2C 1A00 8C00 0000 B400 0000  QI.*,..........
+000AD450 2300 0000 0003 0000 025F 0B0A 140F 0000 #........_......
+000AD460 0050 0100 1500 1C00 0000 0300 AC0D 0000 .P..............
+changed into
+000AD408 0000 0000 0000 0000                     ........
+000AD444 1A1A                                    ..
+000AD448 7800 0000 8C00 0000                     x.......
+000AD450 21                                      !
+000AD458 03                                      .
+000AD459 5A                                      Z
+000AD45B 0912                                    ..
+000AD461 3C                                      <
+000AD464 1100 1C00                               ....
+
+00093B20 4465 6174 6820 436C 616E 00             Death Clan.
+changed into
+00093B20 4865 6C6C 2043 6C61 6E00 00             Hell Clan..
+
+
+More fitting colours for Night Clan goats:
+
+ 42 Night Clan   goatbow_grey -> rhino_blue
+
+000ABE08 0100 0000 402D 4B00                     ....@-K.
+changed into
+000ABE08 0100 0000 CC29 4B00                     .....)K.
+
+111 Night Clan   goatmace_grey -> rhino_blue
+
+000AE088 0100 0000 802E 4B00                     ......K.
+changed into
+000AE088 0100 0000 CC29 4B00                     .....)K.
+
+Adjusted Night Clan mace goats to always, and only, appear on 8:
+
+000AE074 B603 0000                               ....
+changed into
+000AE074 0100 0000                               ....
+
+000AE0C4 0C10                                    ..
+changed into
+000AE0C4 0E0E                                    ..
+
+Adjusted Night Clan archers:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 
+ 42 Night Clan            demon     7 Goat Archer      1   6- 8    12    40-  50   35   45    4- 12 
+                                                       2   7- 8                               6- 13 
+
+000ABE44 0A0E                                    ..
+changed into
+000ABE44 0C0E                                    ..
+
+000ABE58 01                                      .
+changed into
+000ABE58 02                                      .
+
+000ABE5B 040C                                    ..
+changed into
+000ABE5B 060D                                    ..
+
+Adjusted Fire Clan archers:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 
+ 85 Fire Clan             demon    33 Torchant         2   7- 9    14    50-  65   40   50    5- 15  
+                                                           8- 9
+000AD3C4 0C10                                    ..
+changed into
+000AD3C4 0E10                                    ..
+
+
+Changing ChaosHowler the Poison Spitter into Blighthorn Dogmaster, a Night Clan goat:
+
+pos name                      type                  attacktype        sub  pack  dlvl   HP   damage  MFL
+ 55 Chaoshowler               Poison Spitter        20 Fast Spit       1    3Y     8   280   12- 20  IRR
+    Blighthorn Dogmaster                            24 Viper           3    1          330   16- 26  IIR
+
+000AF960 2F00 0000 A817 4B00 841B 4B00 0800 1801 /.....K...K.....
+000AF970 1401 0C14 0E00 0300 0000 0000 0000 0000 ................
+changed into
+000AF960 2F00 0000 BC17 4B00 841B 4B00 0800 4A01 /.....K...K.....
+000AF970 1803 101A 1C00 0100 6F00 0000 0000 0000 ........o.......
+
+000B01BC 426C 6967 6874 686F 726E 2053 7465 656C Blighthorn Steel
+000B01CC 6D61 6365                               mace
+changed into
+000B01BC 426C 6967 6874 686F 726E 2044 6F67 6D61 Blighthorn Dogma
+000B01CC 7374 6572                               ster
+
+
+Grim Reaper is now a Reality Weaver boss in Nest:
+
+ 11 Red Horror            Weaver      15 Hidden          3    3Y   16*   950   30- 60  RIR 
+                                                                   H3
+000AF740 1C00 0000 0C1F 4B00 CC19 4B00 0E00 E803 ......K...K.....
+000AF750 0D03 283C 5500 0300 0000 0000 0000 0000 ..(<U...........
+changed into
+000AF740 5D00 0000 0C1F 4B00 6819 4B00 1300 B603 ].....K.h.K.....
+000AF750 0F03 1E3C 1500 0300 0000 0000 0000 0000 ...<............
+
+000B090C 4772 696D 2052 6561 7065 72             Grim Reaper
+changed into
+000B090C 5265 6420 486F 7272 6F72 00             Red Horror.
+
+
+pos name                type          attacktype        sub  pack  dlvl      HP   damage  MFL 
+ 88 Doomdrake the Dark  Azure Drake   24 Viper           4    3     C1$     860   33- 50  IRR 
+    The Webmaster       Acid Spider    6 Goat Man        5    1     H2     1100   32- 48  IRI
+
+000AFD80 5C00 0000 B415 4B00 841B 4B00 1500 5C03 \.....K...K...\.
+000AFD90 1804 2132 0E00 0300 0000 0000 0000 0000 ..!2............
+changed into
+000AFD80 2D00 0000 B415 4B00 9C1B 4B00 1200 4C04 -.....K...K...L.
+000AFD90 0605 2030 2A00 0100 7B00 0000 0000 0000 .. 0*...{.......
+
+000AFFB4 446F 6F6D 6472 616B 6520 7468 6520 4461 Doomdrake the Da
+000AFFC4 726B 0000                               rk..
+changed into
+000AFFB4 5468 6520 5765 626D 6173 7465 7200 0000 The Webmaster...
+000AFFC4 0000 00                                 ...
+
+Adjusted Hit frame for Giant Spider:
+
+000AE2DA 08                                      .
+changed into
+000AE2DA 09                                      .
+
+Adjusted Hit frame for Acid Spider:
+
+000ABFDA 08                                      .
+changed into
+000ABFDA 09                                      .
+
+Adjusted walk and attack animation speeds for Acid Spider:
+
+000ABFAC 0100 0000 0200 0000                     ........
+changed into
+000ABFAC 0000 0000 0000 0000                     ........
+
+
+New name and colours for Black Princes:
+
+000B1190 426C 6163 6B20 5072 696E 6365 0000 0000 Black Prince....
+changed into
+000B1190 4775 6172 6469 616E 2050 7269 6E63 6500 Guardian Prince.
+
+000ABF08 0100 0000 BC26 4B00                     .....&K.
+changed into
+000ABF08 0100 0000 1031 4B00                     .....1K.
+
+New name and colour for the Executioner:
+
+000B0328 5468 6520 4578 6563 7574 696F 6E65 7220 The Executioner 
+000B0338 6F66 2048 656C 6C20                     of Hell 
+changed into
+000B0328 5468 6520 4578 6563 7574 696F 6E65 7200 The Executioner.
+000B0338 0000 0000 0000 0000                     ........
+
+000AF9C0 2C00 0000 2819 4B00 FC18 4B00 1800 B80B ,...(.K...K.....
+000AF9D0 0205 3A3E 2A00 0300 0000 0000 0000 0000 ..:>*...........
+changed into
+000AF9C8 A41A 4B00                               ..K.
+
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size   walk hr  
+110 The Dark Lord         demon    27 Diablo           5  26-26*   45  4000-4000  125  135   55- 62    0    0-  0  RIR/RII   6000   950     5   1
+                                                                                                                                            6   2
+000ADFF0 A000 0000 B603 0000 9C22 4B00 0100 0000 ........."K.....
+000AE000 7C22 4B00 0100 0000 0000 0000 0000 0000 |"K.............
+000AE010 1000 0000 0500 0000 0A00 0000 0100 0000 ................
+000AE020 1200 0000 0C00 0000 0000 0000 0000 0000 ................
+000AE030 0000 0000 0000 0000 0100 0000 0000 0000 ................
+000AE040 6C22 4B00 3232 2D00 A00F 0000 A00F 0000 l"K.22-.........
+000AE050 1B00 0000 9003 0000 0587 0537 3E00 0800 ...........7>...
+000AE060 007D 0100 5500 7100 0000 0700 7017 0000 .}..U.q.....p...
+changed into
+000AE014 0600 0000 0A00 0000 0200 0000           ............
+
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size   walk hr  
+137 The Dark Lord         demon    27 Diablo           6  26-26*   60  3750-3750  125  135   58- 62  133   58- 62  RII/RII   6000     1     4   1
+                                                                                                                                            6   2
+000AED94 0400 0000 0900 0000 0100 0000           ............
+changed into
+000AED94 0600 0000 0900 0000 0200 0000           ............
+
+New colour for the renewed Dark Lord:
+
+000AED88 0100 0000 BC26 4B00                     .....&K.
+changed into
+000AED88 0100 0000 9C30 4B00                     .....0K.
+
+000AF400 8900 0000 781A 4B00 9C1B 4B00 0000 7017 ....x.K...K...p.
+000AF410 1B06 3A3E 7100 0300 0000 0000 0000 0000 ..:>q...........
+changed into
+000AF408 D61A 4B00                               ..K.			
+
+000B0478 5468 6520 4461 726B 2047 686F 7374      The Dark Ghost
+changed into
+000B0478 5468 6520 4461 726B 204C 6F72 6400      The Dark Lord.
+
+More HP for the renewed Dark Lord:
+
+000AF40E 7017                                    p.
+changed into
+000AF40E 581B                                    X.
+
+
+Quests:
+
+Relocated Halls of the Blind:
+
+000B53A8 08                                      .
+changed into
+000B53A8 07                                      .
+
+Relocated Poisoned Water Supply:
+
+000B540C 04                                      .
+changed into
+000B540C 02                                      .
+
+
+Adjusted mana cost for Spells:
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+
+  0   1 Firebolt            fire            1        1     6    2    1   20   0    40- 80   1: -: -      1000         10
+                                                           2    2        30
+  1   2 Healing             magic/other     1        1    30   15    1   20   1    20- 40  37: -: -      2000         40
+                                                          20   10
+  2   3 Lightning           lightning       4        3    12    6    1   30   0    20- 60   7: -: -      4000         40
+                                                           6    6   
+  3   4 Flash               magic/other     5        4    30   15    1   40   0    20- 40  11:12: -     12000         80
+                                                               16
+  4   5 Arcane Destruction  magic/other    16       16    80   60    1  100   0    15- 30  96: -: -     20000        120
+  5   6 Fire Wall           fire            3        2    30   15    1   30   0    15- 30  38:38: -      6000         80
+                                                               20
+  6   7 Town Portal         magic/other     3        3    30   10    1   20   0    15- 30  10: -: -      4000         40
+  7   8 Stone Curse         magic/other     6        5    45   30    1   40   0    15- 30  30: -: -      8000         80
+                                                          40   20
+  8   9 Seeing              magic/other   255        6    40   20    5   40   0    10- 20  39: -: -         0        240
+  9  10 Medusa Gaze         magic/other    13       13    60   30    2   60   0    15- 30  69: -: -     32000        200
+                                                               40    1
+ 10  11 Mana Shield         magic/other     6        5    40   20    1   30   0    15- 30  13: -: -     16000        160
+ 11  12 Fireball            fire            8        7    25   10    1   70   0    40- 80   6: -: -     12000         40
+                                                          30   10
+ 12  13 Guardian            fire            9        8    30   10    1   60   0    20- 40   2: -: -     12000         80
+                                                          40   20
+ 13  14 Lightning Blast     lightning       8        7    30   15    1   60   0    20- 60 100: -: -     16000         40
+                                                               12
+ 14  15 Blood Wave          magic/other     9        8    35   20    1   50   0    20- 40  41: -: -     12000         80
+                                                          30    8                          41:41: -
+ 15  16 Charm               magic/other   255        3    90   30    3   40   0    10- 15  80: -: -      3000        160
+ 16  17 Inferno             fire          255       10     1    1    1   30   0    20- 40  49:49:49     20000         20
+ 17  18 Nova                lightning      14       10    80   60    1  100   0    15- 30  42: -: -     20000        120
+ 18  19 Invincibility       magic/other   255       14   100   80    2   40   0     5- 10  34: -: -         0        320
+ 19  20 Magic Missile       magic/other     3        2    12    8    1   30   0    20- 40  15: -: -      6000         40
+                                                          10   10
+ 20  21 Golem               magic/other    11        9    80   40    2   80   0    15- 30  33: -: -     24000        160
+                                                          60   40    1
+ 21  22 Rage                magic/other   255      255    15    1    1    0   0     0-  0  43: -: -         0        160
+ 22  23 Teleport            magic/other    14       12    30   10    1   80   1    15- 30  26: -: -     20000         80
+                                                                8
+ 23  24 Apocalypse          magic/other    16       15   255  200    0  150   0     5- 10  44: -: -     80000        400
+ 24  25 Escape              magic/other   255        4    35   18    3   20   0    20- 40   3: -: -     15000         80
+ 25  26 Item Repair         magic/other   255      255     0    0    0  255   1    40- 80  45: -: -         0          0
+ 26  27 Spell Recharge      magic/other   255      255     0    0    0  255   1    40- 80  46: -: -         0          0
+ 27  28 Shielding           magic/other   255      255     0    0    0  255   0    40- 80  13:79:68         0          0
+ 28  29 Elemental           fire            8        6    40   20    1   80   0    40- 60  61:61:61     12000         80
+ 29  30 Charged Bolt        lightning       1        1     8    3    1   30   0    40- 80  90: -: -      2000         10
+                                                           4    4
+ 30  31 Holy Bolt           magic/other     1        1     7    2    1   30   0    40- 80  53: -: -      2000         10
+                                                           2
+ 31  32 Sanctuary           magic/other     7        5    40   20    1   40   0    15- 30  81: -: -     16000        160
+                                                          30   10
+ 32  33 Telekinesis         magic/other     2        2    30   10    1   20   0    20- 40  55: -: -      4000         40
+ 33  34 Heal All            magic/other     1        1    45   30    1   30   1    20- 40  60: -: -      6000         80
+                                                          40   20
+ 34  35 Blood Star          magic/other    14       13    25   10    1   70   0    40- 60  24: -: -     16000         40
+                                                          24    8
+ 35  36 Bone Spirit         magic/other     9        7    50   20    2   50   0    20- 60  63: -: -     12000        120
+ 36  37 Resurrect           magic/other   255        6   150   50    5   60   1    15- 30  54: -: -     30000        160
+ 37  38 Divine Help         magic/other    13       14    40   20    1   60   0    10- 20  85: -: -     28000        160
+                                                          30   10
+ 38  39 Identify            magic/other   255        4   255    1    3   30   1    15- 30  40: -: -    100000         80
+ 39  40 Lightning Wall      lightning       3        2    30   15    1   30   0    15- 30  71:71: -      6000         80
+                                                               20
+ 40  41 Immolation          fire           14       10    80   60    1  100   0    15- 30  72: -: -     20000        120
+ 41  42 Warp                magic/other     4        4    30   10    1   30   1    15- 30  78: -: -      4000         40
+ 42  43 Barrier             magic/other     6        4    45   15    2   30   0    15- 30  79: -: -     12000         80
+                                                          30   14    1
+ 43  44 Arcane Star         magic/other     3        3    12    6    1   40   0    40- 80  32: -: -      6000         20
+                                                           4    4
+ 44  45 Doom Serpents       magic/other    15      255   255  100    0  120   0     4-  8  16:16:16     60000        240
+
+
+
+Lower Tohit for several unique staves:
+
+ 49 Staff of War            32 Great Staff                          28  120000   5   80- 80  +% To Hit
+                                                                                     60- 60  +% To Hit
+0008DB20 0000 0000 5000 0000 5000 0000           ....P...P...
+changed into
+0008DB20 0000 0000 3C00 0000 3C00 0000           ....<...<...
+
+ 54 Rod of Purity           32 Great Staff                          34  240000   6  120-120  +% To Hit
+                                                                                     80- 80  +% To Hit
+0008DCC4 0000 0000 7800 0000 7800 0000           ....x...x...
+changed into
+0008DCC4 0000 0000 5000 0000 5000 0000           ....P...P...
+														 20- 20  specified armor class
+														  0-  0  5% chance of doing *3 damage
+0008DCDC 4B00 0000 1400 0000 1400 0000           K...........
+changed into
+0008DCDC 5400 0000 0000 0000 0000 0000           T...........
+
+ 55 Demon Bane              31 Composite Staff                      18   60000   4   60- 60  +% To Hit
+                                                                                     40- 40  +% To Hit
+0008DD18 0000 0000 3C00 0000 3C00 0000           ....<...<...
+changed into
+0008DD18 0000 0000 2800 0000 2800 0000           ....(...(...
+
+
+More AC bonus for Armor of Gloom:
+
+0008EBDC 0600 0000 6400 0000 6400 0000           ....d...d...
+changed into
+0008EBDC 0600 0000 9600 0000 9600 0000           ............
+
+
+More damage bonus for Woodland bow:
+
+0008EB34 0200 0000 6400 0000 6400 0000           ....d...d...
+changed into
+0008EB34 0200 0000 C800 0000 C800 0000           ............
+
+Devastation instead of extra Dexterity on Woodland bow:
+
+0008EB4C 1700 0000 1400 0000 1400 0000           ............
+changed into
+0008EB4C 5400 0000 0000 0000 0000 0000           T...........
+
+
+More Mana bonus on The Dragon bow:
+
+0008D0C4 2100 0000 1E00 0000 1E00 0000           !...........
+changed into
+0008D0C4 2100 0000 3C00 0000 3C00 0000           !...<...<...
+
+
+Devastation on Windforce:
+
+0008D10C 1700 0000 1400 0000 1400 0000           ............
+changed into
+0008D10C 5400 0000 0000 0000 0000 0000           T...........
+
+
+Devastation on Diamondedge:
+
+0008D3DC 1C0F 4A00 0906 0200 E02E 0000 3900 0000 ..J.........9...
+0008D3EC 0300 0000 0300 0000 0200 0000 3200 0000 ............2...
+0008D3FC 3200 0000 0000 0000 0000 0000 0000 0000 2...............
+0008D40C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+0008D41C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+0008D42C 0000 0000                               ....
+changed into
+0008D3DC 1C0F 4A00 0906 0300 E02E 0000 3900 0000 ..J.........9...
+0008D3EC 0300 0000 0300 0000 5400 0000 0000 0000 ........T.......
+0008D3FC 0000 0000 0200 0000 3200 0000 3200 0000 ........2...2...
+0008D40C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+0008D41C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+0008D42C 0000 0000                               ....
+
+
+Devastation on Bow of Steel:
+
+0008CEF0 4E11 4A00 051B 0600 20BF 0200 0400 0000 N.J..... .......
+0008CF00 6400 0000 0000 0000 3900 0000 0200 0000 d.......9.......
+0008CF10 0200 0000 3A00 0000 0200 0000 0200 0000 ....:...........
+0008CF20 2D00 0000 0A00 0000 1400 0000 1300 0000 -...............
+0008CF30 1400 0000 1400 0000 2C00 0000 7800 0000 ........,...x...
+0008CF40 0000 0000                               ....
+changed into
+0008CEF0 4E11 4A00 051B 0600 20BF 0200 0400 0000 N.J..... .......
+0008CF00 6400 0000 0000 0000 3900 0000 0200 0000 d.......9.......
+0008CF10 0200 0000 5400 0000 0000 0000 0000 0000 ....T...........
+0008CF20 3A00 0000 0200 0000 0200 0000 2D00 0000 :...........-...
+0008CF30 0A00 0000 1400 0000 2C00 0000 7800 0000 ........,...x...
+0008CF40 0000 0000                               ....
+
+
+Removed some damage bonus from Amulet of Wrath:
+
+0008E738 3054 4A00 3822 0600 0071 0200 0200 0000 0TJ.8"...q......
+0008E748 6400 0000 6400 0000 5400 0000 0000 0000 d...d...T.......
+0008E758 0000 0000 3A00 0000 0300 0000 0300 0000 ....:...........
+0008E768 1900 0000 1E00 0000 1E00 0000 1800 0000 ................
+0008E778 1E00 0000 1E00 0000 2C00 0000 AC00 0000 ........,.......
+0008E788 0000 0000                               ....
+changed into
+0008E738 3054 4A00 3822 0500 0071 0200 5400 0000 0TJ.8"...q..T...
+0008E748 0000 0000 0000 0000 3A00 0000 0300 0000 ........:.......
+0008E758 0300 0000 1900 0000 1E00 0000 1E00 0000 ................
+0008E768 1800 0000 1E00 0000 1E00 0000 2C00 0000 ............,...
+0008E778 AC00 0000 0000 0000 0000 0000 0000 0000 ................
+0008E788 0000 0000                               ....
+
+
+Modified Holy Defender:
+
+0008E63C 6010 4A00 331E 0500 0071 0200 0600 0000 `.J.3....q......
+0008E64C C800 0000 C800 0000 1E00 0000 0A00 0000 ................
+0008E65C 0A00 0000 3400 0000 0000 0000 0000 0000 ....4...........
+0008E66C 1B00 0000 1400 0000 1400 0000 2C00 0000 ............,...
+0008E67C 6400 0000 0000 0000 0000 0000 0000 0000 d...............
+0008E68C 0000 0000                               ....
+changed into
+0008E63C 6010 4A00 331E 0500 0071 0200 0600 0000 `.J.3....q......
+0008E64C C800 0000 C800 0000 5B00 0000 0000 0000 ........[.......
+0008E65C 0000 0000 1B00 0000 0A00 0000 0A00 0000 ................
+0008E66C 3400 0000 0000 0000 0000 0000 2C00 0000 4...........,...
+0008E67C 6400 0000 0000 0000 0000 0000 0000 0000 d...............
+0008E68C 0000 0000                               ....
+
+
+Modified Token of Invincibility:
+
+0008EE70 D413 4A00 3825 0600 0035 0C00 4B00 0000 ..J.8%...5..K...
+0008EE80 5000 0000 5000 0000 4200 0000 1300 0000 P...P...B.......
+0008EE90 0A00 0000 1C00 0000 0A00 0000 0A00 0000 ................
+0008EEA0 4600 0000 0000 0000 0000 0000 2E00 0000 F...............
+0008EEB0 0000 0000 0000 0000 2C00 0000 3000 0000 ........,...0...
+0008EEC0 0000 0000                               ....
+changed into
+0008EE70 D413 4A00 3825 0600 0035 0C00 4B00 0000 ..J.8%...5..K...
+0008EE80 6400 0000 6400 0000 4200 0000 1300 0000 d...d...B.......
+0008EE90 0A00 0000 1C00 0000 0A00 0000 0A00 0000 ................
+0008EEA0 3400 0000 0000 0000 0000 0000 2E00 0000 4...............
+0008EEB0 0000 0000 0000 0000 2C00 0000 3000 0000 ........,...0...
+0008EEC0 0000 0000                               ....
+
+
+Pre- and suffixes:
+
+ 69 Spider's       33 + mana                                 10- 15    1    1    ---T-J     750-  1000    2
+                                                             21- 25
+0008B518 0A00 0000 0F00 0000                     ........
+changed into
+0008B518 1500 0000 1900 0000                     ........
+
+ 70 Raven's        33 + mana                                 15- 20    5    1    ---T-J    1100-  2000    4
+                                                             26- 30
+0008B548 0F00 0000 1400 0000                     ........
+changed into
+0008B548 1A00 0000 1E00 0000                     ........
+
+ 71 Snake's        33 + mana                                 21- 30    9    1    ---T-J    2100-  4000    6
+                                                             31- 40
+0008B578 1500 0000 1E00 0000                     ........
+changed into
+0008B578 1F00 0000 2800 0000                     ....(...
+
+ 72 Serpent's      33 + mana                                 30- 40   15    1    ---T-J    4100-  6000    8
+                                                             41- 50
+0008B5A8 1E00 0000 2800 0000                     ....(...
+changed into
+0008B5A8 2900 0000 3200 0000                     )...2...
+
+ 73 Drake's        33 + mana                                 41- 50   21    1    ---T-J    6100- 10000   10
+                                                             51- 65
+0008B5D8 2900 0000 3200 0000                     )...2...
+changed into
+0008B5D8 3300 0000 4100 0000                     3...A...
+
+ 74 Dragon's       33 + mana                                 51- 60   27    1    ---T-J   10100- 15000   12
+                                                             66- 80
+0008B608 3300 0000 3C00 0000                     3...<...
+changed into
+0008B608 4200 0000 5000 0000                     B...P...
+
+ 75 Hydra's        33 + mana                                 61- 80   30    1    ---T-J   15100- 19000   14
+                                                             81-100
+0008B638 3D00 0000 5000 0000                     =...P...
+changed into
+0008B638 5100 0000 6400 0000                     Q...d...
+
+ 76 Wyrm's         33 + mana                                 81-100   32    1    ---T-J   19100- 30000   16
+                                                            101-120
+0008B668 5100 0000 6400 0000                     Q...d...
+changed into
+0008B668 6500 0000 7800 0000                     e...x...
+
+ 50 the fox        31 + life                                 10- 15    1    1    AS---J     750-  1000    2
+                                                             21- 25
+0008C1D8 0A00 0000 0F00 0000                     ........
+changed into
+0008C1D8 1500 0000 1900 0000                     ........
+
+ 51 the jaguar     31 + life                                 16- 20    5    1    AS---J    1100-  2000    4
+                                                             26- 30
+0008C208 1000 0000 1400 0000                     ........
+changed into
+0008C208 1A00 0000 1E00 0000                     ........
+
+ 52 the eagle      31 + life                                 21- 30    9    1    AS---J    2100-  4000    6
+                                                             31- 40
+0008C238 1500 0000 1E00 0000                     ........
+changed into
+0008C238 1F00 0000 2800 0000                     ....(...
+
+ 53 the wolf       31 + life                                 30- 40   15    1    AS---J    4100-  6000    8
+                                                             41- 50
+0008C268 1E00 0000 2800 0000                     ....(...
+changed into
+0008C268 2900 0000 3200 0000                     )...2...
+
+ 54 the tiger      31 + life                                 41- 50   21    1    AS---J    6100- 10000   10
+                                                             51- 65
+0008C298 2900 0000 3200 0000                     )...2...
+changed into
+0008C298 3300 0000 4100 0000                     3...A...
+
+ 55 the lion       31 + life                                 51- 60   27    1    AS---J   10100- 15000   12
+                                                             66- 80
+0008C2C8 3300 0000 3C00 0000                     3...<...
+changed into
+0008C2C8 4200 0000 5000 0000                     B...P...
+
+ 56 the mammoth    31 + life                                 61- 80   30    1    AS---J   15100- 19000   14
+                                                             81-100
+0008C2F8 3D00 0000 5000 0000                     =...P...
+changed into
+0008C2F8 5100 0000 6400 0000                     Q...d...
+
+ 57 the whale      31 + life                                 81-100   32    1    A----J   19100- 30000   16
+                                                            101-120
+0008C328 5100 0000 6400 0000                     Q...d...
+changed into
+0008C328 6500 0000 7800 0000                     e...x...
+
+ 97 the zodiac     27 + all attributes                       16- 20   37    1    --WTB-   20800- 40000   26
+    devastation    84 5% chance of doing *3 damage            1-  1                       15000- 15000   20
+
+0008CAA0 0017 4A00 1B00 0000 1000 0000 1400 0000 ..J.............
+0008CAB0 2500 0000 1011 0000 0000 0000 0000 0000 %...............
+0008CAC0 0100 0000 4051 0000 409C 0000 1A00 0000 ....@Q..@.......
+changed into
+0008CAA0 0415 4A00 5400 0000 0100 0000 0100 0000 ..J.T...........
+0008CAB0 2500 0000 1011 0000 0000 0000 0000 0000 %...............
+0008CAC0 0100 0000 983A 0000 983A 0000 1400 0000 .....:...:......
+
+000A4AB0 6F63 6361 7369 6F6E 616C 2064 6F75 626C occasional doubl
+000A4AC0 6520 6461 6D61 6765 0000 0000           e damage....
+changed into
+000A4AB0 696E 6372 6561 7365 6420 6372 6974 6963 increased critic
+000A4AC0 616C 2064 616D 6167 6500 0000           al damage...
+
+
+Swapped images for Rune Bomb and Recharging Rune:
+
+000A1164 1700 0000                               ....
+changed into
+000A1164 1800 0000                               ....
+
+000A3634 1800 0000                               ....
+changed into
+000A3634 1700 0000                               ....
+
+file offset 00021855
+
+:00422455 81B86454000017000000    cmp dword ptr [eax+00005464], 00000017
+changed into
+:00422455 81B86454000018000000    cmp dword ptr [eax+00005464], 00000018
+
+
+Weapons, armors and shields:
+
+  1 Short Sword                               1 weapon           1 sword            1 1-h       2    20    2- 4    0- 0   15   0   0     120   64    0    0
+                                                                                                                          20
+  2 Buckler                                   2 armor/shield     5 shield           1 1-h       2    10    0- 0    5- 5    0   0   0      40   83    0    0
+
+  3 Club                                      1 weapon           4 club             1 1-h       1    20    1- 4    0- 0   20   0   0      20   69    0   25
+
+  4 Short Bow                                 1 weapon           3 bow              2 2-h       1    20    1- 3    0- 0    0   0  20     100  118    0    0
+
+  5 Staff of Bolts                            1 weapon          10 staff            2 2-h       1    15    1- 2    0- 0    0  20   0     520  109    0    0
+                                                                                                     10
+  6 Cleaver                      Cleaver      1 weapon           2 axe              2 2-h      42    80   20-40    0- 0  120   0   0    2400  143    1   17
+                                                                                                                         160
+  7 Mask                         Mask         2 armor/shield     7 helm             4 head     30    50    0- 0   16-20   50   0   0    1200  234    1   57
+                                                                                                     40                   40
+
+ 13 Skull Cap                    Cap          2 armor/shield     7 helm             4 head      4    20    0- 0    3- 4    0   0   0      25  240    1   34
+                                                                                                     10                   
+ 14 Horned Helmet                Helmet       2 armor/shield     7 helm             4 head     36    60    0- 0   20-24   60   0   0    1600   84    1   65
+                                                                                                     80                   80
+
+ 28 Splint Mail                  Mail         2 armor/shield     8 medium armor     3 body     20    50    0- 0   30-40   40   0   0    3200  136    1   64
+                                                                                                                          50
+
+ 31 War Blade                    Blade        1 weapon           1 sword            1 1-h      42    60   10-20    0- 0   60   0  80    2800  200    1   66
+                                                                                                           6-20                    
+
+ 36 Short Staff                               1 weapon          10 staff            2 2-h       1    15    2- 4    0- 0    0   0   0      40  109    0    0
+                                                                                                     20    1- 2
+
+ 49 Wall Shield                  Wall Shield  2 armor/shield     5 shield           1 1-h      36    70    0- 0   35-40  100   0   0    2400  132    1   61
+                                                                                                     80                  160
+ 50 Helm                         Helm         2 armor/shield     7 helm             4 head      8    25    0- 0    4- 6   20   0   0      40   82    1   35
+                                                                                                     20                    0
+ 51 Full Helm                    Helm         2 armor/shield     7 helm             4 head     12    30    0- 0    6- 8   30   0   0     100   75    1    0
+                                                                                                     40                   40
+ 52 Crown                        Crown        2 armor/shield     7 helm             4 head     16    20    0- 0    8-12    0   0   0     400   95    1   37
+
+ 53 Great Helm                   Helm         2 armor/shield     7 helm             4 head     24    40    0- 0   12-16   40   0   0     800   98    1   36
+                                                                                                     60                   60
+ 54 Cape                         Cape         2 armor/shield     6 light armor      3 body      1    10    0- 0    2- 3    0   0   0      20  150    1   46
+
+
+ 56 Cloak                        Cloak        2 armor/shield     6 light armor      3 body      2    15    0- 0    4- 5    0   0   0      40  149    1   41
+                                                                                                     10       
+ 57 Robe                         Robe         2 armor/shield     6 light armor      3 body      3    15    0- 0    6- 7    0   0   0      80  137    1   42
+                                                                                                     10       
+ 58 Quilted Armor                Armor        2 armor/shield     6 light armor      3 body      4    20    0- 0    8- 9    0   0   0     200  129    1    0
+
+ 59 Leather Armor                Armor        2 armor/shield     6 light armor      3 body      6    25    0- 0   10-11    0   0   0     240  135    1   44
+                                                                                                     20       
+ 60 Hard Leather Armor           Armor        2 armor/shield     6 light armor      3 body      7    30    0- 0   12-13   15   0   0     400  127    1    0
+                                                                                                                          20
+ 61 Studded Leather Armor        Armor        2 armor/shield     6 light armor      3 body      9    35    0- 0   14-16   20   0   0     800  107    1   40
+                                                                                                     40                   30
+ 62 Ring Mail                    Mail         2 armor/shield     8 medium armor     3 body     11    40    0- 0   17-23   25   0   0    1200  154    1    0
+                                                                                                                          30
+ 63 Heavy Mail                   Mail         2 armor/shield     8 medium armor     3 body     36    60    0- 0   40-50   60   0   0    4800  245    1   43
+
+ 64 Scale Mail                   Mail         2 armor/shield     8 medium armor     3 body     15    45    0- 0   24-30   30   0   0    1600  114    1    0
+                                                                                                     40                   40
+ 65 Breast Plate                 Plate        2 armor/shield     9 heavy armor      3 body     16    60    0- 0   40-45   60   0   0    2400  153    1   45
+                                                                                                     
+
+ 67 Plate Mail                   Plate        2 armor/shield     9 heavy armor      3 body     23    70    0- 0   45-50   70   0   0    4400  243    1   47
+                                                                                                     60
+ 68 Field Plate                  Plate        2 armor/shield     9 heavy armor      3 body     25    80    0- 0   50-60   80   0   0    5600  103    1   72
+                                                                                                     70
+ 69 Gothic Plate                 Plate        2 armor/shield     9 heavy armor      3 body     36    90    0- 0   60-70  100   0   0    6400  152    1   71
+                                                                                                     80                  120
+ 70 Full Plate Mail              Plate        2 armor/shield     9 heavy armor      3 body     42   100    0- 0   70-80  120   0   0    7200  151    1   48
+                                                                                                     90                  160
+ 71 Buckler                      Shield       2 armor/shield     5 shield           1 1-h       1    15    0- 0    5-10    0   0   0      40   83    1   49
+                                                                                                     20
+ 72 Small Shield                 Shield       2 armor/shield     5 shield           1 1-h       5    20    0- 0   10-15   20   0   0     120  105    1   50
+                                                                                                     30
+ 73 Large Shield                 Shield       2 armor/shield     5 shield           1 1-h       9    30    0- 0   15-20   40   0   0     200  247    1   51
+                                                                                                     40
+ 74 Kite Shield                  Shield       2 armor/shield     5 shield           1 1-h      14    40    0- 0   20-25   50   0   0     400  113    1   52
+                                                                                                     50                   60
+ 75 Tower Shield                 Shield       2 armor/shield     5 shield           1 1-h      24    50    0- 0   25-30   60   0   0     800  241    1   53
+                                                                                                     60                   90
+ 76 Gothic Shield                Shield       2 armor/shield     5 shield           1 1-h      30    60    0- 0   30-35   80   0   0    1600  147    1    0
+                                                                                                     70                  120
+
+118 Dagger                       Dagger       1 weapon           1 sword            1 1-h       1    15    1- 3    0- 0    0   0   0      60   54    1    7
+                                                                                                     20
+119 Short Sword                  Sword        1 weapon           1 sword            1 1-h       1    20    2- 4    0- 0   15   0   0     120   64    1    0
+                                                                                                                          20
+120 Falchion                     Sword        1 weapon           1 sword            1 1-h       2    30    4- 6    0- 0   30   0   0     200   62    1    8
+
+121 Scimitar                     Sword        1 weapon           1 sword            1 1-h       4    30    2- 8    0- 0   20   0  20     240   72    1   12
+                                                                                                     40    4- 8           40      
+122 Claymore                     Sword        1 weapon           1 sword            1 1-h       5    40    2-12    0- 0   30   0  30     400   65    1    9
+                                                                                                     50    6-10           50
+123 Blade                        Blade        1 weapon           1 sword            1 1-h       4    40    4- 8    0- 0   30   0  20     280   56    1    0
+                                                                                                           2- 8           20      30
+124 Sabre                        Sabre        1 weapon           1 sword            1 1-h       1    20    2- 6    0- 0   20   0   0     160   67    1   11
+                                                                                                           1- 6            0      20
+125 Long Sword                   Sword        1 weapon           1 sword            1 1-h       6    50    6-10    0- 0   40   0  30     600   60    1   13
+                                                                                                           4-12           30      50
+126 Broad Sword                  Sword        1 weapon           1 sword            1 1-h      15    60    4-14    0- 0   40   0  40     800   61    1   10
+                                                                                                           6-14           60      60
+127 Bastard Sword                Sword        1 weapon           1 sword            1 1-h      30    60    6-18    0- 0   50   0  50    1600   57    1   14
+                                                                                                           8-18           80      60
+128 Battle Sword                 Sword        1 weapon           1 sword            2 2-h      24    60    8-20    0- 0   60   0  40    1600  110    1   15
+                                                                                    1 1-h                 10-20          100      60
+129 Great Sword                  Sword        1 weapon           1 sword            2 2-h      36    80   12-24    0- 0   80   0  60    3200  134    2   16
+                                                                                    1 1-h            60                  120      80
+130 Small Axe                    Axe          1 weapon           2 axe              2 2-h       2    20    1-10    0- 0   30   0   0      80  112    1   20
+                                                                                                           4- 8
+131 Axe                          Axe          1 weapon           2 axe              2 2-h       4    30    2-12    0- 0   40   0   0     400  144    1    0
+                                                                                                           6-12
+132 Large Axe                    Axe          1 weapon           2 axe              2 2-h       6    40    4-16    0- 0   50   0   0     600  142    1   18
+                                                                                                           8-16           60
+133 Broad Axe                    Axe          1 weapon           2 axe              2 2-h      10    50    6-20    0- 0   60   0   0    1000  141    1   19
+                                                                                                          10-20           80
+134 Battle Axe                   Axe          1 weapon           2 axe              2 2-h      15    60   10-24    0- 0   80   0   0    1600  227    1   21
+                                                                                                          10-25          100
+135 Great Axe                    Axe          1 weapon           2 axe              2 2-h      24    70   15-30    0- 0  100   0   0    2000  101    1   22
+                                                                                                                         130
+136 Mace                         Mace         1 weapon           4 club             1 1-h       2    30    2- 8    0- 0   30   0   0     160  213    1   23
+                                                                                                                          40
+137 Morning Star                 Mace         1 weapon           4 club             1 1-h       3    40    2-10    0- 0   40   0   0     240  223    1   24
+                                                                                                                          50
+138 War Hammer                   Hammer       1 weapon           4 club             1 1-h       5    60    4-12    0- 0   50   0   0     600  226    1   27
+                                                                                                                          60
+139 Spiked Club                  Club         1 weapon           4 club             1 1-h       4    20    2- 6    0- 0   30   0   0     200   71    1   25
+                                                                                                           4- 6
+140 Club                         Club         1 weapon           4 club             1 1-h       1    20    1- 4    0- 0   20   0   0      20   66    1    0
+
+141 Flail                        Flail        1 weapon           4 club             1 1-h      15    80    6-20    0- 0   70   0   0    1200  131    1   28
+                                                                                                           8-20          100
+142 Maul                         Maul         1 weapon           4 club             2 2-h      42    90   10-30    0- 0   90   0   0    2400  122    1   26
+                                                                                    1 1-h                                140
+143 Short Bow                    Bow          1 weapon           3 bow              2 2-h       1    20    1- 3    0- 0    0   0  20     100  118    1    1
+                                                                                                     
+144 Hunter's Bow                 Bow          1 weapon           3 bow              2 2-h       3    30    2- 4    0- 0    0   0  30     240  242    2    3
+                                                                                                     
+145 Long Bow                     Bow          1 weapon           3 bow              2 2-h       5    35    2- 6    0- 0   20   0  40     400  249    2    2
+                                                                                                     40
+146 Composite Bow                Bow          1 weapon           3 bow              2 2-h       7    40    4- 6    0- 0   20   0  50     800  133    2    4
+                                                                                                     50                   30      
+147 Short Battle Bow             Bow          1 weapon           3 bow              2 2-h       9    45    4- 8    0- 0   25   0  60    1200  167    2    0
+                                                                                                     60                   30     
+148 Long Battle Bow              Bow          1 weapon           3 bow              2 2-h      15    50    5-10    0- 0   30   0  70    1600  248    2    6
+                                                                                                     60                   40      80
+149 Short War Bow                Bow          1 weapon           3 bow              2 2-h      30    55    6-12    0- 0   35   0  80    2000  165    2    0
+                                                                                                     70                   50     100
+150 Long War Bow                 Bow          1 weapon           3 bow              2 2-h      42    60    8-16    0- 0   40   0 100    2800  119    2    5
+                                                                                                     70                   60     120
+151 Short Staff                  Staff        1 weapon          10 staff            2 2-h       1    15    2- 4    0- 0    0   0   0      40  109    1   30
+                                                                                                     20    1- 2
+152 Long Staff                   Staff        1 weapon          10 staff            2 2-h       4    30    4- 6    0- 0    0   0   0     120  123    1   29
+                                                                                                           2- 4
+153 Composite Staff              Staff        1 weapon          10 staff            2 2-h      10    40    5-10    0- 0    0   0   0     600  166    1   31
+                                                                                                           4- 8
+154 Great Staff                  Staff        1 weapon          10 staff            2 2-h      42    80   10-20    0- 0    0   0   0    2000  124    1   32
+                                                                                                           8-16
+155 War Staff                    Staff        1 weapon          10 staff            2 2-h      30    60    8-16    0- 0    0   0   0    1200  251    1   33
+                                                                                                           6-12

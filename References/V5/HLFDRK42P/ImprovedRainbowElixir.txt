@@ -1,0 +1,11 @@
+Improving Rainbow Elixir to give 4 points instead of 3:
+
+file offset 00029443
+
+:0042A043 83F803                  cmp eax, 00000003
+:0042A046 7E03                    jle 0042A04B
+:0042A048 6A03                    push 00000003
+changed into
+:0042A043 83F804                  cmp eax, 00000004
+:0042A046 7E03                    jle 0042A04B
+:0042A048 6A04                    push 00000004

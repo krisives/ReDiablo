@@ -1,0 +1,13 @@
+Rage Duration Increase
+
+
+Rage duration goes from 12 seconds to about 20 seconds
+
+duration = clvl + 10*slvl + 245   ->   duration = clvl + 10*slvl + 390
+
+
+File Offset 00034182
+
+:00434D82 8D8C4AF5000000          lea ecx, dword ptr [edx+2*ecx+000000F5]
+wordt
+:00434D82 8D8C4A86010000          lea ecx, dword ptr [edx+2*ecx+00000186]

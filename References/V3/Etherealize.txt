@@ -1,0 +1,106 @@
+()Etherealize
+
+:00433C70 8BC1                    mov eax, ecx
+:00433C72 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00433C78 8B4C2418                mov ecx, dword ptr [esp+18]
+:00433C7C 69C0B0000000            imul eax, 000000B0
+:00433C82 69C9C8550000            imul ecx, 000055C8
+:00433C88 03D1                    add edx, ecx
+:00433C8A 56                      push esi
+:00433C8B 57                      push edi
+:00433C8C 0FBE8AB8010000          movsx ecx, byte ptr [edx+000001B8]
+:00433C93 C1E104                  shl ecx, 04
+:00433C96 D1F9                    sar ecx, 1				ecx := clvl*8
+:00433C98 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+:00433C9E 8B88887A6900            mov ecx, dword ptr [eax+00697A88]	ecx := slvl
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE				jmp if slvl=0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433CBC(C)
+|
+:00433CA8 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]
+:00433CAE 8BFE                    mov edi, esi
+:00433CB0 C1FF03                  sar edi, 03				edi := clvl
+:00433CB3 03FE                    add edi, esi				edi := clvl*9/8 
+:00433CB5 49                      dec ecx				ecx := ecx - 1
+:00433CB6 89B8C87A6900            mov dword ptr [eax+00697AC8], edi
+:00433CBC 75EA                    jne 00433CA8				loop thru slvl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433CA6(C)
+|
+:00433CBE 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]	esi := clvl*8
+:00433CC4 8BBA4C550000            mov edi, dword ptr [edx+0000554C]	?
+:00433CCA 8D88C87A6900            lea ecx, dword ptr [eax+00697AC8]	ecx := clvl*8
+:00433CD0 0FAFFE                  imul edi, esi
+:00433CD3 C1FF08                  sar edi, 08
+:00433CD6 03FE                    add edi, esi
+:00433CD8 807C241C00              cmp byte ptr [esp+1C], 00
+:00433CDD 8939                    mov dword ptr [ecx], edi
+:00433CDF 8B8A98010000            mov ecx, dword ptr [edx+00000198]
+:00433CE5 8988E87A6900            mov dword ptr [eax+00697AE8], ecx	store life
+:00433CEB 8B8A90010000            mov ecx, dword ptr [edx+00000190]
+:00433CF1 8988EC7A6900            mov dword ptr [eax+00697AEC], ecx	store life
+:00433CF7 750C                    jne 00433D05
+:00433CF9 8B4C2420                mov ecx, dword ptr [esp+20]
+:00433CFD 6A19                    push 00000019
+:00433CFF 5A                      pop edx
+:00433D00 E8F7820300              call 0046BFFC				do manacost
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433CF7(C)
+|
+:00433D05 5F                      pop edi
+:00433D06 5E                      pop esi
+:00433D07 C21C00                  ret 001C
+
+
+
+Voorstellen:
+
+
+()Berserk, Ring of Fire, Jester - Available as scrolls
+
+
+()Etherealize
+
+Disable slvl-increase (om misbruik tegen te gaan) en manacost.
+Levert ruimte op om (later) special loss toe te voegen.
+
+:00433C9E 8B88887A6900            mov ecx, dword ptr [eax+00697A88]	ecx := slvl
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE				jmp if slvl=0
+:00433CA8 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]
+:00433CAE 8BFE                    mov edi, esi
+:00433CB0 C1FF03                  sar edi, 03				edi := clvl
+:00433CB3 03FE                    add edi, esi				edi := clvl*9/8 
+:00433CB5 49                      dec ecx				ecx := ecx - 1
+:00433CB6 89B8C87A6900            mov dword ptr [eax+00697AC8], edi
+:00433CBC 75EA                    jne 00433CA8				loop thru slvl
+:00433CBE 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]	esi := clvl*8
+:00433CC4 8BBA4C550000            mov edi, dword ptr [edx+0000554C]	?
+:00433CCA 8D88C87A6900            lea ecx, dword ptr [eax+00697AC8]	ecx := clvl*8
+:00433CD0 0FAFFE                  imul edi, esi
+:00433CD3 C1FF08                  sar edi, 08
+:00433CD6 03FE                    add edi, esi
+:00433CD8 807C241C00              cmp byte ptr [esp+1C], 00
+wordt
+:00433C9E 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]	esi := clvl*8
+:00433CA4 8BBA4C550000            mov edi, dword ptr [edx+0000554C]	?
+:00433CAA 8D88C87A6900            lea ecx, dword ptr [eax+00697AC8]	ecx := clvl*8
+:00433CB0 0FAFFE                  imul edi, esi
+:00433CB3 C1FF08                  sar edi, 08
+:00433CB6 03FE                    add edi, esi
+:00433CB8 807C241C00              cmp byte ptr [esp+1C], 00
+:00433CBD 8939                    mov dword ptr [ecx], edi
+:00433CBF 8B8A98010000            mov ecx, dword ptr [edx+00000198]
+:00433CC5 8988E87A6900            mov dword ptr [eax+00697AE8], ecx	store life
+:00433CCB 8B8A90010000            mov ecx, dword ptr [edx+00000190]
+:00433CD1 8988EC7A6900            mov dword ptr [eax+00697AEC], ecx	store life
+:00433CD7 EB2C                    jmp 00433D05
+:00433CD9 90909090		  4*nop
+
+
+
+

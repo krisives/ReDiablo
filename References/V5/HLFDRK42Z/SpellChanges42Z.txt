@@ -1,0 +1,629 @@
+Spellchanges revision 42Z
+
+
+Slightly modified duration for Sanctuary/Firewall/Lightningwall:
+
+file offset 0003114D
+
+:00431D4D 90                      nop
+:00431D4E 90                      nop
+:00431D4F 90                      nop
+:00431D50 33C0                    xor eax, eax
+:00431D52 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:00431D58 E804E9FFFF              call 00430661
+:00431D5D E870F50100              call 004512D2
+:00431D62 48                      dec eax
+:00431D63 48                      dec eax
+:00431D64 90                      nop
+:00431D65 90                      nop
+changed into
+:00431D4D 33C0                    xor eax, eax
+:00431D4F 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:00431D55 E807E9FFFF              call 00430661
+:00431D5A E873F50100              call 004512D2
+:00431D5F E919FA0000              jmp 0044177D
+:00431D64 90                      nop
+:00431D65 90                      nop
+
+file offset 000506D8
+
+:004512D8 83F810                  cmp eax, 00000010
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A10                    push 00000010
+changed into
+:004512D8 83F80E                  cmp eax, 0000000E
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A0E                    push 0000000E
+
+file offset 00040B7D
+
+:0044177D 51                      push ecx
+:0044177E 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00441784 8BC8                    mov ecx, eax
+:00441786 C1F902                  sar ecx, 02
+:00441789 2BC1                    sub eax, ecx
+:0044178B 59                      pop ecx
+:0044178C C3                      ret
+changed into
+:0044177D 83BE587A690011          cmp dword ptr [esi+00697A58], 00000011
+:00441784 7402                    je 00441788
+:00441786 48                      dec eax
+:00441787 48                      dec eax
+:00441788 E9D905FFFF              jmp 00431D66
+:0044178D
+
+
+Increased duration for Divine Help:
+
+file offset 00033E5E
+
+:00434A5E C1E002                  shl eax, 02
+changed into
+:00434A5E 6BC006                  imul eax, 00000006
+
+
+Increased duration for Guardian:
+
+file offset 00032804
+
+:00433404 6A50                    push 00000050
+:00433406 ...
+:0043343A C1A6C87A690003          shl dword ptr [esi+00697AC8], 03		
+changed into
+:00433404 6A78                    push 00000078
+:00433406 ...
+:0043343A C1A6C87A690004          shl dword ptr [esi+00697AC8], 04
+
+
+Guardian spell will use Inferno instead of Firebolt
+
+Adjusting the spell effect to create:
+
+file offset 00034D6C
+
+:0043596C 6A01                    push 00000001
+changed into
+:0043596C 6A31                    push 00000031
+
+Lowering detection range to keep the Guardian from preferring targets that are too far away:
+
+file offset 000373EC
+
+:00437FEC 6A0A                    push 0000000A
+changed into
+:00437FEC 6A04                    push 00000004
+
+Lowering mana cost (this is unneeded after substraction is done at casting), and tripling the Inferno effect for staves and other charged items:
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)
+ 16  17 Inferno             fire          255       10    30   20    1   30   0    20- 40  49: -: -     20000
+                                                           1    1                          49:49:49
+000B63A0 111E 0000 8813 4A00 0000 0000 FFFF FFFF ......J.........
+000B63B0 0A00 0000 0000 0000 0000 0000 1E00 0000 ................
+000B63C0 5231 0000 0114 0000 1400 0000 2800 0000 R1..........(...
+000B63D0 204E 0000 6400 0000                      N..d...
+changed into
+000B63A1 01                                      .
+000B63C1 3131 31                                 111
+000B63C5 01                                      .
+
+Removing Mana/Charge cost from Inferno initializing spell effect:
+
+file offset 000344ED
+
+:004350ED 807D1800                cmp byte ptr [ebp+18], 00
+:004350F1 750B                    jne 004350FE
+:004350F3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004350F6 6A14                    push 00000014
+:004350F8 5A                      pop edx
+:004350F9 E8FE6E0300              call 0046BFFC
+changed into
+:004350ED EB0F                    jmp 004350FE
+:004350EF 9090                    2*nop
+:004350F1 ...
+
+Now 15 bytes free space from 004350EF to 004350FE.
+
+
+Always 90% tohit for Inferno attack (to make Guardian and Inferno useful for non-spellcasters):
+
+file offset 0002E06C
+
+:0042EC6C 3C11                    cmp al, 11
+changed into
+:0042EC6C 3C31                    cmp al, 31
+
+
+Removing Mana/Charge cost from Blood Wave initializing spell effect:
+
+file offset 00033FA7
+
+:00434BA7 E850740300              call 0046BFFC
+changed into
+:00434BA7 9090909090              5*nop
+
+
+Double Fire Walls:
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)
+  5   6 Fire Wall           fire            3        2    30   15    1   30   0    15- 30  38: -: -      6000   
+                                                                                           38:38: -
+000B6138 061E 0000 2C83 4B00 0000 0000 0300 0000 ....,.K.........
+000B6148 0200 0000 0100 0000 0000 0000 1E00 0000 ................
+000B6158 5226 0000 010F 0000 0F00 0000 1E00 0000 R&..............
+000B6168 7017 0000 9001 0000                     p.......
+changed into
+000B6159 2626 00                                 &&.
+
+
+Double Lightning Walls:
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)
+ 39  40 Lightning Wall      lightning       3        2    30   15    1   30   0    15- 30  71: -: -      6000   
+                                                                                           71:71: -
+000B68A8 281E 0100 B881 4B00 0000 0000 0300 0000 (.....K.........
+000B68B8 0200 0000 0100 0000 0000 0000 1E00 0000 ................
+000B68C8 5447 0000 010F 0000 0F00 0000 1E00 0000 TG..............
+000B68D8 7017 0000 9001 0000                     p.......
+changed into
+000B68C9 4747 00                                 GG.
+
+
+Removing Mana/Charge cost from Fire/Lightning Wall initializing spell effect:
+
+file offset 00033D6F
+
+:0043496F E888760300              call 0046BFFC
+changed into
+:0043496F 9090909090              5*nop
+
+
+Adding Mana/Charge cost for Fire/Lightning Wall, Inferno and Blood Wave to casting of the spell:
+
+file offset 0002FBBB
+
+:004307BB 75E7                    jne 004307A4
+:004307BD 6A1D                    push 0000001D
+:004307BF EBE1                    jmp 004307A2
+:004307C1 90                      nop
+:004307C2 90                      nop
+:004307C3 90                      nop
+:004307C4 8B5508                  mov edx, dword ptr [ebp+08]
+:004307C7 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004307CA FFB6887A6900            push dword ptr [esi+00697A88]
+:004307D0 8A86D07A6900            mov al, byte ptr [esi+00697AD0]
+:004307D6 6A00                    push 00000000
+:004307D8 FFB6CC7A6900            push dword ptr [esi+00697ACC]
+:004307DE 50                      push eax
+:004307DF 57                      push edi
+:004307E0 FF7514                  push [ebp+14]
+:004307E3 FF7510                  push [ebp+10]
+changed into
+:004307BB 7504                    jne 004307C1
+:004307BD 6A1D                    push 0000001D
+:004307BF EBE1                    jmp 004307A2
+:004307C1 80FA26                  cmp dl, 26		Fire Wall
+:004307C4 7504                    jne 004307CA
+:004307C6 6A06                    push 00000006
+:004307C8 EBD8                    jmp 004307A2
+:004307CA 80FA47                  cmp dl, 47		Lightning Wall
+:004307CD 7504                    jne 004307D3
+:004307CF 6A28                    push 00000028
+:004307D1 EBCF                    jmp 004307A2
+:004307D3 80FA31                  cmp dl, 31		Inferno
+:004307D6 7504                    jne 004307DC
+:004307D8 6A11                    push 00000011
+:004307DA EBC6                    jmp 004307A2
+:004307DC 80FA29                  cmp dl, 29		Blood Wave
+:004307DF 75C3                    jne 004307A4
+:004307E1 6A0F                    push 0000000F
+:004307E3 EBBD                    jmp 004307A2
+:004307E5 90                      nop
+
+Casting Fire Wall, Lightning Wall, Sanctuary or Guardian will terminate all previous instances of those spells. Walls from different casters can coexist.
+
+Modifying SpellCast routine:
+
+file offset 0006B4FC
+
+:0046C0FC 83FA06                  cmp edx, 00000006
+:0046C0FF 8B4870                  mov ecx, dword ptr [eax+70]
+:0046C102 894DF8                  mov dword ptr [ebp-08], ecx
+:0046C105 7405                    je 0046C10C
+:0046C107 83FA28                  cmp edx, 00000028
+:0046C10A 7509                    jne 0046C115
+:0046C10C 8B80DC010000            mov eax, dword ptr [eax+000001DC]
+changed into
+:0046C0FC 8B4870                  mov ecx, dword ptr [eax+70]
+:0046C0FF 894DF8                  mov dword ptr [ebp-08], ecx
+:0046C102 E99469FEFF              jmp 00452A9B
+:0046C107 9090909090909090909090  11*nop
+:0046C112 
+
+Now 11 bytes free space from 0046C107 to 0046C112.
+
+Using free space from old Glimmering shrine:
+
+file offset 00051E9B
+
+:00452A9B 69C9C8550000            imul ecx, 000055C8
+:00452AA1 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452AA6 6A07                    push 00000007
+:00452AA8 8BF1                    mov esi, ecx
+:00452AAA 5B                      pop ebx
+:00452AAB BF74010000              mov edi, 00000174
+:00452AB0 80BC30C803000000        cmp byte ptr [eax+esi+000003C8], 00
+:00452AB8 741C                    je 00452AD6
+:00452ABA 83BC30C403000000        cmp dword ptr [eax+esi+000003C4], 00000000
+:00452AC2 8D9430C4030000          lea edx, dword ptr [eax+esi+000003C4]
+:00452AC9 750B                    jne 00452AD6
+:00452ACB C70201000000            mov dword ptr [edx], 00000001
+:00452AD1 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452AD6 03F7                    add esi, edi
+:00452AD8 4B                      dec ebx
+:00452AD9 75D5                    jne 00452AB0
+:00452ADB 33DB                    xor ebx, ebx
+:00452ADD 399C08D8470000          cmp dword ptr [eax+ecx+000047D8], ebx
+:00452AE4 7E34                    jle 00452B1A
+:00452AE6 8BF1                    mov esi, ecx
+:00452AE8 80BC30F40D000000        cmp byte ptr [eax+esi+00000DF4], 00
+:00452AF0 741C                    je 00452B0E
+:00452AF2 83BC30F00D000000        cmp dword ptr [eax+esi+00000DF0], 00000000
+:00452AFA 8D9430F00D0000          lea edx, dword ptr [eax+esi+00000DF0]
+:00452B01 750B                    jne 00452B0E
+:00452B03 C70201000000            mov dword ptr [edx], 00000001
+:00452B09 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452B0E 43                      inc ebx
+:00452B0F 03F7                    add esi, edi
+:00452B11 3B9C08D8470000          cmp ebx, dword ptr [eax+ecx+000047D8]
+:00452B18 7CCE                    jl 00452AE8
+:00452B1A 6A08                    push 00000008
+:00452B1C 5E                      pop esi
+
+changed into
+
+:00452A9B 83FA06                  cmp edx, 00000006	Fire Wall
+:00452A9E 741B                    je 00452ABB
+:00452AA0 83FA28                  cmp edx, 00000028	Lightning Wall
+:00452AA3 7412                    je 00452AB7
+:00452AA5 83FA0D                  cmp edx, 0000000D	Guardian
+:00452AA8 7409                    je 00452AB3
+:00452AAA 83FA20                  cmp edx, 00000020	Sanctuary
+:00452AAD 7568                    jne 00452B17
+:00452AAF 6A11                    push 00000011		Sanctuary flame spell effect
+:00452AB1 EB16                    jmp 00452AC9
+:00452AB3 6A02                    push 00000002		Guardian spell effect
+:00452AB5 EB12                    jmp 00452AC9
+:00452AB7 6A46                    push 00000046		Lightning Wall patch spell effect
+:00452AB9 EB02                    jmp 00452ABD
+:00452ABB 6A05                    push 00000005		Fire Wall patch spell effect
+:00452ABD 8B80DC010000            mov eax, dword ptr [eax+000001DC]
+:00452AC3 8945F8                  mov dword ptr [ebp-08], eax
+:00452AC6 8B75FC                  mov esi, dword ptr [ebp-04]
+:00452AC9 5F                      pop edi
+:00452ACA A148D06900              mov eax, dword ptr [0069D048]
+:00452ACF 85C0                    test eax, eax
+:00452AD1 7E44                    jle 00452B17
+:00452AD3 53                      push ebx
+:00452AD4 8BD8                    mov ebx, eax
+:00452AD6 B968766900              mov ecx, 00697668
+:00452ADB 8B01                    mov eax, dword ptr [ecx]
+:00452ADD 69C0B0000000            imul eax, 000000B0
+:00452AE3 39B8587A6900            cmp dword ptr [eax+00697A58], edi
+:00452AE9 7525                    jne 00452B10
+:00452AEB 83FF11                  cmp edi, 00000011
+:00452AEE 740D                    je 00452AFD
+:00452AF0 83FF02                  cmp edi, 00000002
+:00452AF3 7408                    je 00452AFD
+:00452AF5 39B0CC7A6900            cmp dword ptr [eax+00697ACC], esi
+:00452AFB 7513                    jne 00452B10
+:00452AFD 52                      push edx
+:00452AFE 6A0F                    push 0000000F		smallest time needed for Guardian to finish animation
+:00452B00 5A                      pop edx
+:00452B01 3990C87A6900            cmp dword ptr [eax+00697AC8], edx
+:00452B07 7E06                    jle 00452B0F
+:00452B09 8990C87A6900            mov dword ptr [eax+00697AC8], edx
+:00452B0F 5A                      pop edx
+:00452B10 83C104                  add ecx, 00000004
+:00452B13 4B                      dec ebx
+:00452B14 75C5                    jne 00452ADB
+:00452B16 5B                      pop ebx
+:00452B17 E9F9950100              jmp 0046C115
+:00452B1C 90                      nop
+
+
+Inferno damage will depend on CLVL only, because the SLVL used is not correctly defined for all characters (common issue when previously learnable spells are replaced by not-learnable spells)
+
+Old damage is 1+(RND[clvl]+RND[8*slvl])/4 for each attack (20 attacks per second),
+new damage is 1+(RND[clvl]+RND[6*clvl])/4, also for each attack.
+
+file offset 0003443F
+
+:0043503F 50                      push eax
+:00435040 8BC8                    mov ecx, eax
+:00435042 E8403B0500              call 00488B87
+:00435047 B14F                    mov cl, 4F
+:00435049 E80C4FFEFF              call 00419F5A
+:0043504E 8BF8                    mov edi, eax
+:00435050 58                      pop eax
+:00435051 90                      nop
+:00435052 90                      nop
+:00435053 90                      nop
+:00435054 90                      nop
+:00435055 90                      nop
+:00435056 90                      nop
+:00435057 8B96887A6900            mov edx, dword ptr [esi+00697A88]
+:0043505D C1E203                  shl edx, 03
+:00435060 B14F                    mov cl, 4F
+:00435062 E8F34EFEFF              call 00419F5A
+:00435067 03F8                    add edi, eax
+:00435069 8D04FD20000000          lea eax, dword ptr [8*edi+00000020]
+:00435070 8BC8                    mov ecx, eax
+:00435072 D1E1                    shl ecx, 1
+:00435074 898ED47A6900            mov dword ptr [esi+00697AD4], ecx
+changed into
+:0043503F 8BC8                    mov ecx, eax
+:00435041 E8413B0500              call 00488B87
+:00435046 52                      push edx
+:00435047 ...
+:00435050 5A                      pop edx
+:00435051 6BD206                  imul edx, 00000006
+:00435054 EB0A                    jmp 00435060
+:00435056 90                      nop
+:00435057 909090909090909090      9*nop
+:00435060 ...
+
+Now 10 bytes free space from 00435056 to 00435060
+
+
+Guardian spellbook damage:
+
+Real Inferno damage is now 1+(RND[clvl]+RND[6*clvl])/4 for each attack (20 attacks per second). Damage displayed in the spellbook is a rough estimate of the total for one 'breath'.
+
+Using obsolete Fire Wall damage calculation for Guardian damage:
+
+file offset 0002E32B
+
+:0042EF2B 08
+changed into
+:0042EF2B 05
+
+file offset 0002DE15
+
+:0042EA15 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:0042EA1C 8D048508000000          lea eax, dword ptr [4*eax+00000008]
+:0042EA23 D1F8                    sar eax, 1			4+2*clvl
+:0042EA25 8902                    mov dword ptr [edx], eax
+:0042EA27 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042EA2C 69C0C8550000            imul eax, 000055C8
+:0042EA32 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042EA38 0FBE8408B8010000        movsx eax, byte ptr [eax+ecx+000001B8]
+:0042EA40 8D048550000000          lea eax, dword ptr [4*eax+00000050]
+:0042EA47 D1F8                    sar eax, 1			40+2*clvl
+:0042EA49 E901030000              jmp 0042ED4F
+changed into
+:0042EA15 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:0042EA1C 6BC006                  imul eax, 00000006
+:0042EA1F 8902                    mov dword ptr [edx], eax
+:0042EA21 8BC8                    mov ecx, eax
+:0042EA23 D1E0                    shl eax, 1
+:0042EA25 03C1                    add eax, ecx
+:0042EA27 E923030000              jmp 0042ED4F
+:0042EA2C 12*90                   12*nop
+
+Now 34 bytes free space from 0042EA2C to 0042EA4E.
+
+
+Increased damage for Fire Bolt and Doom Serpent traps:
+
+file offset 00035655
+
+:00436255 90                      nop
+:00436256 90                      nop
+:00436257 90                      nop
+changed into
+:00436255 41                      inc ecx
+:00436256 D1E1                    shl ecx, 1
+
+
+Increased damage for Lightning traps:
+
+file offset 0003654F
+
+:0043714F C1E103                  shl ecx, 03
+:00437152 8D3C48                  lea edi, dword ptr [eax+2*ecx]
+changed into
+:0043714F C1E104                  shl ecx, 04
+:00437152 8D3C41                  lea edi, dword ptr [ecx+2*eax]
+
+
+Increased damage for Lightning from Lightning Demons:
+
+file offset 00036534
+
+:00437134 03F8                    add edi, eax
+:00437136 C1E702                  shl edi, 02
+:00437139 90                      nop
+:0043713A 90                      nop
+changed into
+:00437134 D1E7                    shl edi, 1
+:00437136 03F8                    add edi, eax
+:00437138 C1E702                  shl edi, 02
+
+
+Correcting support for Lightning Demons in Lightning spell effect:
+
+file offset 0003661E
+
+:0043721E 83F94C                  cmp ecx, 0000004C
+:00437221 7C18                    jl 0043723B
+:00437223 83F94F                  cmp ecx, 0000004F
+changed into
+:0043721E 83F94B                  cmp ecx, 0000004B
+:00437221 7C18                    jl 0043723B
+:00437223 83F950                  cmp ecx, 00000050
+
+
+Increased damage for Flash from Mages:
+
+file offset 0003241F
+
+:0043301F C1E002                  shl eax, 02
+changed into
+:0043301F C1E003                  shl eax, 03
+
+file offset 00079F3F
+
+:0047AB3F C1E302                  shl ebx, 02
+changed into
+:0047AB3F C1E303                  shl ebx, 03
+
+
+Increased damage for Flash from characters:
+
+file offset 00032398
+
+:00432F98 6A02                    push 00000002
+changed into
+:00432F98 6A03                    push 00000003
+
+file offset 000324E0
+
+:004330E0 6A02                    push 00000002
+changed into
+:004330E0 6A03                    push 00000003
+
+
+Adjusted Spellbook damage for Flash:
+
+file offset 0002DDFB
+
+:0042E9FB 8BC8                    mov ecx, eax
+:0042E9FD D1F9                    sar ecx, 1
+:0042E9FF 03C1                    add eax, ecx
+changed into
+:0042E9FB C1E802                  shr eax, 02
+:0042E9FE 6BC007                  imul eax, 00000007
+
+
+Greatly increased gain from Mana spell:
+
+file offset 0003332D
+
+:00433F2D 6A06                    push 00000006
+changed into
+:00433F2D 6A20                    push 00000020
+
+Using CLVL/4 as replacement for SLVL with Mana spell (because SLVL was undefined for that spell):
+
+file offset 0003C965
+
+:0043D565 83F82F                  cmp eax, 0000002F
+changed into
+:0043D565 83F82E                  cmp eax, 0000002E
+
+
+Modified damage for Magic Missile, to make it less powerful for lower characters, yet more useful for higher characters:
+
+old min damage 2
+old max damage 2+CLVL+2*SLVL
+
+new min damage 2
+new max damage 2+(6+SLVL+MAG/32+CLVL/4)*(17/16)^(SLVL-1)
+
+Routine for recursive damage [EAX] over SLVL [ECX] (starting damage is 6+SLVL+MAG/32+CLVL/4):
+
+file offset 00051810
+
+:00452410 90                      nop
+:00452411 90                      nop
+:00452412 90                      nop
+:00452413 90                      nop
+:00452414 90                      nop
+:00452415 90                      nop
+:00452416 90                      nop
+:00452417 90                      nop
+:00452418 90                      nop
+:00452419 90                      nop
+:0045241A 90                      nop
+:0045241B 90                      nop
+:0045241C 90                      nop
+:0045241D 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:00452424 D1E0                    shl eax, 1
+:00452426 83F81A                  cmp eax, 0000001A
+:00452429 6A01                    push 00000001
+:0045242B 57                      push edi
+:0045242C 7D1C                    jge 0045244A
+:0045242E 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:00452434 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:0045243A 6A13                    push 00000013
+changed into
+:00452410 57                      push edi
+:00452411 0FBEB8B8010000          movsx edi, byte ptr [eax+000001B8]
+:00452418 8B806C010000            mov eax, dword ptr [eax+0000016C]
+:0045241E C1F803                  sar eax, 03
+:00452421 03C7                    add eax, edi
+:00452423 C1F802                  sar eax, 02
+:00452426 03C1                    add eax, ecx
+:00452428 49                      dec ecx
+:00452429 83C006                  add eax, 00000006
+:0045242C 85C9                    test ecx, ecx
+:0045242E 7E0A                    jle 0045243A
+:00452430 8BF8                    mov edi, eax
+:00452432 C1FF04                  sar edi, 04
+:00452435 03C7                    add eax, edi
+:00452437 49                      dec ecx
+:00452438 EBF2                    jmp 0045242C
+:0045243A 5F                      pop edi
+:0045243B C3                      ret
+
+MM real damage:
+
+file offset 0002F9A7
+
+:004305A7 0FBE90B8010000          movsx edx, byte ptr [eax+000001B8]
+:004305AE 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004305B4 40                      inc eax
+:004305B5 D1E0                    shl eax, 1
+:004305B7 03C2                    add eax, edx
+:004305B9 6A02                    push 00000002
+:004305BB 5A                      pop edx
+:004305BC C3                      ret
+:004305BD 90                      nop
+:004305BE 90                      nop
+changed into
+:004305A7 8B8E887A6900            mov ecx, dword ptr [esi+00697A88]
+:004305AD E85E1E0200              call 00452410
+:004305B2 6A02                    push 00000002
+:004305B4 5A                      pop edx
+:004305B5 03C2                    add eax, edx
+:004305B7 C3                      ret
+:004305B8 9090909090              5*nop
+:004305BD 90                      nop
+:004305BE 90                      nop
+
+Now 7 bytes free space from 004305B8 to 004305BF
+
+MM Spellbook damage:
+
+file offset 0002DFD3
+
+:0042EBD3 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:0042EBDA 03C6                    add eax, esi
+:0042EBDC 90                      nop
+:0042EBDD 90                      nop
+:0042EBDE 03C6                    add eax, esi
+changed into
+:0042EBD3 8BCE                    mov ecx, esi
+:0042EBD5 E836380200              call 00452410
+:0042EBDA 909090909090            6*nop
+
+
+Less piercing for Bone Spirit:
+
+file offset 0000889B
+
+:0040949B 0F842A610200            je 0042F5CB				100% piercing
+changed into
+:0040949B 0F8484F10400            je 00458625				25% piercing
+:004094A1 

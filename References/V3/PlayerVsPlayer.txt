@@ -1,0 +1,48 @@
+()Melee Player vs. Player : Friendly Hit enabled
+
+()Melee Player vs. Player : Max chance to hit  -  95% -> 75%
+
+:0045BF44 6A5F                    push 0000005F
+wordt
+:0045BF44 6A4B                    push 0000004B
+
+
+()Missile Player vs. Player : Max chance to hit  -  95% -> 60%
+
+:0043258C 83F85F                  cmp eax, 0000005F
+wordt
+:0043258C 83F83C                  cmp eax, 0000003C
+en
+:00432591 6A5F                    push 0000005F
+wordt
+:00432591 6A3C                    push 0000003C
+
+
+()WarriorVsPlayer Archer ToHit 10%  ->  20%, BardVsPlayer Archer ToHit 10%  -> 0%
+
+In navolging van PlayerVsMonster.
+
+:00432570 7503                    jne 00432575
+wordt
+:00432570 7F03                    jg 00432575
+
+:00432575 84D2                    test dl, dl
+wordt
+:00432575 EB0A                    jmp 00432581
+		
+
+()Player Vs. Player - Disable CriticalHit for Warrior/Barbarian in Melee
+
+Anders zou ook Monk die moeten krijgen?
+
+:0045C02D 7404                    je 0045C033
+wordt
+:0045C02D EB1B                    jmp 0045C04A
+
+
+Note:
+
+Uit de code blijkt dat in PvP-Melee van de vele mogelijke effecten alleen LifeStealing ondersteund wordt (voor de normale 0 - 12.5 %).
+
+In PvP-Archery doet iedereen behalve de Rogue effectief double damage, omdat hier volledige base damage wordt gebruikt, terwijl in ArcheryVsMonster voor niet-Rogues de halve base damage wordt genomen.
+

@@ -1,0 +1,39 @@
+Improving Cauldron and Blood Fountain
+
+File Offset 00051DD5
+
+:004529D5 90                      nop
+:004529D6 8B1DC0706000            mov ebx, dword ptr [006070C0]
+:004529DC C1E303                  shl ebx, 03
+:004529DF 43                      inc ebx
+:004529E0 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:004529E7 03D8                    add ebx, eax
+:004529E9 C1E306                  shl ebx, 06
+:004529EC C3                      ret
+wordt
+:004529D5 90                      nop
+:004529D6 909090909090            6*nop
+:004529DC 909090                  3*nop
+:004529DF 52                      push edx
+:004529E0 E8CF610300              call 00488BB4
+:004529E5 42                      inc edx
+:004529E6 8BDA                    mov ebx, edx
+:004529E8 5A                      pop edx
+:004529E9 C1E307                  shl ebx, 07
+:004529EC C3                      ret
+
+File Offset 00052AB1
+
+:004536B1 E820F3FFFF              call 004529D6
+wordt
+:004536B1 E829F3FFFF              call 004529DF
+:004536B6 
+
+File Offset 00052B55
+
+:00453755 E87CF2FFFF              call 004529D6
+wordt
+:00453755 E885F2FFFF              call 004529DF
+:0045375A 
+
+Now 10 bytes free at 004529D5.

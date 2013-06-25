@@ -1,0 +1,217 @@
+Stunning Monsters:
+
+Ook op:
+
+
+* Referenced by a CALL at Addresses:
+|:0043DBC5   , :0043DBD2   , :0044470A   
+|
+:0043DBDE 55                      push ebp
+
+En op:
+
+* Referenced by a CALL at Addresses:
+|:0042F258   , :0042F26E   , :0042F565   , :0042F596   , :0043E3AA   
+|:0043E56B   , :0043E5D7   , :004446FE   , :004494EC   , :0045BE30   
+|:0045BE52   
+|
+:0043CEAF 53                      push ebx
+:0043CEB0 55                      push ebp
+:0043CEB1 56                      push esi
+:0043CEB2 57                      push edi
+:0043CEB3 8BFA                    mov edi, edx
+:0043CEB5 8BD9                    mov ebx, ecx
+:0043CEB7 85FF                    test edi, edi
+:0043CEB9 7C16                    jl 0043CED1
+:0043CEBB 8BC3                    mov eax, ebx
+:0043CEBD 8BCF                    mov ecx, edi
+:0043CEBF 69C0E4000000            imul eax, 000000E4
+:0043CEC5 8DB047DD6900            lea esi, dword ptr [eax+0069DD47]
+:0043CECB B001                    mov al, 01
+:0043CECD D2E0                    shl al, cl
+:0043CECF 0806                    or byte ptr [esi], al
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CEB9(C)
+|
+:0043CED1 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:0043CED7 8B6C2414                mov ebp, dword ptr [esp+14]
+:0043CEDB 7525                    jne 0043CF02
+:0043CEDD A0D8B16000              mov al, byte ptr [0060B1D8]
+:0043CEE2 8BCB                    mov ecx, ebx
+:0043CEE4 50                      push eax
+:0043CEE5 8BC3                    mov eax, ebx
+:0043CEE7 69C0E4000000            imul eax, 000000E4
+:0043CEED 8B901CDD6900            mov edx, dword ptr [eax+0069DD1C]
+:0043CEF3 E804960000              call 004464FC
+:0043CEF8 8BD3                    mov edx, ebx
+:0043CEFA 33C9                    xor ecx, ecx
+:0043CEFC 55                      push ebp
+:0043CEFD E8D5A60000              call 004475D7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CEDB(C)
+|
+:0043CF02 6A01                    push 00000001
+:0043CF04 8BCB                    mov ecx, ebx
+:0043CF06 5A                      pop edx
+:0043CF07 E8E4B4FDFF              call 004183F0
+:0043CF0C 8BF3                    mov esi, ebx
+:0043CF0E 69F6E4000000            imul esi, 000000E4
+:0043CF14 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043CF1A 8B00                    mov eax, dword ptr [eax]
+:0043CF1C 83F81D                  cmp eax, 0000001D
+:0043CF1F 7C05                    jl 0043CF26			jmp if no hidden
+:0043CF21 83F820                  cmp eax, 00000020
+:0043CF24 7E15                    jle 0043CF3B			jmp if hidden
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF1F(C)
+|
+:0043CF26 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043CF2D 83C003                  add eax, 00000003
+:0043CF30 C1FD06                  sar ebp, 06
+:0043CF33 3BE8                    cmp ebp, eax
+:0043CF35 0F8C22010000            jl 0043D05D		jmp ret if damage < mlvl+3
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF24(C)
+|
+:0043CF3B 33ED                    xor ebp, ebp			monster gets stunned
+:0043CF3D 3BFD                    cmp edi, ebp
+:0043CF3F 7C39                    jl 0043CF7A
+:0043CF41 89BED4DC6900            mov dword ptr [esi+0069DCD4], edi
+:0043CF47 69FFC8550000            imul edi, 000055C8
+:0043CF4D A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043CF52 03C7                    add eax, edi
+:0043CF54 8A4840                  mov cl, byte ptr [eax+40]
+:0043CF57 888ED8DC6900            mov byte ptr [esi+0069DCD8], cl
+:0043CF5D 8A4044                  mov al, byte ptr [eax+44]
+:0043CF60 8886D9DC6900            mov byte ptr [esi+0069DCD9], al
+:0043CF66 83A624DD6900EF          and dword ptr [esi+0069DD24], FFFFFFEF
+:0043CF6D 8BCB                    mov ecx, ebx
+:0043CF6F E8F0000000              call 0043D064
+:0043CF74 8986D0DC6900            mov dword ptr [esi+0069DCD0], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF3F(C)
+|
+:0043CF7A 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043CF80 8B00                    mov eax, dword ptr [eax]
+:0043CF82 83F827                  cmp eax, 00000027
+:0043CF85 7509                    jne 0043CF90			jmp if no blink
+:0043CF87 8BCB                    mov ecx, ebx
+:0043CF89 E8721D0000              call 0043ED00
+:0043CF8E EB22                    jmp 0043CFB2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF85(C)
+|
+:0043CF90 83F810                  cmp eax, 00000010
+:0043CF93 7C05                    jl 0043CF9A			jmp if no scavenger
+:0043CF95 83F813                  cmp eax, 00000013
+:0043CF98 7E05                    jle 0043CF9F			jmp if scavenger
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF93(C)
+|
+:0043CF9A 83F87D                  cmp eax, 0000007D		
+:0043CF9D 7513                    jne 0043CFB2			jmp if no gravedigger
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF98(C)
+|
+:0043CF9F C68690DC690001          mov byte ptr [esi+0069DC90], 01
+:0043CFA6 89AE94DC6900            mov dword ptr [esi+0069DC94], ebp
+:0043CFAC 89AE98DC6900            mov dword ptr [esi+0069DC98], ebp
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043CF8E(U), :0043CF9D(C)
+|
+:0043CFB2 83BE8CDC69000F          cmp dword ptr [esi+0069DC8C], 0000000F
+:0043CFB9 8DBE8CDC6900            lea edi, dword ptr [esi+0069DC8C]
+:0043CFBF 0F8498000000            je 0043D05D
+:0043CFC5 8B9664DD6900            mov edx, dword ptr [esi+0069DD64]
+:0043CFCB FFB6D0DC6900            push dword ptr [esi+0069DCD0]
+:0043CFD1 81C28C000000            add edx, 0000008C
+:0043CFD7 8BCB                    mov ecx, ebx
+:0043CFD9 E8BCFCFFFF              call 0043CC9A
+:0043CFDE C70705000000            mov dword ptr [edi], 00000005
+:0043CFE4 89AEC0DC6900            mov dword ptr [esi+0069DCC0], ebp
+:0043CFEA 89AEC4DC6900            mov dword ptr [esi+0069DCC4], ebp
+:0043CFF0 8B86B8DC6900            mov eax, dword ptr [esi+0069DCB8]
+:0043CFF6 8986A8DC6900            mov dword ptr [esi+0069DCA8], eax
+:0043CFFC 8B86BCDC6900            mov eax, dword ptr [esi+0069DCBC]
+:0043D002 8986ACDC6900            mov dword ptr [esi+0069DCAC], eax
+:0043D008 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043D00E 8986B0DC6900            mov dword ptr [esi+0069DCB0], eax
+:0043D014 8B86ACDC6900            mov eax, dword ptr [esi+0069DCAC]
+:0043D01A 8986B4DC6900            mov dword ptr [esi+0069DCB4], eax
+:0043D020 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043D026 8986B8DC6900            mov dword ptr [esi+0069DCB8], eax
+:0043D02C 8B86ACDC6900            mov eax, dword ptr [esi+0069DCAC]
+:0043D032 8BCB                    mov ecx, ebx
+:0043D034 8986BCDC6900            mov dword ptr [esi+0069DCBC], eax
+:0043D03A E899FCFFFF              call 0043CCD8
+:0043D03F 8BCB                    mov ecx, ebx
+:0043D041 E8ECFCFFFF              call 0043CD32
+:0043D046 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043D04C 43                      inc ebx
+:0043D04D 6BC070                  imul eax, 00000070
+:0043D050 0386ACDC6900            add eax, dword ptr [esi+0069DCAC]
+:0043D056 891C85E0D15700          mov dword ptr [4*eax+0057D1E0], ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043CF35(C), :0043CFBF(C)
+|
+:0043D05D 5F                      pop edi
+:0043D05E 5E                      pop esi
+:0043D05F 5D                      pop ebp
+:0043D060 5B                      pop ebx
+:0043D061 C20400                  ret 0004
+
+
+
+()Voorstel: ALLE hiddens schrikken van 1 of meer damage
+
+:0043CF1C 83F81D                  cmp eax, 0000001D
+:0043CF1F 7C05                    jl 0043CF26			jmp if no hidden
+:0043CF21 83F820                  cmp eax, 00000020
+:0043CF24 7E15                    jle 0043CF3B			jmp if hidden
+wordt
+:0043CF1C E8BE030000   (?)        call 0043D2DA			call CHECK_HIDDEN
+:0043CF21 85C0                    test eax, eax
+:0043CF23 7517                    jne 0043CF3B			jmp if hidden
+:0043CF25 90                      nop
+
+en
+
+:0043DC5B 83F81D                  cmp eax, 0000001D
+:0043DC5E 7C05                    jl 0043DC65
+:0043DC60 83F820                  cmp eax, 00000020
+:0043DC63 7E15                    jle 0043DC7A
+wordt
+:0043DC5B E87FF6FFFF              call 0043D2DA
+:0043DC60 7C05                    test eax, eax
+:0043DC62 7515                    jne 0043DC7A
+:0043DC64 90                      nop
+
+
+CHECK_HIDDEN:
+Plaatsing over oude DiabloDeath routine, na de DiabloSpeech.
+
+:0043D2DA 83F81D                  cmp eax, 0000001D
+:0043D2DE 7C0F                    jl 0043D2F0			jmp if no hidden
+:0043D2E0 83F820                  cmp eax, 00000020
+:0043D2E3 7E0D                    jle 0043D2F3			jmp if hidden
+:0043D2E5 83F85D                  cmp eax, 0000005D
+:0043D2E8 7408                    je 0043D2F3			jmp if realityweaver
+:0043D2EA 83F877                  cmp eax, 00000077
+:0043D2ED 7403                    je 0043D2F3			jmp if shadow
+:0043D2F0 33C0                    xor eax, eax
+:0043D2F2 C3              	  ret
+:0043D2F3 6A01                    push 00000001
+:0043D2F5 58                      pop eax
+:0043D2F6 C3              	  ret
+:0043D2F7 909090              	  3*nop
+

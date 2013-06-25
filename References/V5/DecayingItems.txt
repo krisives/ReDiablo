@@ -1,0 +1,520 @@
+Decaying items
+
+Instead of destroying items when durability reaches 0, the max durability will be lowered. Destruction will happen when max durability is depleted.
+
+See also Indestructable.TXT and DurableItems.TXT
+
+
+
+
+
+The following is for Diablo, by OmleTTooos.
+
+WeaponDur
+
+:0044F623 85C9                    test ecx, ecx
+:0044F625 8908                    mov dword ptr [eax], ecx
+:0044F627 0F848C000000            je 0044F6B9
+
+--- change to --->
+
+:0044F623 0F8C????????            jl WWWWWWWW    ;if CurDur=0, jmp to Drop MaxDur
+:0044F629 8908                    mov dword ptr [eax], ecx
+:0044F62B 9090                    2x nop
+
+ 
+
+:0044F652 85C9                    test ecx, ecx
+:0044F654 8908                    mov dword ptr [eax], ecx
+:0044F656 7428                    je 0044F680
+
+--- change to --->
+
+:0044F652 E9????????              jmp XXXXXXXX
+:0044F657 90 
+
+ 
+
+:0044F67A 85C9                    test ecx, ecx
+:0044F67C 8908                    mov dword ptr [eax], ecx
+:0044F67E 7511                    jne 0044F691
+
+--- change to --->
+
+:0044F67A E9????????              jmp YYYYYYYY
+:0044F67F 90                      nop
+
+ 
+
+:0044F6B3 85C9                    test ecx, ecx
+:0044F6B5 8908                    mov dword ptr [eax], ecx
+:0044F6B7 751C                    jne 0044F6D5
+
+--- change to --->
+
+:0044F6B3 E9????????              jmp ZZZZZZZZ
+:0044F6B8 90                      nop
+
+ 
+
+--- free space is needed for the following ---
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F623(C)
+|                                                                    ;WWWWWWWW Drop MaxDur
+:0044FB60 8B8EA4816800            mov ecx, dword ptr [esi+006881A4]  ;MaxDur
+:0044FB66 8D86A4816800            lea eax, dword ptr [esi+006881A4]
+:0044FB6C 49                      dec ecx                            ;decrease MaxDur by 1
+:0044FB6D 0F8446FBFFFF            je 0044F6B9                        ;if MaxDur=0, jmp to Destroy Item
+:0044FB73 8908                    mov dword ptr [eax], ecx           ;store MaxDur
+:0044FB75 E9B3FAFFFF              jmp 0044F62D                       ;jmp to 2nd Part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F652(U)
+|                                                                    ;XXXXXXXX
+:0044FB7A 7C04                    jl 0044FB80                        ;if CurDur=0, jmp to Drop MaxDur
+:0044FB7C 8908                    mov dword ptr [eax], ecx           ;store CurDur
+:0044FB7E EB15                    jmp 0044FB95                       ;jmp to 3rd Part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB7A(C)
+|                                                                    ;Drop MaxDur
+:0044FB80 8B8E14836800            mov ecx, dword ptr [esi+00688314]  ;MaxDur
+:0044FB86 8D8614836800            lea eax, dword ptr [esi+00688314]
+:0044FB8C 49                      dec ecx                            ;decrease MaxDur by 1
+:0044FB8D 0F84EDFAFFFF            je 0044F680                        ;if MaxDur=0, jmp to Destroy Item
+:0044FB93 8908                    mov dword ptr [eax], ecx           ;store MaxDur
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB7E(U)
+|
+:0044FB95 E9BEFAFFFF              jmp 0044F658                       ;jmp to 3rd Part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F67A(U)
+|                                                                    ;YYYYYYYY
+:0044FB9A 7C04                    jl 0044FBA0                        ;if CurDur=0, jmp to Drop MaxDur
+:0044FB9C 8908                    mov dword ptr [eax], ecx           ;store CurDur
+:0044FB9E EB15                    jmp 0044FBB5                       ;jmp to 4th Part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB9A(C)
+|                                                                    ;Drop MaxDur
+:0044FBA0 8B8E14836800            mov ecx, dword ptr [esi+00688314]  ;MaxDur
+:0044FBA6 8D8614836800            lea eax, dword ptr [esi+00688314]
+:0044FBAC 49                      dec ecx                             ;decrease MaxDur by 1
+:0044FBAD 0F84CDFAFFFF            je 0044F680                        ;if MaxDur=0, jmp to Destroy Item
+:0044FBB3 8908                    mov dword ptr [eax], ecx           ;store MaxDur
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB9E(U)
+|
+:0044FBB5 E9D7FAFFFF              jmp 0044F691                       ;jmp to 4th Part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F6B3(U)
+|                                                                    ;ZZZZZZZZ
+:0044FBBA 7C04                    jl 0044FBC0                        ;if CurDur=0, jmp to Drop MaxDur
+:0044FBBC 8908                    mov dword ptr [eax], ecx           ;store CurDur
+:0044FBBE EB15                    jmp 0044FBD5                       ;jmp to End
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FBBA(C)
+|                                                                    ;Drop MaxDur
+:0044FBC0 8B8EA4816800            mov ecx, dword ptr [esi+006881A4]  ;MaxDur
+:0044FBC6 8D86A4816800            lea eax, dword ptr [esi+006881A4]
+:0044FBCC 49                      dec ecx                            ;decrease MaxDur by 1
+:0044FBCD 0F84E6FAFFFF            je 0044F6B9                        ;if MaxDur=0, jmp to Destroy Item
+:0044FBD3 8908                    mov dword ptr [eax], ecx           ;store MaxDur
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FBBE(U)
+|
+:0044FBD5 E9FBFAFFFF              jmp 0044F6D5                       ;jmp to End
+
+ 
+
+--- original code ---
+
+* Referenced by a CALL at Addresses:
+|:0044FEF4   , :0044FFEC   
+|
+:0044F5B8 53                      push ebx
+:0044F5B9 55                      push ebp
+:0044F5BA 56                      push esi
+:0044F5BB 57                      push edi
+:0044F5BC 8BF9                    mov edi, ecx
+:0044F5BE 3B3D74776800            cmp edi, dword ptr [00687774]
+:0044F5C4 0F850B010000            jne 0044F6D5
+:0044F5CA B103                    mov cl, 03
+:0044F5CC E8A686FCFF              call 00417C77
+:0044F5D1 85C0                    test eax, eax
+:0044F5D3 0F85FC000000            jne 0044F6D5
+:0044F5D9 83FF04                  cmp edi, 00000004
+:0044F5DC 720D                    jb 0044F5EB
+:0044F5DE 57                      push edi
+
+* Possible StringData Ref from Data Obj ->"WeaponDur: illegal player %d"
+                                  |
+:0044F5DF 68D0264A00              push 004A26D0
+:0044F5E4 E89923FBFF              call 00401982
+:0044F5E9 59                      pop ecx
+:0044F5EA 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F5DC(C)
+|                                                                     ;1st Part
+:0044F5EB 8BF7                    mov esi, edi
+:0044F5ED 83CDFF                  or ebp, FFFFFFFF
+:0044F5F0 69F6D8540000            imul esi, 000054D8
+:0044F5F6 6A01                    push 00000001
+:0044F5F8 BAFF000000              mov edx, 000000FF
+:0044F5FD 39AEBC806800            cmp dword ptr [esi+006880BC], ebp   ;Weaponslot primary
+:0044F603 5B                      pop ebx
+:0044F604 7427                    je 0044F62D
+:0044F606 389E72816800            cmp byte ptr [esi+00688172], bl     ;item class (??)
+:0044F60C 751F                    jne 0044F62D
+:0044F60E 8B8EA0816800            mov ecx, dword ptr [esi+006881A0]   ;CurDur
+:0044F614 8D86A0816800            lea eax, dword ptr [esi+006881A0]
+:0044F61A 3BCA                    cmp ecx, edx                        ;check if item indestructible
+:0044F61C 0F84B3000000            je 0044F6D5
+:0044F622 49                      dec ecx                             ;dec CurDur
+:0044F623 85C9                    test ecx, ecx                       ;check if CurDur=0
+:0044F625 8908                    mov dword ptr [eax], ecx            ;store CurDur
+:0044F627 0F848C000000            je 0044F6B9                         ;if yes, jmp to Destroy Item
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044F604(C), :0044F60C(C)
+|                                                                     ;2nd Part
+:0044F62D 39AE2C826800            cmp dword ptr [esi+0068822C], ebp   ;Weaponslot secondary
+:0044F633 7423                    je 0044F658
+:0044F635 389EE2826800            cmp byte ptr [esi+006882E2], bl     ;2nd weapon/shield slot
+:0044F63B 751B                    jne 0044F658
+:0044F63D 8B8E10836800            mov ecx, dword ptr [esi+00688310]   ;CurDur
+:0044F643 8D8610836800            lea eax, dword ptr [esi+00688310]
+:0044F649 3BCA                    cmp ecx, edx                        ;check if item indestructible
+:0044F64B 0F8484000000            je 0044F6D5
+:0044F651 49                      dec ecx                             ;dec CurDur
+:0044F652 85C9                    test ecx, ecx                       ;check if CurDur=0
+:0044F654 8908                    mov dword ptr [eax], ecx            ;store CurDur
+:0044F656 7428                    je 0044F680                         ;if yes, jmp to Destroy Item
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044F633(C), :0044F63B(C)
+|                                                                     ;3rd Part
+:0044F658 39AEBC806800            cmp dword ptr [esi+006880BC], ebp   ;Weaponslot primary
+:0044F65E 7531                    jne 0044F691
+:0044F660 83BE2C82680005          cmp dword ptr [esi+0068822C], 00000005  ;Weaponslot Secondary, shield
+:0044F667 7528                    jne 0044F691
+:0044F669 8B8E10836800            mov ecx, dword ptr [esi+00688310]   ;CurDur
+:0044F66F 8D8610836800            lea eax, dword ptr [esi+00688310]
+:0044F675 3BCA                    cmp ecx, edx                        ;check if item indestructible
+:0044F677 745C                    je 0044F6D5
+:0044F679 49                      dec ecx                             ;dec CurDur
+:0044F67A 85C9                    test ecx, ecx                       ;check if CurDur=0
+:0044F67C 8908                    mov dword ptr [eax], ecx            ;store CurDur
+:0044F67E 7511                    jne 0044F691
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F656(C)
+|                                                                     ;Destroy Item
+:0044F680 B205                    mov dl, 05
+:0044F682 8BCB                    mov ecx, ebx
+:0044F684 E849ECFEFF              call 0043E2D2
+:0044F689 89AE2C826800            mov dword ptr [esi+0068822C], ebp   ;Weaponslot secondary
+:0044F68F EB37                    jmp 0044F6C8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044F65E(C), :0044F667(C), :0044F67E(C)
+|                                                                     ;4th Part
+:0044F691 39AE2C826800            cmp dword ptr [esi+0068822C], ebp   ;Weaponslot secondary
+:0044F697 753C                    jne 0044F6D5
+:0044F699 83BEBC80680005          cmp dword ptr [esi+006880BC], 00000005  ;Weaponslot primary, shield
+:0044F6A0 7533                    jne 0044F6D5
+:0044F6A2 8B8EA0816800            mov ecx, dword ptr [esi+006881A0]   ;CurDur
+:0044F6A8 8D86A0816800            lea eax, dword ptr [esi+006881A0]
+:0044F6AE 3BCA                    cmp ecx, edx                        ;check if item indestructible
+:0044F6B0 7423                    je 0044F6D5
+:0044F6B2 49                      dec ecx                             ;dec CurDur
+:0044F6B3 85C9                    test ecx, ecx                       ;check if CurDur=0
+:0044F6B5 8908                    mov dword ptr [eax], ecx            ;store CurDur
+:0044F6B7 751C                    jne 0044F6D5
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F627(C)
+|                                                                     ;Destroy Item
+:0044F6B9 B204                    mov dl, 04
+:0044F6BB 8BCB                    mov ecx, ebx
+:0044F6BD E810ECFEFF              call 0043E2D2
+:0044F6C2 89AEBC806800            mov dword ptr [esi+006880BC], ebp   ;Weaponslot primary
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F68F(U)
+|
+:0044F6C8 8BD3                    mov edx, ebx
+:0044F6CA 8BCF                    mov ecx, edi
+:0044F6CC E85F10FDFF              call 00420730
+:0044F6D1 8BC3                    mov eax, ebx
+:0044F6D3 EB02                    jmp 0044F6D7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044F5C4(C), :0044F5D3(C), :0044F61C(C), :0044F64B(C), :0044F677(C)
+|:0044F697(C), :0044F6A0(C), :0044F6B0(C), :0044F6B7(C)
+|                                                                      ;End
+:0044F6D5 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044F6D3(U)
+|
+:0044F6D7 5F                      pop edi
+:0044F6D8 5E                      pop esi
+:0044F6D9 5D                      pop ebp
+:0044F6DA 5B                      pop ebx
+:0044F6DB C3                      ret
+
+
+
+
+
+ShieldDur
+
+
+:0045006B 85C9                    test ecx, ecx
+:0045006D 8908                    mov dword ptr [eax], ecx
+:0045006F 751B                    jne 0045008C
+->
+:0045006B E9XXXXXXXX              jmp XXXXXXXX
+:00450070 90                      nop
+
+ 
+
+:004500A6 85C9                    test ecx, ecx
+:004500A8 8908                    mov dword ptr [eax], ecx
+:004500AA 751B                    jne 004500C7
+->
+:004500A6 E9YYYYYYYY              jmp YYYYYYYY
+:004500AB 90                      nop
+
+ 
+
+--- free space is needed for the following ---
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045006B(U)
+|                                                                    ;XXXXXXXX
+:0044FB20 7407                    je 0044FB29                        ;if CurDur=0, jmp to Drop MaxDur
+:0044FB22 8908                    mov dword ptr [eax], ecx           ;store CurDur
+:0044FB24 E963050000              jmp 0045008C                       ;jmp to 2nd part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB20(C)
+|                                                                    ;Drop MaxDur
+:0044FB29 8B8EA4816800            mov ecx, dword ptr [esi+006881A4]  ;MaxDur
+:0044FB2F 8D86A4816800            lea eax, dword ptr [esi+006881A4]
+:0044FB35 49                      dec ecx                            ;decrease MaxDur by 1
+:0044FB36 0F8435050000            je 00450071               &n`sp;        ;if MaxDur=0, jmp to Destroy Item
+:0044FB3C 8908                    mov dword ptr [eax], ecx           ;store MaxDur
+:0044FB3E E949050000              jmp 0045008C                       ;jmp to 2nd part
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004500A6(U)
+|                                                                    ;YYYYYYYY
+:0044FB43 7407                    je 0044FB4C                        ;if CurDur=0, jmp to Drop MaxDur
+:0044FB45 8908                    mov dword ptr [eax], ecx           ;store CurDur
+:0044FB47 E97B050000              jmp 004500C7                       ;jmp to End
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB43(C)
+|                                                                    ;Drop MaxDur
+:0044FB4C 8B8E14836800            mov ecx, dword ptr [esi+00688314]  ;MaxDur
+:0044FB52 8D8614836800            lea eax, dword ptr [esi+00688314]
+:0044FB58 49                      dec ecx                            ;decrease MaxDur by 1
+:0044FB59 0F844D050000            je 004500AC                        ;if MaxDur=0, jmp to Destroy Item
+:0044FB5F 8908                    mov dword ptr [eax], ecx           ;store MaxDur
+:0044FB61 E961050000              jmp 004500C7                       ;jmp to End
+
+ 
+
+--- original code ---
+
+* Referenced by a CALL at Address:
+|:0045013A   
+|
+:00450021 53                      push ebx
+:00450022 56                      push esi
+:00450023 57                      push edi
+:00450024 8BF9                    mov edi, ecx
+:00450026 3B3D74776800            cmp edi, dword ptr [00687774]
+:0045002C 0F8595000000            jne 004500C7
+:00450032 83FF04                  cmp edi, 00000004
+:00450035 720D                    jb 00450044
+:00450037 57                      push edi
+
+* Possible StringData Ref from Data Obj ->"ShieldDur: illegal player %d"
+                                  |
+:00450038 68C0274A00              push 004A27C0
+:0045003D E84019FBFF              call 00401982
+:00450042 59                      pop ecx
+:00450043 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00450035(C)
+|
+:00450044 8BF7                    mov esi, edi
+:00450046 BBFF000000              mov ebx, 000000FF
+:0045004B 69F6D8540000            imul esi, 000054D8
+:00450051 83BEBC80680005          cmp dword ptr [esi+006880BC], 00000005 ;check if primary hand=shield
+:00450058 7532                    jne 0045008C                       ;if not, jmp to 2nd part
+:0045005A 8B8EA0816800            mov ecx, dword ptr [esi+006881A0]  ;current durability
+:00450060 8D86A0816800            lea eax, dword ptr [esi+006881A0]
+:00450066 3BCB                    cmp ecx, ebx                       ;check if item indestructible
+:00450068 745D                    je 004500C7                        ;if yes, jmp to End
+:0045006A 49                      dec ecx                            ;decrease CurDur by 1
+:0045006B 85C9                    test ecx, ecx
+:0045006D 8908                    mov dword ptr [eax], ecx
+:0045006F 751B                    jne 0045008C
+:00450071 6A01                    push 00000001                      ;Destroy Item
+:00450073 B204                    mov dl, 04
+:00450075 59                      pop ecx
+:00450076 E857E2FEFF              call 0043E2D2
+:0045007B 838EBC806800FF          or dword ptr [esi+006880BC], FFFFFFFF
+:00450082 8BCF                    mov ecx, edi
+:00450084 6A01                    push 00000001
+:00450086 5A                      pop edx
+:00450087 E8A406FDFF              call 00420730
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00450058(C), :0045006F(C)
+|                                                                     ;2nd Part
+:0045008C 83BE2C82680005          cmp dword ptr [esi+0068822C], 00000005 ;check if secondary hand=shield
+:00450093 7532                    jne 004500C7                        ;if not, jmp to End
+:00450095 8B8E10836800            mov ecx, dword ptr [esi+00688310]   ;current durability
+:0045009B 8D8610836800            lea eax, dword ptr [esi+00688310]
+:004500A1 3BCB                    cmp ecx, ebx                        ;check if item indestructible
+:004500A3 7422                    je 004500C7                         ;if yes, jmp to End
+:004500A5 49                      dec ecx                             ;decrease CurDur by 1
+:004500A6 85C9                    test ecx, ecx
+:004500A8 8908                    mov dword ptr [eax], ecx
+:004500AA 751B                    jne 004500C7
+:004500AC 6A01                    push 00000001                       ;Destroy Item
+:004500AE B205                    mov dl, 05
+:004500B0 59                      pop ecx
+:004500B1 E81CE2FEFF              call 0043E2D2
+:004500B6 838E2C826800FF          or dword ptr [esi+0068822C], FFFFFFFF
+:004500BD 8BCF                    mov ecx, edi
+:004500BF 6A01                    push 00000001
+:004500C1 5A                      pop edx
+:004500C2 E86906FDFF              call 00420730
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045002C(C), :00450068(C), :00450093(C), :004500A3(C), :004500AA(C)
+|                                                                      ;End
+:004500C7 5F                      pop edi
+:004500C8 5E                      pop esi
+:004500C9 5B                      pop ebx
+:004500CA C3                      ret
+
+
+improved code for ShieldDur at free space:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045006B(U)
+|
+:0044FB20 7C04                    jl 0044FB26
+:0044FB22 8908                    mov dword ptr [eax], ecx
+:0044FB24 EB15                    jmp 0044FB3B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB20(C)
+|
+:0044FB26 8B8EA4816800            mov ecx, dword ptr [esi+006881A4]
+:0044FB2C 8D86A4816800            lea eax, dword ptr [esi+006881A4]
+:0044FB32 49                      dec ecx
+:0044FB33 0F8438050000            je 00450071
+:0044FB39 8908                    mov dword ptr [eax], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB24(U)
+|
+:0044FB3B E94C050000              jmp 0045008C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004500A6(U)
+|
+:0044FB40 7C04                    jl 0044FB46
+:0044FB42 8908                    mov dword ptr [eax], ecx
+:0044FB44 EB15                    jmp 0044FB5B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB40(C)
+|
+:0044FB46 8B8E14836800            mov ecx, dword ptr [esi+00688314]
+:0044FB4C 8D8614836800            lea eax, dword ptr [esi+00688314]
+:0044FB52 49                      dec ecx
+:0044FB53 0F8453050000            je 004500AC
+:0044FB59 8908                    mov dword ptr [eax], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB44(U)
+|
+:0044FB5B E967050000              jmp 004500C7
+
+
+
+
+
+ArmorDur
+
+:004503BF 8B8EEC000000            mov ecx, dword ptr [esi+000000EC]  ;current durability
+:004503C5 8D96EC000000            lea edx, dword ptr [esi+000000EC]
+:004503CB 81F9FF000000            cmp ecx, 000000FF                  ;check if item indestructible
+:004503D1 7426                    je 004503F9                        ;if yes, jmp to End
+:004503D3 81F900000000            cmp ecx, 00000000                  ;check if CurDur=0
+:004503D9 0F8427F7FFFF            je 0044FB06                        ;if yes, jmp to Drop MaxDur (free space)
+:004503DF 49                      dec ecx                            ;decrease CurDur by 1
+:004503E0 890A                    mov dword ptr [edx], ecx           ;store CurDur
+:004503E2 EB15                    jmp 004503F9                       ;jmp to End
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044FB1B(C)
+|                                                                    ;Destroy item
+:004503E4 6A01                    push 00000001
+:004503E6 59                      pop ecx
+:004503E7 E8E6DEFEFF              call 0043E2D2
+:004503EC 8BCD                    mov ecx, ebp
+:004503EE 895E08                  mov dword ptr [esi+08], ebx
+:004503F1 6A01                    push 00000001
+:004503F3 5A                      pop edx
+:004503F4 E83703FDFF              call 00420730
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044FB21(U), :00450345(C), :00450382(C), :004503D1(C), :004503E2(U)
+|                                                                     ;End
+:004503F9 5F                      pop edi
+:004503FA 5E                      pop esi
+:004503FB 5D                      pop ebp
+:004503FC 5B                      pop ebx
+:004503FD C3                      ret
+
+ 
+
+;--- free space is needed for the following ---
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004503D9(C)
+|                                                                    ;Drop MaxDur
+:0044FB06 8B8EF0000000            mov ecx, dword ptr [esi+000000F0]  ;max durability
+:0044FB0C 8D96F0000000            lea edx, dword ptr [esi+000000F0]
+:0044FB12 49                      dec ecx                            ;decrease MaxDur
+:0044FB13 890A                    mov dword ptr [edx], ecx           ;store MaxDur
+:0044FB15 81F900000000            cmp ecx, 00000000                  ;check if MaxDur=0
+:0044FB1B 0F84C3080000            je 004503E4                        ;if yes, jmp to Destroy item
+:0044FB21 E9D3080000              jmp 004503F9                       ;jmp to End
+
+ 
+
+
+
+
+
+

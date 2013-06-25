@@ -1,0 +1,25 @@
+The Escape spell was already given a wider range of possible coordinates, but not enough to ensure that the spell will work in 3 tiles wide corridors. Now the spell will allow for more nearby coordinates.
+
+
+New jump range: 3+Rnd[7] -> 1+Rnd[9]
+
+File offset 00030993
+
+:00431593 6A07                    push 00000007
+changed into
+:00431593 6A09                    push 00000009
+
+File offset 000309A1
+
+:004315A1 6A07                    push 00000007
+:004315A3 83C703                  add edi, 00000003
+changed into
+:004315A1 6A09                    push 00000009
+:004315A3 83C701                  add edi, 00000001
+
+File offset 000309B2
+
+:004315B2 83C603                  add esi, 00000003
+changed into
+:004315B2 83C601                  add esi, 00000001
+

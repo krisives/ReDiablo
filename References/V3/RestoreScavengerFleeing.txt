@@ -1,0 +1,13 @@
+Restoring the modified Scavenging breakpoint, because monsters fled to soon.
+
+Activating Scavenging for Life < 1/2 Hp, not 3/4 Hp for Scavengers and Gravediggers:
+
+File Offset 00040AC8
+
+:004416C8 E8B0000000              call 0044177D
+:004416CD 909090                  3*nop
+wordt
+:004416C8 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:004416CE D1F8                    sar eax, 1
+
+Mages are still quick to phase away.

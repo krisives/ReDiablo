@@ -1,0 +1,15 @@
+
+() Fix voor negatieve Golem regeneratie. 
+
+De gebruikte check op monsterslot voldoet blijkbaar niet, dus hierbij een poging mbv. Attacktype.
+
+:0044385A 83BE64DD69006D          cmp dword ptr [esi+0069DD64], 0000006D
+wordt
+:0044385A 80BE20DD690015          cmp byte ptr [esi+0069DD20], 15
+
+
+() View Golem as a boss
+
+:0042F9A9 83396E                  cmp dword ptr [ecx], 0000006E
+wordt
+:0042F9A9 83396D                  cmp dword ptr [ecx], 0000006D

@@ -1,0 +1,17 @@
+()Set XP cap in MP to 250*clvl ipv. 300 of 200.
+
+300 is toch wat hoog waarschijnlijk.
+
+:00458552 69C9C8000000            imul ecx, 000000C8
+wordt
+:00458552 69C9FA000000            imul ecx, 000000FA
+
+
+()Barbarian gets stunned at damage>1.5*clvl
+
+De vorige aanpassing heeft tot gevolg dat een beginnende barbaar (vrijwel) nooit gestunned raakt, en dus ook weinig onkosten heeft. Ik had bij een test met een nieuwe barbaar op clvl 10 al meer dan 10000 gold bij elkaar verzameld. Het enige wat potions kostte waren de horrorarchers op dlvl 4. De Butcher kreeg maar kans voor 1 tik, op clvl 10 dus. To Hit was geen probleem, waarschijnlijk omdat ik alle gevonden (8 of zo) Accuracy oils gebruikt heb.
+
+:00459F1D 6A01                    push 00000001
+wordt
+:00459F1D 6A02                    push 00000002
+

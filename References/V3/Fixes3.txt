@@ -1,0 +1,15 @@
+()Fixed check on Infravision:
+
+:0044446F F6804055000001          test byte ptr [eax+00005540], 01
+:00444476 7404                    je 0044447C
+:00444478 6A01                    push 00000001
+:0044447A 58                      pop eax
+:0044447B C3                      ret
+:0044447C 33C0                    xor eax, eax
+:0044447E C3                      ret
+wordt
+:0044446F 8B80D0010000            mov eax, dword ptr [eax+000001D0]
+:00444475 C3                      ret
+:00444476 909090909090909090	  9*nop
+
+

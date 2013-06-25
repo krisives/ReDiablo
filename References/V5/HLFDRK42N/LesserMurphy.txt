@@ -1,0 +1,7 @@
+Lowering the chance Murphy Shrine will break an item:
+
+file offset 000523D2
+
+:00452FD2 6A05                    push 00000005
+changed into
+:00452FD2 6A0A                    push 0000000A

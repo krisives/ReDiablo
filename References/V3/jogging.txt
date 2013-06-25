@@ -1,0 +1,75 @@
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0041B6E8(U)
+|
+:0041B528 56                      push esi
+:0041B529 6A02                    push 00000002
+:0041B52B BE64054A00              mov esi, 004A0564
+:0041B530 5A                      pop edx				edx := 2
+:0041B531 8BCE                    mov ecx, esi
+:0041B533 E85C1B0000              call 0041D094
+:0041B538 33D2                    xor edx, edx
+:0041B53A 8BCE                    mov ecx, esi
+:0041B53C FF35B0044A00            push dword ptr [004A04B0]		Starting mode (0 = walk, 1 = jog)
+:0041B542 6A01                    push 00000001
+:0041B544 E8CC1A0000              call 0041D015
+:0041B549 33C0                    xor eax, eax
+:0041B54B 3905B0044A00            cmp dword ptr [004A04B0], eax		test if Jog ?
+:0041B551 5E                      pop esi
+:0041B552 0F94C0                  sete al				set to 1 if eq
+:0041B555 8B048598054A00          mov eax, dword ptr [4*eax+004A0598]	display jog if eax = 0, walk if eax = 1
+:0041B55C A368054A00              mov dword ptr [004A0568], eax
+:0041B561 C3                      ret
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:0041B4E8   , :0041B533   , :0041B56D   
+|
+:0041D094 8B01                    mov eax, dword ptr [ecx]		eax := c0
+:0041D096 81E2FF0F0000            and edx, 00000FFF			edx blijft 2
+:0041D09C C1E20C                  shl edx, 0C				edx wordt 2000h
+:0041D09F 25FF0F00FF              and eax, FF000FFF			eax blijft C0
+:0041D0A4 0BD0                    or edx, eax				edx := 20C0
+:0041D0A6 8911                    mov dword ptr [ecx], edx
+:0041D0A8 C3                      ret
+
+
+
+* Referenced by a CALL at Addresses:
+|:0041B4FA   , :0041B544   , :0041B581   
+|
+:0041D015 53                      push ebx
+:0041D016 56                      push esi
+:0041D017 8B31                    mov esi, dword ptr [ecx]		esi := 000000C0
+:0041D019 57                      push edi
+:0041D01A 8BC6                    mov eax, esi
+:0041D01C C1F80C                  sar eax, 0C
+:0041D01F 25FF0F0000              and eax, 00000FFF
+:0041D024 83F802                  cmp eax, 00000002
+:0041D027 7D03                    jge 0041D02C
+:0041D029 6A02                    push 00000002
+:0041D02B 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0041D027(C)
+|
+:0041D02C 8B5C2414                mov ebx, dword ptr [esp+14]
+:0041D030 8B7C2410                mov edi, dword ptr [esp+10]
+:0041D034 2BDA                    sub ebx, edx
+:0041D036 2BFA                    sub edi, edx
+:0041D038 0FAFD8                  imul ebx, eax
+:0041D03B 8D47FF                  lea eax, dword ptr [edi-01]
+:0041D03E 6681E600F0              and si, F000
+:0041D043 99                      cdq
+:0041D044 2BC2                    sub eax, edx
+:0041D046 D1F8                    sar eax, 1
+:0041D048 03C3                    add eax, ebx
+:0041D04A 99                      cdq
+:0041D04B F7FF                    idiv edi
+:0041D04D 5F                      pop edi
+:0041D04E 0BC6                    or eax, esi
+:0041D050 5E                      pop esi
+:0041D051 8901                    mov dword ptr [ecx], eax
+:0041D053 5B                      pop ebx
+:0041D054 C20800                  ret 0008

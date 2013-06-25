@@ -1,0 +1,7 @@
+Wyrm Blood will now also restore some Mana and Life
+
+Spell number 30h (Wyrm Blood) modified to create addtional spell effects 44h (Mana) and 25h (Healing):
+
+000B6A89 5D00 00                                 ]..
+changed into
+000B6A89 5D44 25                                 ]D%

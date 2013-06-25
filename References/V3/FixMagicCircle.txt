@@ -1,0 +1,68 @@
+Magic Circle gives crash in 36M
+
+File Offset 00052989
+
+:00453589 8B3DE8AD6E00            mov edi, dword ptr [006EADE8]
+wordt
+:00453589 909090909090            6*nop
+
+
+Cirle of Shielding: changing Barrier-effect to Invincibility:
+
+File Offset 0005297A
+
+:0045357A 6A4F                    push 0000004F		Barrier
+wordt
+:0045357A 6A22                    push 00000022		Invincibility
+
+
+Adding MP support:
+
+File Offset 00052905
+
+:00453505 EB38                    jmp 0045353F
+wordt
+:00453505 EB44                    jmp 0045354B
+:00453507 
+
+File Offset 0005293F
+
+:0045353F 833D10AB6D0000          cmp dword ptr [006DAB10], 00000000
+:00453546 0F85D2010000            jne 0045371E
+:0045354C 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+wordt
+:0045353F 90...                   12*nop
+:0045354B 833D10AB6D0000          cmp dword ptr [006DAB10], 00000000
+
+
+Restoring lost Dexterity for user:
+
+File Offset 00052989
+
+:00453589 90                      nop
+:0045358A 90                      nop
+:0045358B 90                      nop
+:0045358C 90                      nop
+:0045358D 90                      nop
+:0045358E 90                      nop
+:0045358F 69FFC8550000            imul edi, 000055C8
+:00453595 53                      push ebx
+:00453596 BBFFFF0000              mov ebx, 0000FFFF
+:0045359B E916010000              jmp 004536B6
+:004535A0 FF442410                inc [esp+10]
+wordt
+:00453589 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:0045358F 0F8589010000            jne 0045371E
+:00453595 8BCF                    mov ecx, edi
+:00453597 6A01                    push 00000001
+:00453599 5A                      pop edx
+:0045359A E883B20000              call 0045E822
+:0045359F E904020000              jmp 004537A8
+:004535A4 
+
+
+Name change:
+
+000B4260 6400 0000 4369 7263 6C65 206F 6620 5368 d...Circle of Sh
+000B4270 6965 6C64 696E 6700 4D75 726B 7920 506F ielding.Murky Po
+

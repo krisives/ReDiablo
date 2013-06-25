@@ -1,0 +1,81 @@
+Murky Pool made permanent
+
+
+File Offset 000528F4
+
+:004534F4 0F84DE000000            je 004535D8
+wordt
+:004534F4 0F840E010000            je 00453608
+
+
+File Offset 00052A03
+
+:00453603 80A600E66D0000          and byte ptr [esi+006DE600], 00
+wordt
+:00453603 9090909090              5*nop
+:00453608 33DB                    xor ebx, ebx
+
+
+File Offset 00052A47
+
+:00453647 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+wordt
+:00453647 E95C010000              jmp 004537A8
+:0045364C 90                      nop
+
+
+Now free code: 
+:004535D8 80BE00E66D0000          cmp byte ptr [esi+006DE600], 00
+:004535DF 0F84CC010000            je 004537B1
+:004535E5 33DB                    xor ebx, ebx
+:004535E7 391D10AB6D00            cmp dword ptr [006DAB10], ebx
+:004535ED 7514                    jne 00453603
+:004535EF FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:004535F5 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:004535FB 6A73                    push 00000073
+:004535FD 59                      pop ecx
+:004535FE E8C150FCFF              call 004186C4
+:00453603 90                      nop
+:00453604 90                      nop
+:00453605 90                      nop
+:00453606 90                      nop
+:00453607 90                      nop
+
+
+
+Full Murky Pool code:
+
+:004535D8 80BE00E66D0000          cmp byte ptr [esi+006DE600], 00
+:004535DF 0F84CC010000            je 004537B1
+:004535E5 33DB                    xor ebx, ebx
+:004535E7 391D10AB6D00            cmp dword ptr [006DAB10], ebx
+:004535ED 7514                    jne 00453603
+:004535EF FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:004535F5 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:004535FB 6A73                    push 00000073
+:004535FD 59                      pop ecx
+:004535FE E8C150FCFF              call 004186C4
+:00453603 80A600E66D0000          and byte ptr [esi+006DE600], 00
+:0045360A 391D10AB6D00            cmp dword ptr [006DAB10], ebx
+:00453610 0F8508010000            jne 0045371E
+:00453616 0FB635D4B16000          movzx esi, byte ptr [0060B1D4]
+:0045361D 8BC7                    mov eax, edi
+:0045361F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00453625 69C0C8550000            imul eax, 000055C8
+:0045362B D1E6                    shl esi, 1
+:0045362D 8B54083C                mov edx, dword ptr [eax+ecx+3C]
+:00453631 56                      push esi
+:00453632 53                      push ebx
+:00453633 57                      push edi
+:00453634 03C1                    add eax, ecx
+:00453636 6AFF                    push FFFFFFFF
+:00453638 6A27                    push 00000027			<- Infravision/Seeing
+:0045363A FF7070                  push [eax+70]
+:0045363D 8B4838                  mov ecx, dword ptr [eax+38]
+:00453640 52                      push edx
+:00453641 51                      push ecx
+:00453642 E8E820FEFF              call 0043572F
+:00453647 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:0045364D B301                    mov bl, 01
+:0045364F 0F855C010000            jne 004537B1
+:00453655 55                      push ebp

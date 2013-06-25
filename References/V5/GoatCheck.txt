@@ -1,0 +1,34 @@
+Goat check
+
+purpose unknown
+
+* Referenced by a CALL at Address:
+|:00471D9B   
+|
+:00444BDD 83F922                  cmp ecx, 00000022
+:00444BE0 7C05                    jl 00444BE7
+:00444BE2 83F925                  cmp ecx, 00000025
+:00444BE5 7E0A                    jle 00444BF1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444BE0(C)
+|
+:00444BE7 83F92A                  cmp ecx, 0000002A
+:00444BEA 7C09                    jl 00444BF5
+:00444BEC 83F92D                  cmp ecx, 0000002D
+:00444BEF 7F04                    jg 00444BF5
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444BE5(C)
+|
+:00444BF1 6A01                    push 00000001
+:00444BF3 58                      pop eax
+:00444BF4 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00444BEA(C), :00444BEF(C)
+|
+:00444BF5 33C0                    xor eax, eax
+:00444BF7 C3                      ret

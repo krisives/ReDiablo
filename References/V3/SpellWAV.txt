@@ -1,0 +1,71 @@
+1   Misc\LMag.wav...
+2   Sfx\Misc\Wallstrt.wav...
+3   Sfx\Misc\Wallloop.wav...
+4   Sfx\Misc\Vtheft.wav.	
+5   Sfx\Misc\Teleport.wav...	phasing!
+6   Sfx\Misc\Trapdis.wav....
+7   Sfx\Misc\Storm.wav..	thunder
+8   Sfx\Misc\Spoutstr.wav...
+9   Sfx\Misc\Spoutlop.wav...	
+10  Sfx\Misc\Soulfire.wav...	holybolt?
+11  Sfx\Misc\Shatter.wav....	
+12  Sfx\Misc\Sentinel.wav...	townportal
+13  Sfx\Misc\Scurimp.wav....	as scurse.wav
+14  Sfx\Misc\Scurse.wav.	nice
+15  Sfx\Misc\Resur.wav..	nice
+16  Sfx\Misc\Puddle.wav.	
+17  Sfx\Misc\Portal.wav.	unknown
+18  Sfx\Misc\Nova.wav...	nova
+19  Sfx\Misc\NestXpld.wav...
+20  Sfx\Misc\Mshield.wav....	ms
+21  Sfx\Misc\Ltning.wav.
+22  Sfx\Misc\Lning1.wav.
+23  Sfx\Misc\Invpot.wav.
+24  Sfx\Misc\Invisibl.wav...	invinc?
+25  Sfx\Misc\Infravis.wav...	iv
+26  Sfx\Misc\Hyper.wav..	strange
+27  Sfx\Misc\Holybolt.wav...	hb
+28  Sfx\Misc\Grdlanch.wav...
+29  Sfx\Misc\Guard.wav..	
+30  Sfx\Misc\Gshrine.wav....	shrine?
+31  Sfx\Misc\Golumded.wav...
+32  Sfx\Misc\Golum.wav..	golem
+33  Sfx\Misc\Fountain.wav...
+34  Sfx\Misc\Flash.wav..	strange
+35  Sfx\Misc\Flamwave.wav...	fw
+36  Sfx\Misc\Firimp2.wav....
+37  Sfx\Misc\Firimp1.wav....
+38  Sfx\Misc\Fbolt2.wav.
+39  Sfx\Misc\Fbolt1.wav.
+40  Sfx\Misc\Fball.wav..
+41  Sfx\Misc\Ethereal.wav...	warp
+42  Sfx\Misc\Elementl.wav...	phasing?
+43  Sfx\Misc\Elecimp1.wav...
+44  Sfx\Misc\DSerp.wav..	doomserpent
+45  Sfx\Misc\Chltning.wav...	cl
+46  Sfx\Misc\Cbolt.wav..	cbolt
+47  Sfx\Misc\portal.wav.....
+48  Sfx\Misc\Bsimpct.wav....
+49  Sfx\Misc\Bonesp.wav.
+50  Sfx\Misc\Blsimpt.wav....
+51  Sfx\Misc\Blodstar.wav...	unknw
+52  Sfx\Misc\Bldboil.wav....	unknown boil
+53  Sfx\Misc\Arrowall.wav...	
+54  Sfx\Misc\Apoc.wav...	apo
+55  Sfx\Misc\Acids2.wav.
+56  Sfx\Misc\Acids1.wav.
+57  Sfx\Misc\Repair.wav.	repair
+58  Sfx\Misc\Healing.wav....	unknown nice
+59  Sfx\Misc\Cast9.wav..	unknown nice
+60  Sfx\Misc\Cast8.wav..	healing/healother
+61  Sfx\Misc\Cast7.wav..	endsearch
+62  Sfx\Misc\Cast6.wav..	townportal
+63  Sfx\Misc\Cast5.wav..	unknown thunderlike
+64  Sfx\Misc\Cast4.wav..	lightning
+65  Sfx\Misc\Cast3.wav..	darkmage
+66  Sfx\Misc\Cast2.wav..	fire?
+67  Sfx\Misc\Cast12.wav.	fire?
+68  Sfx\Misc\Cast10.wav.	warp?
+69  Sfx\Misc\Cast1.wav..	lightning
+
+

@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>Base Item Descriptions</TITLE>
+</HEAD>
+<BODY>
+
+<FONT FACE="Souvenir Lt BT" SIZE=7><P ALIGN="CENTER">Base Item Descriptions</P>
+</FONT><I><FONT FACE="Souvenir Lt BT" SIZE=5><P ALIGN="CENTER">by Dr. Zed</P>
+</I></FONT><FONT FACE="Souvenir Lt BT" SIZE=4><DIR>
+<DIR>
+<DIR>
+<DIR>
+
+<I><P>Add the description of any base item special effect to the base item when it's held on the cursor.</P>
+</I></DIR>
+</DIR>
+</DIR>
+</DIR>
+
+<P>&#9;Note, any previous changes you have made may conflict with these changes.  Please make sure your data is identical to the 'Was' state before changing it to the 'Now' state.</P>
+
+</FONT><U><FONT FACE="Courier New" SIZE=4><P>:0040538F (0000478F)&#9;2Eh bytes</P>
+</U></FONT><B><FONT FACE="Souvenir Lt BT" SIZE=4><P>Was:</P>
+</B></FONT><FONT FACE="Courier New" SIZE=4><P>00004780&#9;xxxx xxxx xxxx xxxx xxxx xxxx xxxx xx<B>39</P>
+</B><P>00004790&#9;<B>9868 CA68 0074 088D 80AD CA68 00EB 068D</P>
+</B><P>000047A0&#9;<B>806D CA68 0050 6848 9C4B 00E8 0063 0600</P>
+</B><P>000047B0&#9;<B>A174 7768 0059 69C0 D854 0000 59</B>xx xxxx</P>
+</FONT><B><FONT FACE="Souvenir Lt BT" SIZE=4><P>Now:</P>
+</B></FONT><FONT FACE="Courier New" SIZE=4><P>00004780&#9;xxxx xxxx xxxx xxxx xxxx xxxx xxxx xx<B>50</P>
+</B><P>00004790&#9;<B>8D88 68CA 6800 8D41 0539 1974 0383 C040</P>
+</B><P>000047A0&#9;<B>5068 489C 4B00 E805 6306 0059 5958 508B</P>
+</B><P>000047B0&#9;<B>8098 CB68 0090 E883 4007 0058 90</B>xx xxxx</P>
+</FONT><FONT FACE="Souvenir Lt BT" SIZE=4>
+</FONT><U><FONT FACE="Courier New" SIZE=4><P>:0047943E (0007883E)&#9;2Eh bytes of Code</P>
+</U></FONT><B><FONT FACE="Souvenir Lt BT" SIZE=4><P>Was:</P>
+</B><P>All zeroes....</P>
+<P>&#9;The first zero at byte 0007883D is part of existing code, don't start there.</P>
+<B><P>Now:</P>
+</B></FONT><FONT FACE="Courier New" SIZE=4><P>00078830&#9;xxxx xxxx xxxx xxxx xxxx xxxx xxxx <B>B9B0</P>
+</B><P>00078840&#9;<B>1748 003A 017C 2374 0583 C105 EBF5 41FF</P>
+</B><P>00078850&#9;<B>3168 189B 4B00 E8E5 1FFF FF6A 01B9 189B</P>
+</B><P>00078860&#9;<B>4B00 5AE8 71AD F8FF 5959 C3</B>xx xxxx xxxx</P>
+</FONT><FONT FACE="Souvenir Lt BT" SIZE=4>
+</FONT><U><FONT FACE="Courier New" SIZE=4><P>:004817B0 (000801B0)&#9;Data at 00401600 Offset</P>
+</U></FONT><B><FONT FACE="Souvenir Lt BT" SIZE=4><P>Was:</P>
+</B></FONT><FONT FACE="Courier New" SIZE=4><P>000801B0&#9;545A 0000 5061 7261 6775 6179 0000 0000&#9;<B>TZ..Paraguay....</P>
+</B><P>000801C0&#9;5572 7567 7561 7900 4368 696C 6500 0000&#9;<B>Uruguay.Chile...</P>
+</B><P>........&#9;.... .... .... .... .... .... .... ....</P>
+<P>00080810&#9;0000 0000 616D 6572 6963 616E 2065 6E67&#9;<B>....american eng</P>
+</B><P>00080820&#9;6C69 7368 0000 0000 616D 6572 6963 616E&#9;<B>lish....american</P>
+</B></FONT><FONT FACE="Souvenir Lt BT" SIZE=4><P>&#9;Use as much of this area as required, for the data table and the text.  The data table must start at the beginning of this section.  The strings should be placed at the end, to allow room for the table to be expanded.</P>
+<B><P>Now:</P>
+</B></FONT><FONT FACE="Courier New" SIZE=4><P>000801B0&#9;<B>0118 1E48 007F 301E 4800</B> xxxx xxxx xxxx</P>
+<P>........&#9;.... .... .... .... .... .... .... ....</P>
+<P>00080810&#9;xxxx xxxx xxxx xxxx <B>5761 7272 696F 7227</B>&#9;....amer<B>Warrior'</P>
+</B><P>00080820&#9;<B>7320 6669 7273 7420 7377 6F72 6400 0000</B>&#9;s <B>First Sword...</P>
+</B></FONT><FONT FACE="Souvenir Lt BT" SIZE=4>
+<P>&#9;Each base item which is to gain a description line needs to be listed.  The first byte is the base item number.  01 is the Warrior's starting sword (used as an example).  The following four bytes (in reverse order) are a pointer to the description to be used.  If the above data area is used for the text, add 00401600 to the file offset to get the pointer.  For the example, 181E4800 points to the text at 00080818 (00080818 + 00401600 = 00481E18; reversed becomes 181E4800).</P>
+<P>&#9;The list must be sortedby item number, from 80 to FF, then from 0 to 7F.  There <B>must </B>be an entry for 7F, which is currently assigned a null string (7F, 301E4800).  The pointer to the null string could be replaced with a pointer to any text desired for that item number, if required.</P>
+
+</FONT><FONT FACE="Souvenir Lt BT" SIZE=6><P ALIGN="CENTER">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</P>
+</FONT><FONT FACE="Souvenir Lt BT" SIZE=4></FONT></BODY>
+</HTML>
+
+<!-- VA Banner -->
+</XMP>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if(typeof(top)=="object" && typeof(top.va_frame)=="object") { if (typeof(top.va_frame.document)=="object" && typeof(top.va_frame.document.images)=="object" && typeof(top.va_frame.document.images[0])=="object" && typeof(top.va_frame.document.images[0].src)=="string" && typeof(top.va_frame.document.images[0].src.length) =="number" && ( (top.va_frame.document.images[0].src.length>25 && top.va_frame.document.images[0].src.substring(0,25)=="http://images.go2net.com/") || (typeof(top.va_frame.document.images[1])=="object" && typeof(top.va_frame.document.images[1].src)=="string" && typeof(top.va_frame.document.images[1].src.length) =="number" && top.va_frame.document.images[1].src.length>25 && top.va_frame.document.images[1].src.substring(0,25)=="http://images.go2net.com/") ) ) {top.va_frame.location.reload(true); } else {dly=(1.+Math.random())*10000.; setTimeout('if (typeof(top.va_frame.document)=="object" && typeof(top.va_frame.document.images)=="object" && typeof(top.va_frame.document.images[0])=="object" && typeof(top.va_frame.document.images[0].src)=="string" && typeof(top.va_frame.document.images[0].src.length) =="number" && ( (top.va_frame.document.images[0].src.length>25 && top.va_frame.document.images[0].src.substring(0,25)=="http://images.go2net.com/") || (typeof(top.va_frame.document.images[1])=="object" && typeof(top.va_frame.document.images[1].src)=="string" && typeof(top.va_frame.document.images[1].src.length) =="number" && top.va_frame.document.images[1].src.length>25 && top.va_frame.document.images[1].src.substring(0,25)=="http://images.go2net.com/") ) ) {top.va_frame.location.reload(true);} else {window.open("http://click.go2net.com/adpopup?site=va&area=COMPUTERS&shape=banner","va_rzjr137y", "width=520,height=160"); }', dly); } } else { window.open("http://click.go2net.com/adpopup?site=va&area=COMPUTERS&shape=banner","va_rzjr137y", "width=520,height=160");}
+//-->
+</SCRIPT>

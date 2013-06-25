@@ -1,0 +1,145 @@
+Fixing Damage for Lich and Scowler
+
+
+By using the FireBall Update instead of the Generic Update, damage for non-mages is no longer properly set. Fixing by determining damage for monsters in FireBall Update if AttackType is in the range of original Hellfire Monsters.
+
+
+Adjusting FireBall Update:
+
+File Offset 00035C21
+
+:00436821 69C0E4000000            imul eax, 000000E4
+wordt
+:00436821 E8792DFDFF              call 0040959F
+:00436826 90                      nop
+
+Using free space from disabled Command file:
+
+File Offset 0000899F
+
+:0040959F 8D45C8                  lea eax, dword ptr [ebp-38]
+:004095A2 EB33                    jmp 004095D7
+:004095A4 EB27                    jmp 004095CD
+:004095A6 90                      nop
+:004095A7 90                      nop
+:004095A8 90                      nop
+:004095A9 8D7DB8                  lea edi, dword ptr [ebp-48]
+:004095AC A5                      movsd
+:004095AD A5                      movsd
+:004095AE A5                      movsd
+:004095AF 8D45B8                  lea eax, dword ptr [ebp-48]
+:004095B2 50                      push eax
+:004095B3 66A5                    movsw
+:004095B5 E886030700              call 00479940
+:004095BA 59                      pop ecx
+:004095BB 50                      push eax
+:004095BC 8D45B8                  lea eax, dword ptr [ebp-48]
+:004095BF 53                      push ebx
+:004095C0 50                      push eax
+:004095C1 E8FA140700              call 0047AAC0
+:004095C6 83C40C                  add esp, 0000000C
+:004095C9 85C0                    test eax, eax
+:004095CB 7515                    jne 004095E2
+:004095CD C605E453570001          mov byte ptr [005753E4], 01
+wordt
+:0040959F 69C0E4000000            imul eax, 000000E4
+:004095A5 80B820DD690020          cmp byte ptr [eax+0069DD20], 20
+:004095AC 7C22                    jl 004095D0
+:004095AE 50                      push eax
+:004095AF 51                      push ecx
+:004095B0 52                      push edx
+:004095B1 0FB6904EDD6900          movzx edx, byte ptr [eax+0069DD4E]
+:004095B8 0FB6804DDD6900          movzx eax, byte ptr [eax+0069DD4D]
+:004095BF 8BD8                    mov ebx, eax
+:004095C1 2BD0                    sub edx, eax
+:004095C3 B14D                    mov cl, 4D
+:004095C5 42                      inc edx
+:004095C6 E88F090100              call 00419F5A
+:004095CB 03D8                    add ebx, eax
+:004095CD 5A                      pop edx
+:004095CE 59                      pop ecx
+:004095CF 58                      pop eax
+:004095D0 C3                      ret
+:004095D1 909090                  3*nop
+
+
+
+
+
+
+
+
+
+General Missile Hit routine:
+
+:0043232C 8D5513                  lea edx, dword ptr [ebp+13]
+:0043232F 52                      push edx
+:00432330 51                      push ecx
+:00432331 FF750C                  push [ebp+0C]			1/64 flag
+:00432334 83CAFF                  or edx, FFFFFFFF
+:00432337 FFB6587A6900            push dword ptr [esi+00697A58]	spelleffect
+:0043233D FF7508                  push [ebp+08]			Max Damage
+:00432340 FF75FC                  push [ebp-04]			Min Damage
+:00432343 FFB6DC7A6900            push dword ptr [esi+00697ADC]
+:00432349 0FBEC8                  movsx ecx, al
+:0043234C 49                      dec ecx
+:0043234D E8BDD2FFFF              call 0042F60F			do MissileVsPlayer
+
+
+
+Missiles vs Player:
+
+
+:0042F84F 807D1800                cmp byte ptr [ebp+18], 00
+:0042F853 8B5510                  mov edx, dword ptr [ebp+10]
+:0042F856 7529                    jne 0042F881
+:0042F858 8B750C                  mov esi, dword ptr [ebp+0C]
+:0042F85B B14B                    mov cl, 4B
+:0042F85D 2BD6                    sub edx, esi
+:0042F85F 42                      inc edx
+:0042F860 C1E206                  shl edx, 06
+:0042F863 E8F2A6FEFF              call 00419F5A
+:0042F868 8BD0                    mov edx, eax
+:0042F86A C1E606                  shl esi, 06
+:0042F86D 03D6                    add edx, esi
+:0042F86F E802EB0000              call 0043E376
+:0042F874 8B8144550000            mov eax, dword ptr [ecx+00005544]
+:0042F87A C1E006                  shl eax, 06
+:0042F87D 03D0                    add edx, eax
+:0042F87F EB1B                    jmp 0042F89C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F856(C)
+|
+:0042F881 2B550C                  sub edx, dword ptr [ebp+0C]
+:0042F884 B14B                    mov cl, 4B
+:0042F886 42                      inc edx
+:0042F887 E8CEA6FEFF              call 00419F5A
+:0042F88C 8BD0                    mov edx, eax
+:0042F88E 03550C                  add edx, dword ptr [ebp+0C]
+:0042F891 E8E0EA0000              call 0043E376
+:0042F896 039144550000            add edx, dword ptr [ecx+00005544]
+
+
+
+Barrel(?):
+
+:00453FCC 8A83E8FE6000            mov al, byte ptr [ebx+0060FEE8]
+:00453FD2 84C0                    test al, al
+:00453FD4 7E18                    jle 00453FEE
+:00453FD6 8D550F                  lea edx, dword ptr [ebp+0F]
+:00453FD9 52                      push edx
+:00453FDA 51                      push ecx
+:00453FDB 51                      push ecx
+:00453FDC 57                      push edi
+:00453FDD 6A10                    push 00000010
+:00453FDF 6A08                    push 00000008
+:00453FE1 51                      push ecx
+:00453FE2 83CAFF                  or edx, FFFFFFFF
+:00453FE5 0FBEC8                  movsx ecx, al
+:00453FE8 49                      dec ecx
+:00453FE9 E821B6FDFF              call 0042F60F
+
+
+edx := diff(dlvl)
+:0043608F E8202B0500              call 00488BB4

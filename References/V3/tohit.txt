@@ -1,0 +1,172 @@
+'Fixing' monster to-hit overflow.
+by Dr. Zed 
+
+
+Monster to-hit is stored in a byte. Unlike their AC, it is always in a byte and therefore, without serious changes, can't exceed 255. If you raise a monster's AC above 135, when it adds 120 for hell difficulty, the number will wrap around, causing the result to be some number less than 120.
+
+To 'fix' the issue, I wrote some code which caps the 'to-hit' value at 255.
+
+Remember, if your data isn't the same as the 'was', then the 'now' probably won't work.
+
+(00031CB3)
+Was:
+xxxx xx66 8986 1AE7 6400 8086 1CE7 6400
+558A 861D E764 0002 C1D0 E088 861D E764
+008A 861E E764 0002 C1D0 E088 861E E764
+0080 861F E764 0055 8A86 20E7 6400 02C1
+D0E0 8886 20E7 6400 xxxx xxxx xxxx xxxx
+
+(00031CB3)
+Now:
+xxxx xx56 81C6 1CE7 6400 6689 46FE E824
+0000 0046 8A06 02C1 D0E0 8806 468A 0602
+C1D0 E088 0646 E80C 0000 0046 8A06 02C1
+D0E0 8806 5EEB 110F B606 83C0 5566 3D00
+017C 020C FF88 06C3 xxxx xxxx xxxx xxxx
+
+(00031D45)
+Was:
+xxxx xxxx xx66 8986 1AE7 6400 8086 1CE7
+6400 788A 8E1D E764 00B0 06C0 E102 02C8
+888E 1DE7 6400 8A8E 1EE7 6400 C0E1 0202
+C888 8E1E E764 0080 861F E764 0078 8A8E
+20E7 6400 C0E1 0202 C888 8E20 E764 00xx
+
+(00031D45)
+Now:
+xxxx xxxx xx56 81C6 1CE7 6400 6689 46FE
+E829 0000 0046 8A0E B006 C0E1 0202 C888
+0E46 8A0E C0E1 0202 C888 0E46 E80D 0000
+0046 8A0E C0E1 0202 C888 0E5E EB11 0FB6
+0683 C078 663D 0001 7C02 0CFF 8806 C3xx
+
+And, for though who want to know what was done, here are the notes (which might not match the above exactly). If the notes don't match the above, assume the above is correct.
+
+Also, I use tabs in my notes, so the formatting will be kinda messed up, but you should be able to read it.
+
+Fix 'to hit overflow by capping it at 255.
+
+Was: (69 bytes)
+:004328B3 6689861AE76400 mov word ptr [esi+0064E71A], ax
+:004328BA 80861CE7640055 add byte ptr [esi+0064E71C], 55 Main Attack To Hit % +85
+:004328C1 8A861DE76400 mov al, byte ptr [esi+0064E71D]
+:004328C7 02C1 add al, cl
+:004328C9 D0E0 shl al, 1
+:004328CB 88861DE76400 mov byte ptr [esi+0064E71D], al
+:004328D1 8A861EE76400 mov al, byte ptr [esi+0064E71E]
+:004328D7 02C1 add al, cl
+:004328D9 D0E0 shl al, 1
+:004328DB 88861EE76400 mov byte ptr [esi+0064E71E], al
+:004328E1 80861FE7640055 add byte ptr [esi+0064E71F], 55 Second Attack To Hit % +85
+:004328E8 8A8620E76400 mov al, byte ptr [esi+0064E720]
+:004328EE 02C1 add al, cl
+:004328F0 D0E0 shl al, 1
+:004328F2 888620E76400 mov byte ptr [esi+0064E720], al
+
+
+Now: (69 bytes)
+:004328B3 (00031CB3)
+56 push esi
+81C6 1CE76400 add esi, 0064E71C
+
+668946 FE mov word ptr [esi-02], ax
+
+E8 [xxxxxxxx] call UPTOHIT
+
+46 inc esi
+8A06 mov al, byte ptr [esi]
+02C1 add al, cl
+D0E0 shl al, 1
+8806 mov byte ptr [esi], al
+
+46 inc esi
+8A06 mov al, byte ptr [esi]
+02C1 add al, cl
+D0E0 shl al, 1
+8806 mov byte ptr [esi], al
+
+46 inc esi
+E8 [xxxxxxxx] call UPTOHIT
+
+46 inc esi
+8A06 mov al, byte ptr [esi]
+02C1 add al, cl
+D0E0 shl al, 1
+8806 mov byte ptr [esi], al
+
+5E pop esi
+EB [11] jmp SKIP UPTOHIT
+
+UPTOHIT:
+0FB606 movzx eax, byte ptr [esi]
+83C0 55 add eax, 00000055
+663D 0001 cmp ax, 0100
+7C [xx] jl SKIP NEXT LINE
+0C FF or al, FF
+8806 mov byte ptr [esi], al
+C3 ret
+
+Was: (57 bytes)
+:00432945 6689861AE76400 mov word ptr [esi+0064E71A], ax
+:0043294C 80861CE7640078 add byte ptr [esi+0064E71C], 78
+:00432953 8A8E1DE76400 mov cl, byte ptr [esi+0064E71D]
+:00432959 B006 mov al, 06
+:0043295B C0E102 shl cl, 02
+:0043295E 02C8 add cl, al
+:00432960 888E1DE76400 mov byte ptr [esi+0064E71D], cl
+:00432966 8A8E1EE76400 mov cl, byte ptr [esi+0064E71E]
+:0043296C C0E102 shl cl, 02
+:0043296F 02C8 add cl, al
+:00432971 888E1EE76400 mov byte ptr [esi+0064E71E], cl
+:00432977 80861FE7640078 add byte ptr [esi+0064E71F], 78
+:0043297E 8A8E20E76400 mov cl, byte ptr [esi+0064E720]
+:00432984 C0E102 shl cl, 02
+:00432987 02C8 add cl, al
+:00432989 888E20E76400 mov byte ptr [esi+0064E720], cl
+
+
+
+Now: (? bytes)
+:00432945 (00031D45)
+56 push esi
+81C6 1CE76400 add esi, 0064E71C
+
+668946 FE mov word ptr [esi-02], ax
+
+E8 [xxxxxxxx] call UPTOHIT
+
+46 inc esi
+8A0E mov cl, byte ptr [esi]
+B0 06 mov al, 06
+C0E1 02 shl cl, 02
+02C8 add cl, al
+880E mov byte ptr [esi], cl
+
+46 inc esi
+8A0E mov cl, byte ptr [esi]
+C0E1 02 shl cl, 02
+02C8 add cl, al
+880E mov byte ptr [esi], cl
+
+46 inc esi
+E8 [xxxxxxxx] call UPTOHIT
+
+46 inc esi
+8A0E mov cl, byte ptr [esi]
+C0E1 02 shl cl, 02
+02C8 add cl, al
+880E mov byte ptr [esi], cl
+
+5E pop esi
+EB [11] jmp SKIP UPTOHIT
+
+UPTOHIT:
+0FB606 movzx eax, byte ptr [esi]
+83C0 78 add eax, 00000078
+663D 0001 cmp ax, 0100
+7C [xx] jl SKIP NEXT LINE
+0C FF or al, FF
+8806 mov byte ptr [esi], al
+C3 ret
+
+

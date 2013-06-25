@@ -1,0 +1,28 @@
+Warrior starts with a shortbow instead of club in inventory:
+
+file offset 00024270
+
+:00424E70 6A03                    push 00000003
+changed into
+:00424E70 6A04                    push 00000004
+
+file offset 00024298
+
+:00424E98 6A01                    push 00000001
+changed into
+:00424E98 6A02                    push 00000002
+
+
+Barbarian starts with 2 bone clubs:
+
+file offset 00024198
+
+:00424D98 BA8B000000              mov edx, 0000008B
+changed into
+:00424D98 BA03000000              mov edx, 00000003
+
+file offset 000241B9
+
+:00424DB9 6A02                    push 00000002
+changed into
+:00424DB9 6A03                    push 00000003

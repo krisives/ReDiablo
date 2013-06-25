@@ -1,0 +1,11 @@
+Switching the additional intro files:
+
+00093E14 6765 6E64 6174 615C 646F 6F6D 2E73 6D6B gendata\doom.smk
+00093E24 0000 0000 0000 0000 496E 7472 6F00 0000 ........Intro...
+00093E34 6765 6E64 6174 615C 6461 726B 2E73 6D6B gendata\dark.smk
+
+
+Renaming Hellfire.ini to TheDark.ini:
+
+00093ECC 5C74 6865 6461 726B 2E69 6E69 00        \thedark.ini.
+

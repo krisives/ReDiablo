@@ -1,0 +1,36 @@
+Elemental slower
+
+File Offset 00033540
+
+:00434140 6A10                    push 00000010
+wordt
+:00434140 6A0C                    push 0000000C
+
+File Offset 0003969E
+
+:0043A29E 6A10                    push 00000010
+wordt
+:0043A29E 6A0C                    push 0000000C
+
+File Offset 000396CF
+
+:0043A2CF 6A10                    push 00000010
+wordt
+:0043A2CF 6A0C                    push 0000000C
+
+
+
+BoneSpirit/DoomSerpents slower (Previous attempts were not complete)
+
+File Offset 0003497B
+
+:0043557B 6A10                    push 00000010
+wordt
+:0043557B 6A0A                    push 0000000A
+
+File Offset 0003989F
+
+:0043A49F 6A10                    push 00000010
+wordt
+:0043A49F 6A0A                    push 0000000A
+

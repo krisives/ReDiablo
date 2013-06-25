@@ -1,0 +1,49 @@
+Searching the dynamic call of the procedure at 409A1A, which performs the key actions
+
+1 - Filling of the variable with the pointer
+
+:0040902F B91A9A4000              mov ecx, 00409A1A
+:00409034 E8104E0100              call 0041DE49				Fill memory var 00684FB0
+
+
+
+
+:0041D6D6 C745D424DE4100          mov [ebp-2C], 0041DE24		Filling of pointer to Dynamic call
+
+
+Procedure which executes the dynamic procedure call
+
+:0041DE24 55                      push ebp
+:0041DE25 8BEC                    mov ebp, esp
+:0041DE27 FF7514                  push [ebp+14]
+:0041DE2A A1B04F6800              mov eax, dword ptr [00684FB0]
+:0041DE2F 85C0                    test eax, eax
+:0041DE31 FF7510                  push [ebp+10]
+:0041DE34 FF750C                  push [ebp+0C]
+:0041DE37 FF7508                  push [ebp+08]
+:0041DE3A 7404                    je 0041DE40
+:0041DE3C FFD0                    call eax				Execute dynamic procedure call
+:0041DE3E EB05                    jmp 0041DE45
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0041DE3A(C)
+|
+:0041DE40 E8E7FEFFFF              call 0041DD2C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0041DE3E(U)
+|
+:0041DE45 5D                      pop ebp
+:0041DE46 C21000                  ret 0010
+
+
+
+This procedure fills the memory pointer 00684FB0 with the pointer which is used for dynamic procedure calls
+
+* Referenced by a CALL at Addresses:
+|:00409034   , :0040918E   , :0041B378   , :0041B3E9   , :0041B423   
+|:0041B47D   , :0041DF90   , :0041E230   , :004451C4   , :0044528D   
+|
+:0041DE49 A1B04F6800              mov eax, dword ptr [00684FB0]
+:0041DE4E 890DB04F6800            mov dword ptr [00684FB0], ecx
+:0041DE54 C3                      ret

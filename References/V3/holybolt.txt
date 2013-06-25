@@ -1,0 +1,43 @@
+Holy bolt in Hellfire - 004352FF
+
+004353AC:
+		push 0000000A
+		pop edx						edx := 10
+		call 00419F5A					eax := 0..9
+		mov ecx, dword ptr [ebp+1C]			get char-record
+		mov edi, dword ptr [006EAE14]
+		mov edx, ecx
+		push 0000001F
+		imul edx, 000055C8
+		movsx edx, byte ptr [edx+edi+000001B8]		edx := clevel
+		lea eax, dword ptr [eax+edx+09]			eax := clevel + 9..18
+		pop edx						
+		mov dword ptr [esi+00697AD4], eax		store damage
+		call 0046BFFC					subtract mana 
+		...
+		ret
+
+moet worden (voor damage:=curmagic/4) :
+
+004353AC:
+		mov ecx, dword ptr [ebp+1C]			get char-record
+		mov edi, dword ptr [006EAE14]
+		mov edx, ecx
+		push 0000001F
+		imul edx, 000055C8
+		movsx edx, byte ptr [edx+edi+00000???]		edx := curmagic
+		sar edx, 02					edx := edx/4
+		mov eax, edx
+		pop edx						
+		mov dword ptr [esi+00697AD4], eax		store damage
+		call 0046BFFC
+		...
+		ret
+
+ook mogelijk (voor damage:=curmana/8) :
+
+		...
+		movsx edx, byte ptr [edx+edi+000001AC]		edx := curmana*64
+		sar edx, 09					edx := curmana/8
+		...
+

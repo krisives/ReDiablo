@@ -1,0 +1,20 @@
+The Dark Signpost
+
+Signpost image, based on Ogden's Sign, is added to the MPQ and now replaces the Wounded Townsman
+
+
+Relocation of the wounded townsman:
+
+file offset 00075193
+
+:00475D93 6A20                    push 00000020
+:00475D95 6A18                    push 00000018
+:00475D97 6A02                    push 00000002
+:00475D99 6A01                    push 00000001		active
+:00475D9B 6A60                    push 00000060
+changed into
+:00475D93 6A2F                    push 0000002F		X-coordinate
+:00475D95 6A38                    push 00000038		y-coordinate
+:00475D97 6A02                    push 00000002
+:00475D99 6A00                    push 00000000		deactivated
+:00475D9B 6A60                    push 00000060		animation size

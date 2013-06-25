@@ -1,0 +1,79 @@
+Acid puddles for all dying dogs and spiders:
+
+
+file offset 0003C670
+
+:0043D270 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043D276 8B00                    mov eax, dword ptr [eax]
+:0043D278 83F82D                  cmp eax, 0000002D
+:0043D27B 7C05                    jl 0043D282
+:0043D27D 83F831                  cmp eax, 00000031
+:0043D280 7E05                    jle 0043D287
+:0043D282 83F878                  cmp eax, 00000078
+:0043D285 7523                    jne 0043D2AA
+changed into
+:0043D270 8BC6                    mov eax, esi
+:0043D272 E8DD250000              call 0043F854				check for spiders and spitters
+:0043D277 7431                    je 0043D2AA
+:0043D279 EB0C                    jmp 0043D287
+:0043D27B ...
+
+Now 12 bytes free space from 0043D27B to 0043D287.
+
+
+file offset 0003D353
+
+:0043DF53 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043DF59 8B00                    mov eax, dword ptr [eax]
+:0043DF5B 83F82E                  cmp eax, 0000002E
+:0043DF5E 7C28                    jl 0043DF88
+:0043DF60 83F831                  cmp eax, 00000031
+:0043DF63 7F23                    jg 0043DF88
+changed into
+:0043DF53 8BC6                    mov eax, esi
+:0043DF55 E8FA180000              call 0043F854				check for spiders and spitters
+:0043DF5A 742C                    je 0043DF88
+:0043DF5C 909090909090909090      9*nop
+
+
+Forcing the availability of AcidPuddle animation on all levels:
+
+file offset 0003A330
+
+:0043AF30 EB32                    jmp 0043AF64
+:0043AF32 837DFC2D                cmp dword ptr [ebp-04], 0000002D
+:0043AF36 7C06                    jl 0043AF3E
+:0043AF38 837DFC31                cmp dword ptr [ebp-04], 00000031
+:0043AF3C 7E06                    jle 0043AF44
+:0043AF3E 837DFC78                cmp dword ptr [ebp-04], 00000078
+:0043AF42 7525                    jne 0043AF69
+:0043AF44 F60538D6690010          test byte ptr [0069D638], 10
+:0043AF4B 751C                    jne 0043AF69
+:0043AF4D 830D38D6690010          or dword ptr [0069D638], 00000010
+:0043AF54 B11F                    mov cl, 1F
+:0043AF56 E8C94BFFFF              call 0042FB24
+:0043AF5B B120                    mov cl, 20
+:0043AF5D E8C24BFFFF              call 0042FB24
+:0043AF62 B121                    mov cl, 21
+:0043AF64 E8BB4BFFFF              call 0042FB24
+changed into
+:0043AF30 EB2B                    jmp 0043AF5D
+:0043AF32 ...
+:0043AF62 90909090909090          7*nop
+
+file offset 0003A3D5
+
+:0043AFD5 817DFC81000000          cmp dword ptr [ebp-04], 00000081
+:0043AFDC 7500                    jne 0043AFDE
+:0043AFDE B800010000              mov eax, 00000100
+:0043AFE3 850538D66900            test dword ptr [0069D638], eax
+:0043AFE9 7514                    jne 0043AFFF
+:0043AFEB 090538D66900            or dword ptr [0069D638], eax
+changed into
+:0043AFD5 B800010000              mov eax, 00000100
+:0043AFDA 850538D66900            test dword ptr [0069D638], eax
+:0043AFE0 751D                    jne 0043AFFF
+:0043AFE2 090538D66900            or dword ptr [0069D638], eax
+:0043AFE8 B121                    mov cl, 21
+:0043AFEA E8354BFFFF              call 0042FB24
+:0043AFEF 9090                    2*nop

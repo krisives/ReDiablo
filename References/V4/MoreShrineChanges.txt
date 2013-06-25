@@ -1,0 +1,75 @@
+Shrines
+
+
+Spiritual Shrine gives more gold:
+
+File Offset 00051B13
+
+:00452713 52                      push edx
+:00452714 90                      nop
+wordt
+:00452713 42                      inc edx
+:00452714 52                      push edx
+
+File Offset 00051B22
+
+:00452722 90                      nop
+:00452723 90                      nop
+:00452724 90                      nop
+:00452725 90                      nop
+:00452726 90                      nop
+:00452727 90                      nop
+wordt
+:00452722 C1E101                  shl ecx, 01
+:00452725 C1E001                  shl eax, 01
+
+
+Increasing chances to break item at Murphys Shrine (1/5 -> 1/4):
+
+File Offset 000523D2
+
+:00452FD2 6A06                    push 00000006
+wordt
+:00452FD2 6A05                    push 00000005
+
+
+Increasing damage gain at Weird Shrine (+1 -> +2):
+
+File Offset 00051070
+
+:00451C70 A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:00451C70 E875000000              call 00451CEA
+
+File Offset 000510E8
+
+:00451CE8 90...                   10*nop
+wordt
+:00451CE8 EB08                    jmp 00451CF2
+:00451CEA FF00                    inc dword ptr [eax]
+:00451CEC A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451CF1 C3                      ret
+
+
+Making Weird Shrine shared between all players:
+
+File Offset 00050FE1
+
+:00451BE1 8B45FC                  mov eax, dword ptr [ebp-04]
+:00451BE4 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00451BEA 0F8550140000            jne 00453040
+wordt
+:00451BE1 90...                   10*nop
+:00451BEB A1E8AD6E00              mov eax, dword ptr [006EADE8]
+
+
+Making Gloomy Shrine shared between all players:
+
+File Offset 00050E85
+
+:00451A85 8B45FC                  mov eax, dword ptr [ebp-04]
+:00451A88 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00451A8E 0F85AC150000            jne 00453040
+wordt
+:00451A85 90...                   10*nop
+:00451A8F A1E8AD6E00              mov eax, dword ptr [006EADE8]

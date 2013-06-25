@@ -1,0 +1,18 @@
+Diablo:
+
+2C582 change F0E6 to 24E7
+2C586 change 1B74 to 407D
+
+In asm
+:0042D180 80BAF0E664001B          cmp byte ptr [edx+0064E6F0], 1B
+:0042D187 7415                    je 0042D19E
+Change to
+:0042D180 80BA24E7640040          cmp byte ptr [edx+0064E724], 40
+:0042D187 7D15                    jge 0042D19E
+
+Hellfire:
+:00433A98 80BA20DD69001B          cmp byte ptr [edx+0069DD20], 1B
+:00433A9F 7423                    je 00433AC4
+Change to
+:00433A98 80BA54DD690040          cmp byte ptr [edx+0069DD54], 40
+:00433A9F 7D23                    jge 00433AC4

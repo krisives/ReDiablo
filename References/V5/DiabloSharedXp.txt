@@ -1,0 +1,55 @@
+
+
+Shared Xp for Diablo 107
+
+Awarding XP's to Several Characters" Old: 
+* Referenced by a CALL at Addresses: 
+|:00434D2D   , :00434F72 
+| 
+:0044CD3A 53                    push ebx 
+:0044CD3B 56                    push esi 
+:0044CD3C 0FBE74240C               movsx esi, byte ptr [esp+0C] 
+:0044CD41 57                    push edi 
+:0044CD42 8BD9                    mov ebx, ecx 
+:0044CD44 33FF                    xor edi, edi 
+:0044CD46 8BC2                    mov eax, edx 
+:0044CD48 33C9                    xor ecx, ecx 
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: 
+|:0044CD58(C) 
+| 
+:0044CD4A 6A01                    push 00000001 
+:0044CD4C 5A                    pop edx 
+:0044CD4D D3E2                    shl edx, cl 
+:0044CD4F 85D6                    test esi, edx 
+:0044CD51 7401                    je 0044CD54 
+:0044CD53 47                    inc edi 
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: 
+|:0044CD51(C) 
+| 
+:0044CD54 41                    inc ecx 
+:0044CD55 83F904               cmp ecx, 00000004 
+:0044CD58 7CF0                    jl 0044CD4A 
+:0044CD5A 85FF                    test edi, edi 
+:0044CD5C 741A                    je 0044CD78 
+:0044CD5E 8B0DE8AD6E00               mov ecx, dword ptr [00687774] 
+:0044CD64 6A01                    push 00000001 
+:0044CD66 99                    cdq 
+:0044CD67 F7FF                    idiv edi 
+:0044CD69 5A                    pop edx 
+:0044CD6A D3E2                    shl edx, cl 
+:0044CD6C 85D6                    test esi, edx 
+:0044CD6E 7408                    je 0044CD78 
+:0044CD70 50                    push eax 
+:0044CD71 8BD3                    mov edx, ebx 
+:0044CD73 E856FEFFFF               call 0044CBFA 
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses: 
+|:0044CD5C(C), :0044CD6E(C) 
+| 
+:0044CD78 5F                    pop edi 
+:0044CD79 5E                    pop esi 
+:0044CD7A 5B                    pop ebx 
+:0044CD7B C20400               ret 0004

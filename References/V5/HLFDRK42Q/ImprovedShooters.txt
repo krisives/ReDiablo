@@ -1,0 +1,360 @@
+Fast spitting dogs, Witches, all Goat Archers, most Skeleton Archers, Firebats, Hellbats, Liches and Scowlers all use the same generic 'Shooter AI' code.
+
+Ranged attackers with the 'Follow' ability tend to be careless and run into their target once it has gone out of sight. Also, that same 'Follow' ability causes shooters to walk around small obstacles they should better ignore. This unwanted behaviour is not part of the generic AI code, but caused by separate code. The generic code could produce better behaviour, but it is bypasssed in such cases.
+
+The following modification keeps ranged attackers with both Follow and OpenDoor abilities from going too near their target (distance depends on the attack subtype). It also prevents 'walking around chests' for those monsters. Delay times between shots now depend on subtype (not for spitters, as those never delay).
+
+
+Adding distance check before target is followed, in Shooter AI code:
+
+file offset 00040840
+
+:00441440 0F8546010000            jne 0044158C
+:00441446 8A8628DD6900            mov al, byte ptr [esi+0069DD28]
+:0044144C 3CFF                    cmp al, FF
+:0044144E 743D                    je 0044148D
+:00441450 F68624DD690010          test byte ptr [esi+0069DD24], 10
+:00441457 7534                    jne 0044148D
+:00441459 84C0                    test al, al
+:0044145B 0F842B010000            je 0044158C
+changed into
+:00441440 7546                    jne 00441488
+:00441442 8A8E28DD6900            mov cl, byte ptr [esi+0069DD28]
+:00441448 84C9                    test cl, cl
+:0044144A 743C                    je 00441488
+:0044144C E83C000000              call 0044148D				'real distance' routine
+:00441451 8945EC                  mov dword ptr [ebp-14], eax
+:00441454 8955F0                  mov dword ptr [ebp-10], edx
+:00441457 80F9FF                  cmp cl, FF
+:0044145A 7452                    je 004414AE
+:0044145C E93D240100              jmp 0045389E
+:00441461
+
+'Real distance' routine:
+
+file offset 000408A7
+
+:004414A7 8945EC                  mov dword ptr [ebp-14], eax
+:004414AA 8955F0                  mov dword ptr [ebp-10], edx
+:004414AD 2BF8                    sub edi, eax
+:004414AF 2BDA                    sub ebx, edx
+changed into
+:004414A7 2BF8                    sub edi, eax
+:004414A9 EB47                    jmp 004414F2
+:004414AB 909090                  3*nop
+:004414AE 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+file offset 000408F2
+
+:004414F2 57                      push edi
+:004414F3 E8D8960300              call 0047ABD0
+:004414F8 83F804                  cmp eax, 00000004
+:004414FB 59                      pop ecx
+:004414FC 7D3B                    jge 00441539
+:004414FE 53                      push ebx
+:004414FF E8CC960300              call 0047ABD0
+:00441504 83F804                  cmp eax, 00000004
+:00441507 59                      pop ecx
+:00441508 7D2F                    jge 00441539
+changed into
+:004414F2 7D02                    jge 004414F6
+:004414F4 F7DF                    neg edi
+:004414F6 2BDA                    sub ebx, edx
+:004414F8 7D02                    jge 004414FC
+:004414FA F7DB                    neg ebx
+:004414FC C3                      ret
+:004414FD 909090                  3*nop
+:00441500 83FF04                  cmp edi, 00000004
+:00441503 7D34                    jge 00441539
+:00441505 83FB04                  cmp ebx, 00000004
+:00441508 7D2F                    jge 00441539
+
+file offset 000408DA
+
+:004414DA 7516                    jne 004414F2
+changed into
+:004414DA 7524                    jne 00441500
+:004414DC 
+
+Using obsolete codespace from 'Nakrul' books:
+
+file offset 00052C9E
+
+:0045389E 90                      nop
+:0045389F 90                      nop
+:004538A0 90                      nop
+:004538A1 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004538A7 0F858E000000            jne 0045393B
+:004538AD 8B8624E66D00            mov eax, dword ptr [esi+006DE624]
+:004538B3 8986E4E56D00            mov dword ptr [esi+006DE5E4], eax
+:004538B9 FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:004538BF 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:004538C5 6A3F                    push 0000003F
+:004538C7 59                      pop ecx
+:004538C8 E8F74DFCFF              call 004186C4
+:004538CD 8B8E34E66D00            mov ecx, dword ptr [esi+006DE634]
+:004538D3 A0D8B16000              mov al, byte ptr [0060B1D8]
+:004538D8 85C9                    test ecx, ecx
+:004538DA 742A                    je 00453906
+:004538DC 3C18                    cmp al, 18
+:004538DE 7526                    jne 00453906
+:004538E0 833D7873570001          cmp dword ptr [00577378], 00000001
+:004538E7 743D                    je 00453926
+:004538E9 803DA6B56E0003          cmp byte ptr [006EB5A6], 03
+changed into
+:0045389E 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:004538A4 80786503                cmp byte ptr [eax+65], 03
+:004538A8 751C                    jne 004538C6
+:004538AA 8BC3                    mov eax, ebx
+:004538AC 3BC7                    cmp eax, edi
+:004538AE 7D02                    jge 004538B2
+:004538B0 8BC7                    mov eax, edi
+:004538B2 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]
+:004538B9 D1E9                    shr ecx, 1
+:004538BB 9090                    2*nop
+:004538BD 41                      inc ecx
+:004538BE 3BC1                    cmp eax, ecx
+:004538C0 0F8EE8DBFEFF            jle 004414AE
+:004538C6 E996DBFEFF              jmp 00441461		
+
+
+Check for 'smart' shooter AI (needed below):
+
+:004538CB 8A8620DD6900            mov al, byte ptr [esi+0069DD20]
+:004538D1 3C07                    cmp al, 07				Goat Archer
+:004538D3 7416                    je 004538EB
+:004538D5 3C0E                    cmp al, 0E				Succubi
+:004538D7 7412                    je 004538EB
+:004538D9 3C1D                    cmp al, 1D				Succubi at Lazarus
+:004538DB 740E                    je 004538EB
+:004538DD 3C21                    cmp al, 21				Fire arrow Archer
+:004538DF 740A                    je 004538EB
+:004538E1 3C23                    cmp al, 23				Lightning arrow Archer
+:004538E3 7C04                    jl 004538E9
+:004538E5 3C25                    cmp al, 25				Lich, Scowler
+:004538E7 7E02                    jle 004538EB
+:004538E9 33C0                    xor eax, eax
+:004538EB C3                      ret
+:004538EC 90909090                4*nop
+
+
+Intercepting check that would bypass normal AI code:
+
+file offset 00042DE5
+
+:004439E5 E862C5FFFF              call 0043FF4C
+changed into
+:004439E5 E849E30000              call 00451D33
+:004439EA 
+
+Using free space from Stone Shrine:
+
+file offset 00051133
+
+:00451D33 90                      nop
+:00451D34 90                      nop
+:00451D35 7E2C                    jle 00451D63
+:00451D37 8BF1                    mov esi, ecx
+:00451D39 83BC30C00D00000A        cmp dword ptr [eax+esi+00000DC0], 0000000A
+:00451D41 8D1430                  lea edx, dword ptr [eax+esi]
+:00451D44 7511                    jne 00451D57
+:00451D46 8B82A00E0000            mov eax, dword ptr [edx+00000EA0]
+:00451D4C 89829C0E0000            mov dword ptr [edx+00000E9C], eax
+:00451D52 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451D57 47                      inc edi
+:00451D58 03F3                    add esi, ebx
+:00451D5A 3BBC08D8470000          cmp edi, dword ptr [eax+ecx+000047D8]
+:00451D61 7CD6                    jl 00451D39
+:00451D63 6A08                    push 00000008
+:00451D65 5E                      pop esi
+:00451D66 83BC080C4800000A        cmp dword ptr [eax+ecx+0000480C], 0000000A
+:00451D6E 8D1408                  lea edx, dword ptr [eax+ecx]
+:00451D71 7511                    jne 00451D84
+:00451D73 8B82EC480000            mov eax, dword ptr [edx+000048EC]
+:00451D79 8982E8480000            mov dword ptr [edx+000048E8], eax
+:00451D7F A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451D84 03CB                    add ecx, ebx
+:00451D86 4E                      dec esi
+:00451D87 75DD                    jne 00451D66
+changed into
+:00451D33 83BE8CDC690000          cmp dword ptr [esi+0069DC8C], 00000000
+:00451D3A 7546                    jne 00451D82				skip all if already busy
+:00451D3C 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:00451D43 743D                    je 00451D82				skip all if not active
+:00451D45 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:00451D4B 80786503                cmp byte ptr [eax+65], 03		check for Follow+OpenDoor ability
+:00451D4F 752A                    jne 00451D7B
+:00451D51 E8751B0000              call 004538CB				check for 'smart' shooters
+:00451D56 85C0                    test eax, eax
+:00451D58 7421                    je 00451D7B
+:00451D5A 80BE28DD6900FF          cmp byte ptr [esi+0069DD28], FF
+:00451D61 741F                    je 00451D82				skip 'bypass' if in sight
+:00451D63 E83782FDFF              call 00429F9F
+:00451D68 909090                  3*nop
+:00451D6B 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]	attack subtype
+:00451D72 D1E9                    shr ecx, 1
+:00451D74 9090                    2*nop
+:00451D76 41                      inc ecx
+:00451D77 3BC1                    cmp eax, ecx
+:00451D79 7E07                    jle 00451D82				jmp if too close
+:00451D7B 8BCB                    mov ecx, ebx
+:00451D7D E9CAE1FEFF              jmp 0043FF4C				proceed normal 'bypass' check
+:00451D82 33C0                    xor eax, eax				skip any 'bypass' check
+:00451D84 C3                      ret
+:00451D85 90909090                4*nop
+
+
+Using free space from Runeclicking:
+
+file offset 0002939F
+
+:00429F9F 69C0C8550000            imul eax, 000055C8
+:00429FA5 C78401AC00000033000000  mov dword ptr [ecx+eax+000000AC], 00000033
+:00429FB0 EB6A                    jmp 0042A01C
+changed into
+:00429F9F 57                      push edi
+:00429FA0 53                      push ebx
+:00429FA1 E8E7740100              call 0044148D				'real distance' routine
+:00429FA6 8BC3                    mov eax, ebx
+:00429FA8 3BC7                    cmp eax, edi
+:00429FAA 7D02                    jge 00429FAE
+:00429FAC 8BC7                    mov eax, edi
+:00429FAE 5B                      pop ebx
+:00429FAF 5F                      pop edi
+:00429FB0 C3                      ret
+:00429FB1 90                      nop
+
+
+Improving attack speed for higher subtypes:
+
+file offset 000408DC
+
+:004414DC 6A14                    push 00000014
+:004414DE B176                    mov cl, 76
+:004414E0 5A                      pop edx
+changed into
+:004414DC E98E82FEFF              jmp 0042976F
+:004414E1 
+
+Using free space from obsolete "Indestructible" text:
+
+file offset 00028B6F
+
+:0042976F FFB6D4000000            push dword ptr [esi+000000D4]
+* Possible StringData Ref from Data Obj ->"armor: %i  Indestructible"
+:00429775 68B4684A00              push 004A68B4
+:0042977A 57                      push edi
+:0042977B E840030500              call 00479AC0
+:00429780 83C40C                  add esp, 0000000C
+:00429783 EB1B                    jmp 004297A0
+changed into
+:0042976F 6A16                    push 00000016
+:00429771 5A                      pop edx
+:00429772 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]	attack subtype
+:00429779 D1E1                    shl ecx, 1
+:0042977B 2BD1                    sub edx, ecx
+:0042977D B176                    mov cl, 76
+:0042977F E95D7D0100              jmp 004414E1
+:00429784 90                      nop
+
+
+Now, the following abilities should be set:					dword 64h
+
+All fast spitting Dogs: no following or doors (as before)			00000000
+Fast spitting spiders, Firebats and Hellbats: following , but no doors		00010000
+Skeleton Archers: doors, but no following					00020000
+Goat Archers, Liches, Scowlers and Witches: 'smart' following and doors		00030000
+
+
+pos name                  type      attacktype        sub  dlvl   mlvl     
+
+ 20 Horror                undead    7 Goat Archer      1   4- 6     9    
+000AB350 0700 0000 0000 0000 01                  .........
+changed into
+000AB350 0700 0000 0002 0000 01                  .........
+
+ 21 Corpse Bow            undead    7 Goat Archer      0   2- 5     5    
+000AB3D0 0700 0000 0000 0000 00                  .........
+changed into
+000AB3D0 0700 0000 0002 0000 00                  .........
+
+ 22 Burning Dead          undead    7 Goat Archer      1   3- 5     7    
+000AB450 0700 0000 0000 0000 01                  .........
+changed into
+000AB450 0700 0000 0002 0000 01                  .........
+
+ 42 Night Clan            demon     7 Goat Archer      2   6- 8    12  
+000ABE50 0700 0000 0003 0000 02                  .........
+changed into
+000ABE50 0700 0000 0003 0000 01                  .........
+
+ 43 Stone Clan            demon     7 Goat Archer      1   5- 7    10  
+000ABED0 0700 0000 0003 0000 01                  .........
+changed into
+000ABED0 0700 0000 0003 0000 00                  .........
+
+ 48 Doomspitter           animal   20 Fast Spit        3  C1-C2    28  
+000AC150 1400 0000 0000 0000 03                  .........
+
+ 49 Lava Maw              animal   20 Fast Spit        2  12-14    25  
+000AC1D0 1400 0000 0000 0000 02                  .........
+
+ 85 Fire Clan             demon    33 Torchant         3   7- 9    14  
+000AD3D0 2100 0000 0003 0000 03                  !........
+changed into
+000AD3D0 2100 0000 0003 0000 02                  !........
+
+ 86 Death Clan            demon    35 Lich             3  C1-C3    26  -> C2-C3
+000AD450 2300 0000 0003 0000 03                  #........
+changed into
+000AD450 2300 0000 0003 0000 02                  #........
+000AD444 2A                                      *
+
+ 99 Soul Burner           demon    14 Succubi          3  C1-C2    30  
+000ADAD0 0E00 0000 0003 0000 03                  .........
+changed into
+000ADAD0 0E00 0000 0003 0000 01                  .........
+
+100 Hell Burner           demon    14 Succubi          3  C3-C4    32  
+000ADB50 0E00 0000 0003 0000 03                  .........
+101 Succubus              demon    14 Succubi          0  13-14    25  
+000ADBD0 0E00 0000 0003 0000 00                  .........
+102 Snow Witch            demon    14 Succubi          1  13-15    26  
+000ADC50 0E00 0000 0003 0000 01                  .........
+103 Hell Spawn            demon    14 Succubi          2  14-15    28  
+000ADCD0 0E00 0000 0003 0000 02                  .........
+
+104 Devil Spawn           demon    14 Succubi          3  C1-C3    31  
+000ADD50 0E00 0000 0003 0000 03                  .........
+changed into
+000ADD50 0E00 0000 0003 0000 02                  .........
+
+105 Dark Spawn            demon    14 Succubi          3  H4-H4    29  
+000ADDD0 0E00 0000 0003 0000 03                  .........
+
+114 Scowler               animal   37 Psychorb         3  H1-H3    26  
+000AE250 2500 0000 0000 0000 03                  %........
+changed into
+000AE250 2500 0000 0003 0000 02                  %........
+
+120 Doom Spider           animal   20 Fast Spit        1  H1-H3    28 
+000AE550 1400 0000 0000 0000 01                  .........
+changed into
+000AE550 1400 0000 0001 0000 01                  .........
+
+127 Firebat               animal   32 Firebat          3   9-12    19  
+000AE8D0 2000 0000 0000 0000 03                   ........
+changed into
+000AE8D0 2000 0000 0001 0000 01                   ........
+
+131 Hellbat               animal   32 Firebat          3  13-14    22 
+000AEAD0 2000 0000 0000 0000 03                   ........
+changed into
+000AEAD0 2000 0000 0001 0000 02                   ........
+
+133 Lich                  undead   36 Arch lich        3  C3-C4    32  
+000AEBD0 2400 0000 0002 0000 03                  $........
+changed into
+000AEBD0 2400 0000 0003 0000 03                  $........
+
+

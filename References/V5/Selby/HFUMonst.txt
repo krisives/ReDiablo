@@ -1,0 +1,102 @@
+Unique monster slots for Hellfire v1.01, 32 bytes between
+
+ 1 - af280 - Gharbad the Weak
+ 2 - af2a0 - Skeleton King
+ 3 - af2c0 - Zhar the Mad
+ 4 - af2e0 - Snotspill
+ 5 - af300 - Arch-Bishop Lazarus
+ 6 - af320 - Red Vex
+ 7 - af340 - BlackJade
+ 8 - af360 - Lachdanan
+ 9 - af380 - Warlord of Blood
+10 - af3a0 - The Butcher
+11 - af3c0 - Hork Demon
+12 - af3e0 - The Defiler
+13 - af400 - Na-Krul
+14 - af420 - Bonehead Keenaxe
+15 - af440 - Bladeskin the Slasher
+16 - af460 - Soulpus
+17 - af480 - Pukerat the Unclean
+18 - af4a0 - Boneripper
+19 - af4c0 - Rotfeast the Hungry
+20 - af4e0 - Gutshank the Quick
+21 - af500 - Brokenhead Bangshield
+22 - af520 - Bongo
+23 - af540 - Rotcarnage
+24 - af560 - Shadowbite
+25 - af580 - Deadeye
+26 - af5a0 - Madeye the Dead
+27 - af5c0 - El Chupacabras
+28 - af5e0 - Skullfire
+29 - af600 - Warpskull
+30 - af620 - Goretongue
+31 - af640 - Pulsecrawler
+32 - af660 - Moonbender
+33 - af680 - Wrathraven
+34 - af6a0 - Spineeater
+35 - af6c0 - Blackash the Burning
+36 - af6e0 - Shadowcrow
+37 - af700 - Blightstone the Weak
+38 - af720 - Bilefroth the Pit Master
+39 - af740 - Bloodskin Darkbow
+40 - af760 - Foulwing
+41 - af780 - Shadowdrinker
+42 - af7a0 - Hazeshifter
+43 - af7c0 - Deathspit
+44 - af7e0 - Bloodgutter
+45 - af800 - Deathshade Fleshmaul
+46 - af820 - Warmaggot the Mad
+47 - af840 - Glasskull the Jagged
+48 - af860 - Blightfire
+49 - af880 - Nightwing the Cold
+50 - af8a0 - Gorestone
+51 - af8c0 - Bronzefist Firestone
+52 - af8e0 - Wrathfire the Doomed
+53 - af900 - Firewound the Grim
+54 - af920 - Baron Sludge
+55 - af940 - Blighthorn Steelmace
+56 - af960 - Chaoshowler
+57 - af980 - Doomgrin the Rotting
+58 - af9a0 - Madburner
+59 - af9c0 - Bonesaw the Litch
+60 - af9e0 - Breakspine
+61 - afa00 - Devilskull Sharpbone
+62 - afa20 - Brokenstorm
+63 - afa40 - Stormbane
+64 - afa60 - Oozedrool
+65 - afa80 - Goldblight of the Flame
+66 - afaa0 - Blackstorm
+67 - afac0 - Plaguewrath
+68 - afae0 - The Flayer
+69 - afb00 - Bluehorn
+70 - afb20 - Warpfire Hellspawn
+71 - afb40 - Fangspeir
+72 - afb60 - Festerskull
+73 - afb80 - Lionskull the Bent
+74 - afba0 - Blacktongue
+75 - afbc0 - Viletouch
+76 - afbe0 - Viperflame
+77 - afc00 - Fangskin
+78 - afc20 - Witchfire the Unholy
+79 - afc40 - Blackskull
+80 - afc60 - Soulslash
+81 - afc80 - Windspawn
+82 - afca0 - Lord of the Pit
+83 - afcc0 - Rustweaver
+84 - afce0 - Howlingire the Shade
+85 - afd00 - Doomcloud
+86 - afd20 - Bloodmoon Soulfire
+87 - afd40 - Witchmoon
+88 - afd60 - Gorefeast
+89 - afd80 - Graywar the Slayer
+90 - afda0 - Dreadjudge
+91 - afdc0 - Stareye the Witch
+92 - afde0 - Steelskull the Hunter
+93 - afe00 - Sir Gorash
+94 - afe20 - The Vizier
+95 - afe40 - Zamphir
+96 - afe60 - Bloodlust
+97 - afe80 - Webwidow
+98 - afea0 - Fleshdancer
+99 - afec0 - Grimspike
+100 - afee0 - Doomlock

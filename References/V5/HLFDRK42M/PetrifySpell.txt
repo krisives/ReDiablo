@@ -1,0 +1,264 @@
+The Petrify spell does Stone Curse on all monsters in sight, and costs one Magic to cast. It uses the Blink spell data, Magi spell effect data, and code from the Apocalypse spell effect. The Blink effect is still available as Escape, on scrolls, staves and as Monk skill.
+
+Testing needed to see if Stone Curse staves still use charges, and to see if Apocalypse still does correct damage.
+
+
+Adding support for Petrify to primary spell effect code for Apocalypse:
+
+file offset 0003434B
+
+:00434F4B 57                      push edi
+:00434F4C 69FFC8550000            imul edi, 000055C8
+:00434F52 80BC38B801000000        cmp byte ptr [eax+edi+000001B8], 00
+:00434F5A B143                    mov cl, 43
+:00434F5C 6A18                    push 00000018
+:00434F5E 59                      pop ecx
+:00434F5F 90                      nop
+:00434F60 90                      nop
+:00434F61 90                      nop
+:00434F62 E8D7D00100              call 0045203E
+:00434F67 5F                      pop edi
+:00434F68 019ED47A6900            add dword ptr [esi+00697AD4], ebx
+:00434F6E 8BCF                    mov ecx, edi
+:00434F70 6A18                    push 00000018
+:00434F72 C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:00434F7C 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:00434F83 5A                      pop edx
+changed into
+:00434F4B C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:00434F55 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:00434F5C 83BE587A690045          cmp dword ptr [esi+00697A58], 00000045
+:00434F63 741A                    je 00434F7F
+:00434F65 57                      push edi
+:00434F66 69FFC8550000            imul edi, 000055C8
+:00434F6C 6A18                    push 00000018
+:00434F6E 59                      pop ecx
+:00434F6F E8CAD00100              call 0045203E
+:00434F74 5F                      pop edi
+:00434F75 019ED47A6900            add dword ptr [esi+00697AD4], ebx
+:00434F7B 8BD1                    mov edx, ecx
+:00434F7D EB03                    jmp 00434F82
+:00434F7F 6A0A                    push 0000000A					
+:00434F81 5A                      pop edx
+:00434F82 8BCF                    mov ecx, edi
+
+
+Adding support for Petrify to update code for Apocalypse:
+
+file offset 000386D2
+
+:004392D2 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004392D8 8BD7                    mov edx, edi
+:004392DA 6A00                    push 00000000
+:004392DC 6A24                    push 00000024
+changed into
+:004392D2 E97901FFFF              jmp 00429450
+:004392D7 51                      push ecx
+:004392D8 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+
+Using free space from "Indestructible" texts:
+
+file offset 00028850
+
+:00429450 803DD8B1600010          cmp byte ptr [0060B1D8], 10
+:00429457 0F8C1D840200            jl 0045187A
+:0042945D E9238D0200              jmp 00452185
+:00429462 90                      nop
+changed into
+:00429450 83BE587A690045          cmp dword ptr [esi+00697A58], 00000045
+:00429457 7405                    je 0042945E
+:00429459 6A24                    push 00000024
+:0042945B 59                      pop ecx
+:0042945C EB27                    jmp 00429485
+:0042945E 6A1E                    push 0000001E
+:00429460 59                      pop ecx
+:00429461 EB22                    jmp 00429485
+:00429463
+
+file offset 00028885
+
+:00429485 51                      push ecx
+:00429486 50                      push eax
+:00429487 68EC684A00              push 004A68EC
+:0042948C 53                      push ebx
+:0042948D E82E060500              call 00479AC0
+:00429492 83C410                  add esp, 00000010
+:00429495 EB17                    jmp 004294AE
+changed into
+:00429485 8BD7                    mov edx, edi
+:00429487 6A02                    push 00000002			flagged to prevent extra manacost
+:00429489 E949FE0000              jmp 004392D7
+:0042948E 909090909090909090      9*nop
+
+
+Setting correct Slvl, increased by 1, for a Stone Curse effect called by Petrify:
+
+file offset 000386BE
+
+:004392BE 8B45F4                  mov eax, dword ptr [ebp-0C]
+:004392C1 6A00                    push 00000000
+changed into
+:004392BE E9900DFFFF              jmp 0042A053
+
+Using free space from improved Rainbow elixir:
+
+file offset 00029453
+
+:0042A053 8BCE                    mov ecx, esi
+:0042A055 E8C8470300              call 0045E822
+:0042A05A 8BD3                    mov edx, ebx
+:0042A05C 8BCE                    mov ecx, esi
+:0042A05E E857480300              call 0045E8BA
+changed into
+:0042A053 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:0042A059 40                      inc eax
+:0042A05A 50                      push eax
+:0042A05B 8B45F4                  mov eax, dword ptr [ebp-0C]
+:0042A05E E960F20000              jmp 004392C3
+:0042A063
+
+
+Preventing Manacost for Stone Curse if called by Petrify:
+
+file offset 00032F8E
+
+:00433B8E 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00433B91 6A08                    push 00000008
+:00433B93 C1A0C87A690004          shl dword ptr [eax+00697AC8], 04
+:00433B9A 5A                      pop edx
+:00433B9B E85C840300              call 0046BFFC
+changed into
+:00433B8E C1A0C87A690004          shl dword ptr [eax+00697AC8], 04
+:00433B95 807D1800                cmp byte ptr [ebp+18], 00
+:00433B99 0F84125BFFFF            je 004296B1			do manacost routine if flag not set
+:00433B9F 90                      nop
+
+Using free space from some "Indestructible" text:
+
+file offset 00028AB1
+
+:004296B1 50                      push eax
+:004296B2 6824694A00              push 004A6924
+:004296B7 57                      push edi
+:004296B8 E803040500              call 00479AC0
+:004296BD 83C40C                  add esp, 0000000C
+:004296C0 EB4B                    jmp 0042970D
+changed into
+:004296B1 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004296B4 6A08                    push 00000008
+:004296B6 5A                      pop edx
+:004296B7 E840290400              call 0046BFFC
+:004296BC E9DFA40000              jmp 00433BA0
+:004296C1 90                      nop
+
+
+Adjusting duration of Stone Curse to reward higher Slvls (now useful up to 11 instead of 6):
+
+File Offset 00032F34
+
+:00433B34 6A0C                    push 0000000C
+wordt
+:00433B34 6A0F                    push 0000000F
+
+file offset 00032F65
+
+:00433B65 83C206                  add edx, 00000006
+changed into
+:00433B65 83C204                  add edx, 00000004
+
+
+Transforming Magi spell effect into Petrify:
+
+000A6AF4 4500 0000 1340 4300 B19F 4100 0000 0000 E....@C...A.....
+000A6B04 0100 FF00 FFFF FFFF FFFF FFFF           ............
+changed into
+000A6AF4 4500 0000 AC4E 4300 2C92 4300 0000 0000 E....NC.,.C.....
+000A6B04 0100 FF00 6100 0000 FFFF FFFF           ....a.......
+
+
+Adjusting Spell data:
+
+Spells
+pos nbr name    type        qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+  9  10 Blink   magic/other     5        5    12    4    1   35   0    40- 60   3: -: -      3500         40
+        Petrify                13       13    60   30    2   55        15- 30  69: -: -     30000        800
+
+000B6218 0A0C 0200 0C83 4B00 0C83 4B00 0500 0000 ......K...K.....
+000B6228 0500 0000 0000 0000 0000 0000 2300 0000 ............#...
+000B6238 5203 0000 0104 0000 2800 0000 3C00 0000 R.......(...<...
+000B6248 AC0D 0000 C800 0000                     ........
+changed into
+000B6219 3C                                      <
+000B6224 0D00 0000 0D00 0000                     ........
+000B6234 3700 0000                               7...
+000B6239 4500 00                                 E..
+000B623C 02                                      .
+000B623D 1E                                      .
+000B6240 0F00 0000 1E00 0000                     ........
+000B6248 3075 0000                               0u..
+000B624C A00F 0000                               ....
+
+
+Changing name:
+
+000B6D0C 426C 696E 6B00 0000                     Blink...
+changed into
+000B6D0C 5065 7472 6966 7900                     Petrify.
+
+
+Switching spell icons between Blink/Petrify and Magic Missile, adding previous Mana spell icon for Petrify:
+
+00093610 1B01 0203 0405 0607 0809 1C0D 0C11 1021 ...............!
+00093620 300F 0B16 1315 2218 1914 1A1D 2526 272A 0.....".....%&'*
+00093630 2928 0A24 1E31 1732 2E2F 2B2D 2312 3323 )(.$.1.2./+-#.3#
+00093640 2323 2323                               ####
+changed into
+0009361A 33                                      3
+00093624 1C                                      .
+
+
+
+Original Apocalypse primary code:
+
+:00434F4B 57                      push edi
+:00434F4C 69FFC8550000            imul edi, 000055C8
+:00434F52 80BC38B801000000        cmp byte ptr [eax+edi+000001B8], 00
+:00434F5A B143                    mov cl, 43
+:00434F5C 6A18                    push 00000018
+:00434F5E 59                      pop ecx
+:00434F5F 90                      nop
+:00434F60 90                      nop
+:00434F61 90                      nop
+:00434F62 E8D7D00100              call 0045203E					calculate damage
+:00434F67 5F                      pop edi
+:00434F68 019ED47A6900            add dword ptr [esi+00697AD4], ebx
+:00434F6E 8BCF                    mov ecx, edi
+:00434F70 6A18                    push 00000018
+:00434F72 C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:00434F7C 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:00434F83 5A                      pop edx
+:00434F84 E873700300              call 0046BFFC					substract mana, scroll or charge
+:00434F89 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00434F8F 750A                    jne 00434F9B
+:00434F91 83CAFF                  or edx, FFFFFFFF
+:00434F94 8BCF                    mov ecx, edi
+:00434F96 E889970200              call 0045E724					substract Magic
+
+
+Original Apocalypse update code:
+
+:004392BE 8B45F4                  mov eax, dword ptr [ebp-0C]
+:004392C1 6A00                    push 00000000					slvl=0 for new effect
+:004392C3 FFB6D47A6900            push dword ptr [esi+00697AD4]
+:004392C9 69C0C8550000            imul eax, 000055C8
+:004392CF FF75F4                  push [ebp-0C]
+:004392D2 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004392D8 8BD7                    mov edx, edi
+:004392DA 6A00                    push 00000000
+:004392DC 6A24                    push 00000024					NewExp spell effect
+:004392DE FF740870                push [eax+ecx+70]
+:004392E2 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:004392E5 57                      push edi
+:004392E6 51                      push ecx
+:004392E7 E843C4FFFF              call 0043572F					create new spell effect
+

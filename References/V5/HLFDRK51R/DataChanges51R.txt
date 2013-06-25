@@ -1,0 +1,9 @@
+Data changes 51R
+
+
+New image for Rage scroll:
+
+000A2548 0100 0000                               ....
+changed into
+000A2548 0200 0000                               ....
+

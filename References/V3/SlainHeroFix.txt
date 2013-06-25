@@ -1,0 +1,175 @@
+Slain Hero Fix (SP only)
+
+
+All characters will now get a random Spellbook. Frees much space.
+
+File Offset 0005065A
+
+:0045125A 8A8C1960010000          mov cl, byte ptr [ecx+ebx+00000160]
+wordt
+:0045125A EB3C                    jmp 00451298			jmp to sorcerer code
+:0045125C 9090909090		  5*nop
+
+
+Now free space from 0045125C to 00451298, and from 004512D2 to 00451389.
+
+
+
+Original code:
+
+* Referenced by a CALL at Addresses:
+|:0045075B   , :00453B4F   
+|
+:0045121C 53                      push ebx
+:0045121D 56                      push esi
+:0045121E 57                      push edi
+:0045121F 8BFA                    mov edi, edx
+:00451221 8BC7                    mov eax, edi
+:00451223 8BF1                    mov esi, ecx
+:00451225 6BC078                  imul eax, 00000078
+:00451228 33D2                    xor edx, edx
+:0045122A 389000E66D00            cmp byte ptr [eax+006DE600], dl
+:00451230 8D8800E66D00            lea ecx, dword ptr [eax+006DE600]
+:00451236 0F8464010000            je 004513A0
+:0045123C 391510AB6D00            cmp dword ptr [006DAB10], edx
+:00451242 8811                    mov byte ptr [ecx], dl
+:00451244 0F8556010000            jne 004513A0
+:0045124A 8BCE                    mov ecx, esi
+:0045124C 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00451252 69C9C8550000            imul ecx, 000055C8
+:00451258 6A01                    push 00000001
+:0045125A 8A8C1960010000          mov cl, byte ptr [ecx+ebx+00000160]
+:00451261 3ACA                    cmp cl, dl
+:00451263 751E                    jne 00451283			jmp if not warrior
+:00451265 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:0045126B 52                      push edx
+:0045126C 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:00451272 6899000000              push 00000099			Breastplate
+:00451277 6A09                    push 00000009			type=HeavyArmor
+:00451279 E885A5FDFF              call 0042B803
+:0045127E E9E6000000              jmp 00451369
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451263(C)
+|
+:00451283 5B                      pop ebx
+:00451284 3ACB                    cmp cl, bl
+:00451286 750B                    jne 00451293			jmp if not rogue
+:00451288 53                      push ebx
+:00451289 52                      push edx
+:0045128A 6A77                    push 00000077			GreatBow
+:0045128C 6A03                    push 00000003			type=bow
+:0045128E E987000000              jmp 0045131A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451286(C)
+|
+:00451293 80F902                  cmp cl, 02
+:00451296 753A                    jne 004512D2			jmp if not sorcerer
+:00451298 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:0045129E 53                      push ebx
+:0045129F 52                      push edx
+:004512A0 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:004512A6 6A03                    push 00000003
+:004512A8 E876A4FDFF              call 0042B723			drop a book?
+:004512AD A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:004512B2 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004512B8 69C0C8550000            imul eax, 000055C8
+:004512BE FF74083C                push [eax+ecx+3C]
+:004512C2 8B540838                mov edx, dword ptr [eax+ecx+38]
+:004512C6 03C1                    add eax, ecx
+:004512C8 B90E020000              mov ecx, 0000020E
+:004512CD E9B7000000              jmp 00451389
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451296(C)
+|
+:004512D2 80F903                  cmp cl, 03
+:004512D5 7539                    jne 00451310			jmp if not monk
+:004512D7 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:004512DD 53                      push ebx			ebx = 00000001
+:004512DE 52                      push edx			EDX = 00000000
+:004512DF 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:004512E5 6A7C                    push 0000007C			GreatStaff
+:004512E7 6A0A                    push 0000000A			type=staff
+:004512E9 E8B5A6FDFF              call 0042B9A3
+:004512EE A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:004512F3 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004512F9 69C0C8550000            imul eax, 000055C8
+:004512FF FF74083C                push [eax+ecx+3C]
+:00451303 8B540838                mov edx, dword ptr [eax+ecx+38]
+:00451307 03C1                    add eax, ecx
+:00451309 B94E030000              mov ecx, 0000034E
+:0045130E EB79                    jmp 00451389
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004512D5(C)
+|
+:00451310 80F904                  cmp cl, 04			
+:00451313 7538                    jne 0045134D			jmp if not bard
+:00451315 53                      push ebx
+:00451316 52                      push edx
+:00451317 6A39                    push 00000039			BastardSword
+:00451319 53                      push ebx			type=sword
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045128E(U)
+|
+:0045131A 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:00451320 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:00451326 E878A6FDFF              call 0042B9A3
+:0045132B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451330 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451336 69C0C8550000            imul eax, 000055C8
+:0045133C FF74083C                push [eax+ecx+3C]
+:00451340 8B540838                mov edx, dword ptr [eax+ecx+38]
+:00451344 03C1                    add eax, ecx
+:00451346 B975020000              mov ecx, 00000275
+:0045134B EB3C                    jmp 00451389
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451313(C)
+|
+:0045134D 80F905                  cmp cl, 05
+:00451350 753C                    jne 0045138E			jmp if not Barbarian
+:00451352 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:00451358 53                      push ebx
+:00451359 52                      push edx
+:0045135A 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:00451360 6A65                    push 00000065			BattleAxe
+:00451362 6A02                    push 00000002			type=axe
+:00451364 E83AA6FDFF              call 0042B9A3
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045127E(U)
+|
+:00451369 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045136E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451374 69C0C8550000            imul eax, 000055C8
+:0045137A FF74083C                push [eax+ecx+3C]
+:0045137E 8B540838                mov edx, dword ptr [eax+ecx+38]
+:00451382 03C1                    add eax, ecx
+:00451384 B9DC020000              mov ecx, 000002DC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004512CD(U), :0045130E(U), :0045134B(U)
+|
+:00451389 E83673FCFF              call 004186C4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451350(C)
+|
+:0045138E 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00451394 750A                    jne 004513A0
+:00451396 57                      push edi
+:00451397 B22D                    mov dl, 2D
+:00451399 33C9                    xor ecx, ecx
+:0045139B E8165BFFFF              call 00446EB6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00451236(C), :00451244(C), :00451394(C)
+|
+:004513A0 5F                      pop edi
+:004513A1 5E                      pop esi
+:004513A2 5B                      pop ebx
+:004513A3 C20400                  ret 0004

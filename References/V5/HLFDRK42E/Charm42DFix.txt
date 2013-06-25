@@ -1,0 +1,39 @@
+Correcting bug in 42D
+
+Using last free space from Improved Oils:
+
+file offset 00027896
+
+:00428496 90                      nop
+:00428497 90                      nop
+:00428498 90                      nop
+:00428499 90                      nop
+:0042849A 90                      nop
+:0042849B 90                      nop
+:0042849C 90                      nop
+:0042849D 90                      nop
+:0042849E 90                      nop
+:0042849F 90                      nop
+:004284A0 90                      nop
+:004284A1 90                      nop
+:004284A2 90                      nop
+:004284A3 90                      nop
+:004284A4 90                      nop
+:004284A5 90                      nop
+:004284A6 90                      nop
+changed into
+:00428496 8BC6                    mov eax, esi
+:00428498 B9E4000000              mov ecx, 000000E4
+:0042849D F7F9                    idiv ecx
+:0042849F 8BC8                    mov ecx, eax
+:004284A1 E92FA50200              jmp 004529D5
+:004284A6 90                      nop
+changed into
+:00428496 8BC6                    mov eax, esi
+:00428498 B9E4000000              mov ecx, 000000E4
+:0042849D 99                      cdq
+:0042849E F7F9                    idiv ecx
+:004284A0 8BC8                    mov ecx, eax
+:004284A2 E92EA50200              jmp 004529D5
+:004284A7 ...
+

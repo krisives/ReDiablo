@@ -1,0 +1,44 @@
+Disabling New game and Quit when Restart in Town is enabled
+
+Original code
+:0041B2E0 8B15F8AD6E00            mov edx, dword ptr [006EADF8]		Flag if dead
+:0041B2E6 B918054A00              mov ecx, 004A0518			Restart in Town
+:0041B2EB E9171D0000              jmp 0041D007				Enable/Disable
+
+New code:
+
+:0041B2E0 8B15F8AD6E00            mov edx, dword ptr [006EADF8]		Flag if dead
+:0041B2E6 B90C054A00              mov ecx, 004A050C			Newgame
+:0041B2EB E9E1E2FEFF              jmp 004095D1				New code at free space from connect.txt
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0041B2EB(U)
+|
+:004095D1 E8ED7C0400              call 004512C3				Disable Newgame
+:004095D6 B924054A00              mov ecx, 004A0524
+:004095DB E8E37C0400              call 004512C3				Disable Quit
+:004095E0 B918054A00              mov ecx, 004A0518
+:004095E5 E91D3A0100              jmp 0041D007				Enable Restart
+:004095EA 90                      nop
+
+
+Disabling procedure (placed on  15 bytes part of slain hero quest)
+
+* Referenced by a CALL at Addresses:
+|:004095D1   , :004095DB   
+|
+:004512C3 85D2                    test edx, edx
+:004512C5 7405                    je 004512CC
+:004512C7 8061037F                and byte ptr [ecx+03], 7F		Disable
+:004512CB C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004512C5(C)
+|
+:004512CC 80490380                or byte ptr [ecx+03], 80		Enable
+:004512D0 C3                      ret
+
+
+:004512D1 90                      nop

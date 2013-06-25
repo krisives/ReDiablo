@@ -1,0 +1,119 @@
+
+
+* Referenced by a CALL at Addresses:
+|:004248F7   , :0042491A   , :00424A80   
+|
+:0042492F 0FB68261010000          movzx eax, byte ptr [edx+00000161]
+:00424936 39816C010000            cmp dword ptr [ecx+0000016C], eax
+:0042493C 7C0F                    jl 0042494D
+:0042493E 0FBE8260010000          movsx eax, byte ptr [edx+00000160]
+:00424945 398164010000            cmp dword ptr [ecx+00000164], eax
+:0042494B 7D03                    jge 00424950
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042493C(C)
+|
+:0042494D 33C0                    xor eax, eax
+:0042494F C3                      ret
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:0042A29D   , :0042A769   , :0042AADE   , :0042ABCB   , :0042AF2D   
+|:0042B304   , :0042B667   , :0042B689   , :0042B6AB   , :0042B6CD   
+|:0042B6E7   
+|
+:0042A06A 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0042A070 56                      push esi
+:0042A071 69D2C8550000            imul edx, 000055C8
+:0042A077 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042A07D 6A01                    push 00000001
+:0042A07F 03D6                    add edx, esi
+:0042A081 58                      pop eax
+:0042A082 0FBEB160010000          movsx esi, byte ptr [ecx+00000160]
+:0042A089 39B264010000            cmp dword ptr [edx+00000164], esi
+:0042A08F 7C1E                    jl 0042A0AF
+:0042A091 0FB6B161010000          movzx esi, byte ptr [ecx+00000161]
+:0042A098 39B26C010000            cmp dword ptr [edx+0000016C], esi
+:0042A09E 7C0F                    jl 0042A0AF
+:0042A0A0 0FBE8962010000          movsx ecx, byte ptr [ecx+00000162]
+:0042A0A7 398A74010000            cmp dword ptr [edx+00000174], ecx
+:0042A0AD 7D02                    jge 0042A0B1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A08F(C), :0042A09E(C)
+|
+:0042A0AF 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A0AD(C)
+|
+:0042A0B1 5E                      pop esi
+:0042A0B2 C3                      ret
+
+
+
+
+Book and slvls
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:00421897   , :00421A12   
+|
+:0042122B 51                      push ecx
+:0042122C 69C9C8550000            imul ecx, 000055C8
+:00421232 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00421237 56                      push esi
+:00421238 03C1                    add eax, ecx
+:0042123A 57                      push edi
+:0042123B 83B88054000018          cmp dword ptr [eax+00005480], 00000018
+:00421242 0F8596000000            jne 004212DE
+:00421248 8B9084540000            mov edx, dword ptr [eax+00005484]
+:0042124E 6BD238                  imul edx, 00000038
+:00421251 8A9204764B00            mov dl, byte ptr [edx+004B7604]
+:00421257 889005550000            mov byte ptr [eax+00005505], dl
+:0042125D 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00421263 8B840E84540000          mov eax, dword ptr [esi+ecx+00005484]
+:0042126A 03C6                    add eax, esi
+:0042126C 0FBEBC08C1000000        movsx edi, byte ptr [eax+ecx+000000C1]
+:00421274 85FF                    test edi, edi
+:00421276 7466                    je 004212DE
+:00421278 55                      push ebp
+:00421279 53                      push ebx
+
+
+
+
+:004249C0 83BC31C00D000000        cmp dword ptr [ecx+esi+00000DC0], 00000000
+:004249C8 8D0431                  lea eax, dword ptr [ecx+esi]
+:004249CB 0F85C7000000            jne 00424A98
+:004249D1 83B8940E000018          cmp dword ptr [eax+00000E94], 00000018
+:004249D8 0F85BA000000            jne 00424A98
+:004249DE 8B88980E0000            mov ecx, dword ptr [eax+00000E98]
+:004249E4 6BC938                  imul ecx, 00000038
+:004249E7 8A8904764B00            mov cl, byte ptr [ecx+004B7604]
+:004249ED 8888190F0000            mov byte ptr [eax+00000F19], cl
+:004249F3 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004249F9 8B8431980E0000          mov eax, dword ptr [ecx+esi+00000E98]
+:00424A00 03C1                    add eax, ecx
+:00424A02 0FBE8438C1000000        movsx eax, byte ptr [eax+edi+000000C1]
+:00424A0A 85C0                    test eax, eax
+:00424A0C 89442410                mov dword ptr [esp+10], eax
+:00424A10 7465                    je 00424A77
+:00424A12 8DAE190F0000            lea ebp, dword ptr [esi+00000F19]
+
+
+
+:00425997 83BE5C63680018          cmp dword ptr [esi+0068635C], 00000018
+
+
+:00429377 83BFDC00000018          cmp dword ptr [edi+000000DC], 00000018
+
+* Possible StringData Ref from Data Obj ->"Right click to read"
+                                  |
+:0042937E BBB4674A00              mov ebx, 004A67B4
+:00429383 7512                    jne 00429397
+:00429385 53                      push ebx

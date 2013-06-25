@@ -1,0 +1,100 @@
+()Reflect/Barrier - Duration (number of hits) : clvl*slvl -> 1+clvl+slvl
+
+:0043037D 0FAFFA                  imul edi, edx
+wordt
+:0043037D 03FA                    add edi, edx
+:0043037F 47                      inc edi
+
+
+()Reflect/Barrier - Damage reduction 10..(10+rnd[10])% -> 10..(10+rnd[clvl/2])%
+
+:0043E517 6A0A                    push 0000000A
+:0043E519 668908                  mov word ptr [eax], cx
+:0043E51C 5A                      pop edx
+:0043E51D B164                    mov cl, 64
+:0043E51F E836BAFDFF              call 00419F5A
+wordt
+:0043E517 668908                  mov word ptr [eax], cx
+:0043E51A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E51F E840FEFFFF              call 0043E364				call BARRIER
+
+BARRIER - Calculate rnd[clvl/2]
+
+* Referenced by a CALL at Address:
+|:0043E51F   
+|
+:0043E364 8B9430B8010000          mov edx, dword ptr [eax+esi+000001B8]
+:0043E36B C1EA01                  shr edx, 01
+:0043E36E B16A                    mov cl, 6A
+:0043E370 E8E5BBFDFF              call 00419F5A
+:0043E375 C3                      ret
+
+
+
+()Berserk/Charm - Bonus to Stats : 20..(20+rnd[10])% -> 1..(1+rnd[5])%
+
+:004304C2 6A0A                    push 0000000A
+wordt
+:004304C2 6A05                    push 00000005
+
+:004304DD 6A14                    push 00000014
+wordt
+:004304DD 6A01                    push 00000001
+
+
+
+()Negating - Halves magical attack damage, sets resists to 0.
+
+PvP wordt niet ondersteund, net zoals Evasion en vele andere effecten ook niet ondersteund worden.
+
+Plaatsing routine HALVING na bovenstaande BARRIER op het oude ReflectWithBlock.
+
+:0042F86F 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042F875 F6843E4355000010        test byte ptr [esi+edi+00005543], 10
+:0042F87D 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0042F880 7402                    je 0042F884				jmp if no Evasion
+:0042F882 D1FA                    sar edx, 1
+wordt
+:0042F86F E802EB0000              call 0043E376				call HALVING
+:0042F874 16*90			  16*nop
+
+:0042F89C 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042F8A2 8BD0                    mov edx, eax
+:0042F8A4 03550C                  add edx, dword ptr [ebp+0C]
+:0042F8A7 F6843E4355000010        test byte ptr [esi+edi+00005543], 10
+:0042F8AF 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0042F8B2 7402                    je 0042F8B6
+:0042F8B4 D1FA                    sar edx, 1
+wordt
+:0042F89C 8BD0                    mov edx, eax
+:0042F89E 03550C                  add edx, dword ptr [ebp+0C]
+:0042F8A1 E8D0EA0000              call 0043E376				call HALVING
+:0042F8A6 16*90	                  17*nop
+
+HALVING
+
+* Referenced by a CALL at Addresses:
+|:0042F86F   , :0042F8A1   
+|
+:0043E376 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0043E37C 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0043E37F F6814355000010          test byte ptr [ecx+00005543], 10
+:0043E386 7402                    je 0043E38A				jmp if no Evasion
+:0043E388 D1FA                    sar edx, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E386(C)
+|
+:0043E38A F6814355000080          test byte ptr [ecx+00005543], 80
+:0043E391 7408                    je 0043E39B				jmp if no Negating
+:0043E393 837DF400                cmp dword ptr [ebp-0C], 00000000
+:0043E397 7502                    jne 0043E39B
+:0043E399 D1FA                    sar edx, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E391(C), :0043E397(C)
+|
+:0043E39B C3                      ret
+:0043E39C 90                      nop
+:0043E39D 90                      nop
+

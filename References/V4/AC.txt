@@ -1,0 +1,57 @@
+Useful AC for Melee in The Dark
+
+
+
+Max. Base To Hit for normal monster: 135
+
+Horned Deaths, Bone Lords, Fallen Angels, *all* Knights, Diablo and The Dark Ghost have this highest ToHit value.
+
+Normal : 135
+Night  : 135 +  85 = 220
+Hell   : 135 + 120 = 255
+
+Max.MLvL = 32 (many, but not all of the normal monsters mentioned above)
+
+
+
+AutoHit for monsters is the highest of [8 + 8*Diff + DLvL/2] and [DLvL]
+
+	Caves(12)	Hell(16)	Nest(4)		Abyss(4)
+
+Normal	14		16		20		24
+Night	22		24		26		28
+Hell	30		32		34		36
+
+
+
+Melee To Hit = 40 + BaseToHit + 9*(MLvl-CLvl) - AC,
+so Useful AC = 40 + BaseToHit + 9*(32+Bonus-CLvL) - AutoHit
+
+Maximum useful AC for normal monsters on Abyss(4):
+
+Clvl		Nightmare	Hellmode
+
+30		385		547
+35		340		502
+40		295		457
+45     		250		412
+50		205		367
+
+For Hell(16) all values are 4 lower. To find the AC in other situations, add or subtract 9 for every difference in MLvl or CLvL. For example, a level 42 character fighting level 30 Knights in Hellmode, will need 421 AC for best possible protection.
+
+Only Warriors with a shield can reach the needed AC for Hellmode, although they might have to use some saved oils for that.
+
+
+
+Monsters also have a AutoMiss vs. characters
+
+Max.ToHit = 95 - CLvL/4 
+
+Clvl	MaxTH	AutoMiss
+
+30	88	12		
+35	87	13		
+40	85	15		
+45      84	16		
+50	83	17		
+

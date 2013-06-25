@@ -1,0 +1,52 @@
+diablod.wav            Diablo dying
+dintro.wav             intro music
+DLvIA.wav              church music
+DLvIB.wav              cats
+DLvIC.wav              caves
+DLvID.wav              hell
+DLvIE.wav              hive
+DLvIF.wav              abyss
+Dtowne.wav             town 
+izual01.wav            never heard              <-  for intro level 16?
+lvl16int.wav           never heard, backwards
+nakrul1.wav            MP normal speech
+nakrul2.wav            Accept your death speech
+nakrul3.wav            Message to Hell speech
+nakrul4.wav            Disturbing Na-Krul speech
+nakrul5.wav            Retribution speech
+nakrul6.wav            Aeroticket speech
+nakrula1.wav           attacking
+nakrula2.wav
+nakruld1.wav           dying
+nakruld2.wav
+nakrulh1.wav           getting hit
+nakrulh2.wav
+nakruls1.wav           short speech             <- Dark Ghost speech?
+nakruls2.wav           short speech             <- Dark Ghost speech?
+nar01.wav              Diablo/Horadrim Story
+nar02.wav
+nar03.wav
+nar04.wav
+nar05.wav
+nar06.wav
+nar07.wav
+nar08.wav
+nar09.wav
+naratr3.wav            Na-Krul/Crypts Story
+naratr4.wav
+naratr5.wav
+naratr6.wav
+naratr7.wav
+naratr8.wav
+naratr9.wav
+priest00.wav        original Priest quest from diablo
+priest01.wav
+priest02.wav
+priest03.wav
+priest04.wav
+priest05.wav
+priest06.wav
+priest07.wav
+sking01.wav         SP entrance speech from Leoric
+warlrd01.wav        warlord speech
+wlock01.wav         ghostly speech from V&K book

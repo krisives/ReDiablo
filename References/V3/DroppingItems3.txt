@@ -1,0 +1,29 @@
+Dropping Items when killed by monster - Check for incorrect revival
+
+()Derde poging. 
+
+Voorgaande 2e poging heeft eigenlijk weinig kans van slagen, en kan bij nader inzien zelfs characters permanent beschadigen en kan dus beter niet geprobeerd worden!
+
+Dit vervangt de al geimplementeerde 1e poging, die wel effect, maar niet het goede resultaat had.
+
+:0043E477 90                      nop
+:0043E478 C78698010000C0FFFFFF    mov dword ptr [esi+00000198], FFFFFFC0
+:0043E482 C3                      ret
+:0043E483 90                      nop
+:0043E484 90                      nop
+:0043E485 90                      nop
+:0043E486 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E48B 03C6                    add eax, esi
+:0043E48D 8D8890010000            lea ecx, dword ptr [eax+00000190]
+wordt
+:0043E477 8B9E94010000            mov ebx, dword ptr [esi+00000194]
+:0043E47D 899E9C010000            mov dword ptr [esi+0000019C], ebx
+:0043E483 33DB                    xor ebx, ebx
+:0043E485 899E90010000            mov dword ptr [esi+00000190], ebx
+:0043E48B 899E98010000            mov dword ptr [esi+00000198], ebx
+:0043E491 C3                      ret
+:0043E492 90                      nop
+
+Hiermee vervalt ook het voorstel voor ApoDeath, omdat de benodigde ruimte deels wordt overschreven. ApoDeath dient nog verder uitgezocht te worden.
+
+Hiermee nog ruimte over op oude BlackDeath code.

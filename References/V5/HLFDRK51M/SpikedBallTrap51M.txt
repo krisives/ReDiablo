@@ -1,0 +1,87 @@
+Spiked Ball trap in Abyss
+
+
+Spell effect 62h (missile):
+
+Animation was changed from 0E (doom) to 34 (now Ball, previous rglows1)
+sound changed from 68 (dserp) to 61 (blodstar)
+sound changed from 64 (bsimpct) to 61 (blodstar)
+
+000A6E20 6200 0000 2313 4300 E860 4300 0100 0000 b...#.C..`C.....
+000A6E30 0000 0E00 6800 0000 6400 0000           ....h...d...
+changed into
+000A6E20 6200 0000 2313 4300 E860 4300 0100 0000 b...#.C..`C.....
+000A6E30 0000 3400 6100 0000 6100 0000           ..4.a...a...
+
+
+Spell effect 12h (impact):
+
+Animation was changed from 0B (bone/doom9) to 12 (shatter)
+sound changed from 75 (golumded) to 89 (shatter)
+sound changed from FF (none) to 61 (blodstar)
+
+000A6560 1200 0000 B62B 4300 1F84 4300 0100 0000 .....+C...C.....
+000A6570 0200 0B00 7500 0000 FFFF FFFF           ....u.......
+changed into
+000A6560 1200 0000 B62B 4300 1F84 4300 0100 0000 .....+C...C.....
+000A6570 0200 1200 8900 0000 6100 0000           ........a...
+
+
+Full piercing vs. characters (Using old obsolete code for Bone Spirit):
+
+File Offset 00052907
+
+:00453507 837D143F                cmp dword ptr [ebp+14], 0000003F
+wordt
+:00453507 837D1462                cmp dword ptr [ebp+14], 00000062
+
+
+Adjusting flying speed for the missile:
+
+file offset 00087F7F
+
+:00488B7F 6A0A                    push 0000000A
+changed into
+:00488B7F 6A0E                    push 0000000E
+
+
+Correcting old bug to actually have the intended speed:
+
+file offset 00030755
+
+:00431355 E918780500              jmp 00488B72
+:0043135A 90                      nop
+changed into
+:00431355 E93388FFFF              jmp 00429B8D
+:0043135A 90                      nop
+
+file offset 00087F72
+
+:00488B72 83BE587A690062          cmp dword ptr [esi+00697A58], 00000062
+changed into
+:00488B72 83BF587A690062          cmp dword ptr [edi+00697A58], 00000062
+
+file offset 00008984
+
+:00409584 83BE587A69006B          cmp dword ptr [esi+00697A58], 0000006B
+changed into
+:00409584 83BF587A69006B          cmp dword ptr [edi+00697A58], 0000006B
+
+Using free space:
+
+file offset 00028F8D
+
+:00429B8D B106                    mov cl, 06
+:00429B8F E8C603FFFF              call 00419F5A
+:00429B94 8945D8                  mov dword ptr [ebp-28], eax
+:00429B97 E9F61E0300              jmp 0045BA92
+:00429B9C 90                      nop
+:00429B9D 90                      nop
+changed into
+:00429B8D 8BF9                    mov edi, ecx
+:00429B8F 69FFB0000000            imul edi, 000000B0
+:00429B95 E9D8EF0500              jmp 00488B72
+:00429B9A 90                      nop
+:00429B9B 90                      nop
+:00429B9C 90                      nop
+:00429B9D 90                      nop

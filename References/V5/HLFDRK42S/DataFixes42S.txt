@@ -1,0 +1,279 @@
+Adjustments to Rune images:
+
+pos name        item type         item group          equip     qlvl  dur   damage    AC    str mag dex  price  pic
+
+ 39 Rune Bomb   5 special          0 other            7 not       0     0    0- 0    0- 0    0   0   0       0   26
+                                                                                                                 23
+000A1164 1A00 0000                               ....
+changed into
+000A1164 1700 0000                               ....
+
+161 Fury        3 pot/scr/jewl     0 other            7 not      14     0    0- 0    0- 0    0   0   0     600   23
+                                                                                                                 34
+000A359C 1700 0000                               ....
+changed into
+000A359C 2200 0000                               ....
+
+Renaming Fury:
+
+000A3B0E 5275 6E65 206F 6620 4675 7279 0000 0000 Rune of Fury....
+000A3B1E 00                                      .
+changed into
+000A3B0E 426F 7474 6C65 206F 6620 4675 7279 0000 Bottle of Fury..
+000A3B1E 00                                      .
+
+
+Rune Bomb didn't work properly with a different image:
+
+file offset 00021855
+
+:00422455 81B864540000BB000000    cmp dword ptr [eax+00005464], 000000BB
+changed into
+:00422455 81B86454000017000000    cmp dword ptr [eax+00005464], 00000017
+
+
+New images for the Rainbow Elixir ingredients, and restoring old Blacksmith Oil image:
+
+pos name        item type         item group          equip     qlvl  dur   damage    AC    str mag dex  price  pic
+
+ 42 Teddy Bear  5 special          0 other            7 not       0     0    0- 0    0- 0    0   0   0       0  188
+    Vial of Darkness                                                                                             29
+
+000A1248 BC00 0000 0000 0000 A853 4A00           .........SJ.
+changed into
+000A1248 1D00 0000 0000 0000 9953 4A00           .........SJ.
+
+ 43 Odd Bottle  5 special          0 other            7 not       0     0    0- 0    0- 0    0   0   0       0   52
+    Vial of Blood                                                                                                15
+
+000A1294 3400 0000 0000 0000 9C53 4A00           4........SJ.
+changed into
+000A1294 0F00 0000 0000 0000 0250 4A00           .........PJ.
+
+ 44 Demon Brain 5 special          0 other            7 not       0     0    0- 0    0- 0    0   0   0       0   40
+    Vial of Light                                                                                                38
+
+000A12E0 2800 0000 0000 0000 9053 4A00           (........SJ.
+changed into
+000A12E0 2600 0000 0000 0000 8B53 4A00           &........SJ.
+
+ 84 Blacksmith  3 pot/scr/jewl     0 other            7 not       1     0    0- 0    0- 0    0   0   0     400   29
+                                                                                                                 30
+000A1EC0 1D00 0000                               ....
+changed into
+000A1EC0 1E00 0000                               ....
+
+Providing names:
+
+000A3D8B 0000 0000 0044 656D 6F6E 2042 7261 696E .....Demon Brain
+000A3D9B 004F 6464 2042 6F74 746C 6500 0054 6564 .Odd Bottle..Ted
+000A3DAB 6479 2042 6561 7200 00                  dy Bear..
+changed into
+000A3D8B 5669 616C 206F 6620 4C69 6768 7400 5669 Vial of Light.Vi
+000A3D9B 616C 206F 6620 4461 726B 6E65 7373 0000 al of Darkness..
+000A3DAB 0000 0000 0000 0000 00                  .........
+
+000A3A02 5363 726F 6C6C 206F 6620 5368 6965 6C64 Scroll of Shield
+000A3A12 696E 6700                               ing.
+changed into
+000A3A02 5669 616C 206F 6620 7468 6520 5370 6972 Vial of the Spir
+000A3A12 6974 7300                               its.
+
+
+
+Adjustments to Spell Data
+
+pos nbr name               price(bo)  multiplier  charge scrollprice	new charge new mult	new bookprice
+
+  3   4 Flash                16000        160	  400	 		 200	      80        12000
+  4   5 Identify             30000        200	  500	 200		 250	     100
+  6   7 Town Portal           4000         40	  100	 100		 150	      60
+  7   8 Stone Curse           8000         60	  150	 200		 250	     100
+  8   9 Seeing                   0        200	  500	 600		 600	     240
+ 17  18 Nova                 20000        200	  500			 300	     120
+ 19  20 Magic Missile         4000         40	  100					  	 6000
+ 21  22 Rage                     0        200	  500	 200		 400	     160
+ 22  23 Teleport             20000        120	  300	 200		 250	     100
+ 24  25 Escape               15000         20	   50	 200		 200	      80
+ 33  34 Heal All              8000         80	  200						 6000
+ 40  41 Immolation           20000        200	  500			 300	     120
+ 41  42 Warp                  4000         40	  100	 100		 150	      60
+ 42  43 Barrier              12000         80	  200	 200
+ 43  44 Arcane Star           4000         20	   50						 6000
+ 44  45 Doom Serpents        60000        200	  500			 600	     240
+ 45  46 Mana                  3000        320	  800			 500	     200
+
+
+
+The 'sparkling' suffix (cast spell when used) does, with the remote Charged Bolt spell, no longer work properly. Since characters seldom used it, it is replaced by Evasion (for staves only, because another Evasion already exists for other item types).
+
+ 62 sparkling      77 cast spell when used                    4- 16   12    1    ---T--    1000-  1000    2
+    evasion        52 absorb half trap damage                 0-  0                       20000- 20000    6
+
+0008C410 B109 4A00 4D00 0000 0400 0000 1000 0000 ..J.M...........
+0008C420 0C00 0000 0001 0000 0000 0000 0000 0000 ................
+0008C430 0100 0000 E803 0000 E803 0000 0200 0000 ................
+changed into
+0008C410 B415 4A00 3400 0000 0000 0000 0000 0000 ..J.4...........
+0008C420 0C00 0000 0001 0000 0100 0000 0000 0000 ................
+0008C430 0100 0000 204E 0000 204E 0000 0600 0000 .... N.. N......
+
+
+The following are changes to unique items.
+
+
+Corrected price for Woodland Bow:
+
+0008EB30 F049 0200                               .I..
+changed into
+0008EB30 C0D4 0100                               ....
+
+
+Corrected price for Shadowfang sword:
+
+0008D5DC 60EA 0100                               `...
+changed into
+0008D5DC 60EA 0000                               `...
+
+
+Reduced Fastest Hitrecovery on Leather of Aut:
+
+0008E2D0 3B00 0000 0300 0000 0300 0000           ;...........
+changed into
+0008E2D0 3B00 0000 0200 0000 0200 0000           ;...........
+
+
+Adding +20 Strength to Bloodslayer axe:
+
+0008EDC8 3C13 4A00 1622 0600 400D 0300 0000 0000 <.J.."..@.......
+0008EDD8 6400 0000 6400 0000 0200 0000 C800 0000 d...d...........
+0008EDE8 C800 0000 3800 0000 0500 0000 0500 0000 ....8...........
+0008EDF8 1300 0000 1400 0000 1400 0000 1900 0000 ................
+0008EE08 1400 0000 1400 0000 2C00 0000 D300 0000 ........,.......
+0008EE18 0000 0000                               ....
+
+
+Renaming Mongreldeath:
+
+0009FD1A 4D6F 6E67 7265 6C64 6561 7468 0000      Mongreldeath..
+changed into
+0009FD1A 4C69 6665 7374 6561 6C65 7200 0000      Lifestealer...
+
+Replacing extra Life by Lifestealing:
+
+0008D79C 1F00 0000 3200 0000 3200 0000           ....2...2...
+changed into
+0008D79C 3800 0000 0500 0000 0500 0000           8...........
+
+
+Adding +15 AC to Ring of Truth:
+
+0008E984 8055 4A00 3C20 0600 0071 0200 4B00 0000 .UJ.< ...q..K...
+0008E994 0F00 0000 0F00 0000 0E00 0000 0100 0000 ................
+0008E9A4 0100 0000 4200 0000 2E00 0000 0F00 0000 ....B...........
+0008E9B4 0B00 0000 1E00 0000 1E00 0000 1A00 0000 ................
+0008E9C4 1E00 0000 1E00 0000 2C00 0000 0E00 0000 ........,.......
+0008E9D4 0000 0000                               ....
+
+
+Increasing Seeing charges on Ring of the Cat:
+
+0008EA50 4200 0000 0900 0000 0A00 0000           B...........
+changed into
+0008EA50 4200 0000 0900 0000 1E00 0000           B...........
+
+
+More Mana on The Skullcrown:
+
+0008E0D8 2100 0000 2800 0000 2800 0000           !...(...(...
+changed into
+0008E0D8 2100 0000 5000 0000 5000 0000           !...P...P...
+
+
+Swapping some qualities to allow Bards to equip Naj's Plate without to much effort:
+
+Naj's Plate has +15 to all attributes changed into +30 magic 
+
+0008E270 1B00 0000 0F00 0000 0F00 0000           ............
+changed into
+0008E270 1500 0000 1E00 0000 1E00 0000           ............
+
+Stormshield has +30 magic changed into +15 to all attributes
+
+0008E5B8 1500 0000 1E00 0000 1E00 0000           ............
+changed into
+0008E5B8 1B00 0000 0F00 0000 0F00 0000           ............
+
+Dragon's Tooth now has +15 to all attributes instead of altered damage, and otherwise improved stats
+
+0008D484 9013 4A00 071E 0600 E022 0200 0200 0000 ..J......"......
+0008D494 9600 0000 9600 0000 0B00 0000 1E00 0000 ................
+0008D4A4 1E00 0000 4B00 0000 0F00 0000 0F00 0000 ....K...........
+0008D4B4 4200 0000 0900 0000 0F00 0000 1B00 0000 B...............
+0008D4C4 0F00 0000 0F00 0000 2C00 0000 3700 0000 ........,...7...
+0008D4D4 0000 0000                               ....
+
+
+Small changes to Monk's items:
+
+Black Mail looses the extra AC vs. Undead but gains extra mana
+
+0008E378 2100 0000 3200 0000 3200 0000           !...2...2...
+
+Mail of Guard looses the AC vs. Demons, but gains more AC and Invincibility charges
+
+0008E3FC 0600 0000 C800 0000 C800 0000           ............
+0008E420 4200 0000 1300 0000 0F00 0000           B...........
+
+Mystic's Amulet looses the extra ToHit but gains AC vs. Demons
+
+0008CE0C 5A00 0000 0000 0000 0000 0000 3A00 0000 Z...........:...
+0008CE1C 0400 0000 0400 0000                     ........
+
+Ring of Engagement has +60% To Hit added
+
+0008CC50 0810 4A00 3C19 0600 8038 0100 4B00 0000 ..J.<....8..K...
+0008CC60 0F00 0000 0F00 0000 0B00 0000 1E00 0000 ................
+0008CC70 1E00 0000 0000 0000 3C00 0000 3C00 0000 ........<...<...
+0008CC80 4200 0000 0900 0000 0F00 0000 0E00 0000 B...............
+0008CC90 FFFF FFFF FFFF FFFF 2C00 0000 0D00 0000 ........,.......
+0008CCA0 0000 0000                               ....
+
+Less AC for Rod of Purity
+
+0008DCD0 4500 0000 0000 0000 0000 0000 4B00 0000 E...........K...
+0008DCE0 1400 0000 1400 0000                     ........
+
+
+Small changes to Sorcerer's items:
+
+Replaced Mana charges by more extra Mana on Xorine's Ring:
+
+0008E834 D80F 4A00 3A20 0600 0071 0200 0E00 0000 ..J.: ...q......
+0008E844 0300 0000 0300 0000 2100 0000 3C00 0000 ........!...<...
+0008E854 3C00 0000 4200 0000 2E00 0000 0F00 0000 <...B...........
+0008E864 1500 0000 1E00 0000 1E00 0000 1800 0000 ................
+0008E874 1E00 0000 1E00 0000 2C00 0000 A800 0000 ........,.......
+0008E884 0000 0000                               ....
+changed into
+0008E834 D80F 4A00 3A20 0500 0071 0200 0E00 0000 ..J.: ...q......
+0008E844 0300 0000 0300 0000 2100 0000 5A00 0000 ........!...Z...
+0008E854 5A00 0000 1500 0000 1E00 0000 1E00 0000 Z...............
+0008E864 1800 0000 1E00 0000 1E00 0000 2C00 0000 ............,...
+0008E874 A800 0000 0000 0000 0000 0000 0000 0000 ................
+0008E884 0000 0000                               ....
+
+Replaced extra Mana by Mana charges on Arcane Ring:
+
+0008EA80 940F 4A00 3C24 0600 0071 0200 0E00 0000 ..J.<$...q......
+0008EA90 0200 0000 0200 0000 1E00 0000 0A00 0000 ................
+0008EAA0 0A00 0000 2100 0000 2800 0000 2800 0000 ....!...(...(...
+0008EAB0 1500 0000 1400 0000 1400 0000 1400 0000 ................
+0008EAC0 1400 0000 1400 0000 2C00 0000 A900 0000 ........,.......
+0008EAD0 0000 0000                               ....
+changed into
+0008EA98 4200 0000 2E00 0000 1400 0000 1E00 0000 B...............
+0008EAA8 0A00 0000 0A00 0000                     ........
+
+
+

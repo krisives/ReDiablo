@@ -1,0 +1,11 @@
+
+
+Gold drop bonuses
+by Charlie
+Gold drops are directly related to the dungeon level, as you probably already know. 
+
+Dlv * 5 with a small increase to top it off. That increase is slightly larger than the current dungeon level as well. Nightmare has a +16 DLvl bonus before the multiplication, and Hell has +32. It's easiest to change these bonuses than it is to change the actual formula.
+
+208C8 10 <---- Nightmare DLvl bonus
+208F6 20 <---- Hell DLvl bonus 
+

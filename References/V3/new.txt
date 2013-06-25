@@ -1,0 +1,482 @@
+Code Changes
+------------
+
+(*) betekent aangepast of nieuw of nog te doen
+    weghalen na implementatie en controle
+
+Listing op alfabetische volgorde
+
+
+
+
+()Bashing
+
+Normal effect is 2/8, 3/8 en 4/8, Barbarian altijd AC/8 bonus.
+Barbarian zonder Bashing dus 12.5%, met Bashing 37.5%, 50% en 62.5%
+Anderen 25%, 37.5% en 50%
+
+:0045B93F 85C9                    test ecx, ecx
+:0045B941 7E27                    jle 0045B96A			jmp if no Bashing
+:0045B943 49                      dec ecx
+:0045B944 85C9                    test ecx, ecx
+:0045B946 7E04                    jle 0045B94C
+:0045B948 D3FB                    sar ebx, cl
+:0045B94A EB07                    jmp 0045B953
+:0045B94C 8BCB                    mov ecx, ebx
+:0045B94E C1F902                  sar ecx, 02
+:0045B951 2BD9                    sub ebx, ecx
+:0045B953 80BF6001000005          cmp byte ptr [edi+00000160], 05
+:0045B95A 7508                    jne 0045B964
+:0045B95C 6AF8                    push FFFFFFF8
+:0045B95E 99                      cdq
+:0045B95F 59                      pop ecx
+:0045B960 F7F9                    idiv ecx
+:0045B962 03D8                    add ebx, eax
+wordt
+:0045B93F 80BF6001000005          cmp byte ptr [edi+00000160], 05
+:0045B946 7407                    je 0045B94F
+:0045B948 85C9                    test ecx, ecx
+:0045B94A 7E1E                    jle 0045B96A				jmp if no Bashing or Barbarian
+:0045B94C 41                      inc ecx
+:0045B94D EB06                    jmp 0045B955
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045B946(C)
+|
+:0045B94F 85C9                    test ecx, ecx
+:0045B951 7E01                    jle 0045B954
+:0045B953 41                      inc ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045B951(C)
+|
+:0045B954 41                      inc ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045B94D(U)
+|
+:0045B955 C1F803                  sar eax, 03				eax := AC/8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045B95D(C)
+|
+:0045B958 2BD8                    sub ebx, eax
+:0045B95A 49                      dec ecx
+:0045B95B 85C9                    test ecx, ecx
+:0045B95D 75F9                    jne 0045B958
+:0045B95F 90                      nop
+:0045B960 90                      nop
+:0045B961 90                      nop
+:0045B962 90                      nop
+:0045B963 90                      nop
+
+
+(*)BlackDeath lifeloss
+
+Te vinden tussen
+:0043E3BA 8338F0                  cmp dword ptr [eax], FFFFFFF0	-> 03h in Hellfire
+:0043E3BD 0F85F8000000            jne 0043E4BB
+en
+:0043E4BB 8B5510                  mov edx, dword ptr [ebp+10]
+
+Lijkt me niet makkelijk (veilig) aan te passen: er staat nogal veel onbegrijpelijks.
+
+
+
+()Check for Retreat-Immunity : Illusion Weaver -> Shadow	
+
+
+:0042F100 833820                  cmp dword ptr [eax], 00000020
+wordt
+:0042F100 833877                  cmp dword ptr [eax], 00000077
+
+:0042F2E0 83FF20                  cmp edi, 00000020
+wordt
+:0042F2E0 83FF77                  cmp edi, 00000077
+
+:0043DB35 833820                  cmp dword ptr [eax], 00000020
+wordt
+:0043DB35 833877                  cmp dword ptr [eax], 00000077
+
+:0045B896 833820                  cmp dword ptr [eax], 00000020
+wordt
+:0045B896 833877                  cmp dword ptr [eax], 00000077
+
+
+()Check on Diablo voor 'data' ipv '3333' Hps.		
+
+:0043B218 7511                    jne 0043B22B
+wordt
+:0043B218 EB11                    jmp 0043B22B
+
+
+
+()Chainlightning - Detection Range : 2 + clvl/2  ->  clvl/2 
+
+:004381E2 83C002                  add eax, 00000002
+wordt
+:004381E2 909090                  3*nop
+
+
+
+()Charge - ToHit 500%  ->  750%
+	
+:00444772 68F4010000              push 000001F4
+wordt
+:00444772 68EE020000              push 000002EE
+
+:00444883 68F4010000              push 000001F4
+wordt
+:00444883 68EE020000              push 000002EE
+
+
+
+()Charge - Disable no-melee-at-charge check voor monsters 72-75	
+
+:00444865 7C09                    jl 00444870
+wordt
+:00444865 EB09                    jmp 00444870
+
+:004446D9 7C13                    jl 004446EE
+wordt
+:004446D9 EB13                    jmp 004446EE
+
+:00444755 7C09                    jl 00444760
+wordt
+:00444755 EB09                    jmp 00444760
+
+
+
+()Charge - Spelleffect-ondersteuning voor alle Horned Beasts
+
+:0043357A 83F943                  cmp ecx, 00000043
+wordt
+:0043357A 83F945                  cmp ecx, 00000045
+
+()Slots nog verwisselen (68 en 69 <-> 72 en 118)!
+
+
+
+()Durability loss on firing Bows : 1/40 -> 1/30
+
+:0045C6D9 6A28                    push 00000028
+wordt
+:0045C6D9 6A1E                    push 0000001E
+
+
+
+()Golem
+
+Hp  maxmana*2/3 + 10*slvl  ->  maxmana + 20*slvl	
+
+:00444F7D 6A03                    push 00000003
+wordt
+:00444F7D 6A02                    push 00000002
+
+:00444FEE C1E106                  shl ecx, 06
+wordt
+:00444FEE C1E107                  shl ecx, 07
+
+ToHit  40 + 2·clvl + 5·slvl  ->  48 + 2*clvl + 6*slvl 					
+
+:00445014 B305                    mov bl, 05
+wordt
+:00445014 B306                    mov bl, 06
+
+Min.Damage  8 + 2·slvl  ->  12 + 2*slvl			Ook in boek te zien
+
+:00445022 80C104                  add cl, 04
+wordt
+:00445022 80C106                  add cl, 06 	
+
+Max.Damage  16 + 2·slvl  ->  24 + 3*slvl + clvl 	Ook in boek te zien
+
+:0044501F 8A450B                  mov al, byte ptr [ebp+0B]
+wordt
+:0044501F 8AC2                    mov al, dl
+:00445021 90                      nop
+
+:0044502D D0E0                    shl al, 1
+wordt
+:0044502D D0E8                    shr al, 1
+
+
+
+(*)Golem
+
+View info door aanpassing Outline-Selection?
+
+
+
+()Holy Bolt Damage : 2 + magic/8 + rnd[clvl]  ->  5 + magic/8 + rnd[clvl]
+
+:004353C4 8D441002                lea eax, dword ptr [eax+edx+02]
+wordt
+:004353C4 8D441005                lea eax, dword ptr [eax+edx+05]
+
+
+
+()Knockback ook bij succesvolle block:
+
+:0043E300 0F8561030000            jne 0043E667
+:0043E31D 0F8644030000            jbe 0043E667
+:0043E39E E9C4020000              jmp 0043E667
+:0043E3AF E9B3020000              jmp 0043E667				
+
+
+
+()Lifedrain - Disable check on Leoric, en 100% -> 50%		
+
+:0043E5E5 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]
+:0043E5EB 833832                  cmp dword ptr [eax], 00000032
+:0043E5EE 750F                    jne 0043E5FF
+:0043E5F0 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043E5F7 7406                    je 0043E5FF
+:0043E5F9 019F1CDD6900            add dword ptr [edi+0069DD1C], ebx
+wordt
+:0043E5E5 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043E5EC 7411                    je 0043E5FF
+:0043E5EE 8BC3                    mov eax, ebx
+:0043E5F0 D1E8                    shr eax, 1
+:0043E5F2 90909090909090          7*nop
+:0043E5F9 01871CDD6900            add dword ptr [edi+0069DD1C], eax 
+
+(*)Check op niet teveel ([edi+0069DD18]) nog te doen.
+
+
+
+()Monster Melee ToHit:	
+
+ToHit = 30 + 2*(mlvl-clvl) + base - AC
+:0043E219 8D44121E                lea eax, dword ptr [edx+edx+1E]	
+Wordt
+ToHit = 40 + 9*(mlvl-clvl) + base - AC
+:0043E219 8D44D228                lea eax, dword ptr [edx+8*edx+28] 
+
+(*)Om het leefbaar te houden voor vooral Barbarian en Monk zullen meer aanpassingen moeten gebeuren (AC voor staves en axes, bijv.).
+
+
+
+()Monster Archer ToHit : 30 + 2*(mlvl-clvl) + base - AC  ->  40 + ...
+
+:0042F6D4 8D5C501E                lea ebx, dword ptr [eax+2*edx+1E]
+wordt
+:0042F6D4 8D5C5028                lea ebx, dword ptr [eax+2*edx+28]
+
+
+
+()Oils - Blacksmith : +1 tot 120 ipv 127 ipv 100 Dur
+
+:00428522 83F964                  cmp ecx, 00000064
+wordt
+:00428522 83F9C8                  cmp ecx, 000000C8 (= cmp ecx, FFFFFFC8)
+geworden
+:00428522 83F97F                  cmp ecx, 0000007F
+()wordt(geeft een ronder getal voor max. dur?)
+:00428522 83F978                  cmp ecx, 00000078
+
+
+()Oils - Fortitude : Dur Increase 10 + rnd[41]  -> 5 + rnd[11]
+
+:00428550 6A29                    push 00000029
+wordt
+:00428550 6A0B                    push 0000000B
+
+:0042855A 83C00A                  add eax, 0000000A
+wordt
+:0042855A 83C005                  add eax, 00000005
+
+
+
+()Reflect - niet bij block (incl knockback bij block):			
+
+:0043E31D 0F86DB030000            jbe 0043E6FE
+wordt
+:0043E31D E945030000              jmp 0043E667
+:0043E322 90                      nop
+
+
+
+()Reflect -> Barrier (no damage to monster)
+
+:0043E53B 29871CDD6900            sub dword ptr [edi+0069DD1C], eax
+wordt
+:0043E53B 909090909090            6*nop
+
+:0043E555 7F0D                    jg 0043E564
+wordt
+:0043E555 EB19                    jmp 0043E570
+
+()Naam nog aanpassen
+(*)manacost : init=40 decr=1 min.=30
+()Nog te doen: Reductie -> 10 + rnd[clvl/2] %
+
+
+
+()Regenation of monsters disabled (tijdelijk voor testen)
+
+:0044384D 7537                    jne 00443886
+wordt
+:0044384D EB37                    jmp 00443886
+
+
+
+()Resistances/Immunities in Nightmare gelijk aan die in Hell ipv. Normal		
+
+:0043B48F E9BA000000              jmp 0043B54E
+wordt
+:0043B48F E9A9000000              jmp 0043B53D
+
+Voor de display na aantal kills:						
+:004444CB 833DC070600002          cmp dword ptr [006070C0], 00000002
+:004444D2 740C                    je 004444E0
+wordt
+:004444CB 833DC070600000          cmp dword ptr [006070C0], 00000000
+:004444D2 750C                    jne 004444E0
+
+
+
+()Search duration: (1 of clvl) + 10*slvl + 245  ->  (1 of clvl) + 18*slvl + 600
+
+:00434A73 8D0480                  lea eax, dword ptr [eax+4*eax]
+wordt
+:00434A73 8D04C0                  lea eax, dword ptr [eax+8*eax]
+
+:00434A76 8D8441F5000000          lea eax, dword ptr [ecx+2*eax+000000F5]
+geworden
+:00434A76 8D8441F4010000          lea eax, dword ptr [ecx+2*eax+000001F4]
+()wordt (voor nog 5 sec. langer?)
+:00434A76 8D844158020000          lea eax, dword ptr [ecx+2*eax+00000258]
+
+
+
+()Shrines - Spiritual : Gives more gold				
+
+:0045270E 0FB605D4B16000          movzx eax, byte ptr [0060B1D4]
+wordt
+:0045270E E8A1640300              call 00488BB4			edx := diff(dlvl)
+:00452713 52                      push edx
+:00452714 90                      nop
+
+:00452717 8D1480                  lea edx, dword ptr [eax+4*eax]
+wordt
+:00452717 8D1492                  lea edx, dword ptr [edx+4*edx]
+
+:00452721 0FB60DD4B16000          movzx ecx, byte ptr [0060B1D4]
+wordt
+:00452721 59		          pop ecx
+:00452722 909090909090		  6*nop
+
+
+
+()Stun - ALLE hiddens get stunned van 1 of meer damage
+
+Hier in de buurt worden ook Blink(!), Gravedigger en Scavengers ondersteund.
+
+:0043CF1C 83F81D                  cmp eax, 0000001D
+:0043CF1F 7C05                    jl 0043CF26			jmp if no hidden
+:0043CF21 83F820                  cmp eax, 00000020
+:0043CF24 7E15                    jle 0043CF3B			jmp if hidden
+wordt
+:0043CF1C E8BE030000   (?)        call 0043D2DA			call CHECK_HIDDEN
+:0043CF20 85C0                    test eax, eax
+:0043CF22 7517                    jne 0043CF3B			jmp if hidden
+:0043CF24 9090                    2*nop
+
+CHECK_HIDDEN:
+
+Routine nodig omdat RealityWeaver niet verplaatst kan worden.
+Plaatsing over niet-gebruikte DiabloDeath routine, na de (nieuwe) DiabloSpeech.
+
+:0043D2DA 83F81D                  cmp eax, 0000001D
+:0043D2DE 7C0F                    jl 0043D2F0			jmp if no hidden
+:0043D2E0 83F820                  cmp eax, 00000020
+:0043D2E3 7E0D                    jle 0043D2F3			jmp if hidden
+:0043D2E5 83F85D                  cmp eax, 0000005D
+:0043D2E8 7408                    je 0043D2F3			jmp if realityweaver
+:0043D2EA 83F877                  cmp eax, 00000077
+:0043D2ED 7403                    je 0043D2F3			jmp if shadow
+:0043D2F0 33C0                    xor eax, eax
+:0043D2F2 C3              	  ret
+:0043D2F3 6A01                    push 00000001
+:0043D2F5 58                      pop eax
+:0043D2F6 C3              	  ret
+:0043D2F7 909090              	  3*nop
+
+
+
+()Stun for all Drakes (nu kunnen de 4 'oude' drakes niet stunnen)
+
+:0044489A 7C05                    jl 004448A1
+wordt
+:0044489A EB05                    jmp 004448A1
+
+:00444796 7C09                    jl 004447A1
+wordt
+:00444796 EB09                    jmp 004447A1
+
+
+
+()Stunned with resist for player:
+
+:0042F99E 8A8660010000            mov al, byte ptr [esi+00000160]
+wordt
+:0042F99E E9CC000000              jmp 0042FA6F
+:0042F9A3 90	                  nop
+
+Hopelijk werkt dit! Getting stunned with MS hoop ik dan snel op soortgelijke manier op te lossen.
+
+
+
+()Thorns - Attacker takes 1+clvl/2 damage:
+
+:0043E5A5 8B8430B8010000          mov eax, dword ptr [eax+esi+000001B8] 
+:0043E5AC C1E801                  shr eax, 01				eax := clvl/2
+
+
+
+()Traps - Arrow-Trap Tohit : 100 - 2*dist - AC/2  ->  200 - dist - AC/2
+
+:0042F6E4 6A64                    push 00000064
+:0042F6E6 03C0                    add eax, eax
+:0042F6E8 5B                      pop ebx
+wordt
+:0042F6E4 6A64                    push 00000064
+:0042F6E6 5B                      pop ebx
+:0042F6E7 D1E3                    shl ebx, 1
+
+
+()Traps - Spell-Trap Tohit : 40  ->  60 %
+
+:0042F720 6A28                    push 00000028		
+wordt
+:0042F720 6A3C                    push 0000003C		
+
+
+()Warrior Melee ToHit Bonus 20%  ->  30%
+Niet uitgevoerd.
+
+:0045B98D 83C314                  add ebx, 00000014		
+wordt
+:0045B98D 83C31C                  add ebx, 0000001C
+
+
+()Warrior Archer ToHit Bonus 10%  ->  20%, Bard Archer ToHit Bonus 10%  -> 0%
+
+:0042F3E4 7503                    jne 0042F3E9
+wordt
+:0042F3E4 7F03                    jg 0042F3E9
+
+:0042F3E9 84C0                    test al, al
+wordt
+:0042F3E9 EB22                    jmp 0042F40D
+		
+
+()Bard Spell ToHit Bonus 10%  -> 20%
+
+In combinatie met Warrior Archer ToHit aanpassing, anders krijgt Bard ook als Archer 20%.
+
+:0042F3F1 83C70A                  add edi, 0000000A
+wordt
+:0042F3F1 83C714                  add edi, 00000014
+

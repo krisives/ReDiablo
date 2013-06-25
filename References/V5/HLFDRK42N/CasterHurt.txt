@@ -1,0 +1,54 @@
+This modification will allow all spells to attack their caster:
+
+file offset 000315DA
+
+:004321DA 0F84DA010000            je 004323BA
+changed into
+:004321DA 0F84036E0000            je 00438FE3
+:004321E0
+
+The following is needed to keep Doom Serpents, Elemental and Bone Spirit from attacking the caster right away.
+
+Using some free space from old Search update code:
+
+file offset 000383E3
+
+:00438FE3 69C9B0000000            imul ecx, 000000B0
+:00438FE9 FF89C87A6900            dec dword ptr [ecx+00697AC8]
+:00438FEF 7533                    jne 00439024
+:00438FF1 C7818C7A690001000000    mov dword ptr [ebx+00697A8C], 00000001
+:00438FFB 8B81E87A6900            mov eax, dword ptr [ecx+00697AE8]
+:00439001 69C0C8550000            imul eax, 000055C8
+:00439007 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043900D 03C1                    add eax, ecx
+:0043900F FF703C                  push [eax+3C]
+:00439012 8B5038                  mov edx, dword ptr [eax+38]
+:00439015 6A57                    push 00000057
+:00439017 59                      pop ecx
+:00439018 E8A7F6FDFF              call 004186C4
+:0043901D 802538E76E0000          and byte ptr [006EE738], 00
+:00439024 C3                      ret
+changed into
+:00438FE3 83BEF07A690000          cmp dword ptr [esi+00697AF0], 00000000
+:00438FEA 7516                    jne 00439002
+:00438FEC 8B86587A6900            mov eax, dword ptr [esi+00697A58]
+:00438FF2 3C10                    cmp al, 10			Doom Serpents
+:00438FF4 7411                    je 00439007
+:00438FF6 3C3D                    cmp al, 3D			Elemental
+:00438FF8 740D                    je 00439007
+:00438FFA 3C3F                    cmp al, 3F			Bone Spirit
+:00438FFC 7409                    je 00439007
+:00438FFE 3C10                    cmp al, 10			(spare)
+:00439000 7405                    je 00439007
+:00439002 E9D991FFFF              jmp 004321E0
+:00439007 E9AE93FFFF              jmp 004323BA
+:0043900C 90                      nop
+
+
+To prevent accidents with Cryptic Shrine, its Immolation is replaced by Arcane Flames:
+
+file offset 00051540
+
+:00452140 6A48                    push 00000048
+changed into
+:00452140 6A59                    push 00000059

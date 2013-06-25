@@ -1,0 +1,73 @@
+Fixing a mistake made by previous reorganizing:
+
+File Offset 00051603
+
+:00452203 50                      push eax
+wordt
+:00452203 C3                      ret
+
+File Offset 00051612
+
+:00452212 58                      pop eax
+wordt
+:00452212 90                      nop
+
+File Offset 000515D4
+
+:004521D4 E802000000              call 004521DB
+wordt
+:004521D4 E816010000              call 004522EF
+:004521D9 
+
+File Offset 00051644
+
+:00452244 E892FFFFFF              call 004521DB
+wordt
+:00452244 E8A6000000              call 004522EF
+:00452249 
+
+File Offset 00051695
+
+:00452295 E841FFFFFF              call 004521DB
+wordt
+:00452295 E860000000              call 004522FA
+:0045229A
+
+File Offset 000516B8
+
+:004522B8 E81EFFFFFF              call 004521DB
+wordt
+:004522B8 E83D000000              call 004522FA
+:004522BD 
+
+File Offset 000516E0
+
+:004522E0 90                      nop
+:004522E1 90                      nop
+:004522E2 8B89E0480000            mov ecx, dword ptr [ecx+000048E0]
+:004522E8 90                      nop
+:004522E9 90                      nop
+:004522EA 90                      nop
+:004522EB 90                      nop
+:004522EC 90                      nop
+:004522ED 83F906                  cmp ecx, 00000006
+:004522F0 755C                    jne 0045234E
+:004522F2 6A07                    push 00000007
+:004522F4 59                      pop ecx
+:004522F5 E8A0E1FFFF              call 0045049A
+:004522FA 8BD0                    mov edx, eax
+:004522FC A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452301 8D8C18A4530000          lea ecx, dword ptr [eax+ebx+000053A4]
+wordt
+:004522E0 8B4D08                  mov ecx, dword ptr [ebp+08]
+:004522E3 C784180855000001000000  mov dword ptr [eax+ebx+00005508], 00000001
+:004522EE C3                      ret
+:004522EF E8E7FEFFFF              call 004521DB
+:004522F4 E80BFFFFFF              call 00452204
+:004522F9 C3                      ret
+:004522FA E8DCFEFFFF              call 004521DB
+:004522FF E8DCFFFFFF              call 004522E0
+:00452304 C3                      ret
+:00452305 909090                  3*nop
+
+Now less free space, from 00452305 to 004523D5.

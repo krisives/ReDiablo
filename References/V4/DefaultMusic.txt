@@ -1,0 +1,8 @@
+The following was already implemented as a test since 41E. It sets the default for the Music Switch to 'CD', avoiding crashes in some cases.
+
+File Offset 0002D882
+
+:0042E482 8325B0044A0001          and dword ptr [004A04B0], 00000001
+wordt
+:0042E482 8325B0044A0000          and dword ptr [004A04B0], 00000000
+

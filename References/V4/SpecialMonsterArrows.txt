@@ -1,0 +1,220 @@
+Goat Archers with Fire- or Lightning Arrows
+
+
+Spell Effects for Lightning- and Fire-Arrows partly support monster-origin. Creating Goat-Archer attack types with these effects, and adding support for elemental damage from monsters.
+
+
+Goat Archer Attack type:
+
+7 Goat Archer		07	004B37DC 00441634
+
+:00441634 6A00                    push 00000000
+:00441636 33D2                    xor edx, edx		Arrow
+:00441638 E8D9FDFFFF              call 00441416
+:0044163D C3                      ret
+
+Unused attacktypes:
+
+33 HellBat 		21	004B3844 0044168B
+
+:0044168B 6A00                    push 00000000
+:0044168D 6A06                    push 00000006		FireBall
+:0044168F 5A                      pop edx
+:00441690 E881FDFFFF              call 00441416
+:00441695 C3                      ret
+
+35 Lich 		23	004B384C 00441649
+
+:00441649 6A00                    push 00000000
+:0044164B 6A62                    push 00000062		Ms_Ora
+:0044164D 5A                      pop edx
+:0044164E E8C3FDFFFF              call 00441416
+:00441653 C3                      ret
+
+
+SpellEffects:
+
+1Bh	Fire Arrows
+38h	Lightning Arrows
+
+
+Modifying Hellbat Attack Type (21h) into Fire Arrows:
+
+File Offset 00040A8D
+
+:0044168D 6A06                    push 00000006
+wordt
+:0044168D 6A1B                    push 0000001B		Fire Arrows
+
+Modifying Lich Attack Type (23h) into Lightning Arrows:
+
+File Offset 00040A4B
+
+:0044164B 6A62                    push 00000062
+wordt
+:0044164B 6A38                    push 00000038		Lightning Arrows
+
+
+Supporting Monsters for Lighting Arrow's elemental damage:
+
+File Offset 000352ED
+
+:00435EED 83FFFF                  cmp edi, FFFFFFFF
+:00435EF0 741F                    je 00435F11
+wordt
+:00435EED E9CC4B0400              jmp 0047AABE
+:00435EF2 
+
+Supporting Monsters for Fire Arrow's elemental damage:
+
+File Offset 00035366
+
+:00435F66 83FFFF                  cmp edi, FFFFFFFF
+:00435F69 741B                    je 00435F86
+wordt
+:00435F66 E9734B0400              jmp 0047AADE
+:00435F6B 
+
+
+
+Using free space from disabled Command file:
+
+File Offset 00079EBE
+
+:0047AABE 90                      nop
+:0047AABF 90                      nop
+:0047AAC0 55                      push ebp
+:0047AAC1 8BEC                    mov ebp, esp
+:0047AAC3 57                      push edi
+:0047AAC4 56                      push esi
+:0047AAC5 53                      push ebx
+:0047AAC6 8B4D10                  mov ecx, dword ptr [ebp+10]
+:0047AAC9 0BC9                    or ecx, ecx
+:0047AACB 0F84E9000000            je 0047ABBA
+:0047AAD1 8B7508                  mov esi, dword ptr [ebp+08]
+:0047AAD4 8B7D0C                  mov edi, dword ptr [ebp+0C]
+:0047AAD7 8D0580037000            lea eax, dword ptr [00700380]
+:0047AADD 83780800                cmp dword ptr [eax+08], 00000000
+:0047AAE1 754E                    jne 0047AB31
+:0047AAE3 B741                    mov bh, 41
+:0047AAE5 B35A                    mov bl, 5A
+:0047AAE7 B620                    mov dh, 20
+:0047AAE9 2E8BC0                  mov eax, eax
+:0047AAEC 8A26                    mov ah, byte ptr [esi]
+:0047AAEE 0AE4                    or ah, ah
+:0047AAF0 8A07                    mov al, byte ptr [edi]
+:0047AAF2 7421                    je 0047AB15
+:0047AAF4 0AC0                    or al, al
+:0047AAF6 741D                    je 0047AB15
+:0047AAF8 46                      inc esi
+:0047AAF9 47                      inc edi
+:0047AAFA 38FC                    cmp ah, bh
+:0047AAFC 7206                    jb 0047AB04
+:0047AAFE 38DC                    cmp ah, bl
+:0047AB00 7702                    ja 0047AB04
+:0047AB02 02E6                    add ah, dh
+:0047AB04 38F8                    cmp al, bh
+:0047AB06 7206                    jb 0047AB0E
+:0047AB08 38D8                    cmp al, bl
+:0047AB0A 7702                    ja 0047AB0E
+:0047AB0C 02C6                    add al, dh
+:0047AB0E 38C4                    cmp ah, al
+:0047AB10 750D                    jne 0047AB1F
+:0047AB12 49                      dec ecx
+:0047AB13 75D7                    jne 0047AAEC
+:0047AB15 33C9                    xor ecx, ecx
+:0047AB17 38C4                    cmp ah, al
+:0047AB19 0F849B000000            je 0047ABBA
+:0047AB1F B9FFFFFFFF              mov ecx, FFFFFFFF
+
+wordt
+
+:0047AABE 83FFFF                  cmp edi, FFFFFFFF
+:0047AAC1 0F844AB4FBFF            je 00435F11
+:0047AAC7 83BED07A690000          cmp dword ptr [esi+00697AD0], 00000000
+:0047AACE 0F841EB4FBFF            je 00435EF2
+:0047AAD4 E827000000              call 0047AB00
+:0047AAD9 E95DB4FBFF              jmp 00435F3B
+
+:0047AADE 83FFFF                  cmp edi, FFFFFFFF
+:0047AAE1 0F849FB4FBFF            je 00435F86
+:0047AAE7 83BED07A690000          cmp dword ptr [esi+00697AD0], 00000000
+:0047AAEE 0F8477B4FBFF            je 00435F6B
+:0047AAF4 E807000000              call 0047AB00
+:0047AAF9 8BF8                    mov edi, eax
+:0047AAFB E9B0B4FBFF              jmp 00435FB0
+
+:0047AB00 51                      push ecx
+:0047AB01 8BCF                    mov ecx, edi
+:0047AB03 69C9E4000000            imul ecx, 000000E4
+:0047AB09 0FB6814DDD6900          movzx eax, byte ptr [ecx+0069DD4D]
+:0047AB10 8BD8                    mov ebx, eax
+:0047AB12 C1FB03                  sar ebx, 03
+:0047AB15 0FB6814EDD6900          movzx eax, byte ptr [ecx+0069DD4E]
+:0047AB1C C1F803                  sar eax, 03
+:0047AB1F 59                      pop ecx
+:0047AB20 C3                      ret
+:0047AB21 909090                  3*nop
+
+
+
+Setting Night Clan archers to Fire Arrows:
+
+000AD3D0 07                                      .
+wordt
+000AD3D0 21                                      !
+
+Setting GoreStone to Fire Arrows:
+
+000AF590 07                                      .
+wordt
+000AF590 21                                      !
+
+Setting Blightfire to Fire Arrows, with lower damage (13-21 -> 8-16):
+
+000AF870 0E                                      .
+wordt
+000AF870 21                                      !
+
+000AF872 0D15                                    ..
+wordt
+000AF872 0810                                    ..
+
+Changing name of Fire Clan:
+
+000B189C 4669 7265 2043 6C61 6E00 0000           Fire Clan...
+wordt
+000B189C 426C 6F6F 6420 436C 616E 0000           Blood Clan..
+
+
+Lighting Arrows will be used by new 'Death Clan' Goat Archers in Abyss, which replace the Guardian Balrogs from Caves and Hell:
+
+00093B20 5265 7175 6972 656D 656E 7473 206E 6F74 Requirements not
+00093B30 206D 6574 0000 0000                      met....
+wordt
+00093B20 4465 6174 6820 436C 616E 0053 6861 646F Death Clan.Shado
+00093B30 7720 4269 7465 7200                     w Biter.
+
+000AD3F0 A000 0000 1405 0000 F826 4B00 0100 0000 .........&K.....
+000AD400 DC26 4B00 0100 0000 0100 0000 2027 4B00 .&K......... 'K.
+000AD410 0600 0000 0700 0000 0D00 0000 0100 0000 ................
+000AD420 1800 0000 0500 0000 0300 0000 0000 0000 ................
+000AD430 0000 0000 0000 0000 0200 0000 0000 0000 ................
+000AD440 B026 4B00 1418 1600 8C00 0000 A000 0000 .&K.............
+000AD450 1A00 0000 0003 0000 046E 080E 1600 0300 .........n......
+000AD460 0041 0100 1100 1100 0000 0700 9A0A 0000 .A..............
+wordt
+000AD3F0 8000 0000 BC02 0000 B42D 4B00 0000 0000 .........-K.....
+000AD400 942D 4B00 0000 0000 0000 0000 402D 4B00 .-K.........@-K.
+000AD410 0C00 0000 0800 0000 0E00 0000 0600 0000 ................
+000AD420 1400 0000 0000 0000 0300 0000 0000 0000 ................
+000AD430 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AD440 2051 4900 282C 1A00 8C00 0000 B400 0000  QI.(,..........
+000AD450 2300 0000 0003 0000 035F 0B0A 140F 0000 #........_......
+000AD460 0050 0100 1500 3100 0000 0300 AC0D 0000 .P....1.........
+
+000AFD20 5600 0000 3815 4B00 841B 4B00 0D00 B202 V...8.K...K.....
+000AFD30 1A06 0F30 1100 0B00 0000 0000 0000 0000 ...0............
+wordt
+000AFD20 5600 0000 2B51 4900 D41A 4B00 1600 8403 V...+QI...K.....
+000AFD30 2303 141E 3100 0B00 0000 0000 0000 0000 #...1...........

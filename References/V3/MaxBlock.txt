@@ -1,0 +1,72 @@
+Geen wijzigingen voor (of wel?):
+
+Missiles MonsterVsPlayer - Max Block = 100%
+
+:0042F7ED 6A64                    push 00000064
+
+Melee    PlayerVsPlayer  - Max Block =  85%
+
+:0045BFB0 83FA55                  cmp edx, 00000055		
+:0045BFB3 7E03                    jle 0045BFB8
+:0045BFB5 6A55                    push 00000055
+:0045BFB7 5A                      pop edx
+
+
+
+Voorstel voor:
+
+()Missiles PlayerVsPlayer :
+
+Max Block = 100% -> 90%
+
+:0043260B 6A64                    push 00000064
+wordt
+:0043260B 6A5A                    push 0000005A
+
+
+()Melee MonsterVsPlayer :
+
+Max Block = 80%  ->  75% (90% if Monk, also +15% for Monk)
+
+Echte Block-bonus werkt niet (aldus JG).
+
+:0043E2BD 83FA50                  cmp edx, 00000050			
+:0043E2C0 7E03                    jle 0043E2C5
+:0043E2C2 6A50                    push 00000050
+:0043E2C4 5A                      pop edx
+wordt
+:0043E2BD E88D000000              call 0043E34F			call MAXBLOCK
+:0043E2C2 90                      nop
+:0043E2C3 90                      nop
+:0043E2C4 90                      nop
+
+MAXBLOCK
+
+ecx = pointer to blocker
+edx = chance to block
+
+Plaatsing na nieuwe CriticalHit en RND100 routines, over de rest van oude ReflectWithBlock.
+
+
+* Referenced by a CALL at Address:
+|:0043E2BD   
+|
+:0043E34F 83FA4B                  cmp edx, 0000004B
+:0043E352 7E03                    jle 0043E357
+:0043E354 6A4B                    push 0000004B
+:0043E356 5A                      pop edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E352(C)
+|
+:0043E357 80B96001000003          cmp byte ptr [ecx+00000160], 03
+:0043E35E 7503                    jne 0043E363
+:0043E360 83C20A                  add edx, 0000000A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E35E(C)
+|
+:0043E363 C3                      ret
+
+
+

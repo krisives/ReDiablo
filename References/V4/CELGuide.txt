@@ -1,0 +1,40 @@
+Figured I might as well write this down before I forget all of it, plus Z&Z seemed interested. FoxBat
+
+
+Format of the .cel file
+
+Fairly straightforward. The header consists of dword (4 byte) pointers. The first dword is the # of frames in the .cel. Then there is one dword for each frame, and this points to the location of the start of each frame. Then there is one dword which points to the end of the file + 1. (add 1 to the hex location of the last byte in the file) Then comes all your graphics data.
+
+.cl2 format is a bit tricker. cl2's can be made of several groups of frames. The first dwords are pointers to the pointers for a group. (these pointers are omitted if the cl2 has only one group, such as missle animations) Then come the group frame pointers, and this is similar to a .cel in that you have the # of frames, the location of each frame, and then the end of the last frame + 1. Note that to read these group pointers you must add the value of the pointer that points to the the group pointers. So this means that when creating your own group pointers, you must subtract the pointer to the group pointers from the actual frame location.
+
+For example, I have a .cl2 with two subgroups. Each group has two frames. The first two frames are located at 28 and 2A, and the second are at 2C and 2E. the end of the last animation is 2F. the pointers would be
+
+08000000 10000000
+
+then the first group pointers
+
+02000000 20000000 2200000 24000000
+
+then the second
+
+02000000 1C000000 1E00000 20000000
+
+Knowing this should let you C+P frames and lengthen or shorten animations as you wish. Just be aware that Diablo generally wants you to keep the same width for each frame when it reads these things, and in Diablo the width is determined somewhere in a data table in diablo.exe.
+
+How to create a raw .cel frame from any 256 color .bmp:
+
+Find the width of your bmp image, I will call this W for future refernece. (KP knows where it is in the file header, maybe he can reply with it's location) Remove the first 436h bytes, this is the BMP header. Then insert a W(in hex) at the start of the file. Then, every W bytes, insert another W. If you are jumping and inserting, jump with value W + 1 because you need to also jump past the byte you just inserted. After the last W you insert there should be W bytes which is the last line. Finally, add a header at the beginning in the usual .cel format.
+
+Example: a single bmp 5 pixels wide and 4 pixels high would look like this when were done.
+
+01000000 0C000000 24000000 050000000000 050F3E000000 05000ee500 05000e000000
+
+A few notes:
+
+The .cel graphics data starts from the bottom and goes towards the top as you near the end of the file. The first data byte indicates how many pixels of data will follow for that line and where the should be drawn in the final image (in a real .cel file, most of the transparant space is just skipped with these instructions and thus space is saved, while the method for converting BMPs above isnt smart enough to do that) ALso unlike some people say, theres more difference between .cl2 and .cel than the header file. These instructions for skipping space and line endings are completely different values in .cl2 and .cel, and I don't know how to convert them.
+
+In the CL2 files, 7F is used to indicate a totally blank line. Why is this useful? By removing or C+Ping, you can alter the height placement of a graphic. For example, incinerator hit recovery animation has some strange floating. Knowing this information, they can be fixed.
+
+One would probably need a utility to do any major amount of fiddling with frames and creating new .cels. I know some C++ but I've never worked with binary files n data, nor command line paramaters. KP was working on one but it's delayed for now, and he has enough to keep him busy anyway. So someone could go and make a util with this info if they were interested.
+
+For you budding artists, .cel files cover item flips, dungeon objects, and inventory and user interface graphics. The level tilesets are also in this format but there is something tricky with this. Either that or the format is a bit different because most of those graphics come out in very odd width and height in cv5. (Likely just cv5's fault, since cv5 has to "guess" the actual width/height of .cel files)

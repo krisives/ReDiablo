@@ -1,0 +1,96 @@
+Search functionality will be attached to the Automap. This makes the Search spell obsolete, and the spell slot, spell effects, its flag ([006EE738]) and all related code available for other uses.
+
+
+Spell effect:
+
+55	Search
+A6CB4	5500 0000 F049 4300 E38F
+	4300 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+
+Search initial code:
+
+:00434A46 C60538E76E0001          mov byte ptr [006EE738], 01
+
+Search update code:
+
+:0043901D 802538E76E0000          and byte ptr [006EE738], 00
+
+
+Set Automap on/off:
+
+* Referenced by a CALL at Addresses: :004054D9, :0040A822   
+:0040506E 33C0                    xor eax, eax
+:00405070 3805D8B16000            cmp byte ptr [0060B1D8], al
+:00405076 750F                    jne 00405087
+:00405078 B101                    mov cl, 01				
+:0040507A 380DC8DF6D00            cmp byte ptr [006DDFC8], cl
+:00405080 7505                    jne 00405087
+:00405082 E91A5A0100              jmp 0041AAA1				jmp if Town and SP
+:00405087 3905A8074D00            cmp dword ptr [004D07A8], eax		
+:0040508D 7505                    jne 00405094
+:0040508F E915CEFFFF              jmp 00401EA9
+:00405094 A3A8074D00              mov dword ptr [004D07A8], eax
+:00405099 C3                      ret
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: :0040508F(U)
+:00401EA9 8325140E4D0000          and dword ptr [004D0E14], 00000000
+:00401EB0 8325180E4D0000          and dword ptr [004D0E18], 00000000
+:00401EB7 C705A8074D0001000000    mov dword ptr [004D07A8], 00000001
+:00401EC1 C3                      ret
+
+
+Flag used by Automap = [004D07A8]
+Flag used by Search  = [006EE738]
+
+
+Changing all checks on Search into checks on Automap:
+
+file offset 000015DB
+
+:004021DB 803D38E76E0000          cmp byte ptr [006EE738], 00
+changed ito
+:004021DB 803DA8074D0000          cmp byte ptr [004D07A8], 00
+
+file offset 00004BEE							
+
+:004057EE 803D38E76E0000          cmp byte ptr [006EE738], 00
+changed ito
+:004057EE 803DA8074D0000          cmp byte ptr [004D07A8], 00
+
+file offset 0006771D
+
+:0046831D 803D38E76E0001          cmp byte ptr [006EE738], 01
+changed ito
+:0046831D 803DA8074D0001          cmp byte ptr [004D07A8], 01
+
+file offset 00067B3A
+
+:0046873A 803D38E76E0001          cmp byte ptr [006EE738], 01
+changed ito
+:0046873A 803DA8074D0001          cmp byte ptr [004D07A8], 01
+
+file offset 0006848B
+
+:0046908B 803D38E76E0001          cmp byte ptr [006EE738], 01
+changed ito
+:0046908B 803DA8074D0001          cmp byte ptr [004D07A8], 01
+
+file offset 000688D1
+
+:004694D1 803D38E76E0001          cmp byte ptr [006EE738], 01
+changed ito
+:004694D1 803DA8074D0001          cmp byte ptr [004D07A8], 01
+
+file offset 00069142
+
+:00469D42 803D38E76E0001          cmp byte ptr [006EE738], 01
+changed ito
+:00469D42 803DA8074D0001          cmp byte ptr [004D07A8], 01
+
+file offset 0006958E
+
+:0046A18E 803D38E76E0001          cmp byte ptr [006EE738], 01
+changed ito
+:0046A18E 803DA8074D0001          cmp byte ptr [004D07A8], 01
+

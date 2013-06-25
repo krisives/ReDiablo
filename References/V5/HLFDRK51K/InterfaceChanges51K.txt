@@ -1,0 +1,7 @@
+RE-enabling Hellfire logo (now new hf_logo3.cel@16Frames).
+
+file offset 0001BEB0
+
+:0041CAB0 9090909090              5*nop
+changed into
+:0041CAB0 E87AD5FFFF              call 0041A02F

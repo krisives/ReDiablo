@@ -1,0 +1,61 @@
+Hiddens will not become visible while their target is still out of view:
+
+file offset 0003FDD3
+
+:004409D3 8B55FC                  mov edx, dword ptr [ebp-04]
+:004409D6 8B4DF4                  mov ecx, dword ptr [ebp-0C]
+:004409D9 6A00                    push 00000000
+:004409DB E8FA000000              call 00440ADA
+:004409E0 E9A3000000              jmp 00440A88
+changed into
+:004409D3 E954E0FEFF              jmp 0042EA2C
+:004409D8 8B55FC                  mov edx, dword ptr [ebp-04]
+:004409DB 8B4DF4                  mov ecx, dword ptr [ebp-0C]
+:004409DE 6A00                    push 00000000
+:004409E0 E9A68AFCFF              jmp 0040948B
+:004409E5
+
+file offset 0000888B
+
+:0040948B 6BC978                  imul ecx, 00000078
+:0040948E 80FB14                  cmp bl, 14
+:00409491 7C03                    jl 00409496
+:00409493 6A33                    push 00000033
+:00409495 58                      pop eax
+:00409496 C3                      ret
+changed into
+:0040948B E84A760300              call 00440ADA
+:00409490 E9F3750300              jmp 00440A88
+:00409495 9090                    2*nop
+
+file offset 0002DE2C
+
+:0042EA2C 90                      nop
+:0042EA2D 90                      nop
+:0042EA2E 90                      nop
+:0042EA2F 90                      nop
+:0042EA30 90                      nop
+:0042EA31 90                      nop
+:0042EA32 90                      nop
+:0042EA33 90                      nop
+:0042EA34 90                      nop
+:0042EA35 90                      nop
+:0042EA36 90                      nop
+:0042EA37 90                      nop
+:0042EA38 0FBE8408B8010000        movsx eax, byte ptr [eax+ecx+000001B8]
+:0042EA40 8D048550000000          lea eax, dword ptr [4*eax+00000050]
+:0042EA47 D1F8                    sar eax, 1
+:0042EA49 E901030000              jmp 0042ED4F
+changed into
+:0042EA2C 0FB65651                movzx edx, byte ptr [esi+51]		target coordinate
+:0042EA30 52                      push edx
+:0042EA31 0FB65650                movzx edx, byte ptr [esi+50]		target coordinate
+:0042EA35 52                      push edx
+:0042EA36 8B5624                  mov edx, dword ptr [esi+24]		monster coordinate
+:0042EA39 8B4E20                  mov ecx, dword ptr [esi+20]		monster coordinate
+:0042EA3C E886550100              call 00443FC7				check LOS
+:0042EA41 85C0                    test eax, eax
+:0042EA43 0F849C1F0100            je 004409E5
+:0042EA49 E98A1F0100              jmp 004409D8
+:0042EA4E 
+

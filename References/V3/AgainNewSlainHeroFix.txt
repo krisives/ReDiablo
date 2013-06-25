@@ -1,0 +1,15 @@
+Slain Hero Fix (SP only)
+
+The disabling of incorrect character speech led to another crash.
+
+Fix:
+
+File Offset 000506BE
+
+:004512BE FF74083C                push [eax+ecx+3C]
+:004512C2 8B540838                mov edx, dword ptr [eax+ecx+38]
+wordt
+:004512BE E9CB000000              jmp 0045138E
+:004512C3 909090                  3*nop
+
+This finally leads to a stable 'Slain Hero'.

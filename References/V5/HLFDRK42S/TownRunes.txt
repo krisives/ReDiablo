@@ -1,0 +1,7 @@
+Allowing use of Recharging Runes in town:
+
+file offset 0002234D
+
+:00422F4D 83F834                  cmp eax, 00000034
+changed into
+:00422F4D 83F833                  cmp eax, 00000033

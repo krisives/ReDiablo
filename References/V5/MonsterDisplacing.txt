@@ -1,0 +1,70 @@
+Knockbacking monsters:
+
+
+* Referenced by a CALL at Addresses:
+|:0042F585   , :004494DF   , :0045BE46   
+|
+:0043CDC1 53                      push ebx
+:0043CDC2 56                      push esi
+:0043CDC3 57                      push edi
+:0043CDC4 8BF9                    mov edi, ecx
+:0043CDC6 8BF7                    mov esi, edi
+:0043CDC8 69F6E4000000            imul esi, 000000E4
+:0043CDCE 8B9ED0DC6900            mov ebx, dword ptr [esi+0069DCD0]
+:0043CDD4 83EB04                  sub ebx, 00000004
+:0043CDD7 83E307                  and ebx, 00000007
+:0043CDDA 8BD3                    mov edx, ebx
+:0043CDDC E8216E0000              call 00443C02
+:0043CDE1 85C0                    test eax, eax
+:0043CDE3 0F84C2000000            je 0043CEAB
+:0043CDE9 8BCF                    mov ecx, edi
+:0043CDEB E842FFFFFF              call 0043CD32
+:0043CDF0 8BC3                    mov eax, ebx
+:0043CDF2 C1E002                  shl eax, 02
+:0043CDF5 8B8840374B00            mov ecx, dword ptr [eax+004B3740]
+:0043CDFB 8B8060374B00            mov eax, dword ptr [eax+004B3760]
+:0043CE01 018EB8DC6900            add dword ptr [esi+0069DCB8], ecx
+:0043CE07 0186BCDC6900            add dword ptr [esi+0069DCBC], eax
+:0043CE0D 8B9664DD6900            mov edx, dword ptr [esi+0069DD64]
+:0043CE13 FFB6D0DC6900            push dword ptr [esi+0069DCD0]
+:0043CE19 81C28C000000            add edx, 0000008C
+:0043CE1F 8BCF                    mov ecx, edi
+:0043CE21 E874FEFFFF              call 0043CC9A
+:0043CE26 C7868CDC690005000000    mov dword ptr [esi+0069DC8C], 00000005
+:0043CE30 83A6C0DC690000          and dword ptr [esi+0069DCC0], 00000000
+:0043CE37 83A6C4DC690000          and dword ptr [esi+0069DCC4], 00000000
+:0043CE3E 8B86B8DC6900            mov eax, dword ptr [esi+0069DCB8]
+:0043CE44 8986A8DC6900            mov dword ptr [esi+0069DCA8], eax
+:0043CE4A 8B86BCDC6900            mov eax, dword ptr [esi+0069DCBC]
+:0043CE50 8986ACDC6900            mov dword ptr [esi+0069DCAC], eax
+:0043CE56 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043CE5C 8986B0DC6900            mov dword ptr [esi+0069DCB0], eax
+:0043CE62 8B86ACDC6900            mov eax, dword ptr [esi+0069DCAC]
+:0043CE68 8986B4DC6900            mov dword ptr [esi+0069DCB4], eax
+:0043CE6E 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043CE74 8986B8DC6900            mov dword ptr [esi+0069DCB8], eax
+:0043CE7A 8B86ACDC6900            mov eax, dword ptr [esi+0069DCAC]
+:0043CE80 8BCF                    mov ecx, edi
+:0043CE82 8986BCDC6900            mov dword ptr [esi+0069DCBC], eax
+:0043CE88 E84BFEFFFF              call 0043CCD8
+:0043CE8D 8BCF                    mov ecx, edi
+:0043CE8F E89EFEFFFF              call 0043CD32
+:0043CE94 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043CE9A 47                      inc edi
+:0043CE9B 6BC070                  imul eax, 00000070
+:0043CE9E 0386ACDC6900            add eax, dword ptr [esi+0069DCAC]
+:0043CEA4 893C85E0D15700          mov dword ptr [4*eax+0057D1E0], edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CDE3(C)
+|
+:0043CEAB 5F                      pop edi
+:0043CEAC 5E                      pop esi
+:0043CEAD 5B                      pop ebx
+:0043CEAE C3                      ret
+
+
+
+
+
+

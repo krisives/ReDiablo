@@ -1,0 +1,30 @@
+()Automatisch aanzetten van de Automap, en daarmee Game-Name.
+
+In SP kan de map niet worden aangezet in town. Deze fix zorgt er wel voor dat ie in de dungeon aan staat dan.
+
+:00401D1D 8325A8074D0000          and dword ptr [004D07A8], 00000000
+wordt
+:00401D1D 830DA8074D0001          or dword ptr [004D07A8], 00000001  (of zoiets?)	
+
+
+Interesante routine trouwens:
+
+* Referenced by a CALL at Address:
+|:0040B1DF   
+|
+:00401D1D 8325A8074D0000          and dword ptr [004D07A8], 00000000	Game Name
+:00401D24 C705100E4D0032000000    mov dword ptr [004D0E10], 00000032
+:00401D2E C7051C0E4D0020000000    mov dword ptr [004D0E1C], 00000020
+:00401D38 C705200E4D0010000000    mov dword ptr [004D0E20], 00000010
+:00401D42 C705240E4D0008000000    mov dword ptr [004D0E24], 00000008
+:00401D4C C705280E4D0004000000    mov dword ptr [004D0E28], 00000004
+:00401D56 C7052C0E4D0002000000    mov dword ptr [004D0E2C], 00000002
+:00401D60 C3                      ret
+
+Bron:
+
+# Written by the Great BoBaFeTT on 28 March 1998
+start V1.01 "Set map (game name) on when enter game
+401d1e 25 0d
+401d23 00 01
+end

@@ -1,0 +1,8 @@
+Increased life gain for entering 'warcry' mode:
+
+file offset 00040346
+
+:00440F46 C1E105                  shl ecx, 05					mlvl/2
+changed into
+:00440F46 C1E106                  shl ecx, 06					mlvl
+

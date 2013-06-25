@@ -1,0 +1,37 @@
+Blink at Holy Shrine:
+
+:00452569 0FB615D4B16000          movzx edx, byte ptr [0060B1D4]
+:00452570 D1E2                    shl edx, 1
+:00452572 52                      push edx
+:00452573 6A00                    push 00000000
+:00452575 8B513C                  mov edx, dword ptr [ecx+3C]
+:00452578 56                      push esi
+:00452579 6AFF                    push FFFFFFFF
+:0045257B 6A03                    push 00000003
+:0045257D FF7170                  push [ecx+70]
+:00452580 8B4938                  mov ecx, dword ptr [ecx+38]
+:00452583 50                      push eax
+:00452584 53                      push ebx
+:00452585 E8A531FEFF              call 0043572F
+
+
+
+Warp at Magic Circle:
+
+:00453558 0FB635D4B16000          movzx esi, byte ptr [0060B1D4]
+:0045355F 8BC7                    mov eax, edi
+:00453561 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00453567 69C0C8550000            imul eax, 000055C8
+:0045356D D1E6                    shl esi, 1
+:0045356F 8B54083C                mov edx, dword ptr [eax+ecx+3C]
+:00453573 56                      push esi
+:00453574 53                      push ebx
+:00453575 57                      push edi
+:00453576 03C1                    add eax, ecx
+:00453578 6AFF                    push FFFFFFFF
+:0045357A 6A4E                    push 0000004E			<- Warp
+:0045357C FF7070                  push [eax+70]
+:0045357F 8B4838                  mov ecx, dword ptr [eax+38]
+:00453582 52                      push edx
+:00453583 51                      push ecx
+:00453584 E8A621FEFF              call 0043572F

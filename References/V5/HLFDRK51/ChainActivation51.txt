@@ -1,0 +1,63 @@
+Correction to chain activation, for better monster synchronisation:
+
+file offset 00075856
+
+:00476456 E87364FCFF              call 0043C8CE
+changed into
+:00476456 E90C30F9FF              jmp 00409467
+:0047645B 
+
+file offset 00008867
+
+:00409467 F6400108                test [eax+01], 08
+:0040946B 0F85D2290500            jne 0045BE43
+:00409471 2D40550000              sub eax, 00005540
+:00409476 F6807800000040          test byte ptr [eax+00000078], 40
+:0040947D 90                      nop
+:0040947E 0F85BF290500            jne 0045BE43
+:00409484 E9C2290500              jmp 0045BE4B
+:00409489 8BCE                    mov ecx, esi
+:0040948B 6BC978                  imul ecx, 00000078
+:0040948E 80FB14                  cmp bl, 14
+:00409491 7C03                    jl 00409496
+:00409493 6A33                    push 00000033
+:00409495 58                      pop eax
+:00409496 C3                      ret
+changed into
+:00409467 E862340300              call 0043C8CE
+:0040946C 0FB686D8DC6900          movzx eax, byte ptr [esi+0069DCD8]
+:00409473 898630DD6900            mov dword ptr [esi+0069DD30], eax
+:00409479 0FB686D9DC6900          movzx eax, byte ptr [esi+0069DCD9]
+:00409480 898634DD6900            mov dword ptr [esi+0069DD34], eax
+:00409486 E9D0CF0600              jmp 0047645B
+:0040948B
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bosspack:
+
+:0043F8F5 8B9630DD6900            mov edx, dword ptr [esi+0069DD30]
+:0043F8FB 8B8E34DD6900            mov ecx, dword ptr [esi+0069DD34]
+:0043F901 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F907 898834DD6900            mov dword ptr [eax+0069DD34], ecx
+
+
+
+CA:
+
+:0047AB4C 808828DD6900FF          or byte ptr [eax+0069DD28], FF
+:0047AB53 8B9630DD6900            mov edx, dword ptr [esi+0069DD30]
+:0047AB59 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0047AB5F 8B9634DD6900            mov edx, dword ptr [esi+0069DD34]
+:0047AB65 899034DD6900            mov dword ptr [eax+0069DD34], edx

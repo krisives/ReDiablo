@@ -1,0 +1,87 @@
+Weapons will only be auto-equipped if characters are unable to pick them up otherwise.
+
+
+File offset 00020E4D
+
+:00421A4D 0F85FD020000            jne 00421D50
+changed into
+:00421A4D 0F8505030000            jne 00421D58
+:00421A53 
+
+File offset 00020E69
+
+:00421A69 E9E2020000              jmp 00421D50
+:00421A6E 8B4878                  mov ecx, dword ptr [eax+78]
+:00421A71 33F6                    xor esi, esi
+changed into
+:00421A69 E986030000              jmp 00421DF4
+:00421A6E EB54                    jmp 00421AC4
+:00421A70 8B4878                  mov ecx, dword ptr [eax+78]
+
+File offset 00020EB2
+
+:00421AB2 7412                    je 00421AC6
+changed into
+:00421AB2 740A                    je 00421ABE
+:00421AB4 
+
+File offset 00020EB9
+
+:00421AB9 E801300000              call 00424ABF
+:00421ABE 85F6                    test esi, esi
+:00421AC0 0F858A020000            jne 00421D50
+changed into
+:00421AB9 E998F40100              jmp 00440F56
+:00421ABE E931030000              jmp 00421DF4
+:00421AC3 90                      nop
+:00421AC4 33F6                    xor esi, esi
+
+File offset 00040356
+
+:00440F56 90                      nop
+:00440F57 90                      nop
+:00440F58 90                      nop
+:00440F59 90                      nop
+:00440F5A 90                      nop
+:00440F5B 90                      nop
+:00440F5C 90                      nop
+:00440F5D 90                      nop
+:00440F5E 90                      nop
+:00440F5F 90                      nop
+changed into
+:00440F56 E8643BFEFF              call 00424ABF
+:00440F5B E9F80DFEFF              jmp 00421D58
+:00440F60 
+
+
+File offset 00021150
+
+:00421D50 33FF                    xor edi, edi
+:00421D52 3BF7                    cmp esi, edi
+:00421D54 0F849A000000            je 00421DF4			character comment if unable to pick up item
+:00421D5A 
+changed into
+:00421D50 85F6                    test esi, esi
+:00421D52 0F84A9C40100            je 0043E201
+:00421D58 33FF                    xor edi, edi
+:00421D5A 
+
+File offset 0003D601
+ 
+:0043E201 90                      nop
+:0043E202 90                      nop
+:0043E203 90                      nop
+:0043E204 90                      nop
+:0043E205 90                      nop
+:0043E206 90                      nop
+:0043E207 90                      nop
+:0043E208 90                      nop
+:0043E209 90                      nop
+:0043E20A 90                      nop
+:0043E20B 90                      nop
+:0043E20C 90                      nop
+changed into
+:0043E201 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E206 03C5                    add eax, ebp
+:0043E208 E96338FEFF              jmp 00421A70
+:0043E20D

@@ -1,0 +1,162 @@
+Town Palette
+
+Levels\TownData\TownS.CEL
+NLevels\TownData\Town.CEL
+
+Levels\TownData\Town.PAL
+
+
+New Town palette : Levels\TownData\TowD.PAL
+
+000B4470 546F 7744 2E70 616C 0000 0000 0000 0000 TowD.pal........
+
+Added to Dark.MPQ with 'A' option.
+
+
+Palette file : 768 (300h) bytes
+
+  1-384		colour pattern, 128 codes, 3 byte each
+
+385-768 	unknown
+
+
+Colour pattern:
+
+00 00 00 	black (none)
+FF 00 00	bright red	
+FF FF 00	bright yellow
+FF FF FF	white (all)
+00 FF FF	light bluegreen	
+FF 00 FF	lilac		
+00 FF 00	green
+00 00 FF	blue
+
+
+000: black : 000000 ok
+003: rare : B55D1B ok
+006: rare : A55D36 ok
+009: rare : A55518 ok
+00C: rare : 985631 ok
+00F: small red shining : 8F563B ok
+012: rare : 9C541D ok
+015: shining inside : 8D581B -> 8D682B
+018: rare : 915229 ok
+01B: rare : 8B5231 ok
+01E: rare : 84492C ok
+021: rare : A13E12 ok
+024: rare : 914227 ok
+027: churchroof, abyssgrave : 525375 -> 636360
+02A: inside houses : 884611 -> 804411
+02D: shining outside : 784533 ok
+030: deep inside houses : 744A18 -> 8A5016
+033: bits of shining : 784229 ok
+036: rare : CC1821 ok
+039: inside houses : 6B4A18 ok
+03C: churchroof, abyssgrave : 4E4A63 -> 50504F
+03F: inside Griz's : 78401A -> 78300A
+042: churchroof, abyssgrave : 49476E -> 565650
+045: rare : CE1020 -> C01012
+048: inside houses : 6B4218 -> 724015
+04B: rare : C61021 -> C01011
+04E: churchroof : 4E425C -> 544F4C
+051: rare : C61018 -> C0100A
+054: inside houses : 634218 -> 604018
+057: shining outside : 653D2C -> 65392C
+05A: dots on roof and sand : 533F4B -> 504449 -> 524447
+05D: churchroof, foutain : 41435E -> 464640
+060: rare : BD1018 -> BD1010
+063: spots : 653E10 ok
+066: shining outside : 67381E ok
+069: rare : B51018 -> B51014
+06C: rare : B51010 ok
+06F: rare : AD1018 -> AD1014
+072: rare : AD1010 -> AD2020
+075: rare : A51018 -> A51C1A
+078: fountain, churchroof : 3E3A4E -> 41403A
+07B: rare : A51010 -> A51414
+07E: red shining : 9C1018 -> 9C302A
+081: churchroof, abyssgrave : 36365D -> 363636
+084: shining from hell : 9C1010 -> 8C3028
+087: inside, outside : 4E321C -> 53301B
+08A: rare : A50810 -> A0080B
+08D: sand, roofs, leafs : 43342E -> 403A2B
+090: sand, roofs, dots : 3D3040 -> 413C30
+093: outside, trees, outside church : 51292D ok
+096: rare : 9C0810 -> 9C2820
+099: red shining : 910C11 -> 802C11
+09C: churchroof, fence, abyssgrave : 2F3249 -> 3E3E2F
+09F: shining : 492E10 ok
+0A2: grass : 2E312C -> 2E3D20
+0A5: red shining : 810C10 -> 701D10
+0A8: dots in grass : 2F3121 -> 3F4A2F -> 38482C
+0AB: most sand, trees : 39292D -> 3F3423 -> 3A2D1E
+0AE: red shining, path to church : 691314 -> 802320
+0B1: churchroof, graves : 2B2947 -> 343429
+0B4: sand, trees : 312929 -> 353020
+0B7: all but rocks : 2D2931 -> 303022
+0BA: church, abyssgrave : 2B2839 -> 2D2D2D
+0BD: shining : 342914 ok
+0C0: shining from hell : 780808 -> 700D0A
+0C3: leafs, dots on sand : 3B202A -> 3B2A20 -> 3B3120
+0C6: grass, dots on roofs and leafs : 2C2921 -> 292F20
+0C9: grass, spots on roofs (!) : 292929 -> 2C2C25
+0CC: shining church and hell : 441A1A -> 401C1C
+0CF: dots in grass (!) : 212929 -> 252F1D -> 242E1C
+0D2: leafs, sand, roofs : 312121 -> 32261A
+0D5: grass : 212921 -> 1F2B22 -> 222D20 -> 232E1F
+0D8: some shining from hell : 6B0808 -> AB3018 (orange)
+0DB: bridges, dots everywhere : 292131 -> 2A2A27
+0DE: bushes, spots on grass: 212918 (= nice darkgreen) -> 214918 -> 204116
+0E1: fountainwater, churhroof, rocks : 1B2346 -> 1D2A44
+0E4: spots everywhere, not rocks, trees : 292129 -> 272527 -> 272725
+0E7: sand, roofs (!) : 292121 -> 242423 -> 282822
+0EA: leafs, inside Griz's, Nest : 2C2118 -> 30241A
+0ED: shining from hell : 630808 ok
+0F0: pots, inside, roofs (!) : 2E210C -> 26280D -> 453112
+0F3: cat's roof, Adria's roof, fences (!) : 202131 -> 252624
+0F6: grass, church, roof of Adria : 212129 -> 242423 -> 242523
+0F9: grass : 212121 -> 212220 -> 252620 -> 25281C
+0FC: churchfloor : 570A08 ok
+0FF: grass : 212118 -> 202416 -> 222716
+102: minor, roof Adria : 182119 -> 1F2116
+105: bushes, young leafs on some trees : 212110 -> 212A10 -> 272910
+108: minor, mostly bridges : 29182A -> 262A16
+10B: trees, sand : 2C1821 -> 2B2920
+10E: grass in sunlight : 182121 -> 1C3020 -> 1E2E20 -> 202E1E
+111: rocks, water, sunside : 191C39 -> 221F22
+114: pot, dots on trees and roofs : 212108 ok
+117: grass and bushes in sun : 182118 -> 182C17
+11A: bushes, branches, rooflines : 18210E ok
+11D: walls, grass, roofs, all in sun : 211821 -> 232118
+120: yellow inside houses : 2B1512 -> 2F1713
+123: trees, grass, sand : 211818 -> 211808 -> 292008
+126: roofs, trees, light : 211810 -> 2B2106
+129: sunshine on rocks and water : 131831 -> 2E3337
+12C: churchfront, dots on grass and walls : 181821 -> 1C1C1C
+12F: sunshine on rocks : 191629 -> 262528
+132: grass, churchfront, walls (!) : 181818 -> 181A17
+135: dots on trees, grass, roofs : 181810 -> 1B190D
+138: dots in grass, moss on walls : 101818 -> 141814 -> 141C15
+13B: pots, bushes : 101810 ok
+13E: sun on wood on fence : 181021 -> 211810
+141: pot, churchfloor : 430001 -> 330004
+144: pot, roof, lights : 1C1206 ok
+147: walls : 191018 -> 141412 -> 161613
+14A: rocks, water, walls, etc : 0F1221 -> 141716
+14D: leafs, shadow, roofs : 191010 -> 131411 -> 151410
+150: doors, church, walls, etc : 101018 -> 151310
+153: shadows : 101010 ok
+156: shadows : 101008 ok
+159: water, shadow : 081010 -> 0B1010
+15C: grass in shadow : 081008 -> 071207
+15F: small shadows : 100818 -> 12120E
+162: small shadows : 110810 -> 0F0F0A
+165: rocks, water, trees, pot : 080B18 -> 101210
+168: pots, bushes, roofs : 110807 -> 140708
+16B: rocks, water, trees, dark : 080810 -> 0B0B08
+16E: dark shadow : 080808 -> 070704
+171: small shadows : 080800 -> 060600
+174: small shadows : 000808 -> 000404
+177: small shadows : 080000 -> 0A0400
+17A: graves, shadows : 040008 -> 040304 -> 040403
+

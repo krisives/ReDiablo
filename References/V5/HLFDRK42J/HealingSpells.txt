@@ -1,0 +1,293 @@
+Healing and Heal Other spells
+
+For both spells higher spell levels and higher caster levels will more strongly increase the gain in life. The class dependant bonus is removed (it made barbarians better casters as sorcerers). Heal Other is changed into Heal All, which heals all present characters (including caster) immediately when the spell is cast. Manacost for both spells now follows the normal scheme of decreasing amount, so the earlier added maximum is obsolete and removed.
+
+This modification uses the code for the Healing spell effect for both Healing and Heal All. It makes use of the fact that all spells are executed on every client, and that Healing heals the caster in all those processes. Now it simply heals the local character, if the casted spell is found to be Heal All.
+
+
+Spell effects:
+
+25	Healing
+A6774	2500 0000 D63D 4300 B195
+	4100 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+3C	Heal Other
+A69F8	3C00 0000 6C40 4300 B19F
+	4100 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+Adjusting spell effect data to have Heal All call the primary routine for Healing:
+
+000A69FC 6C40 4300                               l@C.
+changed into
+000A69FC D63D 4300                               .=C.
+
+This frees the code for the primary Heal Other routine at 0043406C (51 bytes), and the 'cursor flag' it uses.
+
+
+Adjusting Healing spell effect
+
+Increasing Clvl influence:
+
+file offset 0003320A
+
+:00433E0A 6A04                    push 00000004
+changed into
+:00433E0A 6A08                    push 00000008
+
+Strongly increasing Slvl influence:
+
+file offset 00033242
+
+:00433E42 6A06                    push 00000006
+changed into
+:00433E42 6A12                    push 00000012
+
+Removing Class bonus and adding code to support Heal All, also transforming the code that adds to life into a subroutine so it can be used for greater healing spells:
+
+file offset 00033260
+
+:00433E60 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E65 03C6                    add eax, esi
+:00433E67 8A8860010000            mov cl, byte ptr [eax+00000160]	character class
+:00433E6D 84C9                    test cl, cl
+:00433E6F 740A                    je 00433E7B
+:00433E71 80F905                  cmp cl, 05
+:00433E74 7405                    je 00433E7B
+:00433E76 80F903                  cmp cl, 03
+:00433E79 7502                    jne 00433E7D
+:00433E7B D1E7                    shl edi, 1				2 x for warriors, monks and barbarians
+:00433E7D 80F901                  cmp cl, 01
+:00433E80 7405                    je 00433E87
+:00433E82 80F904                  cmp cl, 04
+:00433E85 7506                    jne 00433E8D
+:00433E87 8BCF                    mov ecx, edi				3/2 x for rogues and bards
+:00433E89 D1F9                    sar ecx, 1
+:00433E8B 03F9                    add edi, ecx
+changed into
+:00433E60 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00433E63 6A02                    push 00000002				use manacost for Healing
+:00433E65 5A                      pop edx
+:00433E66 83BB587A690025          cmp dword ptr [ebx+00697A58], 00000025
+:00433E6D 7410                    je 00433E7F				jmp if Healing
+:00433E6F 6A22                    push 00000022				use manacost for Heal All
+:00433E71 5A                      pop edx
+:00433E72 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00433E77 69C0C8550000            imul eax, 000055C8
+:00433E7D 8BF0                    mov esi, eax				esi = local character
+:00433E7F E878810300              call 0046BFFC				substract mana, charge or scroll
+:00433E84 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E89 03C6                    add eax, esi				esi = caster
+:00433E8B EB52                    jmp 00433EDF
+:00433E8D
+
+file offset 000332D9
+
+:00433ED9 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00433EDC 6A02                    push 00000002
+:00433EDE 5A                      pop edx
+:00433EDF E818810300              call 0046BFFC
+changed into
+:00433ED9 C3                      ret
+:00433EDA 9090909090              5*nop
+:00433EDF E8A9FFFFFF              call 00433E8D				add to life
+:00433EE4
+
+
+Adjusting Spell name for Heal All:
+
+000B6C00 4865 616C 204F 7468 6572 00             Heal Other.
+changed into
+000B6C00 4865 616C 2041 6C6C 0000 00             Heal All...
+
+
+Spells
+pos nbr name         type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects  price(bo)  multiplier
+
+  1   2 Healing      magic/other     1        1     5    1    3   20   1    20- 40  37: -: -    1000         10
+                                                   30   20    1
+
+ 33  34 Heal Other   magic/other     1        1     5    1    3   20   1    20- 40  60: -: -    1000         10
+                                                   50   30    1   30                            2000         15
+
+Adjusting manacost for Healing:
+
+000B6058 0205 0200 4C83 4B00 0000 0000 0100 0000 ....L.K.........
+000B6068 0100 0000 0000 0000 0100 0000 1400 0000 ................
+000B6078 5A25 0000 0301 0000 1400 0000 2800 0000 Z%..........(...
+000B6088 E803 0000 3200 0000                     ....2...
+changed into
+000B6059 1E                                      .
+000B607C 0114                                    ..
+
+Adjusting mana- and other costs for Heal All:
+
+000B6758 2205 0200 0082 4B00 0000 0000 0100 0000 ".....K.........
+000B6768 0100 0000 0000 0000 0100 0000 1400 0000 ................
+000B6778 583C 0000 0301 0000 1400 0000 2800 0000 X<..........(...
+000B6788 E803 0000 3200 0000                     ....2...
+changed into
+000B6759 32                                      2
+000B677C 011E                                    ..
+000B6774 1E00 0000                               ....
+000B6788 D007 0000                               ....
+000B678C 4B00 0000                               K...
+
+
+Disabling special manacost for Healing and Heal All:
+
+file offset 0006B37C
+
+:0046BF7C 83FA02                  cmp edx, 00000002
+:0046BF7F 7513                    jne 0046BF94
+:0046BF81 0FBE8EB8010000          movsx ecx, byte ptr [esi+000001B8]
+:0046BF88 D1E1                    shl ecx, 1
+:0046BF8A 0FB6E8                  movzx ebp, al
+:0046BF8D 2BCF                    sub ecx, edi
+:0046BF8F 03CD                    add ecx, ebp
+:0046BF91 EB16                    jmp 0046BFA9
+:0046BF93 90                      nop
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0046BF7F(C)
+:0046BF94 83FA22                  cmp edx, 00000022
+:0046BF97 7534                    jne 0046BFCD
+:0046BF99 0FBE8EB8010000          movsx ecx, byte ptr [esi+000001B8]
+:0046BFA0 D1E1                    shl ecx, 1
+:0046BFA2 0FB6C0                  movzx eax, al
+:0046BFA5 2BCF                    sub ecx, edi
+:0046BFA7 03C8                    add ecx, eax
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0046BF91(U)
+:0046BFA9 83F91E                  cmp ecx, 0000001E
+:0046BFAC 7E03                    jle 0046BFB1
+:0046BFAE 6A1E                    push 0000001E
+:0046BFB0 59                      pop ecx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0046BFAC(C)
+:0046BFB1 EB17                    jmp 0046BFCA
+:0046BFB3 90                      nop
+...
+:0046BFC5 90                      nop
+:0046BFC6 90                      nop
+:0046BFC7 90                      nop
+:0046BFC8 90                      nop
+:0046BFC9 90                      nop
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0046BFB1(U)
+:0046BFCA C1E106                  shl ecx, 06
+
+changed into
+
+:0046BF7C EB4F                    jmp 0046BFCD
+:0046BF7E 90                      nop
+
+Now free space from 0046BF7E to 0046BFB4 (54 bytes) and from 0046BFC5 to 0046BFCD (8 bytes).
+
+
+Original primary routine for Healing Spell effect:
+
+:00433DD6 55                      push ebp
+:00433DD7 8BEC                    mov ebp, esp
+:00433DD9 51                      push ecx
+:00433DDA 51                      push ecx
+:00433DDB 53                      push ebx
+:00433DDC 56                      push esi
+:00433DDD 57                      push edi
+:00433DDE 894DF8                  mov dword ptr [ebp-08], ecx
+:00433DE1 6A0A                    push 0000000A
+:00433DE3 B139                    mov cl, 39
+:00433DE5 5A                      pop edx
+:00433DE6 E86F61FEFF              call 00419F5A
+:00433DEB 8B751C                  mov esi, dword ptr [ebp+1C]
+:00433DEE 8BF8                    mov edi, eax
+:00433DF0 69F6C8550000            imul esi, 000055C8
+:00433DF6 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433DFB 47                      inc edi
+:00433DFC 33DB                    xor ebx, ebx
+:00433DFE C1E706                  shl edi, 06
+:00433E01 389C30B8010000          cmp byte ptr [eax+esi+000001B8], bl			clvl
+:00433E08 7E22                    jle 00433E2C
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E2A(C)
+:00433E0A 6A04                    push 00000004
+:00433E0C B139                    mov cl, 39
+:00433E0E 5A                      pop edx
+:00433E0F E84661FEFF              call 00419F5A
+:00433E14 40                      inc eax
+:00433E15 C1E006                  shl eax, 06
+:00433E18 03F8                    add edi, eax
+:00433E1A A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E1F 43                      inc ebx
+:00433E20 0FBE8430B8010000        movsx eax, byte ptr [eax+esi+000001B8]		clvl
+:00433E28 3BD8                    cmp ebx, eax
+:00433E2A 7CDE                    jl 00433E0A
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E08(C)
+:00433E2C 8B5DF8                  mov ebx, dword ptr [ebp-08]
+:00433E2F 8365FC00                and dword ptr [ebp-04], 00000000
+:00433E33 69DBB0000000            imul ebx, 000000B0
+:00433E39 83BB887A690000          cmp dword ptr [ebx+00697A88], 00000000		slvl
+:00433E40 7E1E                    jle 00433E60
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E5E(C)
+:00433E42 6A06                    push 00000006
+:00433E44 B139                    mov cl, 39
+:00433E46 5A                      pop edx
+:00433E47 E80E61FEFF              call 00419F5A
+:00433E4C 40                      inc eax
+:00433E4D C1E006                  shl eax, 06
+:00433E50 03F8                    add edi, eax
+:00433E52 FF45FC                  inc [ebp-04]
+:00433E55 8B45FC                  mov eax, dword ptr [ebp-04]
+:00433E58 3B83887A6900            cmp eax, dword ptr [ebx+00697A88]			slvl
+:00433E5E 7CE2                    jl 00433E42
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E40(C)
+:00433E60 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E65 03C6                    add eax, esi
+:00433E67 8A8860010000            mov cl, byte ptr [eax+00000160]			Class bonus
+:00433E6D 84C9                    test cl, cl
+:00433E6F 740A                    je 00433E7B
+:00433E71 80F905                  cmp cl, 05
+:00433E74 7405                    je 00433E7B
+:00433E76 80F903                  cmp cl, 03
+:00433E79 7502                    jne 00433E7D
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:00433E6F(C), :00433E74(C)
+:00433E7B D1E7                    shl edi, 1
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E79(C)
+:00433E7D 80F901                  cmp cl, 01
+:00433E80 7405                    je 00433E87
+:00433E82 80F904                  cmp cl, 04
+:00433E85 7506                    jne 00433E8D
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E80(C)
+:00433E87 8BCF                    mov ecx, edi
+:00433E89 D1F9                    sar ecx, 1
+:00433E8B 03F9                    add edi, ecx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433E85(C)
+:00433E8D 01B898010000            add dword ptr [eax+00000198], edi			add to life
+:00433E93 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E98 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00433E9B 8D8198010000            lea eax, dword ptr [ecx+00000198]
+:00433EA1 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:00433EA7 3908                    cmp dword ptr [eax], ecx
+:00433EA9 7E02                    jle 00433EAD
+:00433EAB 8908                    mov dword ptr [eax], ecx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433EA9(C)
+:00433EAD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433EB2 01BC3090010000          add dword ptr [eax+esi+00000190], edi
+:00433EB9 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:00433EC0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433EC5 03C6                    add eax, esi
+:00433EC7 8D8890010000            lea ecx, dword ptr [eax+00000190]
+:00433ECD 8B8094010000            mov eax, dword ptr [eax+00000194]
+:00433ED3 3901                    cmp dword ptr [ecx], eax
+:00433ED5 7E02                    jle 00433ED9
+:00433ED7 8901                    mov dword ptr [ecx], eax
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00433ED5(C)
+:00433ED9 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00433EDC 6A02                    push 00000002
+:00433EDE 5A                      pop edx
+:00433EDF E818810300              call 0046BFFC					substract mana for caster
+:00433EE4 6A01                    push 00000001
+:00433EE6 58                      pop eax
+:00433EE7 5F                      pop edi
+:00433EE8 89838C7A6900            mov dword ptr [ebx+00697A8C], eax		terminate spell effect
+:00433EEE 5E                      pop esi
+:00433EEF A3400E4D00              mov dword ptr [004D0E40], eax			update Life globe
+:00433EF4 5B                      pop ebx
+:00433EF5 C9                      leave
+:00433EF6 C21C00                  ret 001C
+

@@ -1,0 +1,95 @@
+Music Switch
+
+
+This selects the music to play:
+
+:0046BE56 688CE86E00              push 006EE88C
+:0046BE5B FF34B5E8744B00          push dword ptr [4*esi+004B74E8]
+
+000B5EE8 8475 4B00 7475 4B00 6475 4B00 5475 4B00 .uK.tuK.duK.TuK.
+000B5EF8 4475 4B00 3475 4B00 2475 4B00 1075 4B00 DuK.4uK.$uK..uK.
+
+000B5F10 4D75 7369 635C 4469 6E74 726F 2E77 6176 Music\Dintro.wav
+000B5F20 0000 0000 4D75 7369 635C 444C 766C 412E ....Music\DLvlA.
+000B5F30 7761 7600 4D75 7369 635C 444C 766C 422E wav.Music\DLvlB.
+000B5F40 7761 7600 4D75 7369 635C 444C 766C 442E wav.Music\DLvlD.
+000B5F50 7761 7600 4D75 7369 635C 444C 766C 432E wav.Music\DLvlC.
+000B5F60 7761 7600 4D75 7369 635C 444C 766C 422E wav.Music\DLvlB.
+000B5F70 7761 7600 4D75 7369 635C 444C 766C 412E wav.Music\DLvlA.
+000B5F80 7761 7600 4D75 7369 635C 4454 6F77 6E65 wav.Music\DTowne
+000B5F90 2E77 6176                               .wav
+
+
+edi 	ptr		Hellfire	TheDark35
+
+0	004B7584	DTowne		idem
+1	004B7574	DLvlA		idem
+2	004B7564	DLvlB		idem
+3	004B7554	DLvlC		idem
+4	004B7544	DLvlD		idem
+5	004B7534	DLvlE		DLvlB
+6	004B7524	DLvlF		DLvlA
+7	004B7510	Dintro		idem
+
+
+Music Switch	CD - HD  (using JOG flag)
+
+edi=5 and CD  ->  edi=2
+edi=6 and CD  ->  edi=1
+
+
+Adjusting Menu text:
+
+0009EFB0 5761 6C6B 0000 0000 4A6F 6700 536F 756E Walk....Jog.Soun
+wordt
+0009EFB0 4344 0000 0000 0000 4844 0000 536F 756E CD......HD..Soun
+
+Restoring old Soundtracks:
+
+000B5F20 0000 0000 4D75 7369 635C 444C 766C 462E ....Music\DLvlF.
+000B5F30 7761 7600 4D75 7369 635C 444C 766C 452E wav.Music\DLvlE.
+
+Adjusting code:
+
+File Offset 0006B256
+
+:0046BE56 688CE86E00              push 006EE88C
+:0046BE5B FF34B5E8744B00          push dword ptr [4*esi+004B74E8]
+wordt
+:0046BE56 E9CBD5F9FF              jmp 00409426
+:0046BE5B FF348DE8744B00          push dword ptr [4*ecx+004B74E8]
+
+Using free space from disabled Command.txt:
+
+File Offset 00008826
+
+:00409426 90                      nop
+:00409427 90                      nop
+:00409428 56                      push esi
+:00409429 E812050700              call 00479940
+:0040942E 59                      pop ecx
+:0040942F 50                      push eax
+:00409430 53                      push ebx
+:00409431 56                      push esi
+:00409432 E889160700              call 0047AAC0
+:00409437 83C40C                  add esp, 0000000C
+:0040943A 85C0                    test eax, eax
+:0040943C 7509                    jne 00409447
+:0040943E C6050CA2570001          mov byte ptr [0057A20C], 01
+:00409445 EB45                    jmp 0040948C
+:00409447 BEB89D4800              mov esi, 00489DB8
+wordt
+:00409426 8BCE                    mov ecx, esi
+:00409426 833DB0044A0000          cmp dword ptr [004A04B0], 00000000
+:0040942F 7510                    jne 00409441		jmp if HD ('Jog')
+:00409431 83FE05                  cmp esi, 00000005
+:00409434 7503                    jne 00409439
+:00409436 6A02                    push 00000002
+:00409438 59                      pop ecx
+:00409439 83FE06                  cmp esi, 00000006
+:0040943C 7503                    jne 00409441
+:0040943E 6A01                    push 00000001
+:00409440 59                      pop ecx
+:00409441 688CE86E00              push 006EE88C
+:00409446 E9102A0600              jmp 0046BE5B
+:0040944B 90			  nop

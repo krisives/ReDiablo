@@ -1,0 +1,13 @@
+Viper Charge fix
+
+The disabling of the fake 'impact' attack for charging Drakes (42Y) seemed to create invulnerable Drakes (and other monsters with this attacktype), in some situations. This removes previous change and compacts some code, so the charge impact will again be heard.
+
+
+file offset 00043AD6
+
+:004446D6 80BE9900000018          cmp byte ptr [esi+00000099], 18	Viper attacktype
+:004446DD 750F                    jne 004446EE
+:004446DF EB2E                    jmp 0044470F
+changed into
+:004446D6 EB16                    jmp 004446EE
+:004446D8 909090909090909090      9*nop

@@ -1,0 +1,34 @@
+cutl6.cel - nest load up
+cutl5.cel - crypt load up
+unrava%.cl2 - unraveler graphics
+goatld.cl2 - Satyr Lord graphics
+L5S.cel - object in crypt
+cows1.cel - cow suit up and down
+donkeys1.cel - donkey suit up and down
+hf_logo3.cel - hellfire intro part
+diabsmal.cel - hellfire intro part
+spellicon.cel - spells icons, 1-50 are spells out of 59, 30-34 unused.
+halfps1.cel - paper falling
+mpaZTown.cel - cathedral map picture
+bubba%.cl2 - iron demons
+Byclps%.cl2 - 2 headed monsters
+Clasp%.cl2 - "bug that walks on it's hands"
+Eye2%.cl2 - psychorb monster
+Flesh%.cl2 - flesh beast
+Fork%.cl2 - wild boar creature
+gravedg%.cl2 - gravedigger
+Lich%.cl2 - blue liches
+Lich2%.cl2 - red lich
+nkr%.cl2 - Na' Krul
+reap%.cl2 - demon with pitchfork (mini Balrog)
+spawn%.cl2 - little exploding demon
+farmrn2.cel - Lester
+mfrmrn2.cel - Moose
+cfrmrn2.cel - cow
+girls1.cel - little girl with something
+girlw1.cel - girl waving both arms back and forth
+mainmenu.pcx - black screen
+selgame.pcx - two boxes
+black.pcx - black screen (duh)
+font42g.pcx - Diablo font, on green background, all languages
+heros.pcx - all 4 heroes

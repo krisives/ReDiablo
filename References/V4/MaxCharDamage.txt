@@ -1,0 +1,77 @@
+Maximum damage for characters, to prevent disappointing easy Boss kills. This also limits Life and Mana Stealing in Melee.
+
+
+Max. Final Damage = clvl*64
+
+
+Arrows/Spells:
+
+File Offset 0002E8E3
+
+:0042F4E3 29BE1CDD6900            sub dword ptr [esi+0069DD1C], edi
+wordt
+:0042F4E3 E833100000              call 0043051B
+:0042F4E8 90                      nop
+
+Melee:
+
+File Offset 0005B01A
+
+:0045BC1A 29BB1CDD6900            sub dword ptr [ebx+0069DD1C], edi
+wordt
+:0045BC1A E80C49FDFF              call 0043052B
+:0045BC1F 90                      nop
+
+
+Using space from Charm spell:
+
+File Offset 0002F91B
+
+:0043051B 90                      nop
+:0043051C 8945F8                  mov dword ptr [ebp-08], eax
+:0043051F DB45F8                  fild dword ptr [ebp-08]
+:00430522 0FB6864EDD6900          movzx eax, byte ptr [esi+0069DD4E]
+:00430529 DC0DB8004900            fmul qword ptr [004900B8]
+:0043052F 8945F8                  mov dword ptr [ebp-08], eax
+:00430532 DC25C0004900            fsub qword ptr [004900C0]
+:00430538 DB45F8                  fild dword ptr [ebp-08]
+:0043053B DEC9                    fmulp st(1), st(0)
+:0043053D DC45EC                  fadd qword ptr [ebp-14]
+:00430540 6A01                    push 00000001
+:00430542 58                      pop eax
+:00430543 90                      nop
+:00430544 90                      nop
+:00430545 8BD3                    mov edx, ebx
+:00430547 B191                    mov cl, 91
+:00430549 88864DDD6900            mov byte ptr [esi+0069DD4D], al
+:0043054F E8069AFEFF              call 00419F5A
+:00430554 03C7                    add eax, edi
+:00430556 8945F8                  mov dword ptr [ebp-08], eax
+:00430559 DB45F8                  fild dword ptr [ebp-08]
+wordt
+:0043051B 51                      push ecx
+:0043051C 8BCB                    mov ecx, ebx
+:0043051E E819000000              call 0043053C
+:00430523 59                      pop ecx
+:00430524 29BE1CDD6900            sub dword ptr [esi+0069DD1C], edi
+:0043052A C3                      ret
+
+:0043052B 51                      push ecx
+:0043052C 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0043052F E815000000              call 00430549				
+:00430534 59                      pop ecx
+:00430535 29BB1CDD6900            sub dword ptr [ebx+0069DD1C], edi
+:0043053B C3                      ret
+
+:0043053C 69C9C8550000            imul ecx, 000055C8
+:00430542 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00430547 03C8                    add ecx, eax
+
+:00430549 52                      push edx
+:0043054A 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]
+:00430551 C1E20B                  shl edx, 0B
+:00430554 3BD7                    cmp edx, edi
+:00430556 7D02                    jge 0043055A
+:00430558 8BFA                    mov edi, edx
+:0043055A 5A                      pop edx
+:0043055B C3                      ret

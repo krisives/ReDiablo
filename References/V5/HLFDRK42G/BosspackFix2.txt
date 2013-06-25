@@ -1,0 +1,39 @@
+Preventing deactivation of bosses:
+
+file offset 00042DBD
+
+:004439BD 8A8628DD6900            mov al, byte ptr [esi+0069DD28]
+:004439C3 8D8E28DD6900            lea ecx, dword ptr [esi+0069DD28]
+:004439C9 84C0                    test al, al
+:004439CB 740D                    je 004439DA					jmp if not active
+:004439CD 80BE20DD69006E          cmp byte ptr [esi+0069DD20], 6E		
+:004439D4 7404                    je 004439DA					jmp if attacktype 6E (*)
+:004439D6 FEC8                    dec al					decrease activation counter
+:004439D8 8801                    mov byte ptr [ecx], al
+changed into
+...
+:004439CD 80BE44DD690000          cmp byte ptr [esi+0069DD44], 00
+:004439D4 7504                    jne 004439DA					jmp if boss
+...
+
+(* Attacktype 6E does not exist, but 6E is the ID for Diablo. This was propably intended to keep Diablo from deactivating.)
+
+
+Improving on previous attempt to prevent packs getting stuck:
+
+file offset 0003EBC9
+
+:0043F7C9 83F804                  cmp eax, 00000004
+changed into
+:0043F7C9 83F801                  cmp eax, 00000001
+changed into
+:0043F7C9 83F800                  cmp eax, 00000000
+
+file offset 0003EBE1
+
+:0043F7E1 83F804                  cmp eax, 00000004
+changed into
+:0043F7E1 83F801                  cmp eax, 00000001
+changed into
+:0043F7E1 83F800                  cmp eax, 00000000
+

@@ -1,0 +1,40 @@
+Charmed animals did very little damage. Now that they are more subject to attack, this is corrected so they will do normal maximum damage (minimum damage is still 1).
+
+file offset 0002F8D1
+
+:004304D1 0FB6864DDD6900          movzx eax, byte ptr [esi+0069DD4D]
+:004304D8 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+:004304DE 8BC3                    mov eax, ebx
+:004304E0 88864DDD6900            mov byte ptr [esi+0069DD4D], al
+:004304E6 0FB68650DD6900          movzx eax, byte ptr [esi+0069DD50]
+:004304ED 888651DD6900            mov byte ptr [esi+0069DD51], al
+:004304F3 8BC3                    mov eax, ebx
+:004304F5 888650DD6900            mov byte ptr [esi+0069DD50], al
+:004304FB 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:00430502 E98F7FFFFF              jmp 00428496
+:00430507 
+changed into
+:004304D1 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:004304D8 889E4DDD6900            mov byte ptr [esi+0069DD4D], bl
+:004304DE 889E50DD6900            mov byte ptr [esi+0069DD50], bl
+:004304E4 E9AD7FFFFF              jmp 00428496
+:004304E9 90909090                4*nop
+:00430507 
+
+Now free space from 004304E9 to 00430507 (30 bytes).
+
+
+Increased activation range for Golem and Charmed animals, to make them a better decoy against shooters but also to make them less powerful in certain situations:
+
+file offset 0003BEB7
+
+:0043CAB7 83F808                  cmp eax, 00000008
+changed into
+:0043CAB7 83F809                  cmp eax, 00000009
+
+file offset 0003BECD
+
+:0043CACD 83F808                  cmp eax, 00000008
+changed into
+:0043CACD 83F809                  cmp eax, 00000009
+

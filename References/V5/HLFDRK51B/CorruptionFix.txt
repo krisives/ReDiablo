@@ -1,0 +1,33 @@
+Corruption Fix
+
+In combination with Mana regeneration and/or Mana Shield, the Corruption effect did not always work properly. Now fixed by replacing it with a heavy Mana drain (at twice the rate as life drops from 'Constantly loose Life'). 
+Corruption will still prevent Mana potions, Fountains, and other Mana sources to work.
+
+
+file offset 0005D045
+
+:0045DC45 8B81A4010000            mov eax, dword ptr [ecx+000001A4]
+:0045DC4B 8D91A4010000            lea edx, dword ptr [ecx+000001A4]
+:0045DC51 85C0                    test eax, eax
+:0045DC53 7E15                    jle 0045DC6A
+:0045DC55 2B81AC010000            sub eax, dword ptr [ecx+000001AC]
+:0045DC5B 8902                    mov dword ptr [edx], eax
+:0045DC5D A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC62 83A430AC01000000        and dword ptr [eax+esi+000001AC], 00000000
+changed into
+:0045DC45 50                      push eax
+:0045DC46 03C6                    add eax, esi
+:0045DC48 53                      push ebx
+:0045DC49 51                      push ecx
+:0045DC4A 8B88AC010000            mov ecx, dword ptr [eax+000001AC]
+:0045DC50 6AF8                    push FFFFFFF8
+:0045DC52 5B                      pop ebx
+:0045DC53 03CB                    add ecx, ebx
+:0045DC55 7E05                    jle 0045DC5C
+:0045DC57 E8695AFFFF              call 004536C5
+:0045DC5C 59                      pop ecx
+:0045DC5D 5B                      pop ebx
+:0045DC5E 58                      pop eax
+:0045DC5F EB09                    jmp 0045DC6A
+:0045DC61 909090909090909090      9*nop
+

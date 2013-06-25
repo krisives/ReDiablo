@@ -1,0 +1,9 @@
+()Rage
+
+Disable bugged life-loss. 2e poging.
+
+:00439B0F 03CB                    add ecx, ebx
+wordt
+:00439B0F 33C9                    xor ecx, ecx
+
+

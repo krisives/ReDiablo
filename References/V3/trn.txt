@@ -1,0 +1,232 @@
+by Dr. Zed
+
+Animation/Sound/Translation data (cl2's, wav's and trn's)
+
+monsters\acid\		acid%c.cl2		acid%c%i.wav
+46	Acid Beast		<none>
+47	Poison Spitter	acidblk.trn
+48	Pit Beast		acidb.trn
+49	Lava Maw		acidr.trn
+
+monsters\bat\		bat%c.cl2		bat%c%i.wav
+38	Fiend			red.trn
+39	Blink			<none>
+40	Gloom			grey.trn
+41	Familiar		orange.trn
+
+monsters\bigfall\		fallg%c.cl2	bfal%c%i.wav
+80	Devil Kin Brute	<none>
+
+monsters\black\		black%c.cl2		black%c%i.wav
+93	Black Knight	<none>
+94	Doom Guard		blkkntrt.trn
+95	Steel Lord		blkknbt.trn
+96	Blood Knight	blkkntbe.trn
+
+monsters\darkmage\	dmage%c.cl2		dmag%c%i.wav
+111	The Arch-Litch Malignus	<none>
+
+NOTE: This monster is missing it's second attack sounds and hit recovery sounds.
+
+monsters\demskel\		demskl%c.cl2
+68	Bone Demon		<Monsters\Thin\Thinv3.TRN>
+69	Red Death		<Monsters\Thin\Thinv3.TRN>
+70	Litch Demon		<Monsters\Thin\Thinv3.TRN>
+71	Undead Balrog	<Monsters\Thin\Thinv3.TRN>
+
+NOTE: This group only used the Demskl%c.cl2 file for the Bone Demon, the remainder used Monsters\Thin\Thin%c.CL2.  The entire group used Monsters\Thin\Thin%c%i.WAV and Monsters\Thin\Thinv3.TRN.
+
+monsters\diablo\		diablo%c.cl2	diablo%c%i.wav
+110	The Dark Lord	<None>
+
+monsters\falspear\	phall%c.cl2		phall%c%i.wav
+4	Fallen One		fallent.trn
+5	Carver		dark.trn
+6	Devil Kin		<none>
+7	Dark One		blue.trn
+
+monsters\falsword\	fall%c.cl2		fall%c%i.wav
+12	Fallen One		fallent.trn
+13	Carver		dark.trn
+14	Devil Kin		<none>
+15	Dark One		blue.trn
+
+monsters\fat\		fat%c.cl2		fat%c%i.wav
+52	Overlord		<none>
+53	Mud Man		blue.trn
+54	Toad Demon		fatb.trn
+55	Flayed One		fatf.trn
+
+monsters\fatc\		fatc%c.cl2		fatc%c%i.wav
+51	The Butcher		<none>
+
+monsters\fireman\		firem%c.cl2
+72	Incinerator		<none>
+73	Flame Lord		<none>
+74	Doom Fire		<none>
+75	Hell Burner		<none>
+
+NOTE: This group uses Monsters\Acid\Acid%c%i.WAV.
+
+monsters\gargoyle\	gargo%c.cl2		gargo%c%i.wav
+81	Winged-Demon	<none>
+82	Gargoyle		gare.trn
+83	Blood Claw		gargbr.trn
+84	Death Wing		gargb.trn
+
+monsters\goatbow\		goatb%c.cl2		goatb%c%i.wav
+42	Flesh Clan
+43	Stone Clan		beige.trn
+44	Fire Clan		red.trn
+45	Night Clan		gray.trn
+
+monsters\goatlord\	goatl%c.cl2		goatl%c%i.wav
+33	Lord Sayter		<none>
+
+monsters\goatmace\	goat%c.cl2		goat%c%i.wav
+34	Flesh Clan		<none>
+35	Stone Clan		beige.trn
+36	Fire Clan		red.trn
+37	Night Clan		gray.trn
+
+monsters\golem\		golem%c.cl2		golem%c%i.wav
+109	Golem			<none>
+
+	NOTE: No neutral animation and hit recovery animations.  No hit recovery sound.
+
+monsters\mage\		mage%c.cl2		mage%c%i.wav
+105	Counselor		<none>
+106	Magistrate		cnselg.trn
+107	Cabalist		cnselgd.trn
+108	Advocate		cnselbk.trn
+
+monsters\magma\		magma%c.cl2		magma%c%i.wav
+60	Magma Demon		<none>
+61	Blood Stone		yellow.trn
+62	Hell Stone		blue.trn
+63	Lava Lord		wierd.trn
+
+monsters\mega\		mega%c.cl2		mega%c%i.wav
+85	Slayer		<none>
+86	Guardian		guard.trn
+87	Vortex Lord		vtext.trn
+88	Balrog		balr.trn
+
+monsters\monsters\
+0	Gharbad the Weak		bsdb.trn
+1	Skeleton King		genrl.trn
+2	Zhar the Mad		general.trn
+3	Snotspill			bng.trn
+4	Arch-Bishop Lazarus	general.trn
+5	Red Vex			redv.trn
+6	BlackJade			blkjd.trn
+7	Lachdanan			bhka.trn
+8	Warlord of Blood		general.trn
+9	The Butcher			genrl.trn
+10	Bonehead Keenaxe		bhka.trn
+11	Bladeskin the Slasher	bsts.trn
+........
+	bashtb.trn
+	bfds.trn
+	bftp.trn
+	bhbs.trn
+	bhsm.trn
+	br.trn
+	db.trn
+	de.trn
+	dsfn.trn
+	eth.trn
+	gtq.trn
+	mtd.trn
+	pmr.trn
+	ptu.trn
+	rcrn.trn
+	shbt.trn
+	shcr.trn
+	shdr.trn
+	skfr.trn
+	tspo.trn
+	wftd.trn
+
+monsters\rhino\		rhino%c.cl2		rhino%c%i.wav
+64	Horned Demon	<none>
+65	Mud Runner		orange.trn
+66	Frost Charger	blue.trn
+67	Obsidian Lord	rhinob.trn
+
+monsters\scav\		scav%c.cl2		scav%c%i.wav
+16	Scavenger		<none>
+17	Plague Eater	scavbr.trn
+18	Shadow Beast	scavbe.trn
+19	Bone Gasher		scavw.trn
+
+monsters\skelaxe\		sklax%c.cl2		sklax%c%i.wav
+8	Skeleton		white.trn
+9	Corpse Axe		skelt.trn
+10	Burning Dead	<none>
+11	Horror		black.trn
+
+monsters\skelbow\		sklbw%c.cl2	sklbw%c%i.wav
+20	Skeleton		white.trn
+21	Corpse Bow		skelt.trn
+22	Burning Dead	<none>
+23	Horror		black.trn
+
+monsters\skelsd\		sklsr%c.cl2		sklsr%c%i.wav
+24	Skeleton Captain		white.trn
+25	Corpse Captain		skelt.trn
+26	Burning Dead Captain	<none>
+27	Horror Captain		black.trn
+
+monsters\sking\		sking%c.cl2		sking%c%i.wav
+50	Skeleton King	<Monsters\SkelAxe\White.TRN>
+
+monsters\snake\		snake%c.cl2		snake%c%i.wav
+89	Cave Viper		<none>
+90	Fire Drake		snakr.trn
+91	Gold Viper		snakg.trn
+92	Azure Drake		snakb.trn
+
+monsters\sneak\		sneak%c.cl2		sneak%c%i.wav
+29	Hidden		<none>
+30	Stalker		sneakv2.trn
+31	Unseen		sneakv3.trn
+32	Illusion Weaver	sneakv1.trn
+
+monsters\succ\		scbs%c.cl2		scbs%c%i.wav
+101	Succubus		<none>
+102	Snow Witch		succb.trn
+103	Hell Spawn		succrw.trn
+104	Soul Burner		succbw.trn
+
+monsters\thin\		thin%c.cl2		thin%c%i.wav
+76	Red Storm		thinv3.trn
+77	Storm Rider		<none>
+78	Storm Lord		thinv2.trn
+79	Maelstorm		thinv1.trn
+
+monsters\tsneak\		tsneak%c.cl2	sneakl%c%i.wav
+28	Invisible Lord	<none>
+
+monsters\unrav\		unrav%c.cl2
+97	Unraveler		<none>
+98	Hollow One		<none>
+99	Pain Master		<none>
+100	Reality Weaver	<none>
+
+NOTE: This group uses Monsters\Acid\Acid%c%i.WAV and is missing it's walking animation.
+
+monsters\worm\					worm%c%i.wav
+56	Wyrm			<none>
+57	Cave Slug		<none>
+58	Devil Wyrm		<none>
+59	Devourer		<none>
+
+NOTE: The unused worm group has their animation set to a non-existant filename and their sound set to Monsters\Fat\Fat%c%i.WAV.
+
+monsters\zombie\		zombie%c.cl2	zombie%c%i.wav
+0	Zombie		<none>
+1	Ghoul			bluered.trn
+2	Rotting Carcass	grey.trn
+3	Black Death		yellow.trn
+

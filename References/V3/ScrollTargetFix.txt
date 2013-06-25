@@ -1,0 +1,82 @@
+Correcting display of several scrolls
+
+
+Magic code 15 = "Right-click to read"
+Magic code 16 = "Right-click to read, then" & "left-click to target"
+
+
+pos name                    qlvl  mag price   pic  src offset oldscroll          MagicCode
+
+ 26 Scroll of Identify       1    10    200    1    0   a0d80 Identify           15 -> 16
+ 27 Scroll of Town Portal    4     5    200    1    0   a0dcc Town Portal        15 -> 16
+ 34 Scroll of Resurrect      1    10    250    1    0   a0fe0 Resurrect          16 
+ 91 Scroll of Healing        1     5     50    1    1   a20cc Healing            15
+ 92 Scroll of Search         1    10     50    1    1   a2118 Search             15
+ 93 Scroll of Telekinesis    1    10    150    1    1   a2164 Lightning          16
+ 94 Scroll of Identify       1    10    200    1    1   a21b0 Identify           15 -> 16
+ 95 Scroll of Resurrect      1    10    250    1    1   a21fc Resurrect          16 
+ 96 Scroll of Fire Wall      4    15    400    1    1   a2248 Fire Wall          16 
+ 97 Scroll of Warp           4    10    300    1    1   a2294 Inferno            16 -> 15
+ 98 Scroll of Town Portal    4     5    200    1    1   a22e0 Town Portal        15 -> 16
+ 99 Scroll of Barrier        6    15    500    1    1   a232c Flash              16 -> 15
+100 Scroll of Seeing         8    15    600    3    1   a2378 Infravision        15
+101 Scroll of Escape         6    10    250    3    1   a23c4 Phasing            15 -> 16
+102 Scroll of Mana Shield    8    20   1200    1    1   a2410 Mana Shield        15
+103 Scroll of The Jester    10     5     40    2    1   a245c Flame Wave         16
+104 Scroll of Charm          8    30    300    3    1   a24a8 Fireball           16 -> 15
+105 Scroll of Stone Curse    6    30    800    1    1   a24f4 Stone Curse        16
+106 Scroll of Rage          10     5   1000    1    1   a2540 Chain Lightning    16 -> 15
+107 Scroll of Guardian      12    30    600    1    1   a258c Guardian           16
+108 Faulty Scroll            0    15     40    3    0   a25d8 Non Item           15 unused
+109 Scroll of Nova          14    30   1300    1    1   a2624 Nova               15
+110 Scroll of Golem         10    30   1100    1    1   a2670 Golem              16 -> 15
+111 Scroll of Rage          99     0   1000    3    0   a26bc None               16 unused
+112 Scroll of Teleport      14    20   1000    1    1   a2708 Teleport           15 -> 16
+113 Scroll of Invincibility 22    30   4000    3    1   a2754 Apocalypse         15      
+
+Getest met prima resultaat. Geen effect op gebruik van scrolls, alleen op de display.
+
+
+Magic code used at :
+
+:00429298 83BFDC00000015          cmp dword ptr [edi+000000DC], 00000015
+:0042929F 7516                    jne 004292B7
+
+* Possible StringData Ref from Data Obj ->"Right-click to read"
+                                  |
+:004292A1 6810684A00              push 004A6810
+:004292A6 56                      push esi
+:004292A7 E8840A0500              call 00479D30
+:004292AC 59                      pop ecx
+:004292AD 8BD5                    mov edx, ebp
+:004292AF 59                      pop ecx
+:004292B0 8BCE                    mov ecx, esi
+:004292B2 E893B2FDFF              call 0040454A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042929F(C)
+|
+:004292B7 83BFDC00000016          cmp dword ptr [edi+000000DC], 00000016
+:004292BE 752C                    jne 004292EC
+
+* Possible StringData Ref from Data Obj ->"Right-click to read, then"
+                                  |
+:004292C0 68F4674A00              push 004A67F4
+:004292C5 56                      push esi
+:004292C6 E8650A0500              call 00479D30
+:004292CB 59                      pop ecx
+:004292CC 8BD5                    mov edx, ebp
+:004292CE 59                      pop ecx
+:004292CF 8BCE                    mov ecx, esi
+:004292D1 E874B2FDFF              call 0040454A
+
+* Possible StringData Ref from Data Obj ->"left-click to target"
+                                  |
+:004292D6 68DC674A00              push 004A67DC
+:004292DB 56                      push esi
+:004292DC E84F0A0500              call 00479D30
+:004292E1 59                      pop ecx
+:004292E2 8BD5                    mov edx, ebp
+:004292E4 59                      pop ecx
+:004292E5 8BCE                    mov ecx, esi
+:004292E7 E85EB2FDFF              call 0040454A

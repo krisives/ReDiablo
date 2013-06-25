@@ -1,0 +1,131 @@
+Lightglows:
+
+
+Character:
+
+:00458913 0FBE8C303E010000        movsx ecx, byte ptr [eax+esi+0000013E]
+:0045891B 03C6                    add eax, esi
+:0045891D 51                      push ecx
+:0045891E 8B503C                  mov edx, dword ptr [eax+3C]
+:00458921 8B4838                  mov ecx, dword ptr [eax+38]
+:00458924 E84B3FFDFF              call 0042C874
+
+Townportal:
+
+:0045F341 381DD8B16000            cmp byte ptr [0060B1D8], bl
+:0045F347 741F                    je 0045F368
+:0045F349 69F6B0000000            imul esi, 000000B0
+:0045F34F 6A0F                    push 0000000F
+:0045F351 8B96607A6900            mov edx, dword ptr [esi+00697A60]
+:0045F357 8B8E5C7A6900            mov ecx, dword ptr [esi+00697A5C]
+:0045F35D E812D5FCFF              call 0042C874
+:0045F362 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+
+
+Charm:
+
+:004305BF A0D8B16000              mov al, byte ptr [0060B1D8]
+:004305C4 3C11                    cmp al, 11
+:004305C6 7208                    jb 004305D0
+:004305C8 3C14                    cmp al, 14
+:004305CA 7704                    ja 004305D0
+:004305CC 6A09                    push 00000009				changed to 00000003 has no effect
+:004305CE EB02                    jmp 004305D2
+:004305D0 6A03                    push 00000003
+:004305D2 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:004305D8 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:004305DE 58                      pop eax
+:004305DF 50                      push eax
+:004305E0 E88FC2FFFF              call 0042C874				
+
+
+Boss creation, but only for KingoftheNest (?):
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043BD9E(C)
+|
+:0043BDA9 8B5624                  mov edx, dword ptr [esi+24]
+:0043BDAC 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043BDAF 6A03                    push 00000003
+:0043BDB1 E8BE0AFFFF              call 0042C874				
+:0043BDB6 8886D7000000            mov byte ptr [esi+000000D7], al
+
+
+Below torches (?):
+
+:0044E5F9 83BE18E66D0000          cmp dword ptr [esi+006DE618], 00000000
+:0044E600 7514                    jne 0044E616
+:0044E602 FF75EC                  push [ebp-14]
+:0044E605 8B55F4                  mov edx, dword ptr [ebp-0C]
+:0044E608 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:0044E60B E864E2FDFF              call 0042C874
+:0044E610 898610E66D00            mov dword ptr [esi+006DE610], eax
+
+
+Fire/Lightning arrow:
+
+:00430C65 6A05                    push 00000005
+:00430C67 8BD7                    mov edx, edi
+:00430C69 C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:00430C73 899EE87A6900            mov dword ptr [esi+00697AE8], ebx
+:00430C79 8BCB                    mov ecx, ebx
+:00430C7B 89BEEC7A6900            mov dword ptr [esi+00697AEC], edi
+:00430C81 E8EEBBFFFF              call 0042C874
+
+
+Firebolt:
+
+:004318EE 6A08                    push 00000008
+:004318F0 8BD3                    mov edx, ebx
+:004318F2 C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:004318FC 89BEE87A6900            mov dword ptr [esi+00697AE8], edi
+:00431902 8BCF                    mov ecx, edi
+:00431904 899EEC7A6900            mov dword ptr [esi+00697AEC], ebx
+:0043190A E865AFFFFF              call 0042C874
+
+Magmaball:
+
+:00431998 6A08                    push 00000008
+:0043199A 8BCB                    mov ecx, ebx
+:0043199C 8996EC7A6900            mov dword ptr [esi+00697AEC], edx
+:004319A2 E8CDAEFFFF              call 0042C874
+
+Fireball:
+
+:00431EC7 6A08                    push 00000008
+:00431EC9 8BD7                    mov edx, edi
+:00431ECB C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:00431ED5 899EE87A6900            mov dword ptr [esi+00697AE8], ebx
+:00431EDB 89BEEC7A6900            mov dword ptr [esi+00697AEC], edi
+:00431EE1 83A6F07A690000          and dword ptr [esi+00697AF0], 00000000
+:00431EE8 899EF47A6900            mov dword ptr [esi+00697AF4], ebx
+:00431EEE 8BCB                    mov ecx, ebx
+:00431EF0 89BEF87A6900            mov dword ptr [esi+00697AF8], edi
+:00431EF6 E879A9FFFF              call 0042C874
+
+Runebomb:
+
+:00432097 6A08                    push 00000008
+:00432099 69F6B0000000            imul esi, 000000B0
+:0043209F E8D0A7FFFF              call 0042C874
+
+Another Fireball:
+
+:004328FA 6A08                    push 00000008
+:004328FC 8BCB                    mov ecx, ebx
+:004328FE 8986007B6900            mov dword ptr [esi+00697B00], eax
+:00432904 E86B9FFFFF              call 0042C874
+
+Fireball trap:
+
+:00432999 6A08                    push 00000008
+:0043299B 8BD3                    mov edx, ebx
+:0043299D C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:004329A7 89BEE87A6900            mov dword ptr [esi+00697AE8], edi
+:004329AD 899EEC7A6900            mov dword ptr [esi+00697AEC], ebx
+:004329B3 83A6F07A690000          and dword ptr [esi+00697AF0], 00000000
+:004329BA 89BEF47A6900            mov dword ptr [esi+00697AF4], edi
+:004329C0 8BCF                    mov ecx, edi
+:004329C2 899EF87A6900            mov dword ptr [esi+00697AF8], ebx
+:004329C8 E8A79EFFFF              call 0042C874
+

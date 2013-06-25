@@ -1,0 +1,151 @@
+Abyss' Krull Trap
+
+
+Added a modified Krull.CL2 to Dark.MPQ
+
+
+Setting Krull image to 16 frames:
+
+000A86A0 10                                      .
+
+
+Force the loading of Krull.CL2 instead of Ex_Ora*.CL2, which is unused:
+
+File Offset 0003A3F8
+
+:0043AFF8 B139                    mov cl, 39
+wordt
+:0043AFF8 B119                    mov cl, 19
+
+
+Modifying the SpellEffect Krull (33h) to call Arrow routines:
+
+000A68FC 3300 0000 8F1A 4300 8365 4300 0100 0000 3.....C..eC.....
+000A690C 0001 1900 FFFF FFFF FFFF FFFF           ............
+wordt
+000A68FC 3300 0000 2313 4300 0F60 4300 0100 0000 3...#.C..`C.....
+000A690C 0000 1900 FFFF FFFF FFFF FFFF           ............
+
+
+Setting Abyss Traps to Krull:
+
+File Offset 0004D607
+
+:0044E207 760A                    jbe 0044E213
+wordt
+:0044E207 7617                    jbe 0044E220
+
+File Offset 0004D620
+
+:0044E220 8BCE                    mov ecx, esi
+:0044E222 6BC978                  imul ecx, 00000078
+:0044E225 218120E66D00            and dword ptr [ecx+006DE620], eax
+wordt
+:0044E220 E864B2FBFF              call 00409489
+:0044E225 898120E66D00            mov dword ptr [ecx+006DE620], eax
+
+
+Using space from disabled Command file:
+
+File Offset 00008889
+
+:00409489 909090                  3*nop
+:0040948C 56                      push esi
+:0040948D E946010000              jmp 004095D8
+:00409492 EB6B                    jmp 004094FF
+:00409494 909090                  3*nop
+wordt
+:00409489 8BCE                    mov ecx, esi
+:0040948B 6BC978                  imul ecx, 00000078
+:0040948E 80FB14                  cmp bl, 14
+:00409491 7C03                    jl 00409496
+:00409493 6A33                    push 00000033
+:00409495 58                      pop eax
+:00409496 C3                      ret
+
+
+Slowing Arrow/Krull speed for Traps and Monsters (32 -> 30):
+
+File Offset 00030759
+
+:00431359 6A20                    push 00000020
+wordt
+:00431359 6A1E                    push 0000001E
+
+
+Increasing ToHit for Arrow/Krull Trap to always hitting:
+
+File Offset 0002EAE7
+
+:0042F6E7 D1E3                    shl ebx, 1
+:0042F6E9 2BD8                    sub ebx, eax
+wordt
+:0042F6E7 C1E302                  shl ebx, 02
+:0042F6EA 90                      nop
+
+
+Adding 100% Piercing to Krull against Monsters:
+
+File Offset 0002E9C6
+
+:0042F5C6 E93C3F0200              jmp 00453507
+wordt
+:0042F5C6 E9CC9EFDFF              jmp 00409497
+
+Using space from disabled Command file:
+
+File Offset 00008897
+
+:00409497 8D7DD4                  lea edi, dword ptr [ebp-2C]
+:0040949A A5                      movsd
+:0040949B A5                      movsd
+:0040949C 8D45D4                  lea eax, dword ptr [ebp-2C]
+:0040949F 50                      push eax
+:004094A0 66A5                    movsw
+:004094A2 E899040700              call 00479940
+:004094A7 59                      pop ecx
+:004094A8 50                      push eax
+:004094A9 8D45D4                  lea eax, dword ptr [ebp-2C]
+:004094AC 53                      push ebx
+:004094AD 50                      push eax
+:004094AE E80D160700              call 0047AAC0
+wordt
+:00409497 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0040949B 0F842A610200            je 0042F5CB
+:004094A1 837D1433                cmp dword ptr [ebp+14], 00000033
+:004094A5 0F8420610200            je 0042F5CB
+:004094AB E969F10400              jmp 00458619
+:004094B0 909090                  3*nop
+
+
+Adding 100% Piercing to Krull against Players:
+
+File Offset 0002EE78
+
+:0042FA78 6A01                    push 00000001
+:0042FA7A 58                      pop eax
+:0042FA7B EB02                    jmp 0042FA7F
+wordt
+:0042FA78 E98A3A0200              jmp 00453507
+:0042FA7D 
+
+File Offset 00052907
+
+:00453507 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0045350B 0F8508510000            jne 00458619
+:00453511 E9B5C0FDFF              jmp 0042F5CB
+wordt
+:00453507 837D1433                cmp dword ptr [ebp+14], 00000033
+:0045350B 0F85E6C4FDFF            jne 0042F9F7
+:00453511 E967C5FDFF              jmp 0042FA7D
+
+File Offset 0002EDF7
+
+:0042F9F7 909090909090            6*nop
+:0042F9FD EB79                    jmp 0042FA78
+wordt
+:0042F9F7 6A01                    push 00000001
+:0042F9F9 58                      pop eax
+:0042F9FA E980000000              jmp 0042FA7F
+:0042F9FF 
+

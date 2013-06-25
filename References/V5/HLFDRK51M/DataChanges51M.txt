@@ -1,0 +1,24 @@
+Adjusting some monster statistics
+
+Unique Monsters
+
+pos name                     type                  attacktype        sub  pack  dlvl    HP   damage  MFL
+
+ 54 Gharbad the Weak         Guardian Goat          2 Skeleton         4   1      8    600   25- 35  IIR
+                                                                                       800   
+
+000AF940 2100 0000 F31A 4B00 841B 4B00 0800 5802 !.....K...K...X.
+000AF950 0204 1923 1C00 0100 0000 0000 0000 0000 ...#............
+changed into
+000AF940 2100 0000 F31A 4B00 841B 4B00 0800 2003 !.....K...K... .
+000AF950 0204 1923 1C00 0100 0000 0000 0000 0000 ...#............
+
+
+  9 The Butcher              The Butcher           13 Butcher          3   1Y     0*   800   24- 36  RIR
+                                                                                      1200   32- 48
+
+000AF3A0 3300 0000 F82B 4B00 9C1B 4B00 0000 2003 3....+K...K... .
+000AF3B0 0D03 1824 5500 0100 0000 0000 0000 0000 ...$U...........
+changed into
+000AF3A0 3300 0000 F82B 4B00 9C1B 4B00 0000 B004 3....+K...K.....
+000AF3B0 0D03 2030 5500 0100 0000 0000 0000 0000 .. 0U...........

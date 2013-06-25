@@ -1,0 +1,28 @@
+Correcting bug that prevented Charm from working properly:
+
+file offset 0002F876
+
+:00430476 741B                    je 00430493
+changed into
+:00430476 751B                    jne 00430493
+
+
+Excluding Firebats and Hellbats from being Charmed:
+
+file offset 0002F878
+
+:00430478 EB10                    jmp 0043048A
+:0043047A 90                      nop
+:0043047B 90                      nop
+:0043047C 6A03                    push 00000003
+:0043047E B163                    mov cl, 63
+:00430480 5A                      pop edx
+:00430481 E8D49AFEFF              call 00419F5A
+:00430486 85C0                    test eax, eax
+:00430488 7409                    je 00430493
+changed into
+:00430478 80BF20DD690020          cmp byte ptr [edi+0069DD20], 20	Firebat attacktype
+:0043047F 7412                    je 00430493
+:00430481 EB07                    jmp 0043048A
+:00430483 90909090909090          7*nop
+

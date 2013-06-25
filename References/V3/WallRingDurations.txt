@@ -1,0 +1,74 @@
+Fire Wall and Ring of Fire (at Spell Effect 05h "Flame")
+
+
+Lowering Duration for high slvl, increasing min. duration for low slvl and Rune
+
+File Offset 0003115D
+
+:00431D5D 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+wordt
+:00431D5D E870F50100              call 004512D2
+:00431D62 90			  nop
+
+
+Routine returns slvl, with 1<slvl<7, placed on Slain Hero codespace.
+
+File Offset 000506D2
+
+:004512D2 80F903                  cmp cl, 03
+:004512D5 7539                    jne 00451310
+:004512D7 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:004512DD 53                      push ebx
+:004512DE 52                      push edx
+:004512DF 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:004512E5 6AA6                    push FFFFFFA6
+:004512E7 6A0A                    push 0000000A
+wordt
+:004512D2 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004512D8 83F806                  cmp eax, 00000006
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A06                    push 00000006
+:004512DF 58                      pop eax
+:004512E0 83F802                  cmp eax, 00000002
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A02                    push 00000002
+:004512E7 58                      pop eax
+:004512E8 C3                      ret
+
+
+Increasing Duration if cast by Trap
+
+File Offset 00031194
+
+:00431D94 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+wordt
+:00431D94 E850F50100              call 004512E9
+:00431D99 9090			  2*nop
+
+
+Routine returns (dlvl+8)*4, placed on Slain Hero codespace.
+
+File Offset 000506E9
+
+:004512E9 E8B5A6FDFF              call 0042B9A3
+:004512EE A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:004512F3 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+wordt
+:004512E9 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:004512F0 83C108                  add ecx, 00000008
+:004512F3 C1E102                  shl ecx, 02
+:004512F6 C3			  ret
+:004512F7 9090			  2*nop
+
+
+
+Decrease duration Lightning Wall (at spell effect 46h)
+
+Routine for slvl-capping from FireWall used.
+
+File Offset 00031091
+
+:00431C91 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+wordt
+:00431C91 E83CF60100              call 004512D2
+:00431C96 90			  nop

@@ -1,0 +1,7 @@
+Increasing the amount of Life that Scavengers gain from eating bodies. This will cause leftovers.
+
+file offset 00040B72
+
+:00441772 C1F805                  sar eax, 05
+changed into
+:00441772 C1F804                  sar eax, 04

@@ -1,0 +1,141 @@
+Hello Azril,
+
+Here you have your notes back, along with some remarks of us.
+
+:00405D0D 8B8174010000            mov eax, dword ptr [ecx+00000174]	eax := dexterity
+:00405D13 6A05                    push 00000005
+:00405D15 99                      cdq
+:00405D16 5B                      pop ebx				ebx := 5
+:00405D17 8B8920550000            mov ecx, dword ptr [ecx+00005520]	ecx := stored AC
+:00405D1D F7FB                    idiv ebx				eax := dex/5
+:00405D1F 03C8                    add ecx, eax				ecx := AC + dex/5
+405d1f=03 c9 (will produced --> add ecx, ecx; (acitem + 2.clvl)+(acitem + 2.clvl))
+				ecx maybe for--> acitem + 2.clvl	correct
+				eax ---> dex/5				correct
+				
+4065fe=90 90  (weird. dex, magic etc not in its place)	
+Unknown code for us.
+
+:00405DDE 8B8118550000            mov eax, dword ptr [ecx+00005518] eax := min.weapondamage
+:00405DE4 6A64                    push 00000064
+:00405DE6 8945F8                  mov dword ptr [ebp-08], eax
+:00405DE9 0FAFC2                  imul eax, edx			 here : edx = +%damage
+:00405DEC 99                      cdq
+:00405DED 5B                      pop ebx				ebx := 100
+:00405DEE F7FB                    idiv ebx			eax := min.dam + %dam
+:00405DF0 038130550000            add eax, dword ptr [ecx+00005530]	add +damage
+405dee=90 90 ( simple noping for -->damage dari prefix + %damage  min damage column).
+;405de5=32	
+
+:00405E24 8B811C550000            mov eax, dword ptr [ecx+0000551C]	max.weapondamage
+:00405E2A 8945F0                  mov dword ptr [ebp-10], eax
+:00405E2D 0FAF8124550000          imul eax, dword ptr [ecx+00005524]	* +%damage
+:00405E34 6A64                    push 00000064
+:00405E36 99                      cdq
+:00405E37 5B                      pop ebx				
+:00405E38 F7FB                    idiv ebx			eax := max.dam + %dam
+;405e34=32  ( damage prefix + %damage for max damage).
+405e38=90 90 
+
+:00423DB3 8A843060010000          mov al, byte ptr [eax+esi+00000160]	al := char.class
+:00423DBA 3C01                    cmp al, 01
+:00423DBC 7521                    jne 00423DDF				jmp if not rogue
+:00423DBE 8B8174010000            mov eax, dword ptr [ecx+00000174]	eax := dex
+:00423DC4 BFC8000000              mov edi, 000000C8			edi := 200
+:00423DC9 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423DD0 038164010000            add eax, dword ptr [ecx+00000164]	eax := dex + str
+423dc5=01		(min-max damage ROGUE with any weapon)
+423dc5=c8		(c8 = 200,		mov edi, 00000c8 ) ROGUE bow dan mele damage.
+
+:00423E02 8B8174010000            mov eax, dword ptr [ecx+00000174]	eax := dex
+:00423E08 BF2C010000              mov edi, 0000012C			edi := 300
+:00423E0D 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423E14 038164010000            add eax, dword ptr [ecx+00000164]	eax := dex+str
+423e09=01 00	(min-max damage for MONK without any weapon)
+423e09=2c 01	(2c01 = 300, command mov , MONK with OTHER weapon)
+
+Attentions;
+423e51
+
+:00423E6C 8B8174010000            mov eax, dword ptr [ecx+00000174]	eax := dex
+:00423E72 BF96000000              mov edi, 00000096			edi := 150
+:00423E77 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423E7E 038164010000            add eax, dword ptr [ecx+00000164]	eax := eax + str
+423e73=01		(min-max damage  MONK and BARD; for str uses mov eax,dword ptr [ecx+00000164], 				for (str+dex) menggunakan add eax, dword ptr[ecx+00000164])
+
+:00423E8D 3C05                    cmp al, 05			propably al = char.class
+:00423E8F 0F8509010000            jne 00423F9E			then jmp if not barbarian
+:00423E95 8B9164090000            mov edx, dword ptr [ecx+00000964]
+:00423E9B 83FA02                  cmp edx, 00000002		check one hand
+:00423E9E 744C                    je 00423EEC
+:00423EA0 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+:00423EA6 83F802                  cmp eax, 00000002		check other hand
+:00423EA9 7441                    je 00423EEC
+:00423EAB 83FA04                  cmp edx, 00000004
+:00423EAE 743C                    je 00423EEC
+:00423EB0 83F804                  cmp eax, 00000004
+:00423EB3 7437                    je 00423EEC
+:00423EB5 83FA03                  cmp edx, 00000003
+:00423EB8 741A                    je 00423ED4
+:00423EBA 83F803                  cmp eax, 00000003
+:00423EBD 7415                    je 00423ED4
+:00423EBF 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423EC6 8B8164010000            mov eax, dword ptr [ecx+00000164]	eax := str
+:00423ECC 6A64                    push 00000064				prepare value 100
+:00423ECE 0FAFC2                  imul eax, edx				eax := eax*edx
+423ecd=01		(min max damage BARBARIAN without AXE and withh any weapon and	bare handed)
+
+:00423EEC 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423EF3 8B8164010000            mov eax, dword ptr [ecx+00000164]	eax := str
+:00423EF9 6A4B                    push 0000004B				prepare value 75
+:00423EFB 0FAFC2                  imul eax, edx				eax := eax*edx
+423efa=01		(min max damage BARBARIAN dengan axe and club)
+	
+:00423F3C 0FBE91 B8010000         movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423F43 8B81 7C010000           mov eax, dword ptr [ecx+0000017C]	eax := vitality
+:00423F49 6A64                    push 00000064				prepare value 100
+:00423F4B 0FAFC2                  imul eax, edx				eax := clvl*vit
+:00423F4E 99                      cdq
+:00423F4F 5F                      pop edi				edi := 100
+:00423F50 F7FF                    idiv edi				eax := clvl*vit/100
+:00423F52 0181 88010000           add dword ptr [ecx+00000188], eax	add to damage
+423f4a=01		(min max damage BARBARIAN without weilding any shield)
+
+:00423F80 A1 14AE6E00             mov eax, dword ptr [006EAE14]
+:00423F85 6A04                    push 00000004
+:00423F87 5F                      pop edi				edi := 4
+:00423F88 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00423F8B 0FBE8430 B8010000       movsx eax, byte ptr [eax+esi+000001B8] eax := clvl
+:00423F93 99                      cdq
+:00423F94 F7FF                    idiv edi				eax := clvl/4
+:00423F96 0181 20550000           add dword ptr [ecx+00005520], eax	store AC
+423f94=90 90 (ac barbarian; formula ac BARBARIAN = dex/5 + acitem + clvl/4;	90 90 akan beri command nop iaitu menidakkan arahan; oleh itu formula	menjadi dex/5 +	acitem + clvl)
+423f94=03 c0 (will gives (clvl + clvl); add eax, eax)   
+Some possibilities here:
+:00423F94 03C0                    add eax, eax 		-> dex/5 + AC + clvl*2
+or:
+:00423F85 6A01                    push 00000001		-> dex/5 + AC + clvl
+or
+:00423F85 6A02                    push 00000002		-> dex/5 + AC + clvl/2
+
+:00423F9E 0FBE91 B8010000         movsx edx, byte ptr [ecx+000001B8]	edx := clvl
+:00423FA5 8B81 64010000           mov eax, dword ptr [ecx+00000164]	eax := strength
+:00423FAB 6A64                    push 00000064
+:00423FAD 0FAFC2                  imul eax, edx				eax := clvl*str
+:00423FB0 99                      cdq
+:00423FB1 5F                      pop edi				edi := 100
+:00423FB2 F7FF                    idiv edi				eax := clvl*str/100	
+:00423FB4 8981 88010000           mov dword ptr [ecx+00000188], eax	store damage
+423fac=01		(min max damage SORCEROR dengan WARRIOR)  
+
+:00401D7A 6A64                    push 00000064				
+401d7b=01		(will make the aotu map only shows the way the char goes,auto map will not complete; depends on the value of the push; higher push, automap will be shown larger)
+interesting.
+
+:004020C2 6A64                    push 00000064
+4020c3=01		(auto map go havoc)
+interesting.
+
+Thanks for these notes. We learned some new things from this.
+
+Zamal & Zenda

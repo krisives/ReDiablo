@@ -1,0 +1,105 @@
+Hotkeys that automatically choose between spell, item and scroll didn't take negative Slvls or insufficient mana into account when checking for the spell. This is fixed now.
+
+
+file offset 0000A1ED
+
+:0040ADED 80BC08C100000000        cmp byte ptr [eax+ecx+000000C1], 00
+:0040ADF5 0F8E20F8FFFF            jle 0040A61B
+changed into
+:0040ADED 51                      push ecx
+:0040ADEE 8BD1                    mov edx, ecx
+:0040ADF0 E96F7E0400              jmp 00452C64
+:0040ADF5 0F8420F8FFFF            je 0040A61B
+
+Using free space from Oily Shrine:
+
+file offset 00052064
+
+:00452C64 6A01                    push 00000001
+:00452C66 5A                      pop edx
+:00452C67 EB0D                    jmp 00452C76
+:00452C69 6A02                    push 00000002
+:00452C6B 5A                      pop edx
+:00452C6C E8B3BA0000              call 0045E724
+:00452C71 EB12                    jmp 00452C85
+:00452C73 6A02                    push 00000002
+:00452C75 5A                      pop edx
+:00452C76 E8A7BB0000              call 0045E822
+:00452C7B EB08                    jmp 00452C85
+:00452C7D 6A02                    push 00000002
+:00452C7F 5A                      pop edx
+:00452C80 E807BA0000              call 0045E68C
+:00452C85 8BCB                    mov ecx, ebx
+:00452C87 E8F2B80000              call 0045E57E
+changed into
+:00452C64 50                      push eax
+:00452C65 03C8                    add ecx, eax
+:00452C67 33C0                    xor eax, eax
+:00452C69 80B9C100000000          cmp byte ptr [ecx+000000C1], 00
+:00452C70 7E0F                    jle 00452C81				skip if Base Slvl < 1
+:00452C72 6A01                    push 00000001					
+:00452C74 6A01                    push 00000001		
+:00452C76 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452C7C E8EE930100              call 0046C06F				check for spell availability
+:00452C81 85C0                    test eax, eax
+:00452C83 58                      pop eax
+:00452C84 59                      pop ecx
+:00452C85 E96B81FBFF              jmp 0040ADF5
+:00452C8A 9090                    2*nop
+
+
+The following is information only.
+
+
+Routine that checks if Slvl and Mana are sufficient to cast a spell:
+
+* Referenced by a CALL at Addresses:
+|:00403C49   , :00406BC4   , :0045E181   
+|
+:0046C06F 837C240800              cmp dword ptr [esp+08], 00000000
+:0046C074 56                      push esi
+:0046C075 57                      push edi
+:0046C076 6A01                    push 00000001
+:0046C078 8BFA                    mov edi, edx
+:0046C07A 8BF1                    mov esi, ecx
+:0046C07C 58                      pop eax
+:0046C07D 7508                    jne 0046C087
+:0046C07F 39055C164D00            cmp dword ptr [004D165C], eax
+:0046C085 7514                    jne 0046C09B					jmp if cursor not 'free'
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046C07D(C)
+|
+:0046C087 807C240C00              cmp byte ptr [esp+0C], 00
+:0046C08C 7434                    je 0046C0C2
+:0046C08E 8BD7                    mov edx, edi
+:0046C090 8BCE                    mov ecx, esi
+:0046C092 E8BE2FFCFF              call 0042F055					eax = total slvl
+:0046C097 85C0                    test eax, eax
+:0046C099 7F04                    jg 0046C09F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046C085(C)
+|
+:0046C09B 33C0                    xor eax, eax
+:0046C09D EB23                    jmp 0046C0C2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046C099(C)
+|
+:0046C09F 8BD7                    mov edx, edi
+:0046C0A1 8BCE                    mov ecx, esi
+:0046C0A3 E84DFEFFFF              call 0046BEF5					eax = needed mana
+:0046C0A8 69F6C8550000            imul esi, 000055C8
+:0046C0AE 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0046C0B4 33C9                    xor ecx, ecx
+:0046C0B6 398416AC010000          cmp dword ptr [esi+edx+000001AC], eax
+:0046C0BD 0F9DC1                  setnl cl
+:0046C0C0 8BC1                    mov eax, ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0046C08C(C), :0046C09D(U)
+|
+:0046C0C2 5F                      pop edi
+:0046C0C3 5E                      pop esi
+:0046C0C4 C20800                  ret 0008

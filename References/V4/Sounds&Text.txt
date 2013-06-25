@@ -1,0 +1,27 @@
+Playing sound and displaying text
+
+For entering Nest:
+
+:0045EE57 80FA11                  cmp dl, 11
+:0045EE5A 7562                    jne 0045EEBE
+:0045EE5C 8BF1                    mov esi, ecx
+:0045EE5E 69F6C8550000            imul esi, 000055C8
+:0045EE64 03F0                    add esi, eax
+:0045EE66 80BE0502000000          cmp byte ptr [esi+00000205], 00
+:0045EE6D 754F                    jne 0045EEBE
+:0045EE6F 80FB01                  cmp bl, 01
+:0045EE72 754A                    jne 0045EEBE
+:0045EE74 849E6B550000            test byte ptr [esi+0000556B], bl
+:0045EE7A 8D966B550000            lea edx, dword ptr [esi+0000556B]
+:0045EE80 7536                    jne 0045EEB8
+:0045EE82 C70514A257000A000000    mov dword ptr [0057A214], 0000000A
+:0045EE8C C70518A25700D9030000    mov dword ptr [0057A218], 000003D9
+:0045EE96 C6058AB56E0002          mov byte ptr [006EB58A], 02
+:0045EE9D C705A0B56E0001000000    mov dword ptr [006EB5A0], 00000001
+:0045EEA7 C70598B56E001E010000    mov dword ptr [006EB598], 0000011E
+:0045EEB1 081A                    or byte ptr [edx], bl
+:0045EEB3 E9E6000000              jmp 0045EF9E
+
+Text at 000C94A0 (004CAAA0)   11E
+
+Text at 000C9538 (004CAB38)   120 of 11D ?

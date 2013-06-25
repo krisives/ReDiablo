@@ -1,0 +1,54 @@
+Fixing Monster activation sounds
+
+Not every character in the game gets to hear the activation sounds (and likely the Ghost Death scream), propably because of this code:
+
+:00418544 389C086A550000          cmp byte ptr [eax+ecx+0000556A], bl
+:0041854B 740D                    je 0041855A
+:0041854D 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:00418554 0F8584000000            jne 004185DE
+
+
+Trying a fix by disabling these checks.
+
+File Offset 0001794B
+
+:0041854B 740D                    je 0041855A
+wordt
+:0041854B EB0D                    jmp 0041855A
+
+Golem doesn't trigger the sound yet, but it might help for other characters.
+
+
+
+
+The following is NOT implemented.
+
+
+File Offset 0001795A
+
+:0041855A 381D7CE86E00            cmp byte ptr [006EE87C], bl
+:00418560 747C                    je 004185DE
+:00418562 381DDC744B00            cmp byte ptr [004B74DC], bl
+:00418568 7474                    je 004185DE
+:0041856A 381D14AB6D00            cmp byte ptr [006DAB14], bl
+:00418570 756C                    jne 004185DE
+wordt
+:0041855A 381D7CE86E00            cmp byte ptr [006EE87C], bl
+:00418560 7400                    je 004185DE
+:00418562 381DDC744B00            cmp byte ptr [004B74DC], bl
+:00418568 7400                    je 004185DE
+:0041856A 381D14AB6D00            cmp byte ptr [006DAB14], bl
+:00418570 7500                    jne 004185DE
+
+Golem still doesn't trigger the sound at Leoric.
+
+Trying another sound routine:
+
+File Offset 00042D06
+
+:00443906 E8024CFDFF              call 0041850D
+wordt
+:00443906 E8B94DFDFF              call 004186C4
+:0044390B 8BCB                    mov ecx, ebx
+
+Still no trigger by Golem, not even for Butcher.

@@ -1,0 +1,103 @@
+Running by DLL call
+
+Implemented in 36H, but not used.
+
+This method will always have the same bug as Jogging has: it will not work properly for seeing the other players in the game, if the setting is not the same.
+
+Started working on 'RunningByFlag'.
+
+
+
+Using 'Loading Celia' for testing. This frees the following code:
+:00476562 381DD4535700            cmp byte ptr [005753D4], bl
+:00476568 7412                    je 0047657C		jmp if Quest not activated
+:0047656A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0047656F 389805020000            cmp byte ptr [eax+00000205], bl
+:00476575 7405                    je 0047657C		jmp if Quest done or Hive not open
+:00476577 E8CFFEFFFF              call 0047644B
+
+
+Loading Celia:
+
+File Offset 0007584B
+
+* Referenced by a CALL at Address:00476577   
+:0047644B 56                      push esi
+:0047644C 57                      push edi
+:0047644D 6A0A                    push 0000000A
+:0047644F 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00476455 6AFF                    push FFFFFFFF
+:00476457 6A2B                    push 0000002B
+:00476459 6A4D                    push 0000004D
+:0047645B 6A0B                    push 0000000B
+:0047645D 6A01                    push 00000001
+:0047645F 6A60                    push 00000060
+:00476461 5A                      pop edx
+:00476462 E80CF7FFFF              call 00475B73
+:00476467 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:0047646D E893F7FFFF              call 00475C05
+:00476472 803D52B56E0003          cmp byte ptr [006EB552], 03
+:00476479 8B35E8F16F00            mov esi, dword ptr [006FF1E8]
+:0047647F 740C                    je 0047648D
+:00476481 C1E608                  shl esi, 08
+:00476484 33D2                    xor edx, edx
+* Possible StringData Ref from Data Obj ->"Towners\Girl\Girlw1.CEL"
+:00476486 B9D8B94C00              mov ecx, 004CB9D8
+:0047648B EB0A                    jmp 00476497
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0047647F(C)
+:0047648D C1E608                  shl esi, 08
+:00476490 33D2                    xor edx, edx
+* Possible StringData Ref from Data Obj ->"Towners\Girl\Girls1.CEL"
+:00476492 B9C0B94C00              mov ecx, 004CB9C0
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0047648B(U)
+:00476497 E8933BFAFF              call 0041A02F
+:0047649C 8986FCF26F00            mov dword ptr [esi+006FF2FC], eax
+:004764A2 8D86D8F26F00            lea eax, dword ptr [esi+006FF2D8]
+:004764A8 6A08                    push 00000008
+:004764AA 8BC8                    mov ecx, eax
+:004764AC 5A                      pop edx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:004764B9(C)
+:004764AD 8BBEFCF26F00            mov edi, dword ptr [esi+006FF2FC]
+:004764B3 8939                    mov dword ptr [ecx], edi
+:004764B5 83C104                  add ecx, 00000004
+:004764B8 4A                      dec edx
+:004764B9 75F2                    jne 004764AD
+:004764BB 6A14                    push 00000014
+:004764BD 59                      pop ecx
+:004764BE 6A06                    push 00000006
+:004764C0 898EF8F26F00            mov dword ptr [esi+006FF2F8], ecx
+:004764C6 8B10                    mov edx, dword ptr [eax]
+:004764C8 51                      push ecx
+:004764C9 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:004764CF E86CF6FFFF              call 00475B40
+:004764D4 A1E8F16F00              mov eax, dword ptr [006FF1E8]
+:004764D9 C1E008                  shl eax, 08
+:004764DC 05B8F26F00              add eax, 006FF2B8
+* Possible StringData Ref from Data Obj ->"Celia"
+:004764E1 68B8B94C00              push 004CB9B8
+:004764E6 50                      push eax
+:004764E7 E844380000              call 00479D30
+:004764EC FF05E8F16F00            inc dword ptr [006FF1E8]
+:004764F2 59                      pop ecx
+:004764F3 59                      pop ecx
+:004764F4 5F                      pop edi
+:004764F5 5E                      pop esi
+:004764F6 C3                      ret
+
+wordt
+
+:0047644B 50                      push eax
+:0047644C 33C0                    xor eax, eax
+:0047644E 6A10                    push 00000010
+:00476450 FF15D0914800            Call dword ptr [004891D0]
+:00476456 3D00800000              cmp eax, 00008000
+:0047645B 7404                    je 00476461
+:0047645D 33C0                    xor eax, eax
+:0047645F EB03                    jmp 00476464
+:00476461 6A01                    push 00000001
+:00476463 58                      pop eax
+:00476464 A3B0044A00              mov dword ptr [004A04B0], eax
+:00476469 58                      pop eax
+:0047646A 90                      nop
+:0047646B C3                      ret
+:0047646C 90                      nop

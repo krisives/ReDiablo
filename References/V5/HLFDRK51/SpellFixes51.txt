@@ -1,0 +1,37 @@
+Corrected checks on Resurrect spell, to allow Heal All and Sanctuary in SP:
+
+file offset 0002471E
+
+:0042531E 83F920                  cmp ecx, 00000020
+:00425321 7503                    jne 00425326
+:00425323 6A21                    push 00000021
+:00425325 59                      pop ecx
+:00425326 80FB01                  cmp bl, 01
+:00425329 7508                    jne 00425333
+:0042532B 83F922                  cmp ecx, 00000022
+changed into
+:0042531E 83F925                  cmp ecx, 00000025
+:00425321 7503                    jne 00425326
+:00425323 6A26                    push 00000026
+:00425325 59                      pop ecx
+:00425326 80FB01                  cmp bl, 01
+:00425329 7508                    jne 00425333
+:0042532B 83F964                  cmp ecx, 00000064
+
+file offset 00024A02
+
+:00425602 83F920                  cmp ecx, 00000020
+:00425605 7503                    jne 0042560A
+:00425607 6A21                    push 00000021
+:00425609 59                      pop ecx
+:0042560A 80FB01                  cmp bl, 01
+:0042560D 7508                    jne 00425617
+:0042560F 83F922                  cmp ecx, 00000022
+changed into
+:00425602 83F925                  cmp ecx, 00000025
+:00425605 7503                    jne 0042560A
+:00425607 6A26                    push 00000026
+:00425609 59                      pop ecx
+:0042560A 80FB01                  cmp bl, 01
+:0042560D 7508                    jne 00425617
+:0042560F 83F964                  cmp ecx, 00000064

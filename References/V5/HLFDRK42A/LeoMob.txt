@@ -1,0 +1,60 @@
+Limiting Leoric's mob to the tougher skeletons only, mostly because "barrelmonsters" are now added to the skeleton check routine and that could increase the change of lonely Skeleton Kings. He should now always be guarded, by skeleton archers or captains.
+
+
+Monster selection routine, Leoric's mob:
+
+file offset 00039F64
+
+:0043AB64 E84FA00000              call 00444BB8				check on any skeleton slots
+changed into
+:0043AB64 E863A00000              call 00444BCC				skip to later skeletons
+
+
+Placement of Leoric:
+
+file offset 0003B4AB
+
+:0043C0AB E8088B0000              call 00444BB8
+changed into
+:0043C0AB E81C8B0000              call 00444BCC
+
+
+
+
+Placing Leoric:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C071(C)
+|
+:0043C07F A0D8B16000              mov al, byte ptr [0060B1D8]
+:0043C084 BB50010000              mov ebx, 00000150
+:0043C089 3A05A8B46E00            cmp al, byte ptr [006EB4A8]
+:0043C08F 753A                    jne 0043C0CB				exit if not quest
+:0043C091 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043C098 7431                    je 0043C0CB				exit if SP
+:0043C09A 33F6                    xor esi, esi
+:0043C09C 393598B76A00            cmp dword ptr [006AB798], esi
+:0043C0A2 7E1B                    jle 0043C0BF
+:0043C0A4 BFB08E6A00              mov edi, 006A8EB0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C0BD(C)
+|
+:0043C0A9 8B0F                    mov ecx, dword ptr [edi]
+:0043C0AB E8088B0000              call 00444BB8				check on skeleton slots
+:0043C0B0 85C0                    test eax, eax
+:0043C0B2 750B                    jne 0043C0BF
+:0043C0B4 46                      inc esi
+:0043C0B5 03FB                    add edi, ebx
+:0043C0B7 3B3598B76A00            cmp esi, dword ptr [006AB798]
+:0043C0BD 7CEA                    jl 0043C0A9
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043C0A2(C), :0043C0B2(C)
+|
+:0043C0BF 6A1E                    push 0000001E				number of guards
+:0043C0C1 6A01                    push 00000001
+:0043C0C3 8BD6                    mov edx, esi				00 -> crash, 01 -> mob of Leorics
+:0043C0C5 59                      pop ecx
+:0043C0C6 E8ADF9FFFF              call 0043BA78
+

@@ -1,0 +1,51 @@
+Caves PAL files:
+
+Levels\L3Data\L3_1.PAL		brown		ok
+Levels\L3Data\L3_2.PAL		bluegreen	ugly
+Levels\L3Data\L3_3.PAL		red		ok
+Levels\L3Data\L3_4.PAL		purple		nearly red
+
+No changes to:
+
+Levels\L3Data\L3pfoul.PAL	brown		as L3_1, with 'tainted' rivers
+Levels\L3Data\L3pwater.PAL	?		error loading
+
+
+000-05F		very red, lava (common for all PAL, except L3pfoul)
+
+		No changes
+
+060-08F		very rare dots
+
+		No changes
+
+090-0BF		small shadows
+
+		grey from 150-17F for all PAL
+
+0C0-0EF		base, includes wood
+	
+		L3_2: Bluegreen -> Yellow
+
+		000000C0 8770 5780 694F 7962 4872 5B41 6B54 3A64 .pW.iOybHr[AkT:d
+		000000D0 4D33 5D46 2C56 3F25 4F38 1E45 301A 3B29 M3]F,V?%O8.E0.;)
+		000000E0 1531 2211 271B 0D1D 1308 140C 040A 0500 .1".'...........
+
+		Other PAL no changes
+
+0F0-11F		many dots in base color, not illumination
+
+		grey from 150-17F for all PAL
+
+120-14F		dots in other color
+
+		No changes
+
+150-17F		pure grey, everywhere, including wood (common for all PAL)
+
+		L3_1: base from L3_3, others: base from L3_1
+
+
+
+
+

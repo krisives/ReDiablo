@@ -1,0 +1,34 @@
+Increasing minimum speed for Firebolt:
+
+File Offset 00030CAA
+
+:004318AA 8D440010                lea eax, dword ptr [eax+eax+10]
+wordt
+:004318AA 8D440016                lea eax, dword ptr [eax+eax+16]
+
+
+Increasing minimum speed for Lightningblast:
+
+File Offset 0000896D
+
+:0040956D 8D740006                lea esi, dword ptr [eax+eax+06]
+wordt
+:0040956D 8D74000E                lea esi, dword ptr [eax+eax+0E]
+
+
+Increasing minimum speed for Holybolt:
+
+File Offset 00034746
+
+:00435346 8D440010                lea eax, dword ptr [eax+eax+10]
+wordt
+:00435346 8D440018                lea eax, dword ptr [eax+eax+18]
+
+
+Increasing minimum speed for ArcaneStar:
+
+File Offset 0003C79B
+
+:0043D39B 8D440010                lea eax, dword ptr [eax+eax+10]
+wordt
+:0043D39B 8D440014                lea eax, dword ptr [eax+eax+14]

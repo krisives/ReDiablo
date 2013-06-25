@@ -1,0 +1,323 @@
+Creating a monster
+
+
+
+:0043BFD5 55                      push ebp
+:0043BFD6 8BEC                    mov ebp, esp
+:0043BFD8 51                      push ecx
+:0043BFD9 53                      push ebx
+:0043BFDA 56                      push esi
+:0043BFDB 57                      push edi
+:0043BFDC 8BFA                    mov edi, edx
+:0043BFDE 8BC7                    mov eax, edi
+:0043BFE0 BA89000000              mov edx, 00000089
+:0043BFE5 69C050010000            imul eax, 00000150
+:0043BFEB 8BF1                    mov esi, ecx
+:0043BFED 3990B08E6A00            cmp dword ptr [eax+006A8EB0], edx
+:0043BFF3 752E                    jne 0043C023
+:0043BFF5 A180DC6900              mov eax, dword ptr [0069DC80]
+:0043BFFA 8365FC00                and dword ptr [ebp-04], 00000000
+:0043BFFE 85C0                    test eax, eax
+:0043C000 7E21                    jle 0043C023
+:0043C002 B964DD6900              mov ecx, 0069DD64
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C021(C)
+|
+:0043C007 39B924FFFFFF            cmp dword ptr [ecx+FFFFFF24], edi
+:0043C00D 7441                    je 0043C050
+:0043C00F 8B19                    mov ebx, dword ptr [ecx]
+:0043C011 3913                    cmp dword ptr [ebx], edx
+:0043C013 743B                    je 0043C050
+:0043C015 FF45FC                  inc [ebp-04]
+:0043C018 81C1E4000000            add ecx, 000000E4
+:0043C01E 3945FC                  cmp dword ptr [ebp-04], eax
+:0043C021 7CE4                    jl 0043C007
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043BFF3(C), :0043C000(C)
+|
+:0043C023 8B4D08                  mov ecx, dword ptr [ebp+08]
+:0043C026 8D4601                  lea eax, dword ptr [esi+01]
+:0043C029 6BC970                  imul ecx, 00000070
+:0043C02C 034D0C                  add ecx, dword ptr [ebp+0C]
+:0043C02F 6A08                    push 00000008
+:0043C031 5A                      pop edx
+:0043C032 89048DE0D15700          mov dword ptr [4*ecx+0057D1E0], eax
+:0043C039 B15A                    mov cl, 5A
+:0043C03B E81ADFFDFF              call 00419F5A
+:0043C040 8BD0                    mov edx, eax
+:0043C042 8BCE                    mov ecx, esi
+:0043C044 FF750C                  push [ebp+0C]
+:0043C047 FF7508                  push [ebp+08]
+:0043C04A 57                      push edi
+:0043C04B E809F1FFFF              call 0043B159
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043C00D(C), :0043C013(C)
+|
+:0043C050 5F                      pop edi
+:0043C051 5E                      pop esi
+:0043C052 5B                      pop ebx
+:0043C053 C9                      leave
+:0043C054 C20800                  ret 0008
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:0043C04B   , :0043C775   
+|
+:0043B159 53                      push ebx
+:0043B15A 56                      push esi
+:0043B15B 8BF1                    mov esi, ecx
+:0043B15D 8BDA                    mov ebx, edx
+:0043B15F 8B54240C                mov edx, dword ptr [esp+0C]
+:0043B163 69F6E4000000            imul esi, 000000E4
+:0043B169 8B442410                mov eax, dword ptr [esp+10]
+:0043B16D 57                      push edi
+:0043B16E 8B4C2418                mov ecx, dword ptr [esp+18]
+:0043B172 8BFA                    mov edi, edx
+:0043B174 69FF50010000            imul edi, 00000150
+:0043B17A 899ED0DC6900            mov dword ptr [esi+0069DCD0], ebx
+:0043B180 8986A8DC6900            mov dword ptr [esi+0069DCA8], eax
+:0043B186 898EACDC6900            mov dword ptr [esi+0069DCAC], ecx
+:0043B18C 8986B0DC6900            mov dword ptr [esi+0069DCB0], eax
+:0043B192 898EB4DC6900            mov dword ptr [esi+0069DCB4], ecx
+:0043B198 8986B8DC6900            mov dword ptr [esi+0069DCB8], eax
+:0043B19E 81C7B08E6A00            add edi, 006A8EB0
+:0043B1A4 898EBCDC6900            mov dword ptr [esi+0069DCBC], ecx
+:0043B1AA 899688DC6900            mov dword ptr [esi+0069DC88], edx
+:0043B1B0 83A68CDC690000          and dword ptr [esi+0069DC8C], 00000000
+:0043B1B7 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B1BD B158                    mov cl, 58
+:0043B1BF 8B4050                  mov eax, dword ptr [eax+50]
+:0043B1C2 898660DD6900            mov dword ptr [esi+0069DD60], eax
+:0043B1C8 89BE64DD6900            mov dword ptr [esi+0069DD64], edi
+:0043B1CE 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B1D4 898668DD6900            mov dword ptr [esi+0069DD68], eax
+:0043B1DA 8B449F0C                mov eax, dword ptr [edi+4*ebx+0C]
+:0043B1DE 8986DCDC6900            mov dword ptr [esi+0069DCDC], eax
+:0043B1E4 8B4730                  mov eax, dword ptr [edi+30]
+:0043B1E7 8986E0DC6900            mov dword ptr [esi+0069DCE0], eax
+:0043B1ED 8D50FF                  lea edx, dword ptr [eax-01]
+:0043B1F0 E865EDFDFF              call 00419F5A
+:0043B1F5 8986E4DC6900            mov dword ptr [esi+0069DCE4], eax
+:0043B1FB 8B472C                  mov eax, dword ptr [edi+2C]
+:0043B1FE B158                    mov cl, 58
+:0043B200 8986E8DC6900            mov dword ptr [esi+0069DCE8], eax
+:0043B206 8D50FF                  lea edx, dword ptr [eax-01]
+:0043B209 E84CEDFDFF              call 00419F5A
+:0043B20E 40                      inc eax
+:0043B20F 8986ECDC6900            mov dword ptr [esi+0069DCEC], eax
+:0043B215 833F6E                  cmp dword ptr [edi], 0000006E
+:0043B218 7509                    jne 0043B223
+:0043B21A C68644DD690001          mov byte ptr [esi+0069DD44], 01
+:0043B221 EB07                    jmp 0043B22A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B218(C)
+|
+:0043B223 C68644DD690000          mov byte ptr [esi+0069DD44], 00
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B221(U)
+|
+:0043B22A 90                      nop
+:0043B22B 8B973C010000            mov edx, dword ptr [edi+0000013C]
+:0043B231 B158                    mov cl, 58
+:0043B233 2B9738010000            sub edx, dword ptr [edi+00000138]
+:0043B239 42                      inc edx
+:0043B23A E81BEDFDFF              call 00419F5A
+:0043B23F 038738010000            add eax, dword ptr [edi+00000138]
+:0043B245 C1E006                  shl eax, 06
+:0043B248 EB20                    jmp 0043B26A
+:0043B24A 803DD8B1600010          cmp byte ptr [0060B1D8], 10
+:0043B251 0F8C23660100            jl 0045187A
+:0043B257 803DD8B1600018          cmp byte ptr [0060B1D8], 18
+:0043B25E 0F84276A0100            je 00451C8B
+:0043B264 E91C6F0100              jmp 00452185
+:0043B269 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B248(U)
+|
+:0043B26A 898618DD6900            mov dword ptr [esi+0069DD18], eax
+:0043B270 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:0043B276 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+:0043B27C 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B282 8A4060                  mov al, byte ptr [eax+60]
+:0043B285 888620DD6900            mov byte ptr [esi+0069DD20], al
+:0043B28B 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B291 8A4068                  mov al, byte ptr [eax+68]
+:0043B294 888621DD6900            mov byte ptr [esi+0069DD21], al
+:0043B29A 33C0                    xor eax, eax
+:0043B29C C68690DC690001          mov byte ptr [esi+0069DC90], 01
+:0043B2A3 898694DC6900            mov dword ptr [esi+0069DC94], eax
+:0043B2A9 898698DC6900            mov dword ptr [esi+0069DC98], eax
+:0043B2AF 89869CDC6900            mov dword ptr [esi+0069DC9C], eax
+:0043B2B5 8986A0DC6900            mov dword ptr [esi+0069DCA0], eax
+:0043B2BB 2086A4DC6900            and byte ptr [esi+0069DCA4], al
+:0043B2C1 8986F4DC6900            mov dword ptr [esi+0069DCF4], eax
+:0043B2C7 90                      nop
+:0043B2C8 90                      nop
+:0043B2C9 90                      nop
+:0043B2CA 90                      nop
+:0043B2CB 90                      nop
+:0043B2CC 90                      nop
+:0043B2CD 208628DD6900            and byte ptr [esi+0069DD28], al
+:0043B2D3 20865FDD6900            and byte ptr [esi+0069DD5F], al
+:0043B2D9 E85DECFDFF              call 00419F3B
+:0043B2DE 898638DD6900            mov dword ptr [esi+0069DD38], eax
+:0043B2E4 E852ECFDFF              call 00419F3B
+:0043B2E9 89863CDD6900            mov dword ptr [esi+0069DD3C], eax
+:0043B2EF 80A647DD690000          and byte ptr [esi+0069DD47], 00
+:0043B2F6 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B2FC 8A4056                  mov al, byte ptr [eax+56]
+:0043B2FF 888648DD6900            mov byte ptr [esi+0069DD48], al
+:0043B305 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B30B 668B407C                mov ax, word ptr [eax+7C]
+:0043B30F 6689864ADD6900          mov word ptr [esi+0069DD4A], ax
+:0043B316 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B31C 8A4069                  mov al, byte ptr [eax+69]
+:0043B31F 88864CDD6900            mov byte ptr [esi+0069DD4C], al
+:0043B325 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B32B 8A406B                  mov al, byte ptr [eax+6B]
+:0043B32E 88864DDD6900            mov byte ptr [esi+0069DD4D], al
+:0043B334 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B33A 8A406C                  mov al, byte ptr [eax+6C]
+:0043B33D 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+:0043B343 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B349 8A406D                  mov al, byte ptr [eax+6D]
+:0043B34C 88864FDD6900            mov byte ptr [esi+0069DD4F], al
+:0043B352 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B358 8A406F                  mov al, byte ptr [eax+6F]
+:0043B35B 888650DD6900            mov byte ptr [esi+0069DD50], al
+:0043B361 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B367 8A4070                  mov al, byte ptr [eax+70]
+:0043B36A 888651DD6900            mov byte ptr [esi+0069DD51], al
+:0043B370 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B376 8A4071                  mov al, byte ptr [eax+71]
+:0043B379 888652DD6900            mov byte ptr [esi+0069DD52], al
+:0043B37F 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B385 668B4074                mov ax, word ptr [eax+74]
+:0043B389 66898654DD6900          mov word ptr [esi+0069DD54], ax
+:0043B390 80A65CDD690000          and byte ptr [esi+0069DD5C], 00
+:0043B397 80A65DDD690000          and byte ptr [esi+0069DD5D], 00
+:0043B39E 8B8F48010000            mov ecx, dword ptr [edi+00000148]
+:0043B3A4 8D8624DD6900            lea eax, dword ptr [esi+0069DD24]
+:0043B3AA 8B4964                  mov ecx, dword ptr [ecx+64]
+:0043B3AD 8908                    mov dword ptr [eax], ecx
+:0043B3AF 83A658DD690000          and dword ptr [esi+0069DD58], 00000000
+:0043B3B6 80BE20DD69000C          cmp byte ptr [esi+0069DD20], 0C
+:0043B3BD 7524                    jne 0043B3E3
+:0043B3BF 8B8C9FE8000000          mov ecx, dword ptr [edi+4*ebx+000000E8]
+:0043B3C6 898EDCDC6900            mov dword ptr [esi+0069DCDC], ecx
+:0043B3CC C786ECDC690001000000    mov dword ptr [esi+0069DCEC], 00000001
+:0043B3D6 830804                  or dword ptr [eax], 00000004
+:0043B3D9 C7868CDC690007000000    mov dword ptr [esi+0069DC8C], 00000007
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B3BD(C)
+|
+:0043B3E3 A1C0706000              mov eax, dword ptr [006070C0]
+:0043B3E8 83F801                  cmp eax, 00000001
+:0043B3EB 0F85A3000000            jne 0043B494
+:0043B3F1 8A0DC8DF6D00            mov cl, byte ptr [006DDFC8]
+:0043B3F7 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:0043B3FD FEC9                    dec cl
+:0043B3FF F6D9                    neg cl
+:0043B401 1BC9                    sbb ecx, ecx
+:0043B403 8D0440                  lea eax, dword ptr [eax+2*eax]
+:0043B406 83E132                  and ecx, 00000032
+:0043B409 83C132                  add ecx, 00000032
+:0043B40C C1E106                  shl ecx, 06
+:0043B40F 03C1                    add eax, ecx
+:0043B411 E8F1F40300              call 0047A907
+:0043B416 90                      nop
+:0043B417 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+:0043B41D 808648DD69000F          add byte ptr [esi+0069DD48], 0F
+:0043B424 668B864ADD6900          mov ax, word ptr [esi+0069DD4A]
+:0043B42B 6605E803                add ax, 03E8
+:0043B42F D1E0                    shl eax, 1
+:0043B431 6689864ADD6900          mov word ptr [esi+0069DD4A], ax
+:0043B438 80864CDD690055          add byte ptr [esi+0069DD4C], 55
+:0043B43F 8A8E4DDD6900            mov cl, byte ptr [esi+0069DD4D]
+:0043B445 B002                    mov al, 02
+:0043B447 02C8                    add cl, al
+:0043B449 D0E1                    shl cl, 1
+:0043B44B 888E4DDD6900            mov byte ptr [esi+0069DD4D], cl
+:0043B451 8A8E4EDD6900            mov cl, byte ptr [esi+0069DD4E]
+:0043B457 02C8                    add cl, al
+:0043B459 D0E1                    shl cl, 1
+:0043B45B 888E4EDD6900            mov byte ptr [esi+0069DD4E], cl
+:0043B461 80864FDD690055          add byte ptr [esi+0069DD4F], 55
+:0043B468 8A8E50DD6900            mov cl, byte ptr [esi+0069DD50]
+:0043B46E 02C8                    add cl, al
+:0043B470 D0E1                    shl cl, 1
+:0043B472 888E50DD6900            mov byte ptr [esi+0069DD50], cl
+:0043B478 8A8E51DD6900            mov cl, byte ptr [esi+0069DD51]
+:0043B47E 02C8                    add cl, al
+:0043B480 D0E1                    shl cl, 1
+:0043B482 888E51DD6900            mov byte ptr [esi+0069DD51], cl
+:0043B488 808652DD690032          add byte ptr [esi+0069DD52], 32
+:0043B48F E9A9000000              jmp 0043B53D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B3EB(C)
+|
+:0043B494 83F802                  cmp eax, 00000002
+:0043B497 0F85B1000000            jne 0043B54E
+:0043B49D A0C8DF6D00              mov al, byte ptr [006DDFC8]
+:0043B4A2 FEC8                    dec al
+:0043B4A4 F6D8                    neg al
+:0043B4A6 1BC0                    sbb eax, eax
+:0043B4A8 83E064                  and eax, 00000064
+:0043B4AB 83C064                  add eax, 00000064
+:0043B4AE C1E004                  shl eax, 04
+:0043B4B1 038618DD6900            add eax, dword ptr [esi+0069DD18]
+:0043B4B7 C1E002                  shl eax, 02
+:0043B4BA E806F40300              call 0047A8C5
+:0043B4BF 90                      nop
+:0043B4C0 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+:0043B4C6 808648DD69001E          add byte ptr [esi+0069DD48], 1E
+:0043B4CD 668B864ADD6900          mov ax, word ptr [esi+0069DD4A]
+:0043B4D4 6605E803                add ax, 03E8
+:0043B4D8 C1E002                  shl eax, 02
+:0043B4DB 6689864ADD6900          mov word ptr [esi+0069DD4A], ax
+:0043B4E2 80864CDD690078          add byte ptr [esi+0069DD4C], 78
+:0043B4E9 8A8E4DDD6900            mov cl, byte ptr [esi+0069DD4D]
+:0043B4EF B006                    mov al, 06
+:0043B4F1 C0E102                  shl cl, 02
+:0043B4F4 02C8                    add cl, al
+:0043B4F6 888E4DDD6900            mov byte ptr [esi+0069DD4D], cl
+:0043B4FC 8A8E4EDD6900            mov cl, byte ptr [esi+0069DD4E]
+:0043B502 C0E102                  shl cl, 02
+:0043B505 02C8                    add cl, al
+:0043B507 888E4EDD6900            mov byte ptr [esi+0069DD4E], cl
+:0043B50D 80864FDD690078          add byte ptr [esi+0069DD4F], 78
+:0043B514 8A8E50DD6900            mov cl, byte ptr [esi+0069DD50]
+:0043B51A C0E102                  shl cl, 02
+:0043B51D 02C8                    add cl, al
+:0043B51F 888E50DD6900            mov byte ptr [esi+0069DD50], cl
+:0043B525 8A8E51DD6900            mov cl, byte ptr [esi+0069DD51]
+:0043B52B C0E102                  shl cl, 02
+:0043B52E 02C8                    add cl, al
+:0043B530 888E51DD6900            mov byte ptr [esi+0069DD51], cl
+:0043B536 808652DD690050          add byte ptr [esi+0069DD52], 50
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B48F(U)
+|
+:0043B53D 8B8748010000            mov eax, dword ptr [edi+00000148]
+:0043B543 668B4076                mov ax, word ptr [eax+76]
+:0043B547 66898654DD6900          mov word ptr [esi+0069DD54], ax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B497(C)
+|
+:0043B54E 5F                      pop edi
+:0043B54F 5E                      pop esi
+:0043B550 5B                      pop ebx
+:0043B551 C20C00                  ret 000C
+

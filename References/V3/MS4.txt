@@ -1,0 +1,99 @@
+Manashield Drain
+
+Drain blijft doorlopen als van level gewisseld wordt zonder dat na het casten van de MS een andere spreuk is gedaan.
+
+'Fix' : Check op dlvl=0 (town), net als bij "Constantly lose HPs"
+
+File Offset = 514DC
+
+:004520DC 83F800                  cmp eax, 00000000
+:004520DF 7C14                    jl 004520F5
+wordt
+:004520DC E98CB3FEFF              jmp 0043D46D
+
+:004520E1 C1E80D                  shr eax, 0D
+
+
+Weer over oude Diablo-Death routine
+
+File Offset = 3C86D
+
+:0043D46D 90                      nop
+:0043D46E 7E03                    jle 0043D473
+:0043D470 8945FC                  mov dword ptr [ebp-04], eax
+:0043D473 A134F36100              mov eax, dword ptr [0061F334]
+:0043D478 C1E010                  shl eax, 10
+:0043D47B 898700DD6900            mov dword ptr [edi+0069DD00], eax
+:0043D481 A138F36100              mov eax, dword ptr [0061F338]
+:0043D486 8B8F00DD6900            mov ecx, dword ptr [edi+0069DD00]
+:0043D48C C1E010                  shl eax, 10
+wordt
+:0043D46D 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0043D474 740A                    je 0043D480
+:0043D476 83F800                  cmp eax, 00000000
+:0043D479 7C05                    jl 0043D480
+:0043D47B E9614C0100              jmp 004520E1
+:0043D480 E9704C0100              jmp 004520F5
+:0043D485 90                      nop
+
+
+
+
+
+Manashield Drain in The Dark 3.0
+
+* Referenced by a CALL at Address:
+|:0045DC33   
+|
+:0045208E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452093 50                      push eax
+:00452094 51                      push ecx
+:00452095 57                      push edi
+:00452096 52                      push edx
+:00452097 53                      push ebx
+:00452098 6A01                    push 00000001
+:0045209A 58                      pop eax
+:0045209B BA68766900              mov edx, 00697668
+:004520A0 33DB                    xor ebx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004520FF(C)
+|
+:004520A2 8B3A                    mov edi, dword ptr [edx]
+:004520A4 69FFB0000000            imul edi, 000000B0
+:004520AA 83BF587A69000D          cmp dword ptr [edi+00697A58], 0000000D
+:004520B1 7542                    jne 004520F5
+:004520B3 8B8FCC7A6900            mov ecx, dword ptr [edi+00697ACC]
+:004520B9 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004520BF 7534                    jne 004520F5
+:004520C1 6A01                    push 00000001
+:004520C3 58                      pop eax
+:004520C4 A30C114D00              mov dword ptr [004D110C], eax
+:004520C9 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:004520CF 69C9C8550000            imul ecx, 000055C8
+:004520D5 8B8439AC010000          mov eax, dword ptr [ecx+edi+000001AC]
+:004520DC 83F800                  cmp eax, 00000000
+:004520DF 7C14                    jl 004520F5
+:004520E1 C1E80D                  shr eax, 0D
+:004520E4 40                      inc eax
+:004520E5 298439AC010000          sub dword ptr [ecx+edi+000001AC], eax
+:004520EC 298439A4010000          sub dword ptr [ecx+edi+000001A4], eax
+:004520F3 EB0C                    jmp 00452101
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004520B1(C), :004520BF(C), :004520DF(C)
+|
+:004520F5 43                      inc ebx
+:004520F6 83C204                  add edx, 00000004
+:004520F9 3B1D48D06900            cmp ebx, dword ptr [0069D048]
+:004520FF 7CA1                    jl 004520A2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004520F3(U)
+|
+:00452101 5B                      pop ebx
+:00452102 5A                      pop edx
+:00452103 5F                      pop edi
+:00452104 59                      pop ecx
+:00452105 58                      pop eax
+:00452106 C3                      ret

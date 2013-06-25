@@ -1,0 +1,31 @@
+
+Flame Wave
+
+SpellBook Damage        = (Rnd[10]+1+CLVL)*3*2
+Real Damage             = Rnd[10]+1+CLVL
+
+
+:0042EB36 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:0042EB3D 40                      inc eax
+:0042EB3E 8D0440                  lea eax, dword ptr [eax+2*eax]
+:0042EB41 D1E0                    shl eax, 1
+:0042EB43 8902                    mov dword ptr [edx], eax
+:0042EB45 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042EB4A 69C0C8550000            imul eax, 000055C8
+:0042EB50 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042EB56 0FBE8408B8010000        movsx eax, byte ptr [eax+ecx+000001B8]
+:0042EB5E 83C00A                  add eax, 0000000A
+:0042EB61 8D0440                  lea eax, dword ptr [eax+2*eax]
+:0042EB64 D1E0                    shl eax, 1
+:0042EB66 E9E4010000              jmp 0042ED4F
+
+
+:00433217 8D440801                lea eax, dword ptr [eax+ecx+01]
+
+
+
+
+
+:00410393 8D0448                  lea eax, dword ptr [eax+2*ecx]
+
+unk00059.cel: 13 frames

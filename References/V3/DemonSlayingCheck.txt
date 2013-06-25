@@ -1,0 +1,12 @@
+Demon Slaying with 50% chance to have no effect
+
+File Offset 0005AF3C
+
+:0045BB3C 8B55FC                  mov edx, dword ptr [ebp-04]
+:0045BB3F 8B9268DD6900            mov edx, dword ptr [edx+0069DD68]
+:0045BB45 807A7201                cmp byte ptr [edx+72], 01
+wordt
+:0045BB3C 80FB01                  cmp bl, 01
+:0045BB3F 7519                    jne 0045BB5A		jmp if no Demon
+:0045BB41 E82C19FEFF              call 0043D472		routine shared by DurableItems
+:0045BB46 909090                  3*nop

@@ -1,0 +1,15 @@
+
+
+Golem monster artificial intelligence
+by Charlie
+virtual offset 0x439315
+
+
+
+
+Small comment
+by Jarulf
+Target selction routine is at a different place. At the point you reach the AI routine, the monster allready has a target that the AI routine will act according to. I guess one could possible change the target selection routine to exclude golems for other golems though.
+
+
+38715 ?

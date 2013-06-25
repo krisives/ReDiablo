@@ -1,0 +1,13 @@
+Lower return prices at Grizwold (1/4 -> 1/8):
+
+File Offset 0006CA0A
+
+:0046D60A C1BA2C406F0002          sar dword ptr [edx+006F402C], 02
+wordt
+:0046D60A C1BA2C406F0003          sar dword ptr [edx+006F402C], 03
+
+File Offset 0006CAE4
+
+:0046D6E4 C1BA2C406F0002          sar dword ptr [edx+006F402C], 02
+wordt
+:0046D6E4 C1BA2C406F0003          sar dword ptr [edx+006F402C], 03

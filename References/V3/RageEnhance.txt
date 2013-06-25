@@ -1,0 +1,17 @@
+Rage by JG:
+
+1.For 12 seconds it adds: 2·clvl to Strength and Vitality and 1.5·clvl to Dexterity.
+
+2.For 12 more seconds, during a lethargy phase, it decreases Strength, Dexterity and Vitality by the same amount (counted from normal values).
+
+3.Afterwards you lose 2·Vit life. There is a bug however so if you click on any item in your inventory your life is restored.
+
+
+
+Disabling 'lethargy phase'
+
+File Offset 00038E4E
+
+:00439A4E 8987C87A6900            mov dword ptr [edi+00697AC8], eax
+wordt
+:00439A4E 8997C87A6900            mov dword ptr [edi+00697AC8], edx

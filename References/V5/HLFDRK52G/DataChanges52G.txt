@@ -1,0 +1,64 @@
+Non-varying manacost for Nova, Immolation and Arcane Destruction (these spells do not properly support varying manacosts):
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+
+  4   5 Arcane Destruction  magic/other    16       16    80   60    1  100   0    15- 30  96: -: -     32000        120
+                                                          60
+000B6101 50                                      P
+changed into
+000B6101 3C                                      <
+
+ 17  18 Nova                lightning      14       10    80   60    1  100   0    15- 30  42: -: -     32000        120
+                                                          60
+000B63D9 50                                      P
+changed into
+000B63D9 3C                                      <
+
+ 40  41 Immolation          fire           14       10    80   60    1  100   0    15- 30  72: -: -     32000        120
+                                                          60
+000B68E1 50                                      P
+changed into
+000B68E1 3C                                      <
+
+
+
+Replaced Ressurect suffix into a (lower level) Mana suffix, and Identify into Inferno:
+
+pos name           effect                                     range  qlvl cursed  occur    base-   max  mul
+  7 Identify       66 spell-                                 39- 20    8    1    -----J   10000- 10000    4
+    Inferno                                                  17-                           6000-  6000    
+
+0008B9C0 3883 4B00                               8.K.
+changed into
+0008B9C0 8813 4A00                               ..J.
+
+0008B9C8 2700 0000                               '...
+changed into
+0008B9C8 1100 0000                               ....
+
+0008B9E4 1027 0000 1027 0000                     .'...'..
+changed into
+0008B9E4 7017 0000 7017 0000                     p...p...
+
+ 14 Resurrect      66 spell-                                 37- 10    8    1    -----J    5000-  5000    2
+    Mana                                                     46-                          12000- 12000   12
+
+0008BB10 1882 4B00                               ..K.
+changed into
+0008BB10 E081 4B00                               ..K.
+
+0008BB18 2500 0000                               %...
+changed into
+0008BB18 2E00 0000                               ....
+
+0008BB34 8813 0000 8813 0000                     ........
+changed into
+0008BB34 E02E 0000 E02E 0000                     ........
+
+0008BB3C 0200 0000                               ....
+changed into
+0008BB3C 0C00 0000                               ....
+
+
+
+

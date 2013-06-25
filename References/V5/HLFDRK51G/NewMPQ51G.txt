@@ -1,0 +1,11 @@
+New MPQ file for 5.2
+
+Added:
+
+HDemon1.WAV (*)		as Monsters\newSfx\HDemons1.WAV
+HDemon1.WAV (*)		as Monsters\newSfx\HDemons2.WAV
+
+(reversed HDemonh2.WAV)
+
+This provides a better 'second attack' sound for Hork Demons.
+

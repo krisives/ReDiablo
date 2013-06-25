@@ -1,0 +1,91 @@
+Negating Fix
+
+Unintentionally, Negating also reduced damage for arrows. Fixed this here, and also rewrote the Negation/Evasion routine.
+
+
+file offset 0002EC6F
+ 
+:0042F86F E802EB0000              call 0043E376
+changed into
+:0042F86F E8D589FFFF              call 00428249
+:0042F874
+
+file offset 0002EC91
+ 
+:0042F891 E8E0EA0000              call 0043E376
+changed into
+:0042F891 E8B389FFFF              call 00428249
+:0042F896
+
+
+Using free space from simplified Repair Skill:
+
+file offset 00027649
+ 
+:00428249 8BD3                    mov edx, ebx
+:0042824B B125                    mov cl, 25
+:0042824D E8081DFFFF              call 00419F5A
+:00428252 03C3                    add eax, ebx
+:00428254 03F8                    add edi, eax
+:00428256 8B86F0000000            mov eax, dword ptr [esi+000000F0]
+:0042825C 99                      cdq
+:0042825D F7FD                    idiv ebp
+:0042825F 83F801                  cmp eax, 00000001
+:00428262 7D03                    jge 00428267
+:00428264 6A01                    push 00000001
+:00428266 58                      pop eax
+:00428267 2986F0000000            sub dword ptr [esi+000000F0], eax
+:0042826D 8B86F0000000            mov eax, dword ptr [esi+000000F0]
+:00428273 740E                    je 00428283
+:00428275 8BCF                    mov ecx, edi
+:00428277 038EEC000000            add ecx, dword ptr [esi+000000EC]
+:0042827D 3BC8                    cmp ecx, eax
+:0042827F 7D08                    jge 00428289
+:00428281 EBC6                    jmp 00428249
+:00428283 834E08FF                or dword ptr [esi+08], FFFFFFFF
+:00428287 EB14                    jmp 0042829D
+:00428289 01BEEC000000            add dword ptr [esi+000000EC], edi
+:0042828F 90                      nop
+:00428290 90                      nop
+
+changed into
+
+:00428249 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042824F 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:00428252 8A9943550000            mov bl, byte ptr [ecx+00005543]
+:00428258 F6C310                  test bl, 10					Evasion
+:0042825B 7407                    je 00428264
+:0042825D 8BC2                    mov eax, edx
+:0042825F C1F802                  sar eax, 02
+:00428262 2BD0                    sub edx, eax					3/4 damage
+:00428264 F6C380                  test bl, 80					Negation
+:00428267 7411                    je 0042827A
+:00428269 8B4514                  mov eax, dword ptr [ebp+14]
+:0042826C 6BC01C                  imul eax, 0000001C
+:0042826F 80B878794A0000          cmp byte ptr [eax+004A7978], 00		Arrow type spelleffect
+:00428276 7402                    je 0042827A
+:00428278 D1FA                    sar edx, 1					1/2 damage
+:0042827A C3                      ret
+:0042827B 20*90                   20*nop
+
+
+Old and now obsolete routine:
+
+:0043E376 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0043E37C 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0043E37F F6814355000080          test byte ptr [ecx+00005543], 80		Negation
+:0043E386 7408                    je 0043E390
+:0043E388 837DF400                cmp dword ptr [ebp-0C], 00000000		Resistances
+:0043E38C 7502                    jne 0043E390
+:0043E38E D1FA                    sar edx, 1					1/2 damage
+:0043E390 F6814355000010          test byte ptr [ecx+00005543], 10		Evasion
+:0043E397 E9F14A0100              jmp 00452E8D
+
+:00452E8D 7409                    je 00452E98
+:00452E8F 50                      push eax
+:00452E90 8BC2                    mov eax, edx
+:00452E92 C1F802                  sar eax, 02
+:00452E95 2BD0                    sub edx, eax					3/2 damage
+:00452E97 58                      pop eax
+:00452E98 C3                      ret
+

@@ -1,0 +1,107 @@
+Initial procedure of magic arrow (copy of holy bolt)
+as update procedure is the holy bolt used
+
+
+:0043D354 55                      push ebp
+:0043D355 8BEC                    mov ebp, esp
+:0043D357 51                      push ecx
+:0043D358 53                      push ebx
+:0043D359 8B5D08                  mov ebx, dword ptr [ebp+08]
+:0043D35C 56                      push esi
+:0043D35D 8B7510                  mov esi, dword ptr [ebp+10]
+:0043D360 894DFC                  mov dword ptr [ebp-04], ecx
+:0043D363 57                      push edi
+:0043D364 8B4D0C                  mov ecx, dword ptr [ebp+0C]
+:0043D367 8BFA                    mov edi, edx
+:0043D369 3BF9                    cmp edi, ecx
+:0043D36B 7519                    jne 0043D386
+:0043D36D 3BDE                    cmp ebx, esi
+:0043D36F 7515                    jne 0043D386
+:0043D371 8B4514                  mov eax, dword ptr [ebp+14]
+:0043D374 C1E002                  shl eax, 02
+:0043D377 038888BE4A00            add ecx, dword ptr [eax+004ABE88]
+:0043D37D 03B0A8BE4A00            add esi, dword ptr [eax+004ABEA8]
+:0043D383 894D0C                  mov dword ptr [ebp+0C], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043D36B(C), :0043D36F(C)
+|
+:0043D386 837D1CFF                cmp dword ptr [ebp+1C], FFFFFFFF
+:0043D38A 741C                    je 0043D3A8
+:0043D38C 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043D38F 69C0B0000000            imul eax, 000000B0
+:0043D395 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:0043D39B 8D440010                lea eax, dword ptr [eax+eax+10]
+:0043D39F 83F83F                  cmp eax, 0000003F
+:0043D3A2 7C07                    jl 0043D3AB
+:0043D3A4 6A3F                    push 0000003F
+:0043D3A6 EB02                    jmp 0043D3AA
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D38A(C)
+|
+:0043D3A8 6A10                    push 00000010
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D3A6(U)
+|
+:0043D3AA 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D3A2(C)
+|
+:0043D3AB 50                      push eax
+:0043D3AC 56                      push esi
+:0043D3AD 51                      push ecx
+:0043D3AE 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043D3B1 53                      push ebx
+:0043D3B2 8BD7                    mov edx, edi
+:0043D3B4 E8A832FFFF              call 00430661
+:0043D3B9 8BD3                    mov edx, ebx
+:0043D3BB 8BCF                    mov ecx, edi
+:0043D3BD 56                      push esi
+:0043D3BE FF750C                  push [ebp+0C]
+:0043D3C1 E8CD38FFFF              call 00430C93
+:0043D3C6 8B75FC                  mov esi, dword ptr [ebp-04]
+:0043D3C9 8BD0                    mov edx, eax
+:0043D3CB 8BCE                    mov ecx, esi
+:0043D3CD E8B426FFFF              call 0042FA86
+:0043D3D2 69F6B0000000            imul esi, 000000B0
+:0043D3D8 6A08                    push 00000008
+:0043D3DA 8BD3                    mov edx, ebx
+:0043D3DC C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:0043D3E6 89BEE87A6900            mov dword ptr [esi+00697AE8], edi
+:0043D3EC 8BCF                    mov ecx, edi
+:0043D3EE 899EEC7A6900            mov dword ptr [esi+00697AEC], ebx
+:0043D3F4 E87BF4FEFF              call 0042C874
+:0043D3F9 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:0043D3FF 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:0043D402 E880B70400              call 00488B87
+:0043D407 B145                    mov cl, 45
+:0043D409 E84CCBFDFF              call 00419F5A
+:0043D40E 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:0043D411 E888B70400              call 00488B9E
+:0043D416 C1FA03                  sar edx, 03
+:0043D419 8D441005                lea eax, dword ptr [eax+edx+05]
+:0043D41D 6A2C                    push 0000002C
+:0043D41F 5A                      pop edx
+:0043D420 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:0043D426 E8D1EB0200              call 0046BFFC
+:0043D42B 5F                      pop edi
+:0043D42C 5E                      pop esi
+:0043D42D 5B                      pop ebx
+:0043D42E C9                      leave
+:0043D42F C21C00                  ret 001C
+
+
+Damage Firebolt:
+:004361EA 6A0A                    push 0000000A
+:004361EC B14B                    mov cl, 4B
+:004361EE 5A                      pop edx
+:004361EF E8663DFEFF              call 00419F5A
+:004361F4 69FFC8550000            imul edi, 000055C8
+:004361FA 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00436200 0386887A6900            add eax, dword ptr [esi+00697A88]
+:00436206 8B8C0F6C010000          mov ecx, dword ptr [edi+ecx+0000016C]
+:0043620D C1F902                  sar ecx, 02
+:00436210 8D440801                lea eax, dword ptr [eax+ecx+01]

@@ -1,0 +1,13 @@
+...the order for damage modifiers is:
+
+"of theves" (only against traps of course)
+
+-damage (damage can never be reduced below 1 by this)
+
+Reflect (a new spell in Hellfire)
+
+PvP, that is divde all spell damage by 2
+
+Resistance
+
+Mana Shield 

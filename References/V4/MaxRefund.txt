@@ -1,0 +1,68 @@
+Maximum selling price at Grizwold and Adria at 20000 and 25000 gold
+
+
+Grizwold:
+
+File Offset 0006CA1D
+
+:0046D61D 898A30406F00            mov dword ptr [edx+006F4030], ecx
+wordt
+:0046D61D E829BEF9FF              call 0040944B
+:0046D622 90                      nop
+
+File Offset 0006CAF7
+
+:0046D6F7 898A30406F00            mov dword ptr [edx+006F4030], ecx
+wordt
+:0046D6F7 E84FBDF9FF              call 0040944B
+:0046D6FC 90                      nop
+
+
+Adria:
+
+File Offset 0006D318
+
+:0046DF18 898A30406F00            mov dword ptr [edx+006F4030], ecx
+wordt
+:0046DF18 E836B5F9FF              call 00409453
+:0046DF1D 90                      nop
+
+File Offset 0006D407
+
+:0046E007 898A30406F00            mov dword ptr [edx+006F4030], ecx
+wordt
+:0046E007 E847B4F9FF              call 00409453
+:0046E00C 90                      nop
+
+
+MaxRefund routine, using space from disabled command file:
+
+File Offset 0000884B
+
+:0040944B 90                      nop
+:0040944C 56                      push esi
+:0040944D E8EE040700              call 00479940
+:00409452 59                      pop ecx
+:00409453 50                      push eax
+:00409454 53                      push ebx
+:00409455 56                      push esi
+:00409456 E865160700              call 0047AAC0
+:0040945B 83C40C                  add esp, 0000000C
+:0040945E 85C0                    test eax, eax
+:00409460 7509                    jne 0040946B
+:00409462 C60508A2570001          mov byte ptr [0057A208], 01
+:00409469 EB21                    jmp 0040948C
+wordt
+:0040944B 50                      push eax
+:0040944C B8204E0000              mov eax, 00004E20		Grizw: 20000 gold
+:00409451 EB06                    jmp 00409459
+:00409453 50                      push eax
+:00409454 B8A8610000              mov eax, 000061A8		Adria: 25000 gold
+:00409459 3BC8                    cmp ecx, eax
+:0040945B 7E02                    jle 0040945F
+:0040945D 8BC8                    mov ecx, eax
+:0040945F 898A30406F00            mov dword ptr [edx+006F4030], ecx
+:00409465 58                      pop eax
+:00409466 C3                      ret
+:00409467 90909090                4*nop
+

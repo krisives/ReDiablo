@@ -1,0 +1,136 @@
+Difficulty		Hellfire	Diablo
+					
+dword ptr [006070C0]	00000000			Normal
+			00000001			Nightmare
+			00000002			Hell
+
+Level  	  [0060B1D8]	
+Quest(SP) [0061CB00]
+	  [0061F314]
+
+byte ptr [006DDFC8]	00				Multi
+			01				Single
+
+
+
+Monster pointers     for Helffire        Diablo
+
+Slotnumber live table    0069D960]	 0064E330]
+
+
+Current action 		+0069DC8C]			00 = not busy
+							06 = dying
+							0D = delaying
+							0E = immune (charging, phasing)
+							0F = Stonecursed
+
+	:004439FE 8B868CDC6900            mov eax, dword ptr [esi+0069DC8C]
+	:00443A04 83F811                  cmp eax, 00000011
+	:00443A07 0F87B0000000            ja 00443ABD
+	:00443A0D FF2485503B4400          jmp dword ptr [4*eax+00443B50]
+
+
+?       		+0069DC90]			02 = Fleeing, 04 = circlewalk, 05 = charging
+
+
+position coordinate 	+0069DCA8]
+position coordinate	+0069DCAC]
+
+
+facing direction (?)	+0069DCD0]
+
+real target coordinate	+0069DCD8]			byte
+real target coordinate	+0069DCD9]			byte
+
+?			+0069DCDC]			monster.id + 4*direction + 0C(*)  (* 36h for golem)
+
+frame counter		+0069DCEC]
+
+?			+0069DCF8]			previous action, 0A = (ranged) attack
+							also amount for gargoyle heal
+							also used for storing spell effect for 2nd attack animations
+
+timer/counter		+0069DCFC]
+
+
+action state            +0069DD00]
+action state            +0069DD04]
+action state            +0069DD08]
+action state            +0069DD0C]
+action state            +0069DD10]
+walkframe counter (?)   +0069DD14]
+
+
+originele life		+0069DD18]
+
+Current life		+0069DD1C]
+
+Attacktype              +0069DD20]      +0064E6F0]
+subtype 		+0069DD21]
+
+general use flag	+0069DD24]			"80", wordt ook voor andere zaken gebruikt 
+                                                        zoals Confusion "20" in NW,
+                                                        "08" Vileness
+							"20" golem or charmed
+              						"10" has monstertarget acquired
+general use flag	+0069DD25]			"04" has target acquired
+							"10" lifestealing?
+
+Activation counter      +0069DD28]      +0064E6F8]	00 = not active, FF = still in visual range
+
+Target coordinate	+0069DD30]			last seen position for chars (others always current)
+Target coordinate	+0069DD34]			last seen position for chars (others always current)
+
+
+Boss                    +0069DD44]      +0064E714]	00 = No boss, otherwise Boss.id	
+
+Monsterlevel		+0069DD48]
+
+Xp			+0069DD4A]
+
+To Hit			+0069DD4C]
+
+Min Damage		+0069DD4D]
+Max Damage		+0069DD4E]
+
+To Hit (2e attack)	+0069DD4F]
+
+Min Damage (2e attack)	+0069DD50]
+Max Damage (2e attack)	+0069DD51]
+
+AC			+0069DD52]
+
+resistance/immunity	+0069DD54]
+
+temporary immunity	+0069DD58]			00 = no immunity, otherwise state of quest monsters
+                                                        also speech to use (?)
+
+
+table number of boss
+if a minion         	+0069DD5C]
+
+
+Name pointer		+0069DD60]
+
+Slotnumber (6E=Diablo)	+0069DD64]	+0064E734]
+
+address to full data	+0069DD68]			+72 = Animal/Demon/Undead
+
+
+
+
+
+Clearing state when delay is finished:
+
+:0043B601 69C9E4000000            imul ecx, 000000E4
+:0043B607 33C0                    xor eax, eax
+:0043B609 8981F8DC6900            mov dword ptr [ecx+0069DCF8], eax
+:0043B60F 8981FCDC6900            mov dword ptr [ecx+0069DCFC], eax
+:0043B615 898100DD6900            mov dword ptr [ecx+0069DD00], eax
+:0043B61B 898104DD6900            mov dword ptr [ecx+0069DD04], eax
+:0043B621 898108DD6900            mov dword ptr [ecx+0069DD08], eax
+:0043B627 89810CDD6900            mov dword ptr [ecx+0069DD0C], eax
+:0043B62D 898110DD6900            mov dword ptr [ecx+0069DD10], eax
+:0043B633 898114DD6900            mov dword ptr [ecx+0069DD14], eax
+:0043B639 C3                      ret
+

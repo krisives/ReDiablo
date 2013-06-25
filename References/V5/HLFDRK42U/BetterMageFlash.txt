@@ -1,0 +1,44 @@
+Flash from Mages has its damage doubled
+
+
+file offset 00032408
+
+:00433008 D1E8                    shr eax, 1
+:0043300A EB1B                    jmp 00433027
+:0043300C 8B442424                mov eax, dword ptr [esp+24]		
+:00433010 8BF1                    mov esi, ecx
+:00433012 69C0E4000000            imul eax, 000000E4
+:00433018 69F6B0000000            imul esi, 000000B0
+:0043301E 0FBE804EDD6900          movsx eax, byte ptr [eax+0069DD4E]
+:00433025 D1E0                    shl eax, 1
+changed into
+:00433008 9090                    2*nop
+:0043300A ...
+:00433018 0FBE804EDD6900          movsx eax, byte ptr [eax+0069DD4E]
+:0043301F C1E002                  shl eax, 02
+:00433022 909090                  3*nop
+:00433025 EBDB                    jmp 00433002
+:00433027 
+
+file offset 00032546
+
+:00433146 D1E8                    shr eax, 1
+changed into
+:00433146 9090                    2*nop
+
+file offset 00079F3F
+
+:0047AB3F D1E3                    shl ebx, 1
+:0047AB41 8998D47A6900            mov dword ptr [eax+00697AD4], ebx
+changed into
+:0047AB3F C1E302                  shl ebx, 02
+:0047AB42 E97C10FEFF              jmp 0045BBC3
+:0047AB47
+
+Using free space from FixedPerilCrash:
+
+file offset 0005AFC3
+
+:0045BBC3 8998D47A6900            mov dword ptr [eax+00697AD4], ebx
+:0045BBC9 E98F75FDFF              jmp 0043315D
+:0045BBCE 90                      nop

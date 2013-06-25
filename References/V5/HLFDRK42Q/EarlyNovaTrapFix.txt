@@ -1,0 +1,13 @@
+Nova traps appeared as early as dlvl 5. This was accidently introduced in revision 42N, but now corrected:
+
+file offset 000503D0
+
+:00450FD0 741C                    je 00450FEE
+:00450FD2 49                      dec ecx
+:00450FD3 7415                    je 00450FEA
+:00450FD5 49                      dec ecx
+changed into
+:00450FD0 7418                    je 00450FEA
+:00450FD2 49                      dec ecx
+:00450FD3 7419                    je 00450FEE
+:00450FD5 49                      dec ecx

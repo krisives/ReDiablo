@@ -1,0 +1,174 @@
+Shrine Changes 42Z
+
+
+Increased amount of Life or Mana gained from Blood Fountains and Cauldrons:
+
+file offset 00051DE9
+
+:004529E9 C1E307                  shl ebx, 07
+changed into
+:004529E9 C1E309                  shl ebx, 09
+
+
+Fascinating Shrine may increase spell level for Sanctuary instead of Mana Shield (in Hell mode):
+
+file offset 0005141D
+
+:0045201D 808E0901000004          or byte ptr [esi+00000109], 04
+:00452024 8D86CC000000            lea eax, dword ptr [esi+000000CC]
+changed into
+:0045201D 808E0B01000080          or byte ptr [esi+0000010B], 80
+:00452024 8D86E1000000            lea eax, dword ptr [esi+000000E1]
+
+
+Replaced Divine Shrine by another Stone Shrine (to avoid a bug associated with the created potions and elixirs):
+
+file offset 000524AB
+
+:004530AB 04244500                DWORD 00452404
+changed into
+:004530AB DB1C4500                DWORD 00451CDB
+
+Now 211 bytes free space from 00452404 to 004524D7 (Divine Shrine)
+
+
+Varying Tomes:
+
+Abyss 1		Tome of Perception	casts Seeing
+		may appear twice
+Abyss 2		Tome of Alchemy		Eldritch Shrine effect
+		Tome of Perception	casts Seeing
+Abyss 3		Tome of Renewal		Stone Shrine effect
+		Tome of Perception	casts Seeing
+
+file offset 0003A64A
+
+:0043B24A 803DD8B1600010          cmp byte ptr [0060B1D8], 10
+:0043B251 0F8C23660100            jl 0045187A
+:0043B257 803DD8B1600018          cmp byte ptr [0060B1D8], 18
+:0043B25E 0F84276A0100            je 00451C8B
+:0043B264 E91C6F0100              jmp 00452185
+:0043B269 90                      nop
+changed into
+:0043B24A 8A0DD8B16000            mov cl, byte ptr [0060B1D8]		dlvl
+:0043B250 80F910                  cmp cl, 10
+:0043B253 0F8C21660100            jl 0045187A
+:0043B259 80F918                  cmp cl, 18
+:0043B25C 0F84296A0100            je 00451C8B
+:0043B262 80F915                  cmp cl, 15
+:0043B265 E9C4750100              jmp 0045282E
+:0043B26A 
+
+Spooky Shrine gives Seeing to all, and will only be used for Tomes:
+
+file offset 00051BFA
+
+:004527FA A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:004527FF 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00452805 69C0C8550000            imul eax, 000055C8
+:0045280B 03C1                    add eax, ecx
+:0045280D 8B889C010000            mov ecx, dword ptr [eax+0000019C]
+:00452813 898898010000            mov dword ptr [eax+00000198], ecx
+:00452819 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045281E 69C0C8550000            imul eax, 000055C8
+:00452824 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045282A 03C1                    add eax, ecx
+:0045282C 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:00452832 898890010000            mov dword ptr [eax+00000190], ecx
+:00452838 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045283D 69C0C8550000            imul eax, 000055C8
+:00452843 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00452849 03C1                    add eax, ecx
+:0045284B 8B88B0010000            mov ecx, dword ptr [eax+000001B0]
+:00452851 8988AC010000            mov dword ptr [eax+000001AC], ecx
+:00452857 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045285C 69C0C8550000            imul eax, 000055C8
+:00452862 E961060000              jmp 00452EC8
+
+changed into
+
+:004527FA 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00452800 8B35E8AD6E00            mov esi, dword ptr [006EADE8]		user = local character
+:00452806 8BCE                    mov ecx, esi
+:00452808 69C9C8550000            imul ecx, 000055C8
+:0045280E 03CA                    add ecx, edx
+:00452810 6A00                    push 00000000				slvl
+:00452812 6A00                    push 00000000				
+:00452814 8B513C                  mov edx, dword ptr [ecx+3C]		user coordinate
+:00452817 56                      push esi				user identification
+:00452818 6AFF                    push FFFFFFFF				origin is non-character
+:0045281A 6A27                    push 00000027				spell effect
+:0045281C FF7170                  push [ecx+70]
+:0045281F 8B4938                  mov ecx, dword ptr [ecx+38]		user coordinate
+:00452822 52                      push edx				cursor position
+:00452823 51                      push ecx				cursor position
+:00452824 E8062FFEFF              call 0043572F				create spell effect
+:00452829 E912080000              jmp 00453040
+
+:0045282E 74A9                    je 004527D9				Spooky Shrine
+:00452830 F7861CE66D0001000000    test dword ptr [esi+006DE61C], 00000001
+:0045283A 749D                    je 004527D9				Spooky Shrine
+:0045283C 80F916                  cmp cl, 16
+:0045283F 0F8440F9FFFF            je 00452185				Eldritch Shrine
+:00452845 E991F4FFFF              jmp 00451CDB				Stone Shrine
+:0045284A 90                      nop
+
+Now 29 bytes free space from 0045284A to 00452867.
+
+
+Remove Spooky Shrine from normal selection:
+
+0008F1F8 040B 0101 1001 010B 0101 0B0B 0101 0501 ................
+0008F208 0101 0101 0101 0101 070B 0B01 0105 0105 ................
+0008F218 010B 0000 0000 0000 1818 1818 1818 1818 ................
+0008F228 1818 1818 1818 1818 1818 0418 1818 1818 ................
+0008F238 1818 1818 1818 1818 1818 0000 0000 0000 ................
+0008F248 0000 0000 0000 0000 0100 0001 0000 0000 ................
+0008F258 0000 0200 0000 0100 0002 0001 0100 0000 ................
+0008F268 0102 0000 0000 0000                     ........
+changed into
+0008F20A 18                                      .
+0008F232 18                                      .
+
+
+Adjusting Tome names:
+
+000B3F8C 456C 6472 6974 6368 2054 6F6D 6500 0000 Eldritch Tome...
+000B3F9C 0000 0000 456C 6472 6974 6368 2054 6F6D ....Eldritch Tom
+000B3FAC 6500 0000 0000 0000 456C 6472 6974 6368 e.......Eldritch
+000B3FBC 2054 6F6D 6500 0000 0000 0000 0000 0000  Tome...........
+000B3FCC 0000 0000 456C 6472 6974 6368 2054 6F6D ....Eldritch Tom
+000B3FDC 6500 0000 0000 0500 456C 6472 6974 6368 e.......Eldritch
+000B3FEC 2054 6F6D 6500 0000 0000 0000 0000 0000  Tome...........
+000B3FFC 456C 6472 6974 6368 2054 6F6D 6500 0000 Eldritch Tome...
+000B400C 0000 0000                               ....
+changed into
+000B3F8C 546F 6D65 206F 6620 5265 6E65 7761 6C00 Tome of Renewal.
+000B3F9C 0000 0000 546F 6D65 206F 6620 5065 7263 ....Tome of Perc
+000B3FAC 6570 7469 6F6E 0000 546F 6D65 206F 6620 eption..Tome of 
+000B3FBC 416C 6368 656D 7900 0000 0000 0000 0000 Alchemy.........
+000B3FCC 0000 0000 546F 6D65 206F 6620 5065 7263 ....Tome of Perc
+000B3FDC 6570 7469 6F6E 0500 546F 6D65 206F 6620 eption..Tome of 
+000B3FEC 5065 7263 6570 7469 6F6E 0000 0000 0000 Perception......
+000B3FFC 546F 6D65 206F 6620 5065 7263 6570 7469 Tome of Percepti
+000B400C 6F6E 0000                               on..
+
+
+Adjusting text for Spooky Shrine:
+
+0009E4F8 5370 6972 6974 7561 6C20 656E 6572 6779 Spiritual energy
+0009E508 2069 7320 7265 7374 6F72 6564 0000 0000  is restored....
+changed into
+0009E4F8 4B6E 6F77 6C65 6467 6520 6D61 7920 7361 Knowledge may sa
+0009E508 7665 2074 6865 2064 6179 0000 0000 0000 ve the day......
+
+
+Correcting Book name:
+
+000B4065 0000 0000 0000 004F 6464 2042 6F6F 6B00 .......Odd Book.
+changed into
+000B4065 4D79 7374 6572 696F 7573 2042 6F6F 6B00 Mysterious Book.
+
+0008F280 6C56 4B00                               lVK.
+changed into
+0008F280 6556 4B00                               eVK.

@@ -1,0 +1,72 @@
+Correcting the Bard skill, which was incorrect after the replacement of Identify
+
+
+Skill indicators:
+
+000A5323 1A21 1B19 0502                          .!....
+changed into
+000A5323 1A21 1B19 2702                          .!..'.
+
+
+Spell book:
+
+file offset 000040A7
+
+:00404CA7 C705684D490005000000    mov dword ptr [00494D68], 00000005
+changed into
+:00404CA7 C705684D490027000000    mov dword ptr [00494D68], 00000027
+
+
+Skill selections:
+
+file offset 000574F8
+
+:004580F8 80FA01                  cmp dl, 01
+:004580FB 751E                    jne 0045811B
+:004580FD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458102 899C3010010000          mov dword ptr [eax+esi+00000110], ebx
+:00458109 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045810E C784301401000001000000  mov dword ptr [eax+esi+00000114], 00000001
+:00458119 EB38                    jmp 00458153
+:0045811B 80FA04                  cmp dl, 04
+:0045811E 7512                    jne 00458132
+:00458120 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458125 C784301001000010000000  mov dword ptr [eax+esi+00000110], 00000010
+:00458130 EB15                    jmp 00458147
+:00458132 80FA05                  cmp dl, 05
+:00458135 751C                    jne 00458153
+:00458137 
+changed into
+:004580F8 80FA05                  cmp dl, 05
+:004580FB 743A                    je 00458137
+:004580FD ...
+:00458119 9090                    2*nop
+:0045811B ...
+:00458125 C784301401000040000000  mov dword ptr [eax+esi+00000114], 00000040
+:00458130 EB21                    jmp 00458153
+:00458132 ...
+
+file offset 00057DB2
+
+:004589B2 80F901                  cmp cl, 01
+:004589B5 7512                    jne 004589C9
+:004589B7 899810010000            mov dword ptr [eax+00000110], ebx
+:004589BD C7801401000001000000    mov dword ptr [ebx+00000114], 00000001
+:004589C7 EB26                    jmp 004589EF
+:004589C9 80F904                  cmp cl, 04
+:004589CC 750C                    jne 004589DA
+:004589CE C7801001000010000000    mov dword ptr [ebx+00000110], 00000010
+:004589D8 EB0F                    jmp 004589E9
+:004589DA 80F905                  cmp cl, 05
+:004589DD 7510                    jne 004589EF
+:004589DF 
+changed into
+:004589B2 80F905                  cmp cl, 05
+:004589B5 7428                    je 004589DF
+:004589B7 ...
+:004589C7 9090                    2*nop
+:004589C9 ...
+:004589CE C7801401000040000000    mov dword ptr [ebx+00000114], 00000040
+:004589D8 EB15                    jmp 004589EF
+:004589DA ...
+

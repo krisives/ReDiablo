@@ -1,0 +1,132 @@
+Nest messages
+
+
+0005e296
+
+:0045EE96 C6058AB56E0002          mov byte ptr [006EB58A], 02
+:0045EE9D C705A0B56E0001000000    mov dword ptr [006EB5A0], 00000001
+:0045EEA7 C70598B56E001E010000    mov dword ptr [006EB598], 0000011E
+:0045EEB1 081A                    or byte ptr [edx], bl
+changed into
+:0045EE96 EB19                    jmp 0045EEB1
+:0045EE98 9090909090              5*nop
+:0045EE9D C705A0B56E0001000000    mov dword ptr [006EB5A0], 00000001
+:0045EEA7 C70598B56E001E010000    mov dword ptr [006EB598], 0000011E
+:0045EEB1 081A                    or byte ptr [edx], bl
+
+has no effect.
+
+
+
+
+
+
+
+:0045EE57 80FA11                  cmp dl, 11
+:0045EE5A 7562                    jne 0045EEBE
+:0045EE5C 8BF1                    mov esi, ecx
+:0045EE5E 69F6C8550000            imul esi, 000055C8
+:0045EE64 03F0                    add esi, eax
+:0045EE66 80BE0502000000          cmp byte ptr [esi+00000205], 00
+:0045EE6D 754F                    jne 0045EEBE
+:0045EE6F 80FB01                  cmp bl, 01
+:0045EE72 754A                    jne 0045EEBE
+:0045EE74 849E6B550000            test byte ptr [esi+0000556B], bl
+:0045EE7A 8D966B550000            lea edx, dword ptr [esi+0000556B]
+:0045EE80 7536                    jne 0045EEB8
+:0045EE82 C70514A257000A000000    mov dword ptr [0057A214], 0000000A
+:0045EE8C C70518A25700D9030000    mov dword ptr [0057A218], 000003D9
+:0045EE96 C6058AB56E0002          mov byte ptr [006EB58A], 02
+:0045EE9D C705A0B56E0001000000    mov dword ptr [006EB5A0], 00000001
+:0045EEA7 C70598B56E001E010000    mov dword ptr [006EB598], 0000011E
+:0045EEB1 081A                    or byte ptr [edx], bl
+:0045EEB3 E9E6000000              jmp 0045EF9E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045EE80(C)
+|
+:0045EEB8 8A15D8B16000            mov dl, byte ptr [0060B1D8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045EE5A(C), :0045EE6D(C), :0045EE72(C)
+|
+:0045EEBE 80FA13                  cmp dl, 13
+:0045EEC1 7549                    jne 0045EF0C
+:0045EEC3 8BF1                    mov esi, ecx
+:0045EEC5 69F6C8550000            imul esi, 000055C8
+:0045EECB 03F0                    add esi, eax
+:0045EECD 80BE0702000000          cmp byte ptr [esi+00000207], 00
+:0045EED4 7536                    jne 0045EF0C
+:0045EED6 80FB01                  cmp bl, 01
+:0045EED9 7531                    jne 0045EF0C
+:0045EEDB F6866B55000004          test byte ptr [esi+0000556B], 04
+:0045EEE2 8D966B550000            lea edx, dword ptr [esi+0000556B]
+:0045EEE8 751C                    jne 0045EF06
+:0045EEEA C70514A257000A000000    mov dword ptr [0057A214], 0000000A
+:0045EEF4 C70518A25700DB030000    mov dword ptr [0057A218], 000003DB
+:0045EEFE 800A04                  or byte ptr [edx], 04
+:0045EF01 E998000000              jmp 0045EF9E
+
+
+
+for abyss:
+
+:0045EF0C 80FA15                  cmp dl, 15
+:0045EF0F 0F8582000000            jne 0045EF97
+:0045EF15 69C9C8550000            imul ecx, 000055C8
+:0045EF1B 03C1                    add eax, ecx
+:0045EF1D 80B80902000000          cmp byte ptr [eax+00000209], 00
+:0045EF24 7571                    jne 0045EF97
+:0045EF26 80FB01                  cmp bl, 01
+:0045EF29 756C                    jne 0045EF97
+:0045EF2B F6806955000020          test byte ptr [eax+00005569], 20
+:0045EF32 7563                    jne 0045EF97
+:0045EF34 C70514A257001E000000    mov dword ptr [0057A214], 0000001E
+:0045EF3E 8A8860010000            mov cl, byte ptr [eax+00000160]
+:0045EF44 84C9                    test cl, cl
+:0045EF46 743C                    je 0045EF84
+:0045EF48 3ACB                    cmp cl, bl
+:0045EF4A 7427                    je 0045EF73
+:0045EF4C 80F902                  cmp cl, 02
+:0045EF4F 750C                    jne 0045EF5D
+:0045EF51 C70518A2570062020000    mov dword ptr [0057A218], 00000262
+:0045EF5B EB31                    jmp 0045EF8E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045EF4F(C)
+|
+:0045EF5D 80F903                  cmp cl, 03
+:0045EF60 750C                    jne 0045EF6E
+:0045EF62 C70518A25700A2030000    mov dword ptr [0057A218], 000003A2
+:0045EF6C EB20                    jmp 0045EF8E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045EF60(C)
+|
+:0045EF6E 80F904                  cmp cl, 04
+:0045EF71 750C                    jne 0045EF7F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045EF4A(C)
+|
+:0045EF73 C70518A25700C9020000    mov dword ptr [0057A218], 000002C9
+:0045EF7D EB0F                    jmp 0045EF8E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045EF71(C)
+|
+:0045EF7F 80F905                  cmp cl, 05
+:0045EF82 750A                    jne 0045EF8E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045EF46(C)
+|
+:0045EF84 C70518A2570036030000    mov dword ptr [0057A218], 00000336
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045EF5B(U), :0045EF6C(U), :0045EF7D(U), :0045EF82(C)
+|
+:0045EF8E 80886955000020          or byte ptr [eax+00005569], 20
+:0045EF95 EB07                    jmp 0045EF9E
+
+

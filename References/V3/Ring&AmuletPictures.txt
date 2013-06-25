@@ -1,0 +1,8 @@
+All (normal) amulet pictures  45 (2D) -> 178 (B2)
+
+All (normal) ring pictures    12 (0C) -> 179 (B3)
+
+
+Corrected flip animation for new Ring, Key, Cup:
+
+00088D80 0606 0B03 0608 0106 0611 2800 000C 0C0C ..........(.....

@@ -1,0 +1,165 @@
+()Stun - ALLE hiddens get stunned van 1 of meer damage
+
+:0043CF1C 83F81D                  cmp eax, 0000001D
+:0043CF1F 7C05                    jl 0043CF26			jmp if no hidden
+:0043CF21 83F820                  cmp eax, 00000020
+:0043CF24 7E15                    jle 0043CF3B			jmp if hidden
+()wordt (bevatte eerst telfout)
+:0043CF1C E8BE030000   (?)        call 0043D2DA			call CHECK_HIDDEN
+:0043CF21 85C0                    test eax, eax
+:0043CF23 7516                    jne 0043CF3B			jmp if hidden
+:0043CF25 90                      nop
+
+()en
+
+:0043DC5B 83F81D                  cmp eax, 0000001D
+:0043DC5E 7C05                    jl 0043DC65
+:0043DC60 83F820                  cmp eax, 00000020
+:0043DC63 7E15                    jle 0043DC7A
+wordt
+:0043DC5B E87FF6FFFF              call 0043D2DA
+:0043DC60 85C0                    test eax, eax
+:0043DC62 7516                    jne 0043DC7A
+:0043DC64 90                      nop
+
+
+CHECK_HIDDEN:
+
+Routine nodig omdat RealityWeaver niet verplaatst kan worden.
+Plaatsing over niet-gebruikte DiabloDeath routine, na de (nieuwe) DiabloSpeech.
+
+* Referenced by a CALL at Addresses:
+|:0043CF1C   , :0043DC5B   
+|
+:0043D2DA 83F81D                  cmp eax, 0000001D
+:0043D2DD 7C0F                    jl 0043D2EE			jmp if no hidden
+:0043D2DF 83F820                  cmp eax, 00000020
+:0043D2E2 7E0D                    jle 0043D2F1			jmp if hidden
+:0043D2E4 83F85D                  cmp eax, 0000005D
+:0043D2E7 7408                    je 0043D2F1			jmp if realityweaver
+:0043D2E9 83F877                  cmp eax, 00000077
+:0043D2EC 7403                    je 0043D2F1			jmp if shadow
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D2DD(C)
+|
+:0043D2EE 33C0                    xor eax, eax
+:0043D2F0 C3                      ret
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043D2E2(C), :0043D2E7(C), :0043D2EC(C)
+|
+:0043D2F1 6A01                    push 00000001
+:0043D2F3 58                      pop eax
+:0043D2F4 C3                      ret
+
+
+:0043D2F5 90                      nop
+:0043D2F6 90                      nop
+:0043D2F7 90                      nop
+
+
+
+()Teleport when stunned - enable WarpLords
+
+Twee plaatsen:
+
+:0043CF7A 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043CF80 8B00                    mov eax, dword ptr [eax]
+
+:0043CF82 83F827                  cmp eax, 00000027
+:0043CF85 7509                    jne 0043CF90
+
+:0043CF87 8BCB                    mov ecx, ebx
+:0043CF89 E8721D0000              call 0043ED00
+:0043CF8E EB22                    jmp 0043CFB2
+
+en
+
+:0043DC98 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043DC9E 8B00                    mov eax, dword ptr [eax]
+
+:0043DCA0 83F827                  cmp eax, 00000027
+:0043DCA3 750A                    jne 0043DCAF
+
+:0043DCA5 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043DCA8 E853100000              call 0043ED00
+:0043DCAD EB22                    jmp 0043DCD1
+
+dus:
+
+:0043CF82 83F827                  cmp eax, 00000027
+:0043CF85 7509                    jne 0043CF90
+wordt
+:0043CF82 E971030000              jmp 0043D2F8		jmp CHECK1
+
+en
+
+:0043DCA0 83F827                  cmp eax, 00000027
+:0043DCA3 750A                    jne 0043DCAF
+wordt
+:0043DCA0 E967F6FFFF              jmp 0043D30C		jmp CHECK2
+
+CHECK1
+Plaatsing over niet-gebruikte DiabloDeath routine, na de nieuwe CHECK_HIDDEN routine.
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CF82(U)
+|
+:0043D2F8 50                      push eax
+:0043D2F9 E822000000              call 0043D320		call CHECK_BLINKER
+:0043D2FE 85C0                    test eax, eax
+:0043D300 58                      pop eax
+:0043D301 0F8580FCFFFF            jne 0043CF87		jmp if blinker
+:0043D307 E984FCFFFF              jmp 0043CF90		jmp if no blinker
+
+CHECK2
+Plaatsing over niet-gebruikte DiabloDeath routine, na de vorige CHECK1.
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DCA0(U)
+|
+:0043D30C 50                      push eax
+:0043D30D E80E000000              call 0043D320		call CHECK_BLINKER
+:0043D312 85C0                    test eax, eax
+:0043D314 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D3EC(C)
+|
+:0043D315 0F858A090000            jne 0043DCA5		jmp if blinker
+:0043D31B E98F090000              jmp 0043DCAF		jmp if no blinker
+
+
+CHECK_BLINKER:
+Plaatsing over niet-gebruikte DiabloDeath routine, na de vorige CHECK2.
+MutantLord dient nog op slot 26h gezet te worden (anders blinkende Darkmages?).
+
+* Referenced by a CALL at Addresses:
+|:0043D2F9   , :0043D30D   
+|
+:0043D320 83F826                  cmp eax, 00000026
+:0043D323 7C05                    jl 0043D32A			jmp if no blinker
+:0043D325 83F827                  cmp eax, 00000027
+:0043D328 7E03                    jle 0043D32D			jmp if blinker
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D323(C)
+|
+:0043D32A 33C0                    xor eax, eax
+:0043D32C C3                      ret
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D328(C)
+|
+:0043D32D 6A01                    push 00000001
+:0043D32F 58                      pop eax
+:0043D330 C3                      ret
+
+Opvul:
+:0043D331 90			  nop
+
+
+
+
+

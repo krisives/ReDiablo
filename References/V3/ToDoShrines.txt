@@ -1,0 +1,112 @@
+()Enchanted shrine - Chance for spell increase : 100% -> 50% 
+
+Blijkt na vele test-runs nog niet gecodeerd te zijn. Nu wel
+
+
+
+(*)Murphies - affect max. dur ipv. cur. dur - 00452F8E
+
+Dit moet nog worden bekeken.
+
+
+
+()Sacred - 0045259D
+
+:004525BF 808C080801000040        or byte ptr [eax+ecx+00000108], 40
+:004525F6 E891C00000              call 0045E68C	(Strength)
+
+Strength is niet goed, spreuk ook niet (Townportal->Healing)
+Nu
+Vitality met spreuk (healing)
+:004525BF 808C080801000002        or byte ptr [eax+ecx+00000108], 02		Healing
+:004525D3 8A9408C3000000          mov dl, byte ptr [eax+ecx+000000C3]		Lvl Healing
+:004525F6 E8BFC20000              call 0045E8BA (Vitality)
+
+()Ornate - 00452950
+
+:00452972 808C080801000080        or byte ptr [eax+ecx+00000108], 80		Stone Curse
+:00452986 8A9408C9000000          mov dl, byte ptr [eax+ecx+000000C9]		Lvl SC
+:004529A9 E874BE0000              call 0045E822	(Dexterity)
+
+Spreuk onbekend, niet gevonden bij testen.(Stone Curse)
+
+
+
+()Fascinating - 00451FDB
+
+:00451FFD 838C080B01000040        or dword ptr [eax+ecx+0000010B], 00000040	Holy Bolt
+:00452011 8A9408E0000000          mov dl, byte ptr [eax+ecx+000000E0]		Lvl HB
+:00452034 E8EBC60000              call 0045E724	(Magic)
+
+Spreuk onbekend, niet gevonden bij testen.(Holy Bolt)
+
+
+
+()Town 
+Nieuw:
+:00452E34 E9B4FBFFFF              jmp 004529ED
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452E34(U)
+|
+:004529ED 85C0                    test eax, eax
+:004529EF 0F8577060000            jne 0045306C
+:004529F5 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004529F8 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004529FE 0F8568060000            jne 0045306C
+:00452A04 69C9C8550000            imul ecx, 000055C8
+:00452A0A A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A0F 808C080801000040        or byte ptr [eax+ecx+00000108], 40		Town portal
+:00452A17 8D840808010000          lea eax, dword ptr [eax+ecx+00000108]
+:00452A1E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A23 8A9408C8000000          mov dl, byte ptr [eax+ecx+000000C8]		Lvl Town Portal
+:00452A2A 8D8408C8000000          lea eax, dword ptr [eax+ecx+000000C8]
+:00452A31 80FA0F                  cmp dl, 0F
+:00452A34 7D04                    jge 00452A3A
+:00452A36 FEC2                    inc dl
+:00452A38 8810                    mov byte ptr [eax], dl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452A34(C)
+|
+:00452A3A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00452A3D 83CAFF                  or edx, FFFFFFFF
+:00452A40 80FA08                  cmp dl, 08
+:00452A43 7E01                    jle 00452A46
+:00452A45 4A                      dec edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452A43(C)
+|
+:00452A46 E841BC0000              call 0045E68C			(Strength)
+:00452A4B B130                    mov cl, 30
+:00452A4D E90F010000              jmp 00452B61
+:00452A52 90                      nop
+
+Origineel:
+:00452E34 33FF                    xor edi, edi
+:00452E36 3BC7                    cmp eax, edi
+:00452E38 0F852E020000            jne 0045306C
+:00452E3E 8B45FC                  mov eax, dword ptr [ebp-04]
+:00452E41 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00452E47 0F851F020000            jne 0045306C
+:00452E4D B130                    mov cl, 30
+:00452E4F E84D7CFCFF              call 0041AAA1
+:00452E54 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452E59 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00452E5F 69C0C8550000            imul eax, 000055C8
+:00452E65 57                      push edi
+:00452E66 57                      push edi
+:00452E67 57                      push edi
+:00452E68 6A01                    push 00000001
+:00452E6A 03C1                    add eax, ecx
+:00452E6C 6A0A                    push 0000000A
+:00452E6E FF7070                  push [eax+70]
+:00452E71 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:00452E77 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:00452E7D FF703C                  push [eax+3C]
+:00452E80 FF7038                  push [eax+38]
+:00452E83 E8A728FEFF              call 0043572F
+:00452E88 E9B3010000              jmp 00453040
+
+

@@ -1,0 +1,38 @@
+Props table starting at offset B2988
+
+A dunno
+B number of cel file (see other table)
+C starting dlvl
+D ending dlvl
+E dunno
+F dunno
+G dunno
+H 01 if animated
+I If animated (see H) this is the animation speed. higher values = slower animation
+  If not animated this contains the frame within the cel that should be displayed
+J Number of frames in cel file
+K animation size
+L dunno
+M dunno
+N dunno
+O dunno, works with P anyway
+P 01 and 03 make object "highlightable"
+Q dunno, works with P anyway
+
+ A B C D E F G   H       I       J       K       L       M       N       O P     Q       
+0100010401FFFF0001000000010000001A000000400000000100000001000000000000000000000000000000 L1Braz
+
+0209000000FFFF0000000000010000000F000000600000000100000000000000010000000103000000000000 CruxSk1
+020A000000FFFF0000000000010000000F000000600000000100000000000000010000000103000000000000 CruxSk2
+020B000000FFFF0000000000010000000F000000600000000100000000000000010000000103000000000000 CruxSk3
+032F0000000BFF0001000000020000000A000000600000000100000001000000010000000003000000000000 Goatshrn
+01300D1000FFFF00000000000100000000000000600000000100000000000000010000000003000000000000 Cauldren
+032800000001FF0000000000010000000B000000800000000000000000000000010000000003000000000000 RShrineG
+                                              
+                                                
+Vallende Skelleten:                              
+                                          
+01300D1000FFFF00000000000100000000000000600000000100000000000000010000000003000000000000 Cauldren
+wordt                                     
+01300D1000FFFF00000000000100000000000000600000000100000000000000010000000003000000000000 Cauldren
+                                0F                                      01              

@@ -1,0 +1,85 @@
+Fixed bug where Anvil of Repair affected the Item Repair skill:
+
+file offset 000279C6
+
+:004285C6 F3844200                DWORD 004284F3
+changed into
+:004285C6 EF844200                DWORD 004284EF
+
+file offset 000278EF
+
+:004284EF 90                      nop
+:004284F0 90                      nop
+:004284F1 90                      nop
+:004284F2 90                      nop
+:004284F3 8B8EF0000000            mov ecx, dword ptr [esi+000000F0]
+:004284F9 8BBEEC000000            mov edi, dword ptr [esi+000000EC]
+:004284FF 3BF9                    cmp edi, ecx
+:00428501 7D37                    jge 0042853A
+:00428503 8D4104                  lea eax, dword ptr [ecx+04]
+:00428506 D1E8                    shr eax, 1
+:00428508 90                      nop
+changed into
+:004284EF E82B510100              call 0043D61F
+:004284F4 8B8EF0000000            mov ecx, dword ptr [esi+000000F0]
+:004284FA 8BBEEC000000            mov edi, dword ptr [esi+000000EC]
+:00428500 3BF9                    cmp edi, ecx
+:00428502 7D36                    jge 0042853A
+:00428504 8D4102                  lea eax, dword ptr [ecx+02]
+:00428507 D1E8                    shr eax, 1
+
+file offset 0003CA1F
+
+:0043D61F 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043D626 83C003                  add eax, 00000003
+:0043D629 C3                      ret
+:0043D62A 90                      nop
+:0043D62B 90                      nop
+:0043D62C 90                      nop
+changed into
+:0043D61F E86F560100              call 00452C93
+:0043D624 33C9                    xor ecx, ecx
+:0043D626 898864550000            mov dword ptr [eax+00005564], ecx
+:0043D62C C3                      ret
+:0043D62D
+
+Rewriting code for Oily Shrine:
+
+file offset 0005208C
+
+:00452C8C A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452C91 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00452C97 69C0C8550000            imul eax, 000055C8
+:00452C9D 03C1                    add eax, ecx
+:00452C9F 6A0F                    push 0000000F
+:00452CA1 90                      nop
+:00452CA2 90                      nop
+:00452CA3 90                      nop
+:00452CA4 90                      nop
+:00452CA5 90                      nop
+:00452CA6 90                      nop
+:00452CA7 90                      nop
+:00452CA8 90                      nop
+:00452CA9 90                      nop
+:00452CAA 90                      nop
+:00452CAB 57                      push edi
+changed into
+:00452C8C E802000000              call 00452C93
+:00452C91 EB16                    jmp 00452CA9
+:00452C93 E8E4F8FFFF              call 0045257C
+:00452C98 030514AE6E00            add eax, dword ptr [006EAE14]
+:00452C9E C3                      ret
+:00452C9F 9090                    2*nop
+:00452CA1 90                      nop
+:00452CA2 90                      nop
+:00452CA3 90                      nop
+:00452CA4 90                      nop
+:00452CA5 90                      nop
+:00452CA6 90                      nop
+:00452CA7 90                      nop
+:00452CA8 90                      nop
+:00452CA9 6A0F                    push 0000000F
+:00452CAB 57                      push edi
+
+Now 10 bytes free space from 00452C9F to 00452CA9
+

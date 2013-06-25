@@ -1,0 +1,49 @@
+"Anyway, I hope at least one of these can be answered."
+
+Ok, I'll pick this one:
+
+"No.5: Is there any way to change the skills but also change the skill icon and title? It always appears as "NULL"..."
+
+Here is where the first slot in the book is set to the player's skill. Note that this only changes the book, not the character's skill. That needs to be changed seperatly....
+
+:00404873 C705104D48001A000000
+mov dword ptr [00484D10], 0000001A
+
+:00404883 C705104D48001C000000
+mov dword ptr [00484D10], 0000001C
+
+:00404893 C705104D48001B000000
+mov dword ptr [00484D10], 0000001B
+
+Simply change the '1A', '1C', and '1B' to be what you want.
+
+Dr. Zed
+
+P.S. If you haven't already done so, you can make the monster's hit points a dword instead of a byte (this will allow you to exceed 255 hit points). Also, this change will cause Diablo's hit points to be calculated from his base monster data instead of being set by the code.
+
+---------------------------------------
+
+Change monster hit points to a dword
+
+004326A8: (00031AA8)
+53 push ebx
+0FB61F movzx ebx, byte ptr [edi]
+C1E3 07 shl ebx, 07
+81C3 C88E4900 add ebx, 00498EC8
+8B93 04000000 mov edx, dword ptr [ebx+00000004]
+8B03 mov eax, dword ptr [ebx]
+2BD0 sub edx, eax
+B1 58 mov cl, 58
+42 inc edx
+E8 [B055FEFF] call 00417C77
+8B0B mov ecx, dword ptr [ebx]
+03C1 add eax, ecx
+5B pop ebx
+EB [11] jmp 004326DF
+
+(00031AA8)
+xxxx xxxx xxxx xxxx 530F B61F C1E3 0781
+C3C8 8E49 008B 9304 0000 008B 032B D0B1
+5842 E8B0 55FE FF8B 0B03 C15B EB11 xxxx
+
+---------------------------------------

@@ -1,0 +1,16 @@
+Enabling "Crucifixed Skeleton" as Cauldron animation
+
+Crucifix - 15 frames 
+Cauldron - 3 frames 
+Goat shrine - 10 frames 
+
+
+(*)Data : "cauldren" -> "CruxSk3", geen variaties die niet te controleren zijn.
+
+
+()Correctie framesize
+
+:00453497 C786E4E56D0003000000    mov dword ptr [esi+006DE5E4], 00000003
+wordt
+:00453497 C786E4E56D000F000000    mov dword ptr [esi+006DE5E4], 0000000F
+

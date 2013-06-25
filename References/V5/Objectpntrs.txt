@@ -1,0 +1,14 @@
+Object offsets
+
+
+
+dword ptr [esi+006DE5C0]	type of object
+                                00000001, 00000002, eo.      = doors
+				00000005, 00000006, 00000007 = chests
+				00000044, 00000045, 00000046 = trapped chests
+				00000050 = old cauldron
+				00000056 = L5books
+                                0000001A, 0000005B = burncross
+
+dword ptr [esi+006DE608]	00000001		= trapped
+

@@ -1,0 +1,193 @@
+Setup RNGseed for items in Adria's shop list
+
+:0042B49D 55                      push ebp
+:0042B49E 8BEC                    mov ebp, esp
+:0042B4A0 51                      push ecx
+:0042B4A1 51                      push ecx
+:0042B4A2 53                      push ebx
+:0042B4A3 56                      push esi
+:0042B4A4 57                      push edi
+:0042B4A5 8BFA                    mov edi, edx
+:0042B4A7 83FF19                  cmp edi, 00000019			exclude small Mana potions
+:0042B4AA 894DFC                  mov dword ptr [ebp-04], ecx
+:0042B4AD 7429                    je 0042B4D8
+:0042B4AF 83FF6C                  cmp edi, 0000006C			exclude vault key
+:0042B4B2 7424                    je 0042B4D8
+:0042B4B4 83FF1B                  cmp edi, 0000001B			exclude Townportal scrolls
+:0042B4B7 741F                    je 0042B4D8
+:0042B4B9 83FF72                  cmp edi, 00000072
+:0042B4BC 7C58                    jl 0042B516
+:0042B4BE 83FF75                  cmp edi, 00000075			handle Books of {Spell}
+:0042B4C1 7F53                    jg 0042B516
+:0042B4C3 8B4D0C                  mov ecx, dword ptr [ebp+0C]
+:0042B4C6 E85CEAFEFF              call 00419F27
+:0042B4CB 32C9                    xor cl, cl
+:0042B4CD 6A01                    push 00000001
+:0042B4CF 5A                      pop edx
+:0042B4D0 E885EAFEFF              call 00419F5A
+:0042B4D5 8945F8                  mov dword ptr [ebp-08], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042B4AD(C), :0042B4B2(C), :0042B4B7(C)
+|
+:0042B4D8 8B7508                  mov esi, dword ptr [ebp+08]
+:0042B4DB 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0042B4DE 56                      push esi
+:0042B4DF 8BD7                    mov edx, edi
+:0042B4E1 E8CEA2FFFF              call 004257B4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042B568(C), :0042B580(U)
+|
+:0042B4E6 8B45FC                  mov eax, dword ptr [ebp-04]
+:0042B4E9 8B4D0C                  mov ecx, dword ptr [ebp+0C]
+:0042B4EC 69C074010000            imul eax, 00000174
+:0042B4F2 81CE00200000            or esi, 00002000
+:0042B4F8 5F                      pop edi
+:0042B4F9 898880626800            mov dword ptr [eax+00686280], ecx
+:0042B4FF 6689B084626800          mov word ptr [eax+00686284], si
+:0042B506 5E                      pop esi
+:0042B507 C780B862680001000000    mov dword ptr [ebx+006862B8], 00000001
+:0042B511 5B                      pop ebx
+:0042B512 C9                      leave
+:0042B513 C20800                  ret 0008
+
+
+Original Adria's checklist:
+
+:0042A7BF 6BC94C                  imul ecx, 0000004C
+:0042A7C2 33C0                    xor eax, eax
+:0042A7C4 8A91D41B4A00            mov dl, byte ptr [ecx+004A1BD4]	Item code
+:0042A7CA 84D2                    test dl, dl				potions, scrolls, books, etc.
+:0042A7CC 7405                    je 0042A7D3
+:0042A7CE 80FA0A                  cmp dl, 0A				staves
+:0042A7D1 7503                    jne 0042A7D6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A7CC(C)
+|
+:0042A7D3 6A01                    push 00000001				'accept'
+:0042A7D5 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A7D1(C)
+|
+:0042A7D6 8B91001C4A00            mov edx, dword ptr [ecx+004A1C00]	Magic code
+:0042A7DC 83FA12                  cmp edx, 00000012			Rejuvenation potion
+:0042A7DF 7405                    je 0042A7E6
+:0042A7E1 83FA13                  cmp edx, 00000013			Full Rejuvenation potion
+:0042A7E4 7502                    jne 0042A7E8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A7DF(C)
+|
+:0042A7E6 33C0                    xor eax, eax				'dismiss'
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A7E4(C)
+|
+:0042A7E8 8B89041C4A00            mov ecx, dword ptr [ecx+004A1C04]	Spell number
+:0042A7EE 83F907                  cmp ecx, 00000007
+:0042A7F1 7502                    jne 0042A7F5				exclude Townportal
+:0042A7F3 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A7F1(C)
+|
+:0042A7F5 83FA02                  cmp edx, 00000002
+:0042A7F8 7C07                    jl 0042A801
+:0042A7FA 83FA07                  cmp edx, 00000007
+:0042A7FD 7D02                    jge 0042A801				exclude all Mana and Healing potions
+:0042A7FF 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A7F8(C), :0042A7FD(C)
+|
+:0042A801 83FA1D                  cmp edx, 0000001D
+:0042A804 7E07                    jle 0042A80D
+:0042A806 83FA29                  cmp edx, 00000029
+:0042A809 7D02                    jge 0042A80D				exclude all Oil item codes
+:0042A80B 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A804(C), :0042A809(C)
+|
+:0042A80D 8A15C8DF6D00            mov dl, byte ptr [006DDFC8]		SP/MP
+:0042A813 83F920                  cmp ecx, 00000020			Resurrect spell number
+:0042A816 7505                    jne 0042A81D
+:0042A818 80FA01                  cmp dl, 01
+:0042A81B 740A                    je 0042A827
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A816(C)
+|
+:0042A81D 83F922                  cmp ecx, 00000022			Heal All spell number
+:0042A820 7507                    jne 0042A829
+:0042A822 80FA01                  cmp dl, 01
+:0042A825 7502                    jne 0042A829
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A81B(C)
+|
+:0042A827 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A820(C), :0042A825(C)
+|
+:0042A829 C3                      ret
+
+
+
+Grizwold's checklist:
+
+:0042A0B3 6BC94C                  imul ecx, 0000004C
+:0042A0B6 6A01                    push 00000001
+:0042A0B8 8A91D41B4A00            mov dl, byte ptr [ecx+004A1BD4]		Item code
+:0042A0BE 58                      pop eax
+:0042A0BF 84D2                    test dl, dl					potions, scrolls, books, etc.
+:0042A0C1 7502                    jne 0042A0C5
+:0042A0C3 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A0C1(C)
+|
+:0042A0C5 80FA0B                  cmp dl, 0B					gold
+:0042A0C8 7502                    jne 0042A0CC					
+:0042A0CA 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A0C8(C)
+|
+:0042A0CC 80FA0E                  cmp dl, 0E					unknown
+:0042A0CF 7502                    jne 0042A0D3
+:0042A0D1 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A0CF(C)
+|
+:0042A0D3 80FA0A                  cmp dl, 0A					staves
+:0042A0D6 750B                    jne 0042A0E3
+:0042A0D8 83B9041C4A0000          cmp dword ptr [ecx+004A1C04], 00000000	spell number
+:0042A0DF 7402                    je 0042A0E3
+:0042A0E1 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A0D6(C), :0042A0DF(C)
+|
+:0042A0E3 80FA0C                  cmp dl, 0C					Rings
+:0042A0E6 7502                    jne 0042A0EA
+:0042A0E8 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A0E6(C)
+|
+:0042A0EA 80FA0D                  cmp dl, 0D					Amulets
+:0042A0ED 7502                    jne 0042A0F1
+:0042A0EF 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A0ED(C)
+|
+:0042A0F1 C3                      ret
+
+

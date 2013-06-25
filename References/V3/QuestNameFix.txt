@@ -1,0 +1,56 @@
+Quest Name fix
+
+
+				Level
+#	Name			SP	MP
+
+00 - The Magic Rock		05
+01 - Black Mushroom		09
+02 - Gharbad The Weak		03
+03 - Andariel(Zhar The Mad)	08
+04 - Red Terror(Lachdanan)	0E
+05 - Diablo			0F
+06 - The Butcher		02	04
+07 - Ogden's Sign		04
+08 - Halls Of The Blind		08
+09 - Valor			05
+0A - Anvil Of Fury		0A
+0B - Warlord Of Blood		0D
+0C - The Curse Of King Leoric	03	05
+0D - Poisoned Water Supply	04
+0E - The Chamber Of Bone	06
+0F - Archbishop Lazarus		0F	0F
+10 - Grave Matters		11	11
+11 - Farmer's Orchard		09	09
+12 - Little Girl		11
+13 - Wandering Trader		13
+14 - Red Horror			11	11
+15 - h Thing (Na-Krul)		15	15
+16 - Cornerstone Of The World	15
+17 - The Jersey's Jersey	09	09
+
+
+Andariel -> Zhar The Mad:
+000B5344 08FF FF03 6400 0000 0000 0000 9400 0000 ....d...........
+000B5354 8C1B 4B00                               ..K.
+wordt
+000B5354 0C19 4B00                               ..K.
+
+Red Terror -> Lachdanan:
+000B5358 0EFF FF04 6400 0000 0000 0000 5100 0000 ....d.......Q...
+000B5368 301B 4B00                               0.K.
+wordt
+000B5368 8819 4B00                               ..K.
+
+Red Horror -> The Defiler:
+000B5498 1111 FF14 6400 0000 0100 0000 1E01 0000 ....d...........
+000B54A8 081B 4B00                               ..K.
+wordt
+000B54A8 6009 4A00                               `.J.
+
+H Thing/Nakrul -> The Dark Ghost:
+000B54AC 1515 FF15 6400 0000 0100 0000 2301 0000 ....d.......#...
+000B54BC C01B 4B00                               ..K.
+wordt
+000B54BC 781A 4B00                               x.K.
+

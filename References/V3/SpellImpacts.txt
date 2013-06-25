@@ -1,0 +1,301 @@
+Using Scowler Missile for Magic Missile, adding Area of Effect, for Lich attack also
+
+
+FireBall: #06h
+
+000A6410 0600 0000 CA1D 4300 D267 4300 0100 0000 ......C..gC.....
+000A6420 0101 0100 6D00 0000 7000 0000           ....m...p...
+
+Magic Missile: #20h
+
+000A66E8 2000 0000 54D3 4300 969E 4300 0100 0000  ...T.C...C.....
+000A66F8 0103 1D00 FFFF FFFF FFFF FFFF           ............
+
+Psychorb: #63h
+
+000A6E3C 6300 0000 4A37 4300 E860 4300 0100 0000 c...J7C..`C.....
+000A6E4C 0103 3800 FFFF FFFF FFFF FFFF           ..8.........
+
+Archlich: #65h
+
+000A6E74 6500 0000 4A37 4300 E860 4300 0100 0000 e...J7C..`C.....
+000A6E84 0103 3300 FFFF FFFF FFFF FFFF           ..3.........
+
+Psychorb2: #66h
+
+000A6E90 6600 0000 4A37 4300 E860 4300 0100 0000 f...J7C..`C.....
+000A6EA0 0103 3800 FFFF FFFF FFFF FFFF           ..8.........
+
+
+		spell	byte ptr [esi+00697A90]
+
+Magic Missile	20h	36
+Psychorb	63h	36
+Archlich	65h	35
+Psychorb2	66h	36
+FireBall	06h	13
+
+
+Routine that sets EDX as function of spelleffect
+
+Free space from Fountain of Tears (fully used now)
+
+File Offset 00052916
+
+:00453516 90                      nop
+:00453517 90                      nop
+:00453518 8BEB                    mov ebp, ebx
+:0045351A 89442414                mov dword ptr [esp+14], eax
+:0045351E 89442410                mov dword ptr [esp+10], eax
+:00453522 7514                    jne 00453538
+:00453524 FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:0045352A 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:00453530 6A73                    push 00000073
+:00453532 59                      pop ecx
+:00453533 E88C51FCFF              call 004186C4
+:00453538 90                      nop
+:00453539 90                      nop
+:0045353A 90                      nop
+wordt
+:00453516 50                      push eax
+:00453517 8B86587A6900            mov eax, dword ptr [esi+00697A58]
+:0045351D 83E817                  sub eax, 00000020
+:00453520 7414                    je 00453536
+:00453522 83E827                  sub eax, 00000043
+:00453525 740F                    je 00453536
+:00453527 48                      dec eax
+:00453528 48                      dec eax
+:00453529 7407                    je 00453532
+:0045352B 48                      dec eax
+:0045352C 7408                    je 00453536
+:0045352E 6A13                    push 00000013
+:00453530 EB06                    jmp 00453538
+:00453532 6A35                    push 00000035
+:00453534 EB02                    jmp 00453538
+:00453536 6A36                    push 00000036
+:00453538 5A                      pop edx
+:00453539 58                      pop eax
+:0045353A C3                      ret
+
+
+Supporting different spelleffects in FireBall Update
+
+
+File Offset 00035C36
+
+:00436836 80BE907A690013          cmp byte ptr [esi+00697A90], 13
+wordt
+:00436836 E829440400              call 0047AC64
+:0043683B 9090                    2*nop
+
+File Offset 0007A064
+
+:0047AC64 90                      nop
+:0047AC65 90                      nop
+:0047AC66 90                      nop
+:0047AC67 90                      nop
+:0047AC68 90                      nop
+:0047AC69 90                      nop
+:0047AC6A 90                      nop
+:0047AC6B 90                      nop
+:0047AC6C 90                      nop
+:0047AC6D 90                      nop
+:0047AC6E 90                      nop
+:0047AC6F 90                      nop
+wordt
+:0047AC64 E8AD88FDFF              call 00453516
+:0047AC69 3896907A6900            cmp byte ptr [esi+00697A90], dl
+:0047AC6F C3                      ret
+
+
+
+File Offset 00035F76
+
+:00436B76 6A13                    push 00000013
+:00436B78 898E847A6900            mov dword ptr [esi+00697A84], ecx
+:00436B7E 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00436B81 5A                      pop edx
+:00436B82 E8198FFFFF              call 0042FAA0
+wordt
+:00436B76 9090                    2*nop
+:00436B78 898E847A6900            mov dword ptr [esi+00697A84], ecx
+:00436B7E 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00436B81 90                      nop
+:00436B82 E8AE3C0400              call 0047A835
+:00436B87 
+
+
+
+File Offset 00079C35
+
+:0047A835 90                      nop
+:0047A836 90                      nop
+:0047A837 90                      nop
+:0047A838 90                      nop
+:0047A839 90                      nop
+:0047A83A 90                      nop
+:0047A83B 90                      nop
+:0047A83C 90                      nop
+:0047A83D 90                      nop
+:0047A83E 90                      nop
+:0047A83F 90                      nop
+wordt
+:0047A835 E8DC8CFDFF              call 00453516
+:0047A83A E86152FBFF              call 0042FAA0
+:0047A83F C3                      ret
+
+
+
+Forcing the graphics to load:
+
+File Offset 0003A432
+
+:0043B032 7405                    je 0043B039
+wordt
+:0043B032 EB05                    jmp 0043B039
+
+File Offset 0003A47E
+
+:0043B07E 751A                    jne 0043B09A
+wordt
+:0043B07E 7500                    jne 0043B080
+
+
+Lowering Magic Missile speed, to avoid NoHit bug and nicer graphics:
+
+File Offset 0003C79B
+
+:0043D39B 8D440019                lea eax, dword ptr [eax+eax+19]
+:0043D39F 83F83F                  cmp eax, 0000003F
+:0043D3A2 7C07                    jl 0043D3AB
+:0043D3A4 6A3F                    push 0000003F
+:0043D3A6 EB02                    jmp 0043D3AA
+wordt
+:0043D39B 8D440010                lea eax, dword ptr [eax+eax+10]
+:0043D39F 83F820                  cmp eax, 00000020
+:0043D3A2 7C07                    jl 0043D3AB
+:0043D3A4 6A20                    push 00000020
+:0043D3A6 EB02                    jmp 0043D3AA
+
+
+Give 'Magic Missile' the new graphic 38h (Ms_Blb)
+
+000A66F0 969E 4300 0100 0000 0103 1D00 FFFF FFFF ..C.............
+wordt
+000A66F0 969E 4300 0100 0000 0103 3800 FFFF FFFF ..C.............
+
+
+Giving FireBall-Update to MagicMissile, Scowler and Lich
+
+Magic Missile: #20h
+
+000A66E8 2000 0000 54D3 4300 D267 4300 0100 0000  ...T.C...C.....
+
+Psychorb: #63h
+
+000A6E3C 6300 0000 4A37 4300 D267 4300 0100 0000 c...J7C..`C.....
+
+Archlich: #65h
+
+000A6E74 6500 0000 4A37 4300 D267 4300 0100 0000 e...J7C..`C.....
+
+Psychorb2: #66h
+
+000A6E90 6600 0000 4A37 4300 D267 4300 0100 0000 f...J7C..`C.....
+
+
+Adjusting Manacost for MagicMissile from 8-4-1 to 12-6-1, cost of book from 1000 to 3000, 
+required Magic from 22 to 30 and staff multiplier from 10 to 20:
+
+000B6988 2C0C 0200 C282 4B00 0000 0000 0300 0000 ,.....K.........
+000B6998 0300 0000 0000 0000 0000 0000 1E00 0000 ................
+000B69A8 5220 0000 0106 0000 2800 0000 5000 0000 R ......(...P...
+000B69B8 B80B 0000 6400 0000                     ....d...
+
+
+This doubles the damage to the primary target, so Spellbook damage needs adjusted.
+
+
+
+Knockback and Piercing for Spells
+
+
+		#	Knockback	Piercing 40%	Piercing 100%
+
+Arrow		00	by item		yes		no
+
+Holy Bolt	35	yes		no 		no
+
+Doom Serpent	10	yes		no		no
+
+Elemental	3D	yes		yes		no
+
+Bone Spirit	3F	no		no		yes
+
+
+
+Knockback:
+
+File Offset 0003D892
+
+:0043E492 807D1300                cmp byte ptr [ebp+13], 00
+:0043E496 7414                    je 0043E4AC
+:0043E498 837D1435                cmp dword ptr [ebp+14], 00000035	Holy Bolt
+:0043E49C 7417                    je 0043E4B5
+:0043E49E 837D143D                cmp dword ptr [ebp+14], 0000003D	Elemental
+:0043E4A2 7411                    je 0043E4B5
+:0043E4A4 837D1410                cmp dword ptr [ebp+14], 00000010	Doom Serpents
+:0043E4A8 740B                    je 0043E4B5
+:0043E4AA EB06                    jmp 0043E4B2
+:0043E4AC F6400108                test [eax+01], 08
+:0043E4B0 7503                    jne 0043E4B5
+:0043E4B2 33C0                    xor eax, eax
+:0043E4B4 C3                      ret
+:0043E4B5 6A01                    push 00000001
+:0043E4B7 58                      pop eax
+:0043E4B8 C3                      ret
+
+
+Piercing:
+
+File Offset 0002E9C6
+
+:0042F5C6 E94E900200              jmp 00458619
+wordt
+:0042F5C6 E93C3F0200              jmp 00453507
+:0042F5CB 
+
+File Offset 00052907
+
+:00453507 90                      nop
+:00453508 90                      nop
+:00453509 90                      nop
+:0045350A 90                      nop
+:0045350B 90                      nop
+:0045350C 90                      nop
+:0045350D 90                      nop
+:0045350E 90                      nop
+:0045350F 90                      nop
+:00453510 90                      nop
+:00453511 90                      nop
+:00453512 390510AB6D00            cmp dword ptr [006DAB10], eax
+wordt
+:00453507 837D143F                cmp dword ptr [ebp+14], 0000003F	Bone Spirit
+:0045350B 0F8508510000            jne 00458619
+:00453511 E9B5C0FDFF              jmp 0042F5CB
+:00453516 9090
+
+File Offset 00057A19
+
+:00458619 807D1300                cmp byte ptr [ebp+13], 00		Arrows
+:0045861D 7406                    je 00458625
+:0045861F 837D143D                cmp dword ptr [ebp+14], 0000003D	Elemental
+:00458623 7507                    jne 0045862C
+:00458625 E8A24EFEFF              call 0043D4CC		routine from KnockbackAvoid
+:0045862A EB03                    jmp 0045862F
+:0045862C 6A01                    push 00000001
+:0045862E 58                      pop eax
+:0045862F E9996FFDFF              jmp 0042F5CD
+
+
+

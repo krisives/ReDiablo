@@ -1,0 +1,69 @@
+Divine Help fix
+
+This spell lowers Vitality, but can be cast without problem if Vitality is gone. This fix will prevent using spells and skills when any character statistic is gone. All checks include both base and current statistic. Spells from staves, scrolls and other items can still be used normally.
+
+Adding check for zero Vit, Mag, Dex and Str to routine that checks for sufficient mana and spell levels:
+
+file offset 0006B487
+
+:0046C087 807C240C00              cmp byte ptr [esp+0C], 00
+:0046C08C 7434                    je 0046C0C2
+:0046C08E 8BD7                    mov edx, edi
+:0046C090 8BCE                    mov ecx, esi
+:0046C092 E8BE2FFCFF              call 0042F055
+:0046C097 85C0                    test eax, eax
+:0046C099 7F04                    jg 0046C09F
+:0046C09B 33C0                    xor eax, eax
+:0046C09D EB23                    jmp 0046C0C2
+
+changed into
+
+:0046C087 E9B063FEFF              jmp 0045243C
+:0046C08C 
+
+
+Using free space from Divine Shrine:
+
+file offset 0005183C
+
+:0045243C 57                      push edi
+:0045243D 57                      push edi
+:0045243E E83753FDFF              call 0042777A
+:00452443 6A01                    push 00000001
+:00452445 57                      push edi
+:00452446 6A13                    push 00000013
+:00452448 EB1A                    jmp 00452464
+:0045244A 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:00452450 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:00452456 6A0B                    push 0000000B
+:00452458 57                      push edi
+:00452459 57                      push edi
+:0045245A E81B53FDFF              call 0042777A
+:0045245F 6A01                    push 00000001
+:00452461 57                      push edi
+:00452462 6A0D                    push 0000000D
+:00452464 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:0045246A 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:00452470 57                      push edi
+:00452471 57                      push edi
+:00452472 E80353FDFF              call 0042777A
+changed into
+:0045243C 8BCE                    mov ecx, esi
+:0045243E 69C9C8550000            imul ecx, 000055C8
+:00452444 030D14AE6E00            add ecx, dword ptr [006EAE14]
+:0045244A 81C160010000            add ecx, 00000160
+:00452450 6A08                    push 00000008
+:00452452 5A                      pop edx
+:00452453 8BC2                    mov eax, edx
+:00452455 C1E002                  shl eax, 02
+:00452458 03C1                    add eax, ecx
+:0045245A 833800                  cmp dword ptr [eax], 00000000
+:0045245D 7E03                    jle 00452462
+:0045245F 4A                      dec edx
+:00452460 7FF1                    jg 00452453
+:00452462 85D2                    test edx, edx
+:00452464 0F85319C0100            jne 0046C09B
+:0045246A 807C240C00              cmp byte ptr [esp+0C], 00
+:0045246F E9189C0100              jmp 0046C08C
+:00452474 909090                  3*nop
+

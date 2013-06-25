@@ -1,0 +1,274 @@
+by Jarulf
+
+I will discuss mainly Diablo, but I have pasted the code section for
+both Diablo and Hellfire so hopefully it should be easy to work out.
+
+The positons of stairs on a level is kept track starting at 6ace20 where each stair
+has 16 bytes, at 6ace18 is kept track of the number of stairs on a level. For
+town this is set at a routine staring at 463539. I have pasted the wole routine
+in for you below to find the exact postions (subtract 400c00 to get file 
+offset). Note that first comes the church (19,1d). The number following 404 and
+for others 407 is a code that tells what type of level movement you are doing.
+Just don't mess with them and you are safe. I can tell what they do if
+someone is REALLY interested but there is litle point as messing with them will
+sort of probably crash the game or cause problems. The main check for level
+transition is done in a routine at 41ba20. Examples of codes are 402 and 403
+being going up and down a level, 407 and 408 being sort of portals (one is real
+portal the other stair "portal" to specific level and you will notice that in
+the routine that the four value at 3c, 4c and so on holds the dungeon level you
+will be moved too (so you may tweak that). Church is special in that it uses
+level movement by code 402 and thus do not specify dungeon level you get too.
+Also note that for singel player to work, you need to change the values a second
+time further down in the code.
+
+Note that this do NOT move arround the
+grpahcis, that is not possible, it moves arround the location where the 
+stair is positioned.If anyone is interested, the code that set the exit location
+of the mini quest levels are found at 463a9e and onwards. Remember that those
+mini levels look the same all the time though.
+
+The routine that each frame check if you have reached a stair or portla lcation is found at 464646.
+After it (not pasted here) comes rotuines that add stairs for church, cats, 
+caves and hell (based on precalculated locations). Note the check for the
+pentagram activation, before activating it.
+
+For Diablo:
+
+*Referenced by a CALL at Address::0040A6DF 
+:00463539 803D90A9670004
+cmp byte ptr [0067A990], 04<BR>:00463540 53 push ebx<BR>:00463541 57 =
+push=20
+edi<BR>:00463542 6A01 push 00000001<BR>:00463544 5A pop edx<BR>:00463545 =
+
+C70520CE6A0019000000 mov dword ptr [006ACE20], 00000019<BR>:0046354F=20
+C70524CE6A001D000000 mov dword ptr [006ACE24], 0000001D<BR>:00463559=20
+C70528CE6A0002040000 mov dword ptr [006ACE28], 00000402<BR>:00463563=20
+891518CE6A00 mov dword ptr [006ACE18], edx<BR>:00463569 0F858A000000 jne =
+
+004635F9<BR>:0046356F 8BC2 mov eax, edx<BR>:00463571 BF08CE6A00 mov edi, =
+
+006ACE08<BR>:00463576 AB stosd<BR>:00463577 AB stosd<BR>:00463578 =
+B907040000 mov=20
+ecx, 00000407<BR>:0046357D C70530CE6A0031000000 mov dword ptr =
+[006ACE30],=20
+00000031<BR>:00463587 AB stosd<BR>:00463588 C70534CE6A0015000000 mov =
+dword ptr=20
+[006ACE34], 00000015<BR>:00463592 890D38CE6A00 mov dword ptr [006ACE38], =
+
+ecx<BR>:00463598 C7053CCE6A0005000000 mov dword ptr [006ACE3C],=20
+00000005<BR>:004635A2 C70540CE6A0011000000 mov dword ptr [006ACE40],=20
+00000011<BR>:004635AC C70544CE6A0045000000 mov dword ptr [006ACE44],=20
+00000045<BR>:004635B6 890D48CE6A00 mov dword ptr [006ACE48], =
+ecx<BR>:004635BC=20
+C7054CCE6A0009000000 mov dword ptr [006ACE4C], 00000009<BR>:004635C6=20
+C70550CE6A0029000000 mov dword ptr [006ACE50], 00000029<BR>:004635D0=20
+C70554CE6A0050000000 mov dword ptr [006ACE54], 00000050<BR>:004635DA=20
+890D58CE6A00 mov dword ptr [006ACE58], ecx<BR>:004635E0 =
+C7055CCE6A000D000000 mov=20
+dword ptr [006ACE5C], 0000000D<BR>:004635EA C70518CE6A0004000000 mov =
+dword ptr=20
+[006ACE18], 00000004<BR>:004635F4 E9CF000000 jmp 004636C8<BR><BR>* =
+Referenced by=20
+a (U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00463569(C)<BR>|<BR>:004635F9 33C0 xor eax, =
+eax<BR>:004635FB=20
+BF08CE6A00 mov edi, 006ACE08<BR>:00463600 AB stosd<BR>:00463601 AB=20
+stosd<BR>:00463602 AB stosd<BR>:00463603 A174776800 mov eax, dword ptr=20
+[00687774]<BR>:00463608 6A02 push 00000002<BR>:0046360A 69C0D8540000 =
+imul eax,=20
+000054D8<BR>:00463610 B907040000 mov ecx, 00000407<BR>:00463615 =
+8A98F0CB6800 mov=20
+bl, byte ptr [eax+0068CBF0]<BR>:0046361B 58 pop eax<BR>:0046361C 84DA =
+test dl,=20
+bl<BR>:0046361E 742F je 0046364F<BR>:00463620 C70530CE6A0031000000 mov =
+dword ptr=20
+[006ACE30], 00000031<BR>:0046362A C70534CE6A0015000000 mov dword ptr =
+[006ACE34],=20
+00000015<BR>:00463634 890D38CE6A00 mov dword ptr [006ACE38], =
+ecx<BR>:0046363A=20
+C7053CCE6A0005000000 mov dword ptr [006ACE3C], 00000005<BR>:00463644 =
+A318CE6A00=20
+mov dword ptr [006ACE18], eax<BR>:00463649 891508CE6A00 mov dword ptr=20
+[006ACE08], edx<BR><BR>* Referenced by a (U)nconditional or =
+(C)onditional Jump=20
+at Address:<BR>|:0046361E(C)<BR>|<BR>:0046364F 84D8 test al, =
+bl<BR>:00463651=20
+7438 je 0046368B<BR>:00463653 A118CE6A00 mov eax, dword ptr=20
+[006ACE18]<BR>:00463658 89150CCE6A00 mov dword ptr [006ACE0C], =
+edx<BR>:0046365E=20
+C1E004 shl eax, 04<BR>:00463661 FF0518CE6A00 inc dword ptr=20
+[006ACE18]<BR>:00463667 C78020CE6A0011000000 mov dword ptr =
+[ebx+006ACE20],=20
+00000011<BR>:00463671 C78024CE6A0045000000 mov dword ptr [ebx+006ACE24], =
+
+00000045<BR>:0046367B 898828CE6A00 mov dword ptr [eax+006ACE28],=20
+ecx<BR>:00463681 C7802CCE6A0009000000 mov dword ptr [ebx+006ACE2C],=20
+00000009<BR><BR>* Referenced by a (U)nconditional or (C)onditional Jump =
+at=20
+Address:<BR>|:00463651(C)<BR>|<BR>:0046368B F6C304 test bl, =
+04<BR>:0046368E 7438=20
+je 004636C8<BR>:00463690 A118CE6A00 mov eax, dword ptr =
+[006ACE18]<BR>:00463695=20
+891510CE6A00 mov dword ptr [006ACE10], edx<BR>:0046369B C1E004 shl eax,=20
+04<BR>:0046369E FF0518CE6A00 inc dword ptr [006ACE18]<BR>:004636A4=20
+C78020CE6A0029000000 mov dword ptr [ebx+006ACE20], 00000029<BR>:004636AE =
+
+C78024CE6A0050000000 mov dword ptr [ebx+006ACE24], 00000050<BR>:004636B8 =
+
+898828CE6A00 mov dword ptr [eax+006ACE28], ecx<BR>:004636BE =
+C7802CCE6A000D000000=20
+mov dword ptr [ebx+006ACE2C], 0000000D<BR><BR>* Referenced by a =
+(U)nconditional=20
+or (C)onditional Jump at Addresses:<BR>|:004635F4(U),=20
+:0046368E(C)<BR>|<BR>:004636C8 832514CE6A0000 and dword ptr [006ACE14],=20
+00000000<BR>:004636CF 5F pop edi<BR>:004636D0 5B pop ebx<BR>:004636D1 C3 =
+
+ret<BR><BR><BR><BR><BR>For Hellfire:<BR><BR>* Referenced by a CALL at=20
+Addresses:<BR>|:0040B145 , :0044A362 <BR>|<BR>:00477B96 53 push =
+ebx<BR>:00477B97=20
+803DC8DF6D0004 cmp byte ptr [006DDFC8], 04<BR>:00477B9E 55 push =
+ebp<BR>:00477B9F=20
+57 push edi<BR>:00477BA0 6A01 push 00000001<BR>:00477BA2 =
+C7052802700019000000=20
+mov dword ptr [00700228], 00000019<BR>:00477BAC 5B pop ebx<BR>:00477BAD=20
+C7052C0270001D000000 mov dword ptr [0070022C], 0000001D<BR>:00477BB7 =
+8BCB mov=20
+ecx, ebx<BR>:00477BB9 C7053002700002040000 mov dword ptr [00700230],=20
+00000402<BR>:00477BC3 890D20027000 mov dword ptr [00700220], =
+ecx<BR>:00477BC9=20
+0F85BE000000 jne 00477C8D<BR>:00477BCF 8BC3 mov eax, ebx<BR>:00477BD1 =
+BF10027000=20
+mov edi, 00700210<BR>:00477BD6 AB stosd<BR>:00477BD7 6A15 push=20
+00000015<BR>:00477BD9 C7053802700031000000 mov dword ptr [00700238],=20
+00000031<BR>:00477BE3 59 pop ecx<BR>:00477BE4 C7054402700005000000 mov =
+dword ptr=20
+[00700244], 00000005<BR>:00477BEE AB stosd<BR>:00477BEF 6A11 push=20
+00000011<BR>:00477BF1 890D3C027000 mov dword ptr [0070023C], =
+ecx<BR>:00477BF7 5D=20
+pop ebp<BR>:00477BF8 C7054C02700045000000 mov dword ptr [0070024C],=20
+00000045<BR>:00477C02 AB stosd<BR>:00477C03 6A50 push =
+00000050<BR>:00477C05=20
+B807040000 mov eax, 00000407<BR>:00477C0A 5F pop edi<BR>:00477C0B =
+A340027000 mov=20
+dword ptr [00700240], eax<BR>:00477C10 892D48027000 mov dword ptr =
+[00700248],=20
+ebp<BR>:00477C16 A350027000 mov dword ptr [00700250], eax<BR>:00477C1B=20
+C7055402700009000000 mov dword ptr [00700254], 00000009<BR>:00477C25=20
+C7055802700029000000 mov dword ptr [00700258], 00000029<BR>:00477C2F=20
+893D5C027000 mov dword ptr [0070025C], edi<BR>:00477C35 A360027000 mov =
+dword ptr=20
+[00700260], eax<BR>:00477C3A C705640270000D000000 mov dword ptr =
+[00700264],=20
+0000000D<BR>:00477C44 C7056802700024000000 mov dword ptr [00700268],=20
+00000024<BR>:00477C4E C7056C02700018000000 mov dword ptr [0070026C],=20
+00000018<BR>:00477C58 A370027000 mov dword ptr [00700270], =
+eax<BR>:00477C5D=20
+890D74027000 mov dword ptr [00700274], ecx<BR>:00477C63 893D78027000 mov =
+dword=20
+ptr [00700278], edi<BR>:00477C69 C7057C0270003E000000 mov dword ptr =
+[0070027C],=20
+0000003E<BR>:00477C73 A380027000 mov dword ptr [00700280], =
+eax<BR>:00477C78=20
+892D84027000 mov dword ptr [00700284], ebp<BR>:00477C7E =
+C7052002700006000000 mov=20
+dword ptr [00700220], 00000006<BR>:00477C88 E94C010000 jmp =
+00477DD9<BR><BR>*=20
+Referenced by a (U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00477BC9(C)<BR>|<BR>:00477C8D 33C0 xor eax, =
+eax<BR>:00477C8F=20
+BF10027000 mov edi, 00700210<BR>:00477C94 AB stosd<BR>:00477C95 AB=20
+stosd<BR>:00477C96 AB stosd<BR>:00477C97 A1E8AD6E00 mov eax, dword ptr=20
+[006EADE8]<BR>:00477C9C 8B1514AE6E00 mov edx, dword ptr =
+[006EAE14]<BR>:00477CA2=20
+69C0C8550000 imul eax, 000055C8<BR>:00477CA8 849C1068550000 test byte =
+ptr=20
+[eax+edx+00005568], bl<BR>:00477CAF 56 push esi<BR>:00477CB0 8D3410 lea =
+esi,=20
+dword ptr [eax+edx]<BR>:00477CB3 B807040000 mov eax, =
+00000407<BR>:00477CB8 7509=20
+jne 00477CC3<BR>:00477CBA 80BEB80100000A cmp byte ptr [esi+000001B8],=20
+0A<BR>:00477CC1 7C32 jl 00477CF5<BR><BR>* Referenced by a =
+(U)nconditional or=20
+(C)onditional Jump at Address:<BR>|:00477CB8(C)<BR>|<BR>:00477CC3 6A02 =
+push=20
+00000002<BR>:00477CC5 C7053802700031000000 mov dword ptr [00700238],=20
+00000031<BR>:00477CCF 59 pop ecx<BR>:00477CD0 C7053C02700015000000 mov =
+dword ptr=20
+[0070023C], 00000015<BR>:00477CDA A340027000 mov dword ptr [00700240],=20
+eax<BR>:00477CDF C7054402700005000000 mov dword ptr [00700244],=20
+00000005<BR>:00477CE9 890D20027000 mov dword ptr [00700220], =
+ecx<BR>:00477CEF=20
+891D10027000 mov dword ptr [00700210], ebx<BR><BR>* Referenced by a=20
+(U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00477CC1(C)<BR>|<BR>:00477CF5 F6866855000002 test byte ptr =
+
+[esi+00005568], 02<BR>:00477CFC 6A11 push 00000011<BR>:00477CFE 5D pop=20
+ebp<BR>:00477CFF 7509 jne 00477D0A<BR>:00477D01 80BEB80100000F cmp byte =
+ptr=20
+[esi+000001B8], 0F<BR>:00477D08 7C32 jl 00477D3C<BR><BR>* Referenced by =
+a=20
+(U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00477CFF(C)<BR>|<BR>:00477D0A 8BD1 mov edx, =
+ecx<BR>:00477D0C=20
+891D14027000 mov dword ptr [00700214], ebx<BR>:00477D12 C1E204 shl edx,=20
+04<BR>:00477D15 41 inc ecx<BR>:00477D16 89AA28027000 mov dword ptr=20
+[edx+00700228], ebp<BR>:00477D1C C7822C02700045000000 mov dword ptr=20
+[ebx+0070022C], 00000045<BR>:00477D26 898230027000 mov dword ptr =
+[edx+00700230],=20
+eax<BR>:00477D2C C7823402700009000000 mov dword ptr [ebx+00700234],=20
+00000009<BR>:00477D36 890D20027000 mov dword ptr [00700220], =
+ecx<BR><BR>*=20
+Referenced by a (U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00477D08(C)<BR>|<BR>:00477D3C F6866855000004 test byte ptr =
+
+[esi+00005568], 04<BR>:00477D43 6A50 push 00000050<BR>:00477D45 5F pop=20
+edi<BR>:00477D46 7509 jne 00477D51<BR>:00477D48 80BEB801000014 cmp byte =
+ptr=20
+[esi+000001B8], 14<BR>:00477D4F 7C2C jl 00477D7D<BR><BR>* Referenced by =
+a=20
+(U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00477D46(C)<BR>|<BR>:00477D51 8BD1 mov edx, =
+ecx<BR>:00477D53=20
+891D18027000 mov dword ptr [00700218], ebx<BR>:00477D59 C1E204 shl edx,=20
+04<BR>:00477D5C 41 inc ecx<BR>:00477D5D C7822802700029000000 mov dword =
+ptr=20
+[ebx+00700228], 00000029<BR>:00477D67 89BA2C027000 mov dword ptr =
+[edx+0070022C],=20
+edi<BR>:00477D6D 898230027000 mov dword ptr [edx+00700230], =
+eax<BR>:00477D73=20
+C782340270000D000000 mov dword ptr [ebx+00700234], 0000000D<BR><BR>* =
+Referenced=20
+by a (U)nconditional or (C)onditional Jump at=20
+Address:<BR>|:00477D4F(C)<BR>|<BR>:00477D7D 803D1AB56E0003 cmp byte ptr=20
+[006EB51A], 03<BR>:00477D84 752A jne 00477DB0<BR>:00477D86 8BD1 mov edx, =
+
+ecx<BR>:00477D88 C1E204 shl edx, 04<BR>:00477D8B 41 inc ecx<BR>:00477D8C =
+
+C7822802700024000000 mov dword ptr [ebx+00700228], 00000024<BR>:00477D96 =
+
+C7822C02700018000000 mov dword ptr [ebx+0070022C], 00000018<BR>:00477DA0 =
+
+898230027000 mov dword ptr [edx+00700230], eax<BR>:00477DA6 =
+C7823402700015000000=20
+mov dword ptr [ebx+00700234], 00000015<BR><BR>* Referenced by a =
+(U)nconditional=20
+or (C)onditional Jump at Address:<BR>|:00477D84(C)<BR>|<BR>:00477DB0 =
+8BD1 mov=20
+edx, ecx<BR>:00477DB2 5E pop esi<BR>:00477DB3 C1E204 shl edx, =
+04<BR>:00477DB6 41=20
+inc ecx<BR>:00477DB7 89BA28027000 mov dword ptr [edx+00700228], =
+edi<BR>:00477DBD=20
+C7822C0270003E000000 mov dword ptr [ebx+0070022C], 0000003E<BR>:00477DC7 =
+
+898230027000 mov dword ptr [edx+00700230], eax<BR>:00477DCD 89AA34027000 =
+mov=20
+dword ptr [edx+00700234], ebp<BR>:00477DD3 890D20027000 mov dword ptr=20
+[00700220], ecx<BR><BR>* Referenced by a (U)nconditional or =
+(C)onditional Jump=20
+at Address:<BR>|:00477C88(U)<BR>|<BR>:00477DD9 83251C02700000 and dword =
+ptr=20
+[0070021C], 00000000<BR>:00477DE0 5F pop edi<BR>:00477DE1 5D pop=20
+ebp<BR>:00477DE2 5B pop ebx<BR>:00477DE3 C3 ret<BR><BR><BR><BR>
+<P>
+
+Posted on May 26 2000 , 06:30 AM 

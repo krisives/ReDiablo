@@ -1,0 +1,17 @@
+Max to Hit in Character Melee vs. Monsters 95 -> 90 -> 95%
+
+Restoring old value, because monsters are much harder again.
+
+
+File Offset 0005AD9E
+
+:0045B99E 83FB5A                  cmp ebx, 0000005A
+wordt
+:0045B99E 83FB5F                  cmp ebx, 0000005F
+
+
+File Offset 0005ADA3
+
+:0045B9A3 6A5A                    push 0000005A
+wordt
+:0045B9A3 6A5F                    push 0000005F

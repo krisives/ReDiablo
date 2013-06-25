@@ -1,0 +1,36 @@
+Ears can now be used to cast the Resurrect spell (by right-click):
+
+
+pos name          item type         item group          equip     qlvl  dur   str mag dex  price  pic  src 
+
+ 23 Heart         5 special          0 other            7 not       0     0    0   0   0       0   19    0
+
+000A0C9C 0000 0000 0507 0000 1300 0000 0000 0000 ................
+000A0CAC DC54 4A00 0000 0000 0000 0000 0000 0000 .TJ.............
+000A0CBC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A0CCC 0000 0000 0000 0000 2B00 0000 0000 0000 ........+.......
+000A0CDC 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A0CD8 2500 0000 0100 0000                     %.......
+
+
+file offset 0002937C
+
+:00429F7C 0F84BA000000            je 0042A03C
+changed into
+:00429F7C 0F8E24A0FDFF            jle 00403FA6
+:00429F82 
+
+Using free space from Itemspells:
+
+file offset 000033A6
+
+:00403FA6 50                      push eax
+:00403FA7 68344F4900              push 00494F34
+:00403FAC E929010000              jmp 004040DA
+changed into
+:00403FA6 0F8490600200            je 0042A03C
+:00403FAC E9395D0200              jmp 00429CEA			jmp to 'scroll clicking'
+:00403FB1 
+
+

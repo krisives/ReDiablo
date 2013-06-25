@@ -1,0 +1,40 @@
+Hex values of keycodes in Hellfire
+
+0D = Return
+10 = Shift
+11 = Ctrl
+1B = Escape
+2C = Printscreen
+
+70 = F1
+71 = F2
+72 = F3
+73 = F4
+74 = F5
+75 = F6
+76 = F7
+77 = F8
+78 = F9
+79 = F10
+7A = F11
+7B = F12
+
+
+Accelerator keys:		Hexcode
+
+Escape	Main Menu		1B
+Tab	Automap			09
+Space	Hide all		20
+Return	Talk			0D
+B	Spellbook		42
+C	Character		43
+F	Reduce brightness	46
+G	Increase Brightness	47
+I	Inventory		49
+Q	Quests			51
+S	Speedbook		53
+V       Versiondisplay          56
+Z	Zoom			5A
++ / -	Zoom Automap
+
+1 - 8 Belt Items		31 - 38

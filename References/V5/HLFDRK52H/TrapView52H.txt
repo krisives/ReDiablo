@@ -1,0 +1,92 @@
+These modifications make some traps easier, and others harder to detect.
+
+
+File offset 00053C6E
+
+:0045486E E8343CFDFF              call 004284A7
+:00454873 85C9                    test ecx, ecx
+:00454875 90                      nop
+:00454876 90                      nop
+:00454877 90                      nop
+:00454878 90                      nop
+changed into
+:0045486E 90                      nop
+:0045486F 6A08                    push 00000008
+:00454871 59                      pop ecx
+:00454872 E8F051FEFF              call 00439A67
+:00454877 85C9                    test ecx, ecx
+
+
+Using now free space from Rage spell:
+
+File offset 00038E65
+
+:00439A65 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00439A68 E8F89EFEFF              call 00423965
+:00439A6D A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A72 29BC3098010000          sub dword ptr [eax+esi+00000198], edi
+:00439A79 6A40                    push 00000040
+:00439A7B 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:00439A82 59                      pop ecx
+:00439A83 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A88 398C3098010000          cmp dword ptr [eax+esi+00000198], ecx
+:00439A8F 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:00439A96 7D02                    jge 00439A9A
+:00439A98 8908                    mov dword ptr [eax], ecx
+:00439A9A A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A9F C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:00439AA9 03C6                    add eax, esi
+:00439AAB FF703C                  push [eax+3C]
+:00439AAE 8B5038                  mov edx, dword ptr [eax+38]
+:00439AB1 90                      nop
+:00439AB2 90                      nop
+:00439AB3 90                      nop
+:00439AB4 90                      nop
+changed into
+:00439A65 9090                    2*nop
+:00439A67 80B8D001000000          cmp byte ptr [eax+000001D0], 00
+:00439A6E 7544                    jne 00439AB4					skip if Seeing
+:00439A70 53                      push ebx
+:00439A71 52                      push edx
+:00439A72 0FBE98B8010000          movsx ebx, byte ptr [eax+000001B8]		CLVL
+:00439A79 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]		DLVL
+:00439A80 40                      inc eax
+:00439A81 D1E0                    shl eax, 1
+:00439A83 8B15C0706000            mov edx, dword ptr [006070C0]			Difficulty
+:00439A89 4A                      dec edx
+:00439A8A 7404                    je 00439A90					jump if Nightmare Mode
+:00439A8C 7C04                    jl 00439A92					jump if Normal Mode
+:00439A8E 03C1                    add eax, ecx
+:00439A90 03C1                    add eax, ecx					
+:00439A92 8B97C4E56D00            mov edx, dword ptr [edi+006DE5C4]
+:00439A98 0397C8E56D00            add edx, dword ptr [edi+006DE5C8]
+:00439A9E F6C204                  test dl, 04
+:00439AA1 7404                    je 00439AA7
+:00439AA3 D1E3                    shl ebx, 1
+:00439AA5 EB05                    jmp 00439AAC
+:00439AA7 F6C201                  test dl, 01
+:00439AAA 7404                    je 00439AB0
+:00439AAC 3BC3                    cmp eax, ebx
+:00439AAE 7C02                    jl 00439AB2
+:00439AB0 33C9                    xor ecx, ecx
+:00439AB2 5A                      pop edx
+:00439AB3 5B                      pop ebx
+:00439AB4 C3                      ret
+
+Now 64 bytes free space from 00439A27 to 00439A67
+
+
+Also, 32 bytes free space from 004284A7 to 004284C7:
+
+:004284A7 52                      push edx
+:004284A8 8B88D0010000            mov ecx, dword ptr [eax+000001D0]
+:004284AE 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:004284B5 42                      inc edx
+:004284B6 D1E2                    shl edx, 1
+:004284B8 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:004284BF 3BD0                    cmp edx, eax
+:004284C1 7D02                    jge 004284C5
+:004284C3 8BC8                    mov ecx, eax
+:004284C5 5A                      pop edx
+:004284C6 C3                      ret
+

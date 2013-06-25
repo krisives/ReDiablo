@@ -1,0 +1,39 @@
+Placing the Executioner before the Dark Lord's Abyss room:
+
+File offset 0003B0A9
+
+:0043BCA9 7524                    jne 0043BCCF				jump if not Dark Lord
+:0043BCAB A160735700              mov eax, dword ptr [00577360]
+:0043BCB0 85C0                    test eax, eax
+:0043BCB2 0F8414030000            je 0043BFCC				skip if invalid coordinate
+:0043BCB8 8B1D64735700            mov ebx, dword ptr [00577364]		set coordinate
+:0043BCBE 85DB                    test ebx, ebx
+:0043BCC0 0F8406030000            je 0043BFCC				skip if invalid coordinate
+:0043BCC6 8D78FE                  lea edi, dword ptr [eax-02]		set coordinate
+:0043BCC9 890D7C735700            mov dword ptr [0057737C], ecx
+changed into
+:0043BCA9 7514                    jne 0043BCBF				jump if not Dark Lord
+:0043BCAB E8CBC5FEFF              call 0042827B				get coordinates
+:0043BCB0 0F8416030000            je 0043BFCC				skip placement if invalid coordinate
+:0043BCB6 8D78FE                  lea edi, dword ptr [eax-02]		set coordinate
+:0043BCB9 890D7C735700            mov dword ptr [0057737C], ecx
+:0043BCBF 837DFC3A                cmp dword ptr [ebp-04], 0000003A
+:0043BCC3 750A                    jne 0043BCCF				jump if not Executioner
+:0043BCC5 E8B1C5FEFF              call 0042827B				get coordinates
+:0043BCCA 7403                    je 0043BCCF				random placement if invalid coordinate				
+:0043BCCC 8D7806                  lea edi, dword ptr [eax+06]		set coordinate
+
+Check coordinates:
+
+File offset 0002767B
+
+:0042827B 90...                   22*nop
+changed into
+:0042827B A160735700              mov eax, dword ptr [00577360]
+:00428280 85C0                    test eax, eax
+:00428282 740C                    je 00428290
+:00428284 8B1564735700            mov edx, dword ptr [00577364]
+:0042828A 85D2                    test edx, edx
+:0042828C 7402                    je 00428290
+:0042828E 8BDA                    mov ebx, edx
+:00428290 C3                      ret

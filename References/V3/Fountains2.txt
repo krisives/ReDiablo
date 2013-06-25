@@ -1,0 +1,109 @@
+(*)First free space at old View resist for Bosses:
+
+
+:004445E4 EB39                    jmp 0044461F
+
+* Referenced by a CALL at Address:
+|:004445DF   
+|
+:004445E6 53                      push ebx
+:004445E7 55                      push ebp
+:004445E8 56                      push esi
+:004445E9 57                      push edi
+:004445EA BEC0114D00              mov esi, 004D11C0
+:004445EF A12C164D00              mov eax, dword ptr [004D162C]
+:004445F4 69C0E4000000            imul eax, 000000E4
+:004445FA 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+:00444600 E9E5FEFFFF              jmp 004444EA
+:00444605 90                      nop
+:00444606 90                      nop
+:00444607 90                      nop
+:00444608 90                      nop
+:00444609 59                      pop ecx
+:0044460A 59                      pop ecx
+:0044460B 6A01                    push 00000001
+:0044460D 8BCE                    mov ecx, esi
+:0044460F 5A                      pop edx
+:00444610 E835FFFBFF              call 0040454A
+:00444615 C70594114D0001000000    mov dword ptr [004D1194], 00000001
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004445E4(U)
+|
+:0044461F 5E                      pop esi
+:00444620 5B                      pop ebx
+:00444621 C3                      ret
+
+(*)Dus:
+
+:004445E4 EB39                    jmp 0044461F
+wordt
+:004445E4 EB1F                    jmp 00444605
+
+:00444605 90                      nop
+:00444606 90                      nop
+:00444607 90                      nop
+wordt
+:00444605 5E                      pop esi
+:00444606 5B                      pop ebx
+:00444607 C3                      ret
+
+Now free space from 00444608 to 00444656.
+
+
+(*)Purifying Spring
+
+:004536B6 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536BB 8BC8                    mov ecx, eax
+:004536BD 03CF                    add ecx, edi
+wordt
+:004536B6 E84D0FFFFF              call 00444608		call MAXMANA
+:004536BB 90909090		  4*nop
+
+
+(*)Fountain of Blood
+
+:0045375A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045375F 8BC8                    mov ecx, eax
+:00453761 03CF                    add ecx, edi
+wordt
+:0045375A E8C90EFFFF              call 00444628		call MAXLIFE
+:0045375F 90909090		  4*nop
+
+
+MAXMANA:
+
+:00444608 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0044460D 50                      push eax
+:0044460E 03C7                    add eax, edi
+:00444610 8BC8                    mov ecx, eax
+:00444612 51                      push ecx
+:00444613 8B88B0010000            mov ecx, dword ptr [eax+000001B0]
+:00444619 2B88AC010000            sub ecx, dword ptr [eax+000001AC]
+:0044461F 3BD9                    cmp ebx, ecx
+:00444621 7E02                    jle 00444625
+:00444623 8BD9                    mov ebx, ecx
+:00444625 59                      pop ecx
+:00444626 58                      pop eax
+:00444627 C3                      ret
+
+MAXLIFE:
+
+:00444628 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0044462D 50                      push eax
+:0044462E 03C7                    add eax, edi
+:00444630 8BC8                    mov ecx, eax
+:00444632 51                      push ecx
+:00444633 8B889C010000            mov ecx, dword ptr [eax+0000019C]
+:00444639 2B8898010000            sub ecx, dword ptr [eax+00000198]
+:0044463F 3BD9                    cmp ebx, ecx
+:00444641 7E02                    jle 00444645
+:00444643 8BD9                    mov ebx, ecx
+:00444645 59                      pop ecx
+:00444646 58                      pop eax
+:00444647 C3                      ret
+
+:00444648 9090                    2*nop
+
+Free space almost full.
+

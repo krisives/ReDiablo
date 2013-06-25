@@ -1,0 +1,106 @@
+Mysterious Shrine
+
+Gives now points to allocate instead of points to one of the attributes.
+
+File Offset 00050CB8
+
+:004518B8 32C9                    xor cl, cl
+:004518BA 6A04                    push 00000004
+:004518BC 5A                      pop edx
+:004518BD E89886FCFF              call 00419F5A
+:004518C2 83E800                  sub eax, 00000000
+:004518C5 742D                    je 004518F4
+:004518C7 48                      dec eax
+:004518C8 741E                    je 004518E8
+:004518CA 48                      dec eax
+:004518CB 740F                    je 004518DC
+:004518CD 48                      dec eax
+:004518CE 752E                    jne 004518FE
+wordt
+:004518B8 8BCE                    mov ecx, esi
+:004518BA E8E0690000              call 0045829F
+:004518BF 83F805                  cmp eax, 00000005
+:004518C2 7E03                    jle 004518C7
+:004518C4 6A05                    push 00000005
+:004518C6 58                      pop eax
+:004518C7 018184010000            add dword ptr [ecx+00000184], eax
+:004518CD EB2F                    jmp 004518FE
+:004518CF 90                      nop
+
+Now free space from 004518CF to 004518FE (47 byte).
+
+
+
+Info : Already available and useful routine that calculates 'missing' attribute points
+
+:0045829F 69C9C8550000            imul ecx, 000055C8
+:004582A5 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004582AA 03C8                    add ecx, eax
+:004582AC 0FBE9160010000          movsx edx, byte ptr [ecx+00000160]
+:004582B3 C1E204                  shl edx, 04
+:004582B6 8B82DC5D4B00            mov eax, dword ptr [edx+004B5DDC]
+:004582BC 0382D85D4B00            add eax, dword ptr [edx+004B5DD8]
+:004582C2 0382D45D4B00            add eax, dword ptr [edx+004B5DD4]
+:004582C8 0382D05D4B00            add eax, dword ptr [edx+004B5DD0]
+:004582CE 2B8168010000            sub eax, dword ptr [ecx+00000168]
+:004582D4 2B8178010000            sub eax, dword ptr [ecx+00000178]
+:004582DA 2B8170010000            sub eax, dword ptr [ecx+00000170]
+:004582E0 2B8180010000            sub eax, dword ptr [ecx+00000180]
+:004582E6 C3                      ret
+
+
+Full code Mysterious Shrine:
+
+:0045187A 85C0                    test eax, eax
+:0045187C 0F85EA170000            jne 0045306C
+:00451882 8B75FC                  mov esi, dword ptr [ebp-04]
+:00451885 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:0045188B 0F85DB170000            jne 0045306C
+:00451891 83CFFF                  or edi, FFFFFFFF
+:00451894 8BCE                    mov ecx, esi
+:00451896 8BD7                    mov edx, edi
+:00451898 E8EFCD0000              call 0045E68C
+:0045189D 8BD7                    mov edx, edi
+:0045189F 8BCE                    mov ecx, esi
+:004518A1 E87ECE0000              call 0045E724
+:004518A6 8BD7                    mov edx, edi
+:004518A8 8BCE                    mov ecx, esi
+:004518AA E873CF0000              call 0045E822
+:004518AF 8BD7                    mov edx, edi
+:004518B1 8BCE                    mov ecx, esi
+:004518B3 E802D00000              call 0045E8BA
+:004518B8 32C9                    xor cl, cl
+:004518BA 6A04                    push 00000004
+:004518BC 5A                      pop edx
+:004518BD E89886FCFF              call 00419F5A
+:004518C2 83E800                  sub eax, 00000000
+:004518C5 742D                    je 004518F4
+:004518C7 48                      dec eax
+:004518C8 741E                    je 004518E8
+:004518CA 48                      dec eax
+:004518CB 740F                    je 004518DC
+:004518CD 48                      dec eax
+:004518CE 752E                    jne 004518FE
+:004518D0 6A06                    push 00000006
+:004518D2 8BCE                    mov ecx, esi
+:004518D4 5A                      pop edx
+:004518D5 E8E0CF0000              call 0045E8BA
+:004518DA EB22                    jmp 004518FE
+:004518DC 6A06                    push 00000006
+:004518DE 8BCE                    mov ecx, esi
+:004518E0 5A                      pop edx
+:004518E1 E83CCF0000              call 0045E822
+:004518E6 EB16                    jmp 004518FE
+:004518E8 6A06                    push 00000006
+:004518EA 8BCE                    mov ecx, esi
+:004518EC 5A                      pop edx
+:004518ED E832CE0000              call 0045E724
+:004518F2 EB0A                    jmp 004518FE
+:004518F4 6A06                    push 00000006
+:004518F6 8BCE                    mov ecx, esi
+:004518F8 5A                      pop edx
+:004518F9 E88ECD0000              call 0045E68C
+:004518FE 8BCE                    mov ecx, esi
+:00451900 E879CC0000              call 0045E57E
+:00451905 B10C                    mov cl, 0C
+:00451907 E955120000              jmp 00452B61

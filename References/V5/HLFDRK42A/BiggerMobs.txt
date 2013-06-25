@@ -1,0 +1,7 @@
+Bigger boss mobs, increased from 8 to 12, at generic boss creation
+
+file offset 0003AE57
+
+:0043BA57 6A08                    push 00000008
+changed into
+:0043BA57 6A0C                    push 0000000C

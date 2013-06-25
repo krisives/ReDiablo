@@ -1,0 +1,91 @@
+Boss TRN (byte 8 in boss data)
+
+Name    Offset          Address         Bosses in HLFDRK3E
+
+WFTD    000B01FC        FC174B00	
+DB      000B02FC        FC184B00	8,27,31,32,39,58
+SHDR    000B02E4        E4184B00	40 (Shadowdrinker)
+SKFR    000B03E0        E0194B00	
+BSTS    000B04D4        D41A4B00	25 (Izual)
+BSM     000B01D4        D4174B00	53 (BaronSludge)
+TSPO    000B03CC        CC194B00	14,26,38,51,69,72
+BFDS    000B02C4        C4184B00	98 (Grimspike)
+PMR     000B03BC        BC194B00	
+PTU     000B04B4        B41A4B00	82,90 (Rustweaver,ScissorClaw)
+BHSM    000B01B4        B4174B00	54 (BlighthornSteelmace)
+BGBL    000B02B0        B0184B00        43,45 (Bloodgutter,Warmaggot)
+BSDB    000B05A4        A41B4B00	0,29,62
+BR      000B04A4        A41A4B00	
+GENRL   000B059C        9C1B4B00	1,9,12 (Leoric,Butcher,DarkGhost)
+M       000B0595        951B4B00	
+DSFM    000B0290        90184B00	44 (DeathshadeFleshmaul)
+ETH     000B048C        8C1A4B00	
+GENERAL 000B0584        841B4B00        2,4,10,11,13,15,16,17,18,19,20,23,24,
+                                        28,30,35,37,42,48,49,50,52,55,56,57,59,
+                                        60,61,63,64,65,66,67,68,70,71,73,74,75,
+                                        77,79,80,83,84,85,86,87,88,89,91,92,93,
+                                        94,95,96,97,99
+BNG     000B0574        741B4B00	3,21 (Snotspill,Exeter)
+GTQ     000B0474        741A4B00	
+BASHTB  000B0368        68194B00	34 (DoomskullUnholy)
+tHBS    000B0454        541A4B00	
+BLF     000B0254        54184B00	47 (Blightfire)
+REDV    000B0550        501B4B00	5 (RedVex)    (maakt alles rood)
+BLKJD   000B053C        3C1B4B00	6 (BlackJade) (maakt alles grijs)
+RCRN    000B0438        381A4B00	22 (Xorine)
+BHKA    000B0528        281B4B00	7,33,36,41,46,76,78,81
+SHBT    000B0427        271A4B00	
+BFTP    000B0320        20194B00	
+DE      000B0418        181A4B00	
+MTD     000B0404        041A4B00	
+
+SHCR    Not found in EXE                Not used
+BHBS    000B043D        3D1A4B00	
+
+
+Added to MPQ as boss TRN:
+
+orange.TRN	BS	561A4B00
+bat_grey.TRN	BL	B2184B00
+black.TRN	TS	D61A4B00
+
+
+Some Normal TRN (byte 28, flagged on byte 24 in monsterdata)
+
+SKELT		  90314B00 (000B1B90)       lightyellow	        (skeletonbow)
+WHITE             AC314B00 (000B1BAC)       white               (skeletonbow)
+ORANGE		  F0294B00 (000B13F0)       orangeyellow        (hornedbeast)
+BLUE		  CC294B00 (000B13CC)       lightblue           (hornedbeast)
+SNEAKV1           942F4B00 (000B1994)       yellow              (hidden)                 
+SNEAKV3           B82F4B00 (000B19B8)       gold                (hidden)
+GUARD             BC264B00 (000B10BC)       grey                (balrog)
+FATF              5C2B4B00 (000B155C)       weak red            (balrog)
+SUCCRW            EC234B00 (000B0DEC)       red                 (witch)
+SUCCBW            C4234B00 (000B0DC4)       blue                (witch)
+SUCCB             14244B00 (000B0E14)       weak blue           (witch)
+ORANGE            E02D4B00 (000B17E0)       strong orange       (bat)
+RED               282E4B00 (000B1828)       red                 (bat)
+GREY              002E4B00 (000B1800)       grey                (bat)
+STONE             78784A00 (000A6278)       grey                (plrgfx\stone)
+GREY              20354B00 (000B1F20)       grey                (zombie)
+YELLOW            F4344B00 (000B1EF4)       yellow              (zombie)
+CNSELGD           30234B00 (000B0D30)       gold                (mage)
+CNSELBK           08234B00 (000B0D08)       goldblack           (mage)
+SCAVBR            68324B00 (000B1C68)       orange              (scavenger)
+BLKKNTBT	  1C254B00 (000B0F1C)       blueish             (knight)
+BLKKNTBE          F4244B00 (000B0EF4)       blue                (knight)
+BLKKNTRT          44254B00 (000B0F44)       darkred             (knight)
+THINV2            64284B00 (000B1264)       yellowish           (lightningdemon)
+THINV3            38294B00 (000B1338)       reddish             (lightningdemon)
+WIERD             642A4B00 (000B1464)       red                 (magmademon)
+YELLOW            A42A4B00 (000B14A4)       yellow              (magmademon)
+BALR		  74264B00 (000B1074)	    strong red		(real balrog)
+BLACK		  9C304B00 (000B1A9C)	    black		(horror)  
+BLUE		  30344B00 (000B1E30)	    blue		(carver)
+WHITE		  10314B00 (000B1B10)	    white-goldish	(skelsd)
+WHITE		  C8334B00 (000B1DC8)	    leoric		(skelaxe)
+GRAY		  802E4B00 (000B1880)       grey                (stoneclangoatmace)
+BLUE		  A02B4B00 (000B15A0)	    blue		(mudman)
+FATB		  802B4B00 (000B1580)	    greenish	        (toaddemon)
+
+                      

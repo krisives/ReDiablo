@@ -1,0 +1,227 @@
+Enable Scowler Missile for other uses
+
+
+
+File Offset 0003A432
+
+:0043B032 7405                    je 0043B039
+wordt
+:0043B032 EB05                    jmp 0043B039
+
+
+File Offset 0003A47E
+
+:0043B07E 751A                    jne 0043B09A
+wordt
+:0043B07E 7500                    jne 0043B080
+
+
+Give 'Magic Missile' graphic 38h (Ms_Blb)
+
+000A66F0 969E 4300 0100 0000 0103 1D00 FFFF FFFF ..C.............
+wordt
+000A66F0 969E 4300 0100 0000 0103 3800 FFFF FFFF ..C.............
+
+Works nicely up to here. No new sound or impact, but correct flight animation and damage.
+
+
+Adjust update routine:
+
+000A66F0 969E 4300 0100 0000 0103 3800 FFFF FFFF ..C.......8.....
+wordt
+000A66F0 E860 4300 0100 0000 0103 3800 FFFF FFFF .`C.......8.....
+
+Gives no impact animation, nor damage.
+
+
+Using FireBall update, with animation and checks modified from '13' to '36', gives a very nice looking Magic Missile, with Area-effect! Needs to be slower, now.
+
+
+
+Using HolyBolt update again, with adjusted impact animation:
+
+File Offset 00039338
+
+:00439F38 6A1C                    push 0000001C		holyexpl
+wordt
+
+:00439F38 6A3A                    push 0000003A		ex_blu3
+No image, and does damage more then once.
+
+:00439F38 6A39                    push 00000039		ex_ora1
+No image, and does damage more then once.
+
+:00439F38 6A38                    push 00000038		ms_blb
+Frozen blue star, and does correct damage, sometimes repeated.
+
+:00439F38 6A37                    push 00000037		ex_red3
+No image, and does damage more then once.
+
+:00439F38 6A36                    push 00000036		ex_blu2
+Frozen white star, and does damage more then once.
+
+:00439F38 6A35                    push 00000035		ex_yel2
+No image, and does damage more then once.
+
+:00439F38 6A2D                    push 0000002D		scbsexpd
+No image, and continues invisible after hit.
+
+:00439F38 6A25                    push 00000025		sklball
+Frozen Bonespirits.
+
+:00439F38 6A20                    push 00000020		acidspla
+No image, and does damage more then once.
+
+:00439F38 6A1A                    push 0000001A		miniltng
+Frozen Lightning, continues after hit and does often damage more then once.
+
+:00439F38 6A19                    push 00000019		krull
+No image, continues after hit and does often damage more then once.
+
+:00439F38 6A17                    push 00000017		flareexp
+Frozen Bloodstar, continues after hit and does often damage more then once.
+
+:00439F38 6A15                    push 00000015		thinlght
+No image, and does damage more then once.
+
+:00439F38 6A13                    push 00000013		bigexp
+Frozen explosion, continues after hit and does often damage more then once.
+
+:00439F38 6A12                    push 00000012		shatter
+Frozen stone shatter, continues after hit and does often damage more then once.
+
+:00439F38 6A0C                    push 0000000C		metlhit
+No image, continues after hit and does often damage more then once.
+
+:00439F38 6A08                    push 00000008		bluexbk
+Frozen Flash parts, continues after hit and does often damage more then once.
+
+None of these work. For better results the general update routine at 004360E8 has to be used, and modified to support MagicMissile. This routine is now used by FireBolt, MagmaBall, Bloodstar, AcidBreath, Ms_Ora, Ms_Blb, Ms_Red, Ms_Yeb, and MS_Blb (again).
+
+
+
+Part of general update:
+
+:0043618B 8BBECC7A6900            mov edi, dword ptr [esi+00697ACC]
+:00436191 33DB                    xor ebx, ebx
+:00436193 83FFFF                  cmp edi, FFFFFFFF
+:00436196 0F84A5000000            je 00436241		jmp if from trap
+:0043619C 399ED07A6900            cmp dword ptr [esi+00697AD0], ebx
+:004361A2 7572                    jne 00436216		jmp if from monster
+:004361A4 8B86587A6900            mov eax, dword ptr [esi+00697A58]	eax := spelleffect
+:004361AA 48                      dec eax
+:004361AB 743D                    je 004361EA		jmp to Firebolt damage
+:004361AD 83E817                  sub eax, 00000017
+:004361B0 7410                    je 004361C2		jmp to Bloodstar damage
+:004361B2 83E827                  sub eax, 00000027
+:004361B5 0F85A1000000            jne 0043625C		jmp if not Bonespirit (?)
+:004361BB 33C0                    xor eax, eax
+:004361BD E99D000000              jmp 0043625F
+
+The part for impact animations is not so simple.
+
+
+
+Update routine for Holy Bolt:
+
+:00439E96 56                      push esi
+:00439E97 57                      push edi
+:00439E98 8BF9                    mov edi, ecx
+:00439E9A 8BF7                    mov esi, edi
+:00439E9C 69F6B0000000            imul esi, 000000B0
+:00439EA2 FF8EC87A6900            dec dword ptr [esi+00697AC8]
+:00439EA8 80BE907A69001C          cmp byte ptr [esi+00697A90], 1C
+:00439EAF 0F84E1000000            je 00439F96
+:00439EB5 8B866C7A6900            mov eax, dword ptr [esi+00697A6C]
+:00439EBB 01867C7A6900            add dword ptr [esi+00697A7C], eax
+:00439EC1 8B86707A6900            mov eax, dword ptr [esi+00697A70]
+:00439EC7 0186807A6900            add dword ptr [esi+00697A80], eax
+:00439ECD E8E17AFFFF              call 004319B3
+:00439ED2 8B865C7A6900            mov eax, dword ptr [esi+00697A5C]
+:00439ED8 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]
+:00439EDE 3B86747A6900            cmp eax, dword ptr [esi+00697A74]
+:00439EE4 750E                    jne 00439EF4
+:00439EE6 8B8E607A6900            mov ecx, dword ptr [esi+00697A60]
+:00439EEC 3B8E787A6900            cmp ecx, dword ptr [esi+00697A78]
+:00439EF2 7413                    je 00439F07
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439EE4(C)
+|
+:00439EF4 6A00                    push 00000000
+:00439EF6 8BCF                    mov ecx, edi
+:00439EF8 FFB6607A6900            push dword ptr [esi+00697A60]
+:00439EFE 50                      push eax
+:00439EFF 6A00                    push 00000000
+:00439F01 52                      push edx
+:00439F02 E8C781FFFF              call 004320CE			Hit and do damage
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439EF2(C)
+|
+:00439F07 83BEC87A690000          cmp dword ptr [esi+00697AC8], 00000000
+:00439F0E 7542                    jne 00439F52
+:00439F10 8B866C7A6900            mov eax, dword ptr [esi+00697A6C]
+:00439F16 8BCF                    mov ecx, edi
+:00439F18 29867C7A6900            sub dword ptr [esi+00697A7C], eax
+:00439F1E 8B86707A6900            mov eax, dword ptr [esi+00697A70]
+:00439F24 2986807A6900            sub dword ptr [esi+00697A80], eax
+:00439F2A E8847AFFFF              call 004319B3
+:00439F2F 83A6847A690000          and dword ptr [esi+00697A84], 00000000
+:00439F36 8BCF                    mov ecx, edi
+:00439F38 6A1C                    push 0000001C
+:00439F3A 5A                      pop edx
+:00439F3B E8605BFFFF              call 0042FAA0			Do impact animation 1C
+:00439F40 8B86A07A6900            mov eax, dword ptr [esi+00697AA0]
+:00439F46 48                      dec eax
+:00439F47 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+:00439F4D E983000000              jmp 00439FD5
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439F0E(C)
+|
+:00439F52 8B865C7A6900            mov eax, dword ptr [esi+00697A5C]
+:00439F58 3B86E87A6900            cmp eax, dword ptr [esi+00697AE8]
+:00439F5E 750E                    jne 00439F6E
+:00439F60 8B8E607A6900            mov ecx, dword ptr [esi+00697A60]
+:00439F66 3B8EEC7A6900            cmp ecx, dword ptr [esi+00697AEC]
+:00439F6C 7467                    je 00439FD5
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439F5E(C)
+|
+:00439F6E 8986E87A6900            mov dword ptr [esi+00697AE8], eax
+:00439F74 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:00439F7A 8986EC7A6900            mov dword ptr [esi+00697AEC], eax
+:00439F80 8B96E87A6900            mov edx, dword ptr [esi+00697AE8]
+:00439F86 8B8EE07A6900            mov ecx, dword ptr [esi+00697AE0]
+:00439F8C 6A08                    push 00000008
+:00439F8E 50                      push eax
+:00439F8F E87C2AFFFF              call 0042CA10
+:00439F94 EB3F                    jmp 00439FD5
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439EAF(C)
+|
+:00439F96 8B86B47A6900            mov eax, dword ptr [esi+00697AB4]
+:00439F9C 8B965C7A6900            mov edx, dword ptr [esi+00697A5C]
+:00439FA2 8B8EE07A6900            mov ecx, dword ptr [esi+00697AE0]
+:00439FA8 83C007                  add eax, 00000007
+:00439FAB 50                      push eax
+:00439FAC FFB6607A6900            push dword ptr [esi+00697A60]
+:00439FB2 E8592AFFFF              call 0042CA10
+:00439FB7 83BEC87A690000          cmp dword ptr [esi+00697AC8], 00000000
+:00439FBE 7515                    jne 00439FD5
+:00439FC0 C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:00439FCA 8B8EE07A6900            mov ecx, dword ptr [esi+00697AE0]
+:00439FD0 E80E29FFFF              call 0042C8E3
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00439F4D(U), :00439F6C(C), :00439F94(U), :00439FBE(C)
+|
+:00439FD5 8BCF                    mov ecx, edi
+:00439FD7 E81E67FFFF              call 004306FA
+:00439FDC 5F                      pop edi
+:00439FDD 5E                      pop esi
+:00439FDE C3                      ret
+

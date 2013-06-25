@@ -1,0 +1,12 @@
+by Stu
+When programs are loaded in memory each section is assigned a different virtual (memory) addres. These addresses do not have to correspond to the raw address (in the .exe).
+
+Dhack uses virtual addresses for editing. It's easy to convert from a virtual address to a raw address, for Diablo v1.07 you must subtract the following from the virtual address for each section:
+
+Name 	Desc. 		Start 	End 	Difference
+.text 	(code) 		0x00400 0x78A00 0x400C00
+.rdata 	(read only data)0x78A00 0x8E100 0x401600
+.data 	(r/w data) 	0x8E100 0xB9A00 0x402200
+.rsrc 	(resources) 	0xB6A00 0xB9AAA 0x5F8600
+
+

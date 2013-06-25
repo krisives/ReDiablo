@@ -1,0 +1,33 @@
+Changes to Chain Activation
+
+
+Reduced 'depth' of chain activation, to evaluate its effect:
+
+file offset 00075871
+
+:00476471 6A02                    push 00000002
+changed into
+:00476471 6A01                    push 00000001
+
+
+Disabled chain activation for Monster vs. Monster melee, as it is no longer used with new Targetting system towards Golems and Charmed creatures:
+
+file offset 0003CF60
+
+:0043DB60 E9BDE1FFFF              jmp 0043BD22
+:0043DB65 90                      nop
+changed into
+:0043DB60 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043DB63 8D55F4                  lea edx, dword ptr [ebp-0C]
+
+Again 28 bytes free space from full Hp for bosses in SP:
+
+file offset 0003B122
+
+:0043BD22 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:0043BD29 7508                    jne 0043BD33			
+:0043BD2B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043BD2E E81CA70300              call 0047644F			
+:0043BD33 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043BD36 8D55F4                  lea edx, dword ptr [ebp-0C]
+:0043BD39 E9281E0000              jmp 0043DB66

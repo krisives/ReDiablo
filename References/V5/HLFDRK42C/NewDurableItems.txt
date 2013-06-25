@@ -1,0 +1,353 @@
+Decaying items
+
+Instead of destroying items when durability reaches 0, the max durability will be lowered and curent durability is kept at 1. Destruction will happen after max durability is depleted.
+
+This supports "Non-Indestructable" items, and disables the previous DurableItems modification.
+
+Many thanks to omleTTooos.
+
+
+WeaponDur
+
+file offset 0005AB2B
+
+:0045B72B BAFF000000              mov edx, 000000FF
+:0045B730 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0045B737 7431                    je 0045B76A
+:0045B739 38981A0A0000            cmp byte ptr [eax+00000A1A], bl
+:0045B73F 7529                    jne 0045B76A
+:0045B741 8B88480A0000            mov ecx, dword ptr [eax+00000A48]
+:0045B747 E87B41FDFF              call 0042F8C7
+:0045B74C 90                      nop
+:0045B74D 90                      nop
+:0045B74E 0F84EC000000            je 0045B840
+:0045B754 49                      dec ecx
+:0045B755 8908                    mov dword ptr [eax], ecx
+:0045B757 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B75C 03C6                    add eax, esi
+:0045B75E 39A8480A0000            cmp dword ptr [eax+00000A48], ebp
+:0045B764 0F8EB3000000            jle 0045B81D
+
+:0045B76A 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0045B771 742D                    je 0045B7A0
+:0045B773 38988E0B0000            cmp byte ptr [eax+00000B8E], bl
+:0045B779 7525                    jne 0045B7A0
+:0045B77B 8B88BC0B0000            mov ecx, dword ptr [eax+00000BBC]
+:0045B781 E83A41FDFF              call 0042F8C0
+:0045B786 90                      nop
+:0045B787 90                      nop
+:0045B788 0F84B2000000            je 0045B840
+:0045B78E 49                      dec ecx
+:0045B78F 8908                    mov dword ptr [eax], ecx
+:0045B791 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B796 03C6                    add eax, esi
+:0045B798 39A8BC0B0000            cmp dword ptr [eax+00000BBC], ebp
+:0045B79E 7433                    je 0045B7D3
+
+:0045B7A0 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0045B7A7 7542                    jne 0045B7EB
+:0045B7A9 83B8D80A000005          cmp dword ptr [eax+00000AD8], 00000005
+:0045B7B0 7539                    jne 0045B7EB
+:0045B7B2 8B88BC0B0000            mov ecx, dword ptr [eax+00000BBC]
+:0045B7B8 E80341FDFF              call 0042F8C0
+:0045B7BD 90                      nop
+:0045B7BE 90                      nop
+:0045B7BF 747F                    je 0045B840
+:0045B7C1 49                      dec ecx
+:0045B7C2 8908                    mov dword ptr [eax], ecx
+:0045B7C4 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B7C9 03C6                    add eax, esi
+:0045B7CB 39A8BC0B0000            cmp dword ptr [eax+00000BBC], ebp
+:0045B7D1 7518                    jne 0045B7EB
+
+:0045B7D3 B205                    mov dl, 05
+:0045B7D5 8BCB                    mov ecx, ebx
+:0045B7D7 E805BCFEFF              call 004473E1					destroy item 
+:0045B7DC A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B7E1 838C30D80A0000FF        or dword ptr [eax+esi+00000AD8], FFFFFFFF
+:0045B7E9 EB48                    jmp 0045B833
+
+:0045B7EB 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0045B7F2 754C                    jne 0045B840
+:0045B7F4 83B86409000005          cmp dword ptr [eax+00000964], 00000005
+:0045B7FB 7543                    jne 0045B840
+:0045B7FD 8B88480A0000            mov ecx, dword ptr [eax+00000A48]
+:0045B803 E8BF40FDFF              call 0042F8C7
+:0045B808 90                      nop
+:0045B809 90                      nop
+:0045B80A 7434                    je 0045B840
+:0045B80C 49                      dec ecx
+:0045B80D 8908                    mov dword ptr [eax], ecx
+:0045B80F A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B814 39AC30480A0000          cmp dword ptr [eax+esi+00000A48], ebp
+:0045B81B 7523                    jne 0045B840
+
+:0045B81D B204                    mov dl, 04
+:0045B81F 8BCB                    mov ecx, ebx
+:0045B821 E8BBBBFEFF              call 004473E1					destroy item
+:0045B826 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B82B 838C3064090000FF        or dword ptr [eax+esi+00000964], FFFFFFFF
+
+:0045B833 8BD3                    mov edx, ebx
+:0045B835 8BCF                    mov ecx, edi
+:0045B837 E88392FCFF              call 00424ABF					recalculate stats
+:0045B83C 8BC3                    mov eax, ebx
+:0045B83E EB02                    jmp 0045B842
+
+:0045B840 33C0                    xor eax, eax					no item destroyed
+
+:0045B842 5F                      pop edi
+:0045B843 5E                      pop esi
+:0045B844 5D                      pop ebp
+:0045B845 5B                      pop ebx
+:0045B846 59                      pop ecx
+:0045B847 C3                      ret
+
+changed into
+
+:0045B72B 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0045B732 741E                    je 0045B752
+:0045B734 38981A0A0000            cmp byte ptr [eax+00000A1A], bl
+:0045B73A 7516                    jne 0045B752
+:0045B73C 8B88480A0000            mov ecx, dword ptr [eax+00000A48]
+:0045B742 49                      dec ecx
+:0045B743 0F8E89000000            jle 0045B7D2					
+:0045B749 8988480A0000            mov dword ptr [eax+00000A48], ecx
+:0045B74F 909090                  3*nop
+
+:0045B752 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0045B759 741A                    je 0045B775
+:0045B75B 38988E0B0000            cmp byte ptr [eax+00000B8E], bl
+:0045B761 7512                    jne 0045B775
+:0045B763 8B88BC0B0000            mov ecx, dword ptr [eax+00000BBC]
+:0045B769 49                      dec ecx
+:0045B76A 7E51                    jle 0045B7BD					
+:0045B76C 8988BC0B0000            mov dword ptr [eax+00000BBC], ecx
+:0045B772 909090                  3*nop
+
+:0045B775 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0045B77C 751B                    jne 0045B799
+:0045B77E 83B8D80A000005          cmp dword ptr [eax+00000AD8], 00000005
+:0045B785 7512                    jne 0045B799
+:0045B787 8B88BC0B0000            mov ecx, dword ptr [eax+00000BBC]
+:0045B78D 49                      dec ecx
+:0045B78E 7E3B                    jle 0045B7CB					
+:0045B790 8988BC0B0000            mov dword ptr [eax+00000BBC], ecx
+:0045B796 909090                  3*nop
+
+:0045B799 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0045B7A0 7545                    jne 0045B7E7
+:0045B7A2 83B86409000005          cmp dword ptr [eax+00000964], 00000005
+:0045B7A9 753C                    jne 0045B7E7
+:0045B7AB 8B88480A0000            mov ecx, dword ptr [eax+00000A48]
+:0045B7B1 49                      dec ecx
+:0045B7B2 7E10                    jle 0045B7C4					
+:0045B7B4 8988480A0000            mov dword ptr [eax+00000A48], ecx
+:0045B7BA 90                      nop
+:0045B7BB EB2A                    jmp 0045B7E7					
+
+:0045B7BD 05C00B0000              add eax, 00000BC0				
+:0045B7C2 EB15                    jmp 0045B7D9					
+
+:0045B7C4 054C0A0000              add eax, 00000A4C				
+:0045B7C9 EB0E                    jmp 0045B7D9					
+
+:0045B7CB 05C00B0000              add eax, 00000BC0				
+:0045B7D0 EB0E                    jmp 0045B7E0					
+
+:0045B7D2 054C0A0000              add eax, 00000A4C				
+:0045B7D7 EB07                    jmp 0045B7E0					
+
+:0045B7D9 8B08                    mov ecx, dword ptr [eax]			
+:0045B7DB 49                      dec ecx
+:0045B7DC 7E0B                    jle 0045B7E9					
+
+:0045B7DE EB05                    jmp 0045B7E5					
+
+:0045B7E0 8B08                    mov ecx, dword ptr [eax]			
+:0045B7E2 49                      dec ecx
+:0045B7E3 7E38                    jle 0045B81D					
+
+:0045B7E5 8908                    mov dword ptr [eax], ecx			
+:0045B7E7 EB57                    jmp 0045B840					
+
+:0045B7E9 B205                    mov dl, 05					
+:0045B7EB 8BCB                    mov ecx, ebx
+:0045B7ED E8EFBBFEFF              call 004473E1
+:0045B7F2 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B7F7 838C30D80A0000FF        or dword ptr [eax+esi+00000AD8], FFFFFFFF
+:0045B800 EB31                    jmp 0045B833					
+
+:0045B802 909090909090            6*nop
+...
+
+
+
+ShieldDur
+
+file offset 0005BB66
+
+:0045C766 BBFF000000              mov ebx, 000000FF
+
+:0045C76B 83B86409000005          cmp dword ptr [eax+00000964], 00000005
+:0045C772 7546                    jne 0045C7BA
+:0045C774 8B88480A0000            mov ecx, dword ptr [eax+00000A48]
+:0045C77A 05480A0000              add eax, 00000A48
+:0045C77F 3BCB                    cmp ecx, ebx
+:0045C781 0F8485000000            je 0045C80C
+:0045C787 49                      dec ecx
+:0045C788 8908                    mov dword ptr [eax], ecx
+:0045C78A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045C78F 83BC30480A000000        cmp dword ptr [eax+esi+00000A48], 00000000
+:0045C797 7521                    jne 0045C7BA
+
+:0045C799 6A01                    push 00000001
+:0045C79B B204                    mov dl, 04
+:0045C79D 59                      pop ecx
+:0045C79E E83EACFEFF              call 004473E1
+:0045C7A3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045C7A8 8BCF                    mov ecx, edi
+:0045C7AA 6A01                    push 00000001
+:0045C7AC 838C3064090000FF        or dword ptr [eax+esi+00000964], FFFFFFFF
+:0045C7B4 5A                      pop edx
+:0045C7B5 E80583FCFF              call 00424ABF
+
+:0045C7BA A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045C7BF 03C6                    add eax, esi
+
+:0045C7C1 83B8D80A000005          cmp dword ptr [eax+00000AD8], 00000005
+:0045C7C8 7542                    jne 0045C80C
+:0045C7CA 8B88BC0B0000            mov ecx, dword ptr [eax+00000BBC]
+:0045C7D0 05BC0B0000              add eax, 00000BBC
+
+:0045C7D5 3BCB                    cmp ecx, ebx
+:0045C7D7 7433                    je 0045C80C
+
+:0045C7D9 49                      dec ecx
+:0045C7DA 8908                    mov dword ptr [eax], ecx
+:0045C7DC A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045C7E1 83BC30BC0B000000        cmp dword ptr [eax+esi+00000BBC], 00000000
+:0045C7E9 7521                    jne 0045C80C
+
+:0045C7EB 6A01                    push 00000001
+:0045C7ED B205                    mov dl, 05
+:0045C7EF 59                      pop ecx
+:0045C7F0 E8ECABFEFF              call 004473E1
+:0045C7F5 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045C7FA 8BCF                    mov ecx, edi
+:0045C7FC 6A01                    push 00000001
+:0045C7FE 838C30D80A0000FF        or dword ptr [eax+esi+00000AD8], FFFFFFFF
+:0045C806 5A                      pop edx
+:0045C807 E8B382FCFF              call 00424ABF
+
+:0045C80C 5F                      pop edi
+:0045C80D 5E                      pop esi
+:0045C80E 5B                      pop ebx
+:0045C80F C3                      ret
+
+changed into
+
+:0045C766 83B86409000005          cmp dword ptr [eax+00000964], 00000005
+:0045C76D 7543                    jne 0045C7B2
+
+:0045C76F 8B88480A0000            mov ecx, dword ptr [eax+00000A48]
+:0045C775 49                      dec ecx
+:0045C776 7E08                    jle 0045C780
+
+:0045C778 8988480A0000            mov dword ptr [eax+00000A48], ecx
+:0045C77E EB32                    jmp 0045C7B2
+
+:0045C780 8B884C0A0000            mov ecx, dword ptr [eax+00000A4C]
+:0045C786 49                      dec ecx
+:0045C787 7F23                    jg 0045C7AC
+
+:0045C789 6A01                    push 00000001
+:0045C78B B204                    mov dl, 04
+:0045C78D 59                      pop ecx
+:0045C78E E84EACFEFF              call 004473E1
+:0045C793 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045C798 8BCF                    mov ecx, edi
+:0045C79A 6A01                    push 00000001
+:0045C79C 838C3064090000FF        or dword ptr [eax+esi+00000964], FFFFFFFF
+:0045C7A4 5A                      pop edx
+:0045C7A5 E81583FCFF              call 00424ABF
+
+:0045C7AA EB60                    jmp 0045C80C					jmp Exit
+
+:0045C7AC 89884C0A0000            mov dword ptr [eax+00000A4C], ecx
+
+:0045C7B2 83B8D80A000005          cmp dword ptr [eax+00000AD8], 00000005
+
+:0045C7B9 7551                    jne 0045C80C
+:0045C7BB 8B88BC0B0000            mov ecx, dword ptr [eax+00000BBC]
+
+:0045C7C1 49                      dec ecx
+:0045C7C2 7E08                    jle 0045C7CC
+:0045C7C4 8988BC0B0000            mov dword ptr [eax+00000BBC], ecx
+:0045C7CA EB40                    jmp 0045C80C					jmp Exit
+
+:0045C7CC 8B88C00B0000            mov ecx, dword ptr [eax+00000BC0]
+:0045C7D2 49                      dec ecx
+:0045C7D3 7E16                    jle 0045C7EB
+
+:0045C7D5 8988C00B0000            mov dword ptr [eax+00000BC0], ecx
+:0045C7DB EB2F                    jmp 0045C80C					jmp Exit
+
+:0045C7DD 90909090                4*nop
+...
+
+
+ArmorDur
+
+file offset 0005BF71
+
+:0045CB71 E8F708FEFF              call 0043D46D
+:0045CB76 90                      nop
+:0045CB77 7426                    je 0045CB9F
+:0045CB79 49                      dec ecx
+:0045CB7A 85C9                    test ecx, ecx
+:0045CB7C 890A                    mov dword ptr [edx], ecx
+:0045CB7E 751F                    jne 0045CB9F				jmp Exit
+changed into
+:0045CB71 49                      dec ecx
+:0045CB72 0F8E89ECFFFF            jle 0045B801
+:0045CB78 890A                    mov dword ptr [edx], ecx
+:0045CB7A EB23                    jmp 0045CB9F
+:0045CB7C 90909090                4*nop
+...
+
+Using free space from WeaponDur modification:
+
+file offset 0005AC01
+
+:0045B801 8B8EF0000000            mov ecx, dword ptr [esi+000000F0]
+:0045B807 8D96F0000000            lea edx, dword ptr [esi+000000F0]
+:0045B80D 49                      dec ecx
+:0045B80E 0F8E6C130000            jle 0045CB80
+:0045B814 E95F130000              jmp 0045CB78
+:0045B819 90909090                4*nop
+
+
+
+
+
+Now Obsolete routines from durable items:
+
+:0042F8C0 05BC0B0000              add eax, 00000BBC
+:0042F8C5 EB05                    jmp 0042F8CC
+:0042F8C7 05480A0000              add eax, 00000A48
+:0042F8CC E89CDB0000              call 0043D46D
+:0042F8D1 C3                      ret
+
+:0043D46D 83F909                  cmp ecx, 00000009				
+:0043D470 7F12                    jg 0043D484
+
+More new free space:
+
+:0045C7DD 90                      nop
+:0045C7DE 90                      nop
+:0045C7DF 90                      nop
+:0045C7E0 90                      nop
+:0045C7E1 83BC30BC0B000000        cmp dword ptr [eax+esi+00000BBC], 00000000
+:0045C7E9 7521                    jne 0045C80C
+

@@ -1,0 +1,4 @@
+intro.smk is vervangen door doom.smk
+
+Indien in de Hellfire directory een dicretory gendata wordt gemaakt en daar het doom.smk bestand met geluid wordt ingezet wordt deze gebruikt ipv het bestand in de mpq file. Heb het aangepaste doom.smk op de site gezet je kunt het met ftp ophalen
+

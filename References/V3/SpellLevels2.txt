@@ -1,0 +1,68 @@
+()Spell 22h - Invincibility : Spell levels from items only, min.slvl=1
+
+:00433C9E 8B88887A6900            mov ecx, dword ptr [eax+00697A88]
+wordt
+:00433C9E E8A7A70000              call 0043E44A		call SLVL_BY_ITEMS
+:00433CA3 90			  nop
+
+
+()Spell 2Bh - Rage : Spell levels from items only, min.slvl=1
+:00434D77 8B88887A6900            mov ecx, dword ptr [eax+00697A88]
+wordt
+:00434D77 E8CE960000              call 0043E44A		call SLVL_BY_ITEMS
+:00434D7C 90			  nop
+
+
+()Spell 27h - Seeing : Spell levels from items only, min.slvl=1
+
+:00434B02 8B81887A6900            mov eax, dword ptr [ecx+00697A88]
+wordt
+:00434B02 E838990000              call 0043E43F		call SEEING_SLVL
+:00434B07 90			  nop
+
+
+()Gebruikte routines op oude BlackDeath lifedrain (als tenminste nog niet gebruikt):
+
+:0043E43E 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0043E441 8D8198010000            lea eax, dword ptr [ecx+00000198]
+:0043E447 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:0043E44D 3908                    cmp dword ptr [eax], ecx
+:0043E44F 7E21                    jle 0043E472
+:0043E451 85DB                    test ebx, ebx
+:0043E453 8908                    mov dword ptr [eax], ecx
+:0043E455 7C1B                    jl 0043E472
+:0043E457 8BC3                    mov eax, ebx
+:0043E459 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043E45F 69C0B0000000            imul eax, 000000B0
+:0043E465 8B8C3198010000          mov ecx, dword ptr [ecx+esi+00000198]
+:0043E46C 8988E87A6900            mov dword ptr [eax+00697AE8], ecx
+
+wordt dus:
+
+:0043E43E 90			  nop				reserve byte
+
+:0043E43F 51                      push ecx			start SEEING_SLVL
+:0043E440 E805000000              call 0043E44A			call SLVL_BY_ITEMS
+:0043E445 8BC1                    mov eax, ecx
+:0043E447 59                      pop ecx
+:0043E448 C3                      ret
+
+:0043E449 90			  nop				reserve byte
+
+:0043E44A 52                      push edx			start SLVL_BY_ITEMS
+:0043E44B 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0043E451 69C9C8550000            imul ecx, 000055C8
+:0043E457 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0043E45D 0FBE8C1148550000        movsx ecx, byte ptr [ecx+edx+00005548]
+:0043E465 6A01                    push 00000001
+:0043E467 5A                      pop edx
+:0043E468 3BCA                    cmp ecx, edx
+:0043E46A 7D02                    jge 0043E46E
+:0043E46C 8BCA                    mov ecx, edx
+:0043E46E 5A                      pop edx
+:0043E46F C3                      ret
+
+:0043E470 9090                    2*nop
+
+Nog ruimte tot 0043E4BB.
+

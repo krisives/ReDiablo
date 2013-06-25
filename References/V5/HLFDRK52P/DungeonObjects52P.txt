@@ -1,0 +1,67 @@
+Modifications to objects appearing in Hell and Church levels.
+
+The file SKULPILE.CEL is replaced by a version which has new frames added (made by ArthurDent).
+
+A	-
+B	CEL file number
+C	minimum dlvl
+D	maximum dlvl
+E	-
+F 	indicator for Quests and other special occurances
+G	indicator for Quests and other special occurances
+H	00 = static, 01 = animated
+I	frame number, or animation speed for animations (higher values = slower animation)
+J	total number of frames in CEL file
+K	frame width
+L	00 = walkable, 01 = unwalkable 
+M	00 = block missile, 01 = allow missile
+N	00 = maximum brightness, 01 = varying brightness
+O	-
+P	01 or 03 = selectable
+Q	-
+
+         A B  C D  E F  G    H         I         J         K         L         M         N         O P       Q       
+
+Skull sticks - this entry uses a varying frame
+
+000B2EB0 0108 0D10 0006 0600 0000 0000 0100 0000 0000 0000 6000 0000 0100 0000 0100 0000 0100 0000 0000 0000 0000 0000
+
+Empty cross
+
+000B2EDC 010A 0D10 0006 0600 0000 0000 0F00 0000 0000 0000 6000 0000 0100 0000 0000 0000 0100 0000 0000 0000 0000 0000
+
+Skull pile 
+
+000B2F08 0106 0D10 0006 0600 0000 0000 0100 0000 0000 0000 6000 0000 0100 0000 0100 0000 0100 0000 0000 0000 0000 0000 
+
+Full pedestal - improved image
+
+000B2F34 0106 0D10 0006 0600 0000 0000 0200 0000 0000 0000 6000 0000 0100 0000 0000 0000 0100 0000 0000 0000 0000 0000 
+
+Half full pedestal - improved image
+
+000B2F60 0106 0D10 0006 0600 0000 0000 0300 0000 0000 0000 6000 0000 0100 0000 0000 0000 0100 0000 0000 0000 0000 0000
+
+Empty cross
+
+000B2F8C 010B 0D10 0006 0600 0000 0000 0F00 0000 0000 0000 6000 0000 0100 0000 0000 0000 0100 0000 0000 0000 0000 0000
+
+Wall object - invisible image
+
+000B2FB8 0106 0D10 00FF 0600 0000 0000 0400 0000 0000 0000 6000 0000 0000 0000 0100 0000 0100 0000 0000 0000 0000 0000
+
+Wall object - invisible image
+
+000B2FE4 0106 0D10 00FF 0600 0000 0000 0400 0000 0000 0000 6000 0000 0000 0000 0100 0000 0100 0000 0000 0000 0000 0000 
+
+Wall object - invisible image
+
+000B3010 0106 0D10 00FF 0600 0000 0000 0400 0000 0000 0000 6000 0000 0000 0000 0100 0000 0100 0000 0000 0000 0000 0000 
+
+Wall object - invisible image
+
+000B303C 0106 0D10 00FF 0600 0000 0000 0400 0000 0000 0000 6000 0000 0000 0000 0100 0000 0100 0000 0000 0000 0000 0000 
+
+Wall object - invisible image
+
+000B3068 0106 0D10 00FF 0600 0000 0000 0400 0000 0000 0000 6000 0000 0000 0000 0100 0000 0100 0000 0000 0000 0000 0000

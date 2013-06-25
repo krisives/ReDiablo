@@ -1,0 +1,27 @@
+Replacing 'Thorns' by 'Revenge'
+
+
+Attacker takes 1 + FinalDamageDone/2 as damage:
+
+File Offset 0003D9A5
+
+:0043E5A5 0FBE8430B8010000        movsx eax, byte ptr [eax+esi+000001B8]
+:0043E5AD 83C004                  add eax, 00000004
+:0043E5B0 8D8F1CDD6900            lea ecx, dword ptr [edi+0069DD1C]
+:0043E5B6 C1E004                  shl eax, 04
+wordt
+:0043E5A5 90909090909090          7*nop
+:0043E5AC 8BC3                    mov eax, ebx
+:0043E5AE D1F8                    sar eax, 1
+:0043E5B0 8D8F1CDD6900            lea ecx, dword ptr [edi+0069DD1C]
+:0043E5B6 83C040                  add eax, 00000040
+
+
+Name change:
+
+0009FFC8 7468 6F72 6E73 0000                     thorns..
+wordt
+0009FFC8 7265 7665 6E67 6500                     revenge.
+
+
+

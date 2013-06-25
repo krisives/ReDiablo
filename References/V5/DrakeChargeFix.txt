@@ -1,0 +1,51 @@
+
+
+
+file offset 00032A0F
+
+:0043360F 740B                    je 0043361C
+changed into
+:0043360F EB0B                    jmp 0043361C
+
+no effect!
+
+
+
+:00438944 FF75E8                  push [ebp-18]
+:00438947 8B55E4                  mov edx, dword ptr [ebp-1C]
+:0043894A 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0043894D E804BD0000              call 00444656
+
+
+
+
+
+:00438B05 FF75FC                  push [ebp-04]
+:00438B08 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:00438B0B 8BD3                    mov edx, ebx
+:00438B0D E844BB0000              call 00444656
+
+
+
+file offset 00032990
+
+:00433590 8D7860                  lea edi, dword ptr [eax+60]
+:00433593 90                      nop
+changed into
+:00433590 EBED                    jmp 0043357F
+:00433592 9090                    2*nop
+
+no effect!
+
+
+Both fixes together have no effect either, but makes charging drakes temporary disappear.
+
+
+file offset 00037C43
+
+:00438843 7549                    jne 0043888E
+changed into
+:00438843 EB49                    jmp 0043888E
+
+Crash.
+

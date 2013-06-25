@@ -1,0 +1,11 @@
+Diablo
+
+:0042C818 6A02                    push 00000002
+Change to
+:0042C818 6A14                    push 00000014
+
+Hellfire
+
+:004330E0 6A02                    push 00000002
+Change to
+:004330E0 6A14                    push 00000014

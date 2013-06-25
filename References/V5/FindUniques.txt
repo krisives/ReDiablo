@@ -1,0 +1,45 @@
+Hiya, 
+
+I'm not sure if you've finished your inquiry with the poll, but I may be able to shed some light on the unique situation. I DView'd the v4.2 exe and took a close look at the unique list. I found a couple of things. 
+
+76 Black Mail                Splint Mail                 16 
+7 Arkaine's Valor           Splint Mail                 32 
+
+Since Black Mail has a higher position in the list, I believe that, in multiplayer, it will always drop instead of Valor. This was the same problem encountered in vanilla HF with Gladiator's Ring and RoE, Thunderclap and Schaefer's, and Acolyte's and Warding. Swapping their data should fix this. 
+
+108 Scarab of Gloom           Amulet, Amulet              36 
+101 Amulet of Wrath           Amulet, Amulet              34 
+86 Acolyte Amulet            Amulet, Amulet              30 
+85 Mystic's Amulet           Amulet, Amulet              25 
+9 Amulet of Scholarship     Amulet, Amulet              37 
+
+Amulet of Scholarship should have the highest position since it has the highest qlvl. The others should drop, but I don't think Scholarship does. It's fixable, but this looks extremely tedious. (Appears that Scholarship data should go to Gloom, Gloom to Wrath's, Wrath to Acolyte, and so on.) 
+
+89 Ring of Engagement        Band                        24 
+2 Empyrean Band             Band                        32 
+
+Looks to me like Empyrean can't drop. Swapping RoE and Empy data should fix this. 
+
+93 Xorine's Ring             Band, Band                  25 
+4 Ring of Truth             Band, Band                  32 
+
+Ring of Truth needs the higher position Xorine. 
+
+54 Rod of Purity             Great Staff                 28 
+49 Staff of War              Great Staff                 34 
+
+Staff of War needs the higher position. 
+
+56 Storm Spire               Composite Staff             18 
+55 Protector                 Composite Staff             30 
+
+Protector needs the higher position. 
+
+31 Dragon's Tooth            Scimitar                    16 
+24 Gibbous Moon              Scimitar                    24 
+
+Gibbous needs the higher position. 
+
+I'm just a novice, so I could be wrong about this. But it seems to mesh with what Kp told me about how the game chooses unique drops. 
+
+[o: *LEMMING* :o] 

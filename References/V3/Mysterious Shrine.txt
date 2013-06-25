@@ -1,0 +1,75 @@
+Mysterious Shrine
+
+:00451864 8B8E18E66D00            mov ecx, dword ptr [esi+006DE618]
+:0045186A 83F921                  cmp ecx, 00000021
+:0045186D 0F87CD170000            ja 00453040
+:00451873 FF248D73304500          jmp dword ptr [4*ecx+00453073]
+:0045187A 85C0                    test eax, eax
+:0045187C 0F85EA170000            jne 0045306C
+:00451882 8B75FC                  mov esi, dword ptr [ebp-04]		Char #
+:00451885 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]		Local player
+:0045188B 0F85DB170000            jne 0045306C
+:00451891 83CFFF                  or edi, FFFFFFFF			- 1
+:00451894 8BCE                    mov ecx, esi
+:00451896 8BD7                    mov edx, edi
+:00451898 E8EFCD0000              call 0045E68C				Str update
+:0045189D 8BD7                    mov edx, edi
+:0045189F 8BCE                    mov ecx, esi
+:004518A1 E87ECE0000              call 0045E724				Mag update
+:004518A6 8BD7                    mov edx, edi
+:004518A8 8BCE                    mov ecx, esi
+:004518AA E873CF0000              call 0045E822				Dex update
+:004518AF 8BD7                    mov edx, edi
+:004518B1 8BCE                    mov ecx, esi
+:004518B3 E802D00000              call 0045E8BA				Vit update
+:004518B8 32C9                    xor cl, cl
+:004518BA 6A04                    push 00000004
+:004518BC 5A                      pop edx
+:004518BD E89886FCFF              call 00419F5A				Random 1-4
+:004518C2 83E800                  sub eax, 00000000
+:004518C5 742D                    je 004518F4				+ Str
+:004518C7 48                      dec eax
+:004518C8 741E                    je 004518E8				+ Mag
+:004518CA 48                      dec eax
+:004518CB 740F                    je 004518DC				+ dex
+:004518CD 48                      dec eax
+:004518CE 752E                    jne 004518FE				+ Vit
+:004518D0 6A06                    push 00000006
+:004518D2 8BCE                    mov ecx, esi
+:004518D4 5A                      pop edx
+:004518D5 E8E0CF0000              call 0045E8BA				Vit update
+:004518DA EB22                    jmp 004518FE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004518CB(C)
+|
+:004518DC 6A06                    push 00000006
+:004518DE 8BCE                    mov ecx, esi
+:004518E0 5A                      pop edx
+:004518E1 E83CCF0000              call 0045E822				dex update
+:004518E6 EB16                    jmp 004518FE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004518C8(C)
+|
+:004518E8 6A06                    push 00000006
+:004518EA 8BCE                    mov ecx, esi
+:004518EC 5A                      pop edx
+:004518ED E832CE0000              call 0045E724				Mag update
+:004518F2 EB0A                    jmp 004518FE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004518C5(C)
+|
+:004518F4 6A06                    push 00000006
+:004518F6 8BCE                    mov ecx, esi
+:004518F8 5A                      pop edx
+:004518F9 E88ECD0000              call 0045E68C				Str update
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004518CE(C), :004518DA(U), :004518E6(U), :004518F2(U)
+|
+:004518FE 8BCE                    mov ecx, esi
+:00451900 E879CC0000              call 0045E57E
+:00451905 B10C                    mov cl, 0C
+:00451907 E955120000              jmp 00452B61

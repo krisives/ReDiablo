@@ -1,0 +1,53 @@
+Dit zijn de 2 plaatsen waar zover ik kan zien de test plaats vindt die de display van de golem uitzet. Dit na vergelijken van Netherworld 2.00 met 1.00.
+Net als in Netherworld de "je" omgezet naar "jmp" en dat werkt.
+Alleen de "test ah, 08" is mij nog onduidelijk, die komt niet voor in Diablo
+
+Hellfire
+:0040864B 8B8024DD6900            mov eax, dword ptr [eax+0069DD24]
+:00408651 A820                    test al, 20
+:00408653 0F84C8000000            je 00408721
+:00408659 F6C408                  test ah, 08
+:0040865C E9B7000000              jmp 00408718
+changed:
+:00408653 90                      nop
+:00408653 E9C8000000              jmp 00408721
+
+:00408BA4 8B8024DD6900            mov eax, dword ptr [eax+0069DD24]
+:00408BAA A820                    test al, 20
+:00408BAC 741A                    je 00408BC8
+:00408BAE F6C408                  test ah, 08
+:00408BB1 7515                    jne 00408BC8
+:00408BB3 830D2C164D00FF          or dword ptr [004D162C], FFFFFFFF
+:00408BBA EB0C                    jmp 00408BC8
+changed:
+:00408BAC EB1A                    jmp 00408BC8
+
+Diablo 1.07
+:00407FF1 F680F4E6640020          test byte ptr [eax+0064E6F4], 20
+:00407FF8 0F84C7000000            je 004080C5
+Change to
+:00407FF1 F680F4E6640020          test byte ptr [eax+0064E6F4], 20
+:00407FF8 90                      nop
+:00407FF9 E9C7000000              jmp 004080C5
+
+:00408521 F680F4E6640020          test byte ptr [eax+0064E6F4], 20
+:00408528 7415                    je 0040853F
+Change to
+:00408521 F680F4E6640020          test byte ptr [eax+0064E6F4], 20
+:00408528 EB15                    jmp 0040853F
+
+
+Diablo 1.08
+:00407FF9 F6804CF4640020          test byte ptr [eax+0064F44C], 20
+:00408000 0F84C4000000            je 004080CA
+Change to
+:00407FF9 F680F4E6640020          test byte ptr [eax+0064F44C], 20
+:00408000 90                      nop
+:00408001 E9C4000000              jmp 004080CA
+
+
+:004084EF F6804CF4640020          test byte ptr [eax+0064F44C], 20
+:004084F6 7415                    je 0040850D
+Change to
+:004084EF F680F4E6640020          test byte ptr [eax+0064F44C], 20
+:004084F6 EB15                    jmp 0040850D

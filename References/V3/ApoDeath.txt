@@ -1,0 +1,92 @@
+(*)Fix to enable ApoDeath (and other alternative animations)
+
+:0043AD92 8D85E4FEFFFF            lea eax, dword ptr [ebp+FFFFFEE4]	eax:=ebp-284
+:0043AD98 FFB3F8BE4A00            push dword ptr [ebx+004ABEF8]		animation pointer
+wordt
+:0043AD92 E8EF360000		  call 0043E486				call ANIMATION
+:0043AD97 50                      push eax
+:0043AD98 8D85E4FEFFFF            lea eax, dword ptr [ebp+FFFFFEE4]
+
+ANIMATION:
+
+Nieuwe routine over nog ongebruikte BlackDeath code, na de DropItemsFix. 
+Hierna nog steeds ruimte, wellicht bewaren voor eventuele uitbreidingen op deze code.
+
+:0043E486 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E48B 03C6                    add eax, esi
+:0043E48D 8D8890010000            lea ecx, dword ptr [eax+00000190]
+:0043E493 8B8094010000            mov eax, dword ptr [eax+00000194]
+:0043E499 3901                    cmp dword ptr [ecx], eax
+:0043E49B 7E1E                    jle 0043E4BB
+:0043E49D 85DB                    test ebx, ebx
+:0043E49F 8901                    mov dword ptr [ecx], eax
+:0043E4A1 7C18                    jl 0043E4BB
+:0043E4A3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E4A8 69DBB0000000            imul ebx, 000000B0
+wordt
+:0043E486 83F864                  cmp eax, 00000064			64h = "d"
+:0043E489 7512                    jne 0043E49C				jmp if not dying
+:0043E48B 8BC3                    mov eax, ebx
+:0043E48D C1E807                  shr eax, 07				eax:=monsternr.
+:0043E490 83F86E                  cmp eax, 0000006E			Diablo
+:0043E493 740E                    je 0043E4A3
+:0043E495 3D89000000              cmp eax, 00000089			DarkGhost
+:0043E49A 7407                    je 0043E4A3
+:0043E49C 8B83F8BE4A00            mov eax, dword ptr [ebx+004ABEF8]
+:0043E4A2 C3                      ret
+:0043E4A3 B8??????00              mov eax, 00??????			zie opmerking
+:0043E4A8 C3                      ret
+:0043E4A9 9090909090              5*nop
+
+Nieuwe pointer verwijst naar data met volledige naam van benodigde CL2-file.
+Mogelijk probleem omdat die naam geen "%c" bevat.
+
+
+
+Original routine where monster animations are done:
+
+* Referenced by a CALL at Address:
+|:0043A9B5   
+|
+:0043AD39 55                      push ebp
+:0043AD3A 8BEC                    mov ebp, esp
+:0043AD3C 81EC1C010000            sub esp, 0000011C
+:0043AD42 53                      push ebx
+:0043AD43 56                      push esi
+:0043AD44 8BF1                    mov esi, ecx
+:0043AD46 8365F800                and dword ptr [ebp-08], 00000000
+:0043AD4A 8975E4                  mov dword ptr [ebp-1C], esi
+:0043AD4D 69F650010000            imul esi, 00000150
+:0043AD53 8B9EB08E6A00            mov ebx, dword ptr [esi+006A8EB0]
+:0043AD59 57                      push edi
+:0043AD5A 895DFC                  mov dword ptr [ebp-04], ebx		store monsternr.
+:0043AD5D 8DBEBC8E6A00            lea edi, dword ptr [esi+006A8EBC]
+:0043AD63 C1E307                  shl ebx, 07
+:0043AD66 897DF4                  mov dword ptr [ebp-0C], edi
+:0043AD69 8D8310BF4A00            lea eax, dword ptr [ebx+004ABF10]
+:0043AD6F 8945E8                  mov dword ptr [ebp-18], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AE24(C)
+|
+:0043AD72 8B4DF8                  mov ecx, dword ptr [ebp-08]		ecx = 0..5
+:0043AD75 8A89D8364B00            mov cl, byte ptr [ecx+004B36D8]	"nwahds"
+:0043AD7B 80F973                  cmp cl, 73				found "s"?
+:0043AD7E 7509                    jne 0043AD89				
+:0043AD80 83BBFCBE4A0000          cmp dword ptr [ebx+004ABEFC], 00000000
+:0043AD87 747D                    je 0043AE06
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AD7E(C)
+|
+:0043AD89 833800                  cmp dword ptr [eax], 00000000
+:0043AD8C 7E78                    jle 0043AE06
+:0043AD8E 0FBEC1                  movsx eax, cl				eax:=n..d
+:0043AD91 50                      push eax
+:0043AD92 8D85E4FEFFFF            lea eax, dword ptr [ebp+FFFFFEE4]
+:0043AD98 FFB3F8BE4A00            push dword ptr [ebx+004ABEF8]		animation pointer
+:0043AD9E 50                      push eax
+:0043AD9F E81CED0300              call 00479AC0
+:0043ADA4 83C40C                  add esp, 0000000C
+
+

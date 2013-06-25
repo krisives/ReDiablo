@@ -1,0 +1,269 @@
+The following changes are implemented:
+
+Fire and Lightning Wall lower maximum duration
+More damage for Apocalypse and Doom Serpents
+Knockback for Lightning Blast, not for Doom Serpents
+Increasing speed for Bone Spirit and Doom Serpents
+Full splash damage for Elemental
+Undead immune to Bone Spirit
+Doom Serpent spell with splash damage
+
+
+
+Fire and Lightning Wall lower maximum duration (again):
+
+File Offset 000506D8
+
+:004512D8 83F807                  cmp eax, 00000007
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A07                    push 00000007
+wordt
+:004512D8 83F806                  cmp eax, 00000006
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A06                    push 00000006
+
+
+More damage for Apocalypse and Doom Serpents (increasing CLVL portion):
+
+File Offset 0005147D
+
+:0045207D C1E302                  shl ebx, 02
+wordt
+:0045207D C1E303                  shl ebx, 03
+
+
+Knockback for Lightning Blast, not for Doom Serpents:
+
+File Offset 0003D8A4
+
+:0043E4A4 837D1410                cmp dword ptr [ebp+14], 00000010
+wordt
+:0043E4A4 837D1464                cmp dword ptr [ebp+14], 00000064
+
+
+Increasing speed for Bone Spirit and Doom Serpents (10 -> 12):
+
+File Offset 00051A31
+
+:00452631 6A0A                    push 0000000A
+wordt
+:00452631 6A0C                    push 0000000C
+
+File Offset 0003989F
+
+:0043A49F 6A0A                    push 0000000A
+wordt
+:0043A49F 6A0C                    push 0000000C
+
+File Offset 000398E2
+
+:0043A4E2 6A0A                    push 0000000A
+wordt
+:0043A4E2 6A0C                    push 0000000C
+
+File Offset 0003497B
+
+:0043557B 6A0A                    push 0000000A
+wordt
+:0043557B 6A0C                    push 0000000C
+
+
+Full splash damage for Elemental (now only 1/64):
+
+File Offset 00039472
+
+:0043A072 57                      push edi
+wordt
+:0043A072 50                      push eax
+
+File Offset 0003949C
+
+:0043A09C 57                      push edi
+wordt
+:0043A09C 50                      push eax
+
+File Offset 000394C6
+
+:0043A0C6 57                      push edi
+wordt
+:0043A0C6 50                      push eax
+
+File Offset 000394F1
+
+:0043A0F1 57                      push edi
+:0043A0F2 52                      push edx
+:0043A0F3 E8D67FFFFF              call 004320CE
+wordt
+:0043A0F1 9090                    2*nop
+:0043A0F3 E969F8FEFF              jmp 00429961
+:0043A0F8 
+
+File Offset 0003951C
+
+:0043A11C 57                      push edi
+:0043A11D 52                      push edx
+:0043A11E E8AB7FFFFF              call 004320CE
+wordt
+:0043A11C 9090                    2*nop
+:0043A11E E94BF8FEFF              jmp 0042996E
+:0043A123 
+
+File Offset 00039547
+
+:0043A147 57                      push edi
+:0043A148 52                      push edx
+:0043A149 E8807FFFFF              call 004320CE
+wordt
+:0043A147 9090                    2*nop
+:0043A149 E92DF8FEFF              jmp 0042997B
+:0043A14E 
+
+File Offset 0003956D
+
+:0043A16D 57                      push edi
+wordt
+:0043A16D 50                      push eax
+
+File Offset 00039592
+
+:0043A192 57                      push edi
+wordt
+:0043A192 50                      push eax
+
+File Offset 000395B7
+
+:0043A1B7 57                      push edi
+wordt
+:0043A1B7 50                      push eax
+
+Using free space from Small Potions:
+
+File Offset 00028D61
+
+:00429961 90                      nop
+:00429962 03C6                    add eax, esi
+:00429964 C1E705                  shl edi, 05
+:00429967 8A8860010000            mov cl, byte ptr [eax+00000160]
+:0042996D 80F902                  cmp cl, 02
+:00429970 7502                    jne 00429974
+:00429972 D1E7                    shl edi, 1
+:00429974 80F901                  cmp cl, 01
+:00429977 7409                    je 00429982
+:00429979 3ACB                    cmp cl, bl
+:0042997B 7405                    je 00429982
+:0042997D 80F904                  cmp cl, 04
+:00429980 7506                    jne 00429988
+:00429982 8BCF                    mov ecx, edi
+:00429984 D1F9                    sar ecx, 1
+:00429986 03F9                    add edi, ecx
+wordt
+:00429961 6A00                    push 00000000
+:00429963 52                      push edx
+:00429964 E865870000              call 004320CE
+:00429969 E98A070100              jmp 0043A0F8
+:0042996E 6A00                    push 00000000
+:00429970 52                      push edx
+:00429971 E858870000              call 004320CE
+:00429976 E9A8070100              jmp 0043A123
+:0042997B 6A00                    push 00000000
+:0042997D 52                      push edx
+:0042997E E84B870000              call 004320CE
+:00429983 E9C6070100              jmp 0043A14E
+:00429988
+
+
+Undead immune to Bone Spirit:
+
+File Offset 0002E6AF
+
+:0042F2AF 0F8E16030000            jle 0042F5CB
+:0042F2B5 8B5D14                  mov ebx, dword ptr [ebp+14]
+:0042F2B8 83FB35                  cmp ebx, 00000035
+:0042F2BB 751B                    jne 0042F2D8
+:0042F2BD 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0042F2C3 833889                  cmp dword ptr [eax], FFFFFF89
+:0042F2C6 7410                    je 0042F2D8
+:0042F2C8 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:0042F2CE 80787200                cmp byte ptr [eax+72], 00
+:0042F2D2 0F85F3020000            jne 0042F5CB
+wordt
+:0042F2AF 7E22                    jle 0042F2D3
+:0042F2B1 909090                  3*nop
+:0042F2B4 8B5D14                  mov ebx, dword ptr [ebp+14]
+:0042F2B7 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:0042F2BD 83FB35                  cmp ebx, 00000035
+:0042F2C0 7506                    jne 0042F2C8
+:0042F2C2 80787200                cmp byte ptr [eax+72], 00
+:0042F2C6 750B                    jne 0042F2D3
+:0042F2C8 83FB3F                  cmp ebx, 0000003F
+:0042F2CB 750B                    jne 0042F2D8
+:0042F2CD 80787200                cmp byte ptr [eax+72], 00
+:0042F2D1 7505                    jne 0042F2D8
+:0042F2D3 E9F3020000              jmp 0042F5CB
+
+
+Doom Serpent spell with splash damage, using modified 'Elemental' Update routine and 'Bone' animation from Doom Serpent trap.
+
+Setting Update routine for Doom Serpents to that of Elemental:
+
+000A6530 57A3 4300                               W.C.
+wordt
+000A6530 DF9F 4300                               ..C.
+
+Adjusting Elemental Update to support Doom Serpent:
+
+File Offset 000393FF
+
+:00439FFF 80BE907A690013          cmp byte ptr [esi+00697A90], 13
+wordt
+:00439FFF E88DFEFEFF              call 00429E91
+:0043A004 9090                    2*nop
+
+File Offset 00039735
+
+:0043A335 6A13                    push 00000013
+:0043A337 5A                      pop edx
+:0043A338 E86357FFFF              call 0042FAA0
+wordt
+:0043A335 E84CFBFEFF              call 00429E86
+:0043A33A 909090                  3*nop
+
+Using free space from Small Potions:
+
+File Offset 00029286
+
+:00429E86 90                      nop
+:00429E87 03C6                    add eax, esi
+:00429E89 C1E705                  shl edi, 05
+:00429E8C 8A8860010000            mov cl, byte ptr [eax+00000160]
+:00429E92 84C9                    test cl, cl
+:00429E94 7405                    je 00429E9B
+:00429E96 80F905                  cmp cl, 05
+:00429E99 7502                    jne 00429E9D
+:00429E9B D1E7                    shl edi, 1
+:00429E9D 80F901                  cmp cl, 01
+:00429EA0 740A                    je 00429EAC
+:00429EA2 80F903                  cmp cl, 03
+:00429EA5 7405                    je 00429EAC
+:00429EA7 80F904                  cmp cl, 04
+:00429EAA 7506                    jne 00429EB2
+:00429EAC 8BCF                    mov ecx, edi
+:00429EAE D1F9                    sar ecx, 1
+:00429EB0 03F9                    add edi, ecx
+wordt
+:00429E86 E814000000              call 00429E9F
+:00429E8B E8105C0000              call 0042FAA0
+:00429E90 C3                      ret
+:00429E91 52                      push edx
+:00429E92 E808000000              call 00429E9F
+:00429E97 3896907A6900            cmp byte ptr [esi+00697A90], dl
+:00429E9D 5A                      pop edx
+:00429E9E C3                      ret
+:00429E9F 83BE587A690010          cmp dword ptr [esi+00697A58], 00000010
+:00429EA6 7504                    jne 00429EAC
+:00429EA8 6A0B                    push 0000000B
+:00429EAA EB02                    jmp 00429EAE
+:00429EAC 6A13                    push 00000013
+:00429EAE 5A                      pop edx
+:00429EAF C3                      ret
+:00429EB0 9090                    2*nop

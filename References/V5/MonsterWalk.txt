@@ -1,0 +1,148 @@
+Monster starts walk towards last seen position of target.
+
+This procedure does not seem to check if walking is allowed for some reason. 
+
+
+* Referenced by a CALL at Addresses:
+|:0043FAAC   , :0043FC26   , :0043FD20   , :0043FF08   , :0044032E   
+|:0044035F   , :004404D7   , :004407C0   , :00440A83   , :00440E1B   
+|:00440E2F   , :00441046   , :0044115E   , :004413EE   , :00441483   
+|:00441534   , :00441960   , :00441AE6   , :00441E59   , :0044219C   
+|:004423BE   , :004426FA   , :004429E4   , :00442C95   , :00442D7E   
+|
+:0043F937 53                      push ebx
+:0043F938 55                      push ebp
+:0043F939 56                      push esi
+:0043F93A 57                      push edi
+:0043F93B 8BF2                    mov esi, edx
+:0043F93D 8BF9                    mov edi, ecx
+:0043F93F 8BEE                    mov ebp, esi
+:0043F941 E8BC420000              call 00443C02
+:0043F946 B165                    mov cl, 65
+:0043F948 8BD8                    mov ebx, eax
+:0043F94A 6A02                    push 00000002
+:0043F94C 5A                      pop edx
+:0043F94D E808A6FDFF              call 00419F5A
+:0043F952 85C0                    test eax, eax
+:0043F954 7424                    je 0043F97A
+:0043F956 85DB                    test ebx, ebx
+:0043F958 7553                    jne 0043F9AD
+:0043F95A 8BDE                    mov ebx, esi
+:0043F95C 8BCF                    mov ecx, edi
+:0043F95E C1E302                  shl ebx, 02
+:0043F961 8BB3E0364B00            mov esi, dword ptr [ebx+004B36E0]
+:0043F967 8BD6                    mov edx, esi
+:0043F969 E894420000              call 00443C02
+:0043F96E 85C0                    test eax, eax
+:0043F970 753B                    jne 0043F9AD
+:0043F972 8BB300374B00            mov esi, dword ptr [ebx+004B3700]
+:0043F978 EB22                    jmp 0043F99C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043F954(C)
+|
+:0043F97A 85DB                    test ebx, ebx
+:0043F97C 752F                    jne 0043F9AD
+:0043F97E 8BDE                    mov ebx, esi
+:0043F980 8BCF                    mov ecx, edi
+:0043F982 C1E302                  shl ebx, 02
+:0043F985 8BB300374B00            mov esi, dword ptr [ebx+004B3700]
+:0043F98B 8BD6                    mov edx, esi
+:0043F98D E870420000              call 00443C02
+:0043F992 85C0                    test eax, eax
+:0043F994 7517                    jne 0043F9AD
+:0043F996 8BB3E0364B00            mov esi, dword ptr [ebx+004B36E0]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043F978(U)
+|
+:0043F99C 8BD6                    mov edx, esi
+:0043F99E 8BCF                    mov ecx, edi
+:0043F9A0 E85D420000              call 00443C02
+:0043F9A5 85C0                    test eax, eax
+:0043F9A7 7504                    jne 0043F9AD
+:0043F9A9 33DB                    xor ebx, ebx
+:0043F9AB EB03                    jmp 0043F9B0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043F958(C), :0043F970(C), :0043F97C(C), :0043F994(C), :0043F9A7(C)
+|
+:0043F9AD 6A01                    push 00000001
+:0043F9AF 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043F9AB(U)
+|
+:0043F9B0 6A02                    push 00000002
+:0043F9B2 B166                    mov cl, 66
+:0043F9B4 5A                      pop edx
+:0043F9B5 E8A0A5FDFF              call 00419F5A
+:0043F9BA 85C0                    test eax, eax
+:0043F9BC 7432                    je 0043F9F0
+:0043F9BE 85DB                    test ebx, ebx
+:0043F9C0 756F                    jne 0043FA31
+:0043F9C2 8BDD                    mov ebx, ebp
+:0043F9C4 8BCF                    mov ecx, edi
+:0043F9C6 C1E302                  shl ebx, 02
+:0043F9C9 8B8300374B00            mov eax, dword ptr [ebx+004B3700]
+:0043F9CF 8B348500374B00          mov esi, dword ptr [4*eax+004B3700]
+:0043F9D6 8BD6                    mov edx, esi
+:0043F9D8 E825420000              call 00443C02
+:0043F9DD 85C0                    test eax, eax
+:0043F9DF 7550                    jne 0043FA31
+:0043F9E1 8B83E0364B00            mov eax, dword ptr [ebx+004B36E0]
+:0043F9E7 8B3485E0364B00          mov esi, dword ptr [4*eax+004B36E0]
+:0043F9EE EB30                    jmp 0043FA20
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043F9BC(C)
+|
+:0043F9F0 85DB                    test ebx, ebx
+:0043F9F2 753D                    jne 0043FA31
+:0043F9F4 8BDD                    mov ebx, ebp
+:0043F9F6 8BCF                    mov ecx, edi
+:0043F9F8 C1E302                  shl ebx, 02
+:0043F9FB 8B83E0364B00            mov eax, dword ptr [ebx+004B36E0]
+:0043FA01 8B3485E0364B00          mov esi, dword ptr [4*eax+004B36E0]
+:0043FA08 8BD6                    mov edx, esi
+:0043FA0A E8F3410000              call 00443C02
+:0043FA0F 85C0                    test eax, eax
+:0043FA11 751E                    jne 0043FA31
+:0043FA13 8B8300374B00            mov eax, dword ptr [ebx+004B3700]
+:0043FA19 8B348500374B00          mov esi, dword ptr [4*eax+004B3700]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043F9EE(U)
+|
+:0043FA20 8BD6                    mov edx, esi
+:0043FA22 8BCF                    mov ecx, edi
+:0043FA24 E8D9410000              call 00443C02
+:0043FA29 85C0                    test eax, eax
+:0043FA2B 7504                    jne 0043FA31
+:0043FA2D 33DB                    xor ebx, ebx
+:0043FA2F EB03                    jmp 0043FA34
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043F9C0(C), :0043F9DF(C), :0043F9F2(C), :0043FA11(C), :0043FA2B(C)
+|
+:0043FA31 6A01                    push 00000001
+:0043FA33 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043FA2F(U)
+|
+:0043FA34 85DB                    test ebx, ebx
+:0043FA36 7409                    je 0043FA41
+:0043FA38 8BD6                    mov edx, esi
+:0043FA3A 8BCF                    mov ecx, edi
+:0043FA3C E855F8FFFF              call 0043F296					move forward (?)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043FA36(C)
+|
+:0043FA41 5F                      pop edi
+:0043FA42 5E                      pop esi
+:0043FA43 8BC3                    mov eax, ebx
+:0043FA45 5D                      pop ebp
+:0043FA46 5B                      pop ebx
+:0043FA47 C3                      ret

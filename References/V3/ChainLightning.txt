@@ -1,0 +1,8 @@
+()ChainLightning Range = slvl + 2, max = 10
+
+File Offset = 375DE
+
+:004381DE 6A0D                    push 0000000D
+wordt
+:004381DE 6A0B                    push 0000000B
+

@@ -1,0 +1,195 @@
+Character Adresses	Hellfire	Diablo
+------------------
+
+id for local character  [006EADE8]
+
+
+Mana Globe update       [004D110C]
+Life Globe update       [004D0E40]
+
+
+Dungeon lvl on                +34]
+
+coordinate (char)	      +38]
+coordiante (char) 	      +3C]
+
+coordinate ?                  +70]
+
+Appearance		      +78]	+006877F0]	Graphical display of char
+							It's a summation of the following values (1 of each) 
+							Weapon: 02=Sword,04=Bow,05=Axe,06=Mace,08=Staff
+							Shield: 01=Shield
+							Armor:  10=Medium,20=Heavy
+
+
+?                       +0000009C]			used with LR
+?                       +000000A0]			used with LR
+
+
+Spell Flags             +000000B4]
+                        +000000B8]
+                        +000000E0]
+			+00000108]
+                        +00000109]
+                        +0000010A]
+                        +0000010B]
+                        +0000010C]
+                        +00000110]
+                        +00000114]
+                        +00000118]
+                        +0000011C]
+
+Char Skill		+00000110]	
+     or                 +00000114]			Monk (Search)
+
+?                       +00000120]	+00687898]
+
+Spell on F5             +00000124]
+Spell on F6             +00000128]
+Spell on F7             +0000012C]
+Spell on F8             +00000130]
+
+F5 enabled=01           +00000134]
+F6 enabled=01           +00000135]
+F7 enabled=01           +00000136]
+F8 enabled=01           +00000137]
+
+?			+00000138]			01 if bow in hand
+
+Can Block=01		+0000013C]	+006878B4]	Have Shield or Monk with Staff or no Weapon
+
+?			+0000013D]			<>0 -> not hittable by any spell missiles
+
+Light radius		+0000013E]	
+
+?			+0000013F]			<>0 -> not selectable as monster-target
+
+Char Name		+00000140]	
+
+Class			+00000160]			0,1,..,5=Warrior,Rogue,Mage,Monk,Bard,Barbarian
+
+Cur. Strength		+00000164]			Update by call 0045E68C
+Base Strength		+00000168]			Max Base Str. at [16*class+004B5DD0]
+
+Cur. Magic		+0000016C]			Update by call 0045E724
+Base Magic		+00000170]			Max Base Mag. at [16*class+004B5DD4]
+
+Cur. Dexterity		+00000174]			Update by call 0045E822
+Base Dexterity		+00000178]			Max Base Dex. at [16*class+004B5DD8]
+
+Cur. Vitality		+0000017C]			Update by call 0045E8BA
+Base Vitality		+00000180]			Max Base Vit. at [16*class+004B5DDC]
+
+Char. Base Damage	+00000188]
+
+Block Bonus		+0000018C]
+
+Base life		+00000190]
+Max Base life		+00000194]
+Cur. life		+00000198]
+Max Cur. life		+0000019C]
+
+ratio life globe (?)	+000001A0]			
+
+Base mana		+000001A4]
+Max Base mana		+000001A8]
+Cur. mana		+000001AC]
+Max Cur. mana		+000001B0]
+
+ratio mana globe (?)	+000001B4]			
+
+CLVL			+000001B8]
+
+Xp			+000001BC]			
+
+Magic resistance	+000001C9]	+00687941]
+Fire resistance		+000001CA]	+00687942]
+Lightning resistance	+000001CB]	+00687943]
+
+Total Gold		+000001CC]
+
+Infravision		+000001D0]
+
+coordinate cursor	+000001D4]
+coordinate cursor	+000001D8]
+
+coordinate ?            +000001DC]
+
+slvl current spell 	+000001E0]
+
+
+Weaponslot primary	+00000964]	+006880BC]
+2-Handed on primary     +00000A19]	
+Req. prim. W.slot met	+00000AC0]	+00688218]	<> 0 is requirements met
+Weaponslot secondary	+00000AD8]	+0068822C]
+Damage from items?	+00000BA0]	
+Armor magictype		+00000C08]			00=Normal,01=Magic,02=Unique ?
+Req. sec. W.slot met	+00000C34]	+00688388]	<> 0 is requirements met
+Armortype		+00000C4C]	+0068839C]	06=Light,08=Medium,09=Heavy
+Req. armor met		+00000DA8]	+006884F8]	<> 0 is requirements met
+
+item type offsets:
+			+00000394]			helm
+			+00000508]			jewel
+			+0000067C]			jewel
+			+000007F0]			jewel
+			+00000964]			Righthand
+			+00000AD8]			Lefthand
+			+00000C4C]			Armor	
+			+00000DC0]			inventory
+			+00000F34]	
+			+000010A8]	
+			+0000121C]	
+			+00001390]	
+
+
+
+item cursor or pickedup	+0000550C]			base item number
+
+Min. Damage from item	+00005518]
+Max. Damage from item	+0000551C]
+
+AC from class		+00005520]
+
++% Damage from items	+00005524]
+ToHit from items	+00005528]
+AC from items		+0000552C]
++Damage from items	+00005530]
+
+Staff spells speedbook	+00005538]
+Staff spells speedbook	+0000553C]	
+
+Flags			+00005540]	
+01h=Unused,02h=LifeStealing,04h=RandomSpeed,40h=LoseLife
+00020000h=Fast HitRecovery
+00040000h=Faster HitRecovery
+00080000h=Fastest HitRecovery
+10,20 = firedamage
+
+Flags			+00005541]	
+01h=MonsterCannotHeal?,08h=KnockBack,40h=Vampires
+
+Flags			+00005542]	
+01h=Blood
+
+Flags			+00005543]	
+04h=Thorns,08h=Corruption,10h=Evasion,
+40h=DDVsDemon,80h=Negating
+
+DFE			+00005544]
+
+Extra slvls (?)		+00005548]
+
+Bashing			+00005550]	0,1,2,3 = none, penetrating, piercing, bashing
+
+Min. Fire Damage	+00005554]	
+Max. Fire Damage	+00005558]	
+
+Min. Lig. Damage	+0000555C]	
+Max. Lig. Damage	+00005560]	
+
+Oil effect on cursor	+00005564]	
+
+Reflect counter		+00005570]
+
+Flags			+00005588]	01=Devastation,04=Peril,08=Jester,10h=Doppelganger

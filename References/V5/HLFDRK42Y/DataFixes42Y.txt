@@ -1,0 +1,811 @@
+Various DATA corrections
+
+
+
+Better Tohit and Damage for Goatmen's 2nd attack, and Drake attack type for Night Clan:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  
+
+112 Flesh Clan            demon     6 Goat Man         0   4- 6     9    30-  45   40   50    4- 10   70    6- 15  
+                                                                                                     100    8- 14
+000AE159 3208 040A 4607 060F                     2...F...
+changed into
+000AE159 3208 040A 6407 080E                     2...d...
+
+ 35 Stone Clan            demon     6 Goat Man         1   5- 7    11    40-  55   40   60    6- 12   85    9- 18  
+                                                                                                     110   10- 18
+000ABAD9 3C08 060C 5507 0912                     <...U...
+changed into
+000ABAD9 3C08 060C 6E07 0A12                     <...n...
+
+ 34 Fire Clan             demon     6 Goat Man         2   6- 8    13    50-  65   45   70    8- 16   70   12- 20   
+                                                                                                     120   14- 22
+000ABA59 4608 0810 4607 0C14                     F...F...
+changed into
+000ABA59 4608 0810 7807 0E16                     F...x...
+
+111 Night Clan            demon     6 Goat Man         3   7- 9    15    55-  70   50   80   10- 20  110   15- 26  
+                                   24 Viper                                                  12- 22  130   18- 30
+000AE0D0 0600 0000 0003 0000 03                  .........
+changed into
+000AE0D0 1800 0000 0003 0000 03                  .........
+
+000AE0D9 5008 0A14 6E07 0F1A                     P...n...
+changed into
+000AE0D9 5008 0C16 8207 121E                     P.......
+
+000AE084 0000 0000                               ....
+changed into
+000AE084 0100 0000                               ....
+
+
+Normal Goat attack type for Fire Clan boss:
+
+ 43 Bloodgutter               Fire Clan             13 Butcher          2   3Y     6      12       13   320
+                                                     6 Goat Man         3
+000AF7F0 0D02                                    ..
+changed into
+000AF7F0 0603                                    ..
+
+
+Drake attack type for Stone Clan boss:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP 
+ 44 Deathshade Fleshmaul      Stone Clan             5 Horned Demon     2   3Y     6      12       11   310
+                                                    24 Viper
+000AF810 0502                                    ..
+changed into
+000AF810 1802                                    ..
+
+
+Corrections to Madburner:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL
+ 57 Madburner                 Familiar              11 Winged Fiend     3   3Y     7      14       13   320   20- 40  I-I
+                                                                                   6                    280   14- 32  IRI
+000AF9A0 2900 0000 8417 4B00 841B 4B00 0700 4001 ).....K...K...@.
+000AF9B0 0B03 1428 2800 0300 0000 0000 0000 0000 ...((...........
+changed into
+000AF9AC 0600 1801                               ....
+000AF9B2 0E20                                    . 
+000AF9B4 2A00                                    *.
+
+
+Fix overflow Charge Damage for Horned Death, and adjusting walk speed for other runners:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  walk
+
+ 67 Obsidian Lord         animal    5 Horned Demon     3  10-12    20   130- 160   64   92   11- 24  106   24- 53   7
+                                                                                                           22- 48   8
+000ACA94 0700 0000                               ....
+changed into
+000ACA94 0800 0000                               ....
+
+000ACAD9 5C07 0B18 6A00 1835                     \...j..5
+changed into
+000ACAD9 5C07 0B18 6A00 1630                     \...j..0
+
+ 68 Hell Beast            animal    5 Horned Demon     4  13-16    21   180- 220   80  110   20- 25  110   50- 60   7
+                                                                                                           40- 50   8
+000ACB14 0700 0000                               ....
+changed into
+000ACB14 0800 0000                               ....
+
+000ACB59 6E06 1419 6E00 323C                     n...n.2<
+changed into
+000ACB59 6E06 1419 6E00 2832                     n...n.(2
+
+ 69 Horned Death          animal    5 Horned Demon     5  C2-C4    32   280- 320  115  135   26- 37  135   50- 70   7
+                                                                                                           52- 62   8
+000ACB94 0700 0000                               ....
+changed into
+000ACB94 0800 0000                               ....
+
+000ACBD9 8706 1A25 8700 3246                     ...%..2F
+changed into
+000ACBD9 8706 1A25 8700 343E                     ...%..4>
+
+
+
+Adjust Drake charge Tohit and Damage (for completeness only, as drakes never seem to hit with a charge):
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  
+
+ 89 Cave Viper            animal   24 Viper            1  11-12    21   100- 150   60   90    8- 20    -      -                                                                                                          135   18- 20
+000AD5D9 5A08 0814 0000 0000                     Z.......
+changed into
+000AD5D9 5A08 0814 8700 1214                     Z.......
+
+ 90 Fire Drake            animal   24 Viper            2  12-13    23   120- 170   65  105   12- 24    -      -     
+                                                                                                     135   22- 24
+000AD659 6908 0C18 0000 0000                     i.......
+changed into
+000AD659 6908 0C18 8700 1618                     i.......
+
+ 91 Gold Viper            animal   24 Viper            3  13-14    25   140- 180   70  120   15- 26    -      -     
+                                                                                             18- 30  135   28- 30
+000AD6D9 7808 0F1A 0000 0000                     x.......
+changed into
+000AD6D9 7808 121E 8700 1C1E                     x.......
+
+ 92 Azure Drake           animal   24 Viper            4  14-15    28   180- 220   90  133   26- 35    -      -  
+                                                                                             26- 38  135   36- 38
+000AD759 8507 1A23 0000 0000                     ...#....
+changed into
+000AD759 8507 1A26 8700 2426                     ...&..$&
+            
+ 70 Blood Drake           animal   24 Viper            5  C1-C4    31   200- 260   90  133   20- 50    -      -    
+                                                                                             34- 48  135   46- 52
+000ACC59 8507 1432 0000 0000                     ...2....
+changed into
+000ACC59 8507 2230 8700 2E34                     .."0...4
+
+
+Fix charge damage for various monsters (Drake attacks still do not work properly), and more HP for Golems:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  
+
+ 95 Steel Lord            undead    2 Skeleton         4  15-16    29   200- 200  125  135   25- 35    -      -    
+                                                                                                     135   30- 36
+000AD8D9 8707 1923 0000 0000                     ...#....
+changed into
+000AD8D9 8707 1923 8700 1E24                     ...#...$
+
+ 36 Blood Knight          undead    2 Skeleton         4  14-16    30   220- 220  125  135   30- 39    -      -    
+                                                                                             30- 40  135   36- 40
+000ABB59 8707 1E27 8708 3C64                     ...'..<d
+changed into
+000ABB59 8707 1E28 8708 2428                     ...(..$(
+
+122 Copper Golem          undead    2 Skeleton         3  C1-C2    27   440- 480   75  120   19- 24    -      -  
+                                                                        500- 540   90                135   30- 36  
+000AE659 7808 1318 0000 0000                     x.......
+changed into
+000AE659 7808 1318 8700 1E24                     x......$
+
+000AE648 B801 0000 E001 0000                     ........
+changed into
+000AE648 F401 0000 1C02 0000                     ........
+
+000AE661 4B                                      K
+changed into
+000AE661 5A                                      Z
+
+130 Iron Golem            undead    2 Skeleton         4  C2-C3    29   500- 550   85  125   22- 32    -      -  
+                                                                        620- 660  100                135   40- 48  
+000AEA59 7D07 1620 0000 0000                     }.. ....
+changed into
+000AEA59 7D07 1620 8700 2830                     }.. ..(0
+
+000AEA48 F401 0000 2602 0000                     ....&...
+changed into
+000AEA48 6C02 0000 9402 0000                     l.......
+
+000AEA61 55                                      U
+changed into
+000AEA61 64                                      d
+
+128 Mithril Golem         undead    2 Skeleton         5  C3-C4    31   600- 660   90  133   28- 38    -      -    
+                                                                        740- 780  110                135   50- 62
+000AE959 8506 1C26 0000 0000                     ...&....
+changed into
+000AE959 8506 1C26 8700 323E                     ...&..2>
+
+000AE948 5802 0000 9402 0000                     X.......
+changed into
+000AE948 E402 0000 0C03 0000                     ........
+
+000AE961 5A                                      Z
+changed into
+000AE961 6E                                      n
+
+
+More HP for Flesh Things:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP    
+ 98 Flesh Thing           animal    2 Skeleton         2  H2-H4    27   400- 600
+                                                                        620- 920
+000ADA48 9001 0000 5802 0000                     ....X...
+changed into
+000ADA48 6C02 0000 9803 0000                     l.......
+
+
+Normal melee for Devil Kin Brute, modified appearance:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size
+
+  3 Devil Kin Brute       animal   24 Viper            2  10-12    21    80- 100   70  100   18- 24    0    0-  0  IR-/IRR   2400   700
+                                    2 Skeleton            12-12                                                                    1600
+
+000AAA70 8000 0000 BC02 0000 1028 4B00 0100 0000 .........(K.....
+000AAA80 F027 4B00 0000 0000 0000 0000 0000 0000 .'K.............
+000AAA90 0A00 0000 0800 0000 0B00 0000 0800 0000 ................
+000AAAA0 1100 0000 0000 0000 0000 0000 0000 0000 ................
+000AAAB0 0000 0000 0000 0000 0000 0000 0200 0000 ................
+000AAAC0 E027 4B00 1216 1500 5000 0000 6400 0000 .'K.....P...d...
+000AAAD0 1800 0000 0003 0000 0264 0712 1800 0000 .........d......
+000AAAE0 0046 0200 0A00 0E00 0000 0300 6009 0000 .F..........`...
+changed into
+000AAA74 4006 0000                               @...
+000AAAC4 1616                                    ..
+000AAAD0 02                                      .
+
+
+Normal melee for several bosses:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage 
+
+ 15 Titan                     Mithril Golem         24 Viper            5   3Y    C3      30       31  2900   33- 60
+                                                     2 Skeleton         
+000AF470 1805                                    ..
+changed into
+
+ 29 The Killing Brute         Devil Kin Brute       24 Viper            3   3Y    12      24       21   380   25- 30 
+                                                     2 Skeleton
+000AF630 1803                                    ..
+changed into
+000AF630 0203                                    ..
+
+ 31 Warlord of Blood          Steel Lord            24 Viper            5   3Y    15      30       29  1250   40- 50
+                                                     2 Skeleton         4
+000AF670 1805                                    ..
+changed into
+000AF670 0204                                    ..
+
+ 60 Anvil                     Iron Golem            24 Viper            4   3     C2      28       29  2300   35- 56 
+                                                     2 Skeleton
+000AFA10 1804                                    ..
+changed into
+000AFA10 0204                                    ..
+
+ 63 Magnat                    Copper Golem          24 Viper            3   3Y    C1      26       27  1700   37- 48 
+                                                     2 Skeleton
+000AFA70 1803                                    ..
+changed into
+000AFA70 0203                                    ..
+
+
+Charge attack for Cave Boars, faster movement, modified appearance:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2   walk
+
+118 Cave Boar             animal    2 Skeleton         2   9-12    17    80- 100   60   70   16- 24    -      -      10
+                                    5 Horned Demon     5  12-12                                       135  24- 36     7
+
+000AE3F0 BC00 0000 B603 0000 F821 4B00 0000 0000 .........!K.....
+000AE400 D821 4B00 0000 0000 0000 0000 0000 0000 .!K.............
+000AE410 0A00 0000 0A00 0000 0F00 0000 0600 0000 ................
+000AE420 1000 0000 0000 0000 0200 0000 0000 0000 ................
+000AE430 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AE440 0429 4B00 1016 1100 5000 0000 6400 0000 .)K.....P...d...
+000AE450 0200 0000 8001 0000 0246 0710 1800 0000 .........F......
+000AE460 003C 0200 0800 0800 0000 0300 DC05 0000 .<..............
+changed into
+000AE3F4 0100 0000                               ....
+000AE414 0700 0000                               ....
+000AE444 1616                                    ..
+000AE450 0500 0000 8001 0000 05                  .........
+000AE459 4607 1018 8700 1824                     F......$
+
+
+Follow ability for Byclops:
+
+000AEC50 0200 0000 8002 0000 02                  .........
+changed into
+000AEC50 0200 0000 8003 0000 02                  .........
+
+
+Modified appearance for Blood Stones:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size
+
+ 61 Blood Stone           demon     9 Magma Demon      1   9- 9    14    70-  90   45   50    2- 12   50    2- 12  -I-/-I-   1309  1600
+                                                                                                                                    700
+000AC774 4006 0000                               @...
+changed into
+000AC774 BC02 0000                               ....
+
+
+Correct subtype for Blood Claw boss:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage 
+
+ 64 Goldblight of the Flame   Blood Claw            12 Gargoyle         0   3     10      20       19   420   15- 35 
+                                                                        2
+000AFA90 0C00                                    ..
+changed into
+000AFA90 0C02                                    ..
+
+
+Adjustments for Shredded (now Lifestealing and Strength draining):
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size    stand walk
+
+132 Unraveler             undead    2 Skeleton         1   5- 7    10    30-  60   40   55    8- 22    -      -    III/III    700   950      10    10 
+                                                           7- 8    14    40-  60                                                                    8
+
+000AEAF0 6000 0000 B603 0000 C824 4B00 0000 0000 `........$K.....
+000AEB00 A824 4B00 0000 0000 0000 0000 0000 0000 .$K.............
+000AEB10 0A00 0000 0A00 0000 0C00 0000 0500 0000 ................
+000AEB20 1000 0000 0000 0000 0000 0000 0000 0000 ................
+000AEB30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AEB40 FC1C 4B00 080C 0A00 1E00 0000 3C00 0000 ..K.........<...
+000AEB50 0200 0000 1001 0000 0137 0708 1600 0000 .........7......
+000AEB60 0028 0000 3800 3800 0000 0300 BC02 0000 .(..8.8.........
+changed into
+000AEB14 0800 0000                               ....
+000AEB44 0C0E                                    ..
+000AEB46 0E00 2800 0000 3C00 0000                ..(...<...
+
+135 Hollow One            undead    2 Skeleton         2   8-10    12    40-  80   42   70   10- 30    -      -    III/III   1100   950      10     8 
+                                                          10-11    20    55-  80                                                                  
+
+000AEC70 6000 0000 B603 0000 C824 4B00 0000 0000 `........$K.....
+000AEC80 A824 4B00 0000 0000 0100 0000 E02D 4B00 .$K..........-K.
+000AEC90 0A00 0000 0800 0000 0B00 0000 0500 0000 ................
+000AECA0 1000 0000 0000 0000 0000 0000 0000 0000 ................
+000AECB0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AECC0 441C 4B00 0E12 0C00 2800 0000 5000 0000 D.K.....(...P...
+000AECD0 0200 0000 1001 0000 0246 070A 1E00 0000 .........F......
+000AECE0 002A 0000 3800 3800 0000 0300 4C04 0000 .*..8.8.....L...
+changed into
+000AEC8C 002E 4B00                               ..K.
+000AECC4 1214                                    ..
+000AECC6 1400 3700 0000 5000 0000                ..7...P...
+
+  6 Pain Master           undead    2 Skeleton         3  11-13    17    50-  90   50   80   16- 36    -      -    III/III   2100   950      10     6   
+                                                          13-14    26    70- 100                                                                    8
+
+000AABF0 6000 0000 B603 0000 C824 4B00 0000 0000 `........$K.....
+000AAC00 A824 4B00 0000 0000 0100 0000 002E 4B00 .$K...........K.
+000AAC10 0A00 0000 0600 0000 0A00 0000 0500 0000 ................
+000AAC20 1000 0000 0000 0000 0000 0000 0000 0000 ................
+000AAC30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AAC40 8024 4B00 1418 1100 3200 0000 5A00 0000 .$K.....2...Z...
+000AAC50 0200 0000 1001 0000 0350 0710 2400 0000 .........P..$...
+000AAC60 0032 0000 3800 3800 0000 0300 3408 0000 .2..8.8.....4...
+changed into
+000AAC0C E02D 4B00                               .-K.
+000AAC14 0800 0000                               ....
+000AAC44 181A                                    ..
+000AAC46 1A00 4600 0000 6400 0000                ..F...d...
+
+pos name                      type                  attacktype        sub  pack  dlvl   HP   damage  MFL
+
+ 18 Keeper of the Void        Unraveler              2 Skeleton         3   3Y     7   390    8- 18  III
+                                                                                   8   300   12- 24
+
+000AF4C0 8400 0000 901A 4B00 841B 4B00 0700 8601 ......K...K.....
+000AF4D0 0203 0812 3800 0300 0000 0000 0000 0000 ....8...........
+changed into
+000AF4CC 0800 2C01                               ..,.
+000AF4D2 0C18                                    ..
+
+ 20 The Torturer              Pain Master            2 Skeleton         4   3     12   450   27- 27  III
+                              Hollow One                                          11   400   18- 36
+
+000AF500 0600 0000 5C1A 4B00 841B 4B00 0C00 C201 ....\.K...K.....
+000AF510 0204 1B1B 3800 0300 0000 0000 0000 0000 ....8...........
+changed into
+000AF500 8700 0000                               ....
+000AF50C 0B00 9001                               ....
+000AF512 1224                                    .$
+
+
+
+Relocating Hell Stone boss for a better spread of bosses in Caves:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL
+ 50 Bronzefist Firestone      Hell Stone             9 Magma Demon      2   3Y     9      18       16   520   30- 36  -IR
+                                                                                  10
+000AF8CC 0900                                    ..
+changed into
+000AF8CC 0A00                                    ..
+
+
+Relocating Frost Charger boss for a better spread of bosses in Caves:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL
+ 68 Bluehorn                  Frost Charger          5 Horned Demon     2   3Y    11      22       17   480   25- 30  IRR 
+                                                                                  10
+000AFB0C 0B00                                    ..
+changed into
+000AFB0C 0A00                                    ..
+
+
+Relocating Grave Digger boss for a better spread of bosses in Caves:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL
+ 56 Tomb Crusher              Gravedigger            2 Skeleton         3   3Y    12      24       18   560   18- 26  RRI
+                                                                                  11
+000AF98C 0C                                      .
+changed into
+000AF98C 0B 
+
+
+More damage for the Butcher:
+
+name                  type                   attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP  damage  
+
+  9 The Butcher       The Butcher           13 Butcher          3   3Y     0*     15       10   300   10- 15 
+                                                                                                      10- 25
+000AF3B2 0A0F                                    ..
+changed into
+000AF3B2 0A19                                    ..
+
+
+Less damage for Shadowcrow:
+
+name                  type                   attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP  damage  
+
+35 Shadowcrow         Brave One             15 Hidden           2   3Y     3       6        8   150   12- 25
+                                                                                                      14- 18
+000AF6F2 0C19                                    ..
+changed into
+000AF6F2 0E12                                    ..
+
+
+Lava Maws and Doomspitters no longer resisting Fire in Normal Mode:
+
+name           type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL
+
+Doomspitter    animal   20 Fast Spit        3  C1-C2    28   140- 170   40   75   12- 22   45    0-  0  IRR/IRR
+                                                                                                        I-R/IRR
+000AC164 0E00 0E00                               ....
+changed into
+000AC164 0C00 0E00                               ....
+
+Lava Maw       animal   20 Fast Spit        2  12-14    25   100- 150   35   65    6- 18   40    0-  0  IRR/IRR
+                                                                                                        I-R/IRR
+000AC1E4 0E00 0E00                               ....
+changed into
+000AC1E4 0C00 0E00                               ....
+
+
+
+Increased cost for CB and HB spell books:
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+
+ 29  30 Charged Bolt        lightning       1        1     8    3    1   30   0    40- 80  90: -: -      1000         10
+                                                                                                         2000
+000B66A8 E803 0000                               ....
+changed into
+000B66A8 D007 0000                               ....
+
+ 30  31 Holy Bolt           magic/other     1        1     7    2    1   30   0    40- 80  53: -: -      1000         10
+                                                                                                         2000
+000B66E0 E803 0000                               ....
+changed into
+000B66E0 D007 0000                               ....
+
+
+
+Adjusting manacost and requirements for several Spells:
+
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+
+  1   2 Healing             magic/other     1        1    30   20    1   20   1    20- 40  37: -: -      2000         40
+                                                               15
+000B6058 021E 0200 4C83 4B00 4C83 4B00 0100 0000 ....L.K.L.K.....
+000B6068 0100 0000 0000 0000 0100 0000 1400 0000 ................
+000B6078 5A25 0000 0114 0000 1400 0000 2800 0000 Z%..........(...
+000B6088 D007 0000 C800 0000                     ........
+changed into
+000B607D 0F                                      .
+
+  3   4 Flash               magic/other     5        4    32   16    1   40   0    20- 40  11:12: -     12000         80
+                                                          30   15
+000B60C8 0420 0200 4483 4B00 0000 0000 0500 0000 . ..D.K.........
+000B60D8 0400 0000 0000 0000 0000 0000 2800 0000 ............(...
+000B60E8 540B 0C00 0110 0000 1400 0000 2800 0000 T...........(...
+000B60F8 E02E 0000 9001 0000                     ........
+changed into
+000B60C9 1E                                      .
+000B60ED 0F                                      .
+
+  6   7 Town Portal         magic/other     3        3    32   18    1   20   0    15- 30  10: -: -      4000         40
+                                                          30   10
+000B6170 0720 0200 6052 4900 0000 0000 0300 0000 . ..`RI.........
+000B6180 0300 0000 0100 0000 0000 0000 1400 0000 ................
+000B6190 560A 0000 0112 0000 0F00 0000 1E00 0000 V...............
+000B61A0 A00F 0000 C800 0000                     ........
+changed into
+000B6171 1E                                      .
+000B6195 0A                                      .
+
+ 12  13 Guardian            fire            9        8    45   15    2   60   0    20- 40   2: -: -     12000         80
+                                                          30   10    1
+000B62C0 0D2D 0000 B026 4B00 0000 0000 0900 0000 .-...&K.........
+000B62D0 0800 0000 0100 0000 0000 0000 3C00 0000 ............<...
+000B62E0 5202 0000 020F 0000 1400 0000 2800 0000 R...........(...
+000B62F0 E02E 0000 9001 0000                     ........
+changed into
+000B62C1 1E                                      .
+000B62E4 010A                                    ..
+
+ 16  17 Inferno             fire          255       10    30   20    1   25   0    20- 40  49: -: -     20000         20
+                                                                         30
+000B63A0 111E 0000 8813 4A00 0000 0000 FFFF FFFF ......J.........
+000B63B0 0A00 0000 0000 0000 0000 0000 1900 0000 ................
+000B63C0 5231 0000 0114 0000 1400 0000 2800 0000 R1..........(...
+000B63D0 204E 0000 6400 0000                      N..d...
+changed into
+000B63BC 1E00 0000                               ....
+
+ 18  19 Invincibility       magic/other   255       14   100   80    2  100   0     5- 10  34: -: -         0        320
+                                                                         40
+000B6410 1364 0200 A082 4B00 0000 0000 FFFF FFFF .d....K.........
+000B6420 0E00 0000 0000 0000 0000 0000 6400 0000 ............d...
+000B6430 5222 0000 0250 0000 0500 0000 0A00 0000 R"...P..........
+000B6440 0000 0000 4006 0000                     ....@...
+changed into
+000B642C 2800 0000                               (...
+
+ 22  23 Teleport            magic/other    14       12    35   15    1   80   1    15- 30  26: -: -     20000         80
+                                                          30   10
+000B64F0 1723 0200 8C82 4B00 0000 0000 0E00 0000 .#....K.........
+000B6500 0C00 0000 0100 0000 0100 0000 5000 0000 ............P...
+000B6510 561A 0000 010F 0000 0F00 0000 1E00 0000 V...............
+000B6520 204E 0000 9001 0000                      N......
+changed into
+000B64F1 1E                                      .
+000B6515 0A                                      .
+
+ 31  32 Sanctuary           magic/other     7        5    45   30    1   40   0    15- 30  81: -: -     16000        160
+                                                          40   20
+000B66E8 202D 0200 E13B 4B00 0000 0000 0700 0000  -...;K.........
+000B66F8 0500 0000 0000 0000 0000 0000 2800 0000 ............(...
+000B6708 5251 0000 011E 0000 0F00 0000 1E00 0000 RQ..............
+000B6718 803E 0000 2003 0000                     .>.. ...
+changed into
+000B66E9 28                                      (
+000B670D 14                                      .
+
+ 32  33 Telekinesis         magic/other     2        2    30   15    1   20   0    20- 40  55: -: -      4000         40
+                                                               10
+000B6720 211E 0200 0C82 4B00 0C82 4B00 0200 0000 !.....K...K.....
+000B6730 0200 0000 0000 0000 0000 0000 1400 0000 ................
+000B6740 5237 0000 010F 0000 1400 0000 2800 0000 R7..........(...
+000B6750 A00F 0000 C800 0000                     ........
+changed into
+000B6745 0A                                      .
+
+ 33  34 Heal All            magic/other     1        1    50   30    1   30   1    20- 40  60: -: -      6000         80
+                                                          45   
+000B6758 2232 0200 0082 4B00 0000 0000 0100 0000 "2....K.........
+000B6768 0100 0000 0000 0000 0100 0000 1E00 0000 ................
+000B6778 583C 0000 011E 0000 1400 0000 2800 0000 X<..........(...
+000B6788 7017 0000 9001 0000                     p.......
+changed into
+000B6759 2D                                      -
+
+ 36  37 Resurrect           magic/other   255        6   150   50    5  100   1    15- 30  54: -: -     30000        160
+                                                                         60
+000B6800 2596 0200 1882 4B00 0000 0000 FFFF FFFF %.....K.........
+000B6810 0600 0000 0000 0000 0100 0000 6400 0000 ............d...
+000B6820 5836 0000 0532 0000 0F00 0000 1E00 0000 X6...2..........
+000B6830 3075 0000 2003 0000                     0u.. ...
+changed into
+000B681C 3C00 0000                               <...
+
+ 37  38 Divine Help         magic/other    13       14    80   40    2   60   0    10- 20  85: -: -     28000        160
+                                                          40   20    1
+000B6838 2650 0200 AD5C 4A00 0000 0000 0D00 0000 &P...\J.........
+000B6848 0E00 0000 0000 0000 0000 0000 3C00 0000 ............<...
+000B6858 5255 0000 0228 0000 0A00 0000 1400 0000 RU...(..........
+000B6868 606D 0000 2003 0000                     `m.. ...
+changed into
+000B6839 28                                      (
+000B685C 0114                                    ..
+
+ 38  39 Identify            magic/other   255        4   255    1    3   10   1    15- 30  40: -: -    100000         80
+                                                                         30
+000B6870 27FF 0200 3883 4B00 3883 4B00 FFFF FFFF '...8.K.8.K.....
+000B6880 0400 0000 0000 0000 0100 0000 0A00 0000 ................
+000B6890 5628 0000 0301 0000 0F00 0000 1E00 0000 V(..............
+000B68A0 A086 0100 9001 0000                     ........
+changed into
+000B688C 1E00 0000                               ....
+
+ 41  42 Warp                magic/other     4        4    32   18    2   30   1    15- 30  78: -: -      4000         40
+                                                          30   10    1
+000B6918 2A20 0200 A481 4B00 0000 0000 0400 0000 * ....K.........
+000B6928 0400 0000 0000 0000 0100 0000 1E00 0000 ................
+000B6938 504E 0000 0212 0000 0F00 0000 1E00 0000 PN..............
+000B6948 A00F 0000 C800 0000                     ........
+changed into
+000B6919 1E                                      .
+000B693C 010A                                    ..
+
+
+Adjusted Magic requirements for several scrolls:
+
+Base Items
+pos name                         magic name   item type         item group          equip     qlvl  dur   damage    AC    str mag dex  price  pic  src  
+
+ 34 Scroll of Resurrect                       3 pot/scr/jewl     0 other            7 not       1     0    0- 0    0- 0    0  10   0     400    1    0
+                                                                                                                              20
+000A1010 000A 0000                               ....
+changed into
+000A1010 0014 0000                               ....
+
+ 92 Scroll of Warp                            3 pot/scr/jewl     0 other            7 not       1     0    0- 0    0- 0    0  10   0     100    1    1
+                                                                                                                               5
+000A2148 000A 0000                               ....
+changed into
+000A2148 0005 0000                               ....
+
+ 93 Scroll of Telekinesis                     3 pot/scr/jewl     0 other            7 not       1     0    0- 0    0- 0    0  10   0     100    1    1
+                                                                                                                               5
+000A2194 000A 0000                               ....
+changed into
+000A2194 0005 0000                               ....
+
+ 95 Scroll of Resurrect                       3 pot/scr/jewl     0 other            7 not       1     0    0- 0    0- 0    0  10   0     400    1    1
+                                                                                                                              20
+000A222C 000A 0000                               ....
+changed into
+000A222C 0014 0000                               ....
+
+ 97 Scroll of Warp                            3 pot/scr/jewl     0 other            7 not       4     0    0- 0    0- 0    0  10   0     100    1    1
+                                                                                                                               5
+000A22C4 000A 0000                               ....
+changed into
+000A22C4 0005 0000                               ....
+
+ 98 Scroll of Teleport                        3 pot/scr/jewl     0 other            7 not       4     0    0- 0    0- 0    0  20   0     200    1    1
+                                                                                                                              10
+000A2310 0014 0000                               ....
+changed into
+000A2310 000A 0000                               ....
+
+ 99 Scroll of Mana Shield                     3 pot/scr/jewl     0 other            7 not       6     0    0- 0    0- 0    0  30   0     400    1    1
+                                                                                                                              20
+000A235C 001E 0000                               ....
+changed into
+000A235C 0014 0000                               ....
+
+104 Scroll of Charm                           3 pot/scr/jewl     0 other            7 not       8     0    0- 0    0- 0    0  30   0     400    3    1
+                                                                                                                              15
+000A24D8 001E 0000                               ....
+changed into
+000A24D8 000F 0000                               ....
+
+105 Scroll of Stone Curse                     3 pot/scr/jewl     0 other            7 not       6     0    0- 0    0- 0    0  30   0     200    1    1
+                                                                                                                              15
+000A2524 001E 0000                               ....
+changed into
+000A2524 000F 0000                               ....
+
+110 Scroll of Golem                           3 pot/scr/jewl     0 other            7 not      10     0    0- 0    0- 0    0  30   0     400    1    1
+                                                                                                                              20
+000A26A0 001E 0000                               ....
+changed into
+000A26A0 0014 0000                               ....
+
+113 Scroll of Invincibility                   3 pot/scr/jewl     0 other            7 not      22     0    0- 0    0- 0    0  30   0    2000    3    1
+                                                                                                                              20
+000A2784 001E 0000                               ....
+changed into
+000A2784 0014 0000                               ....
+
+
+Corrections to some prefixes:
+
+pos name           effect                                     range  qlvl cursed  occur    base-   max  mul
+
+ 26 Sharp           4 +% To Hit, +% damage done              35- 40    3    1    --WTB-     750-  1000    6
+                                                             20- 40
+0008AD04 0400 0000 2300 0000 2800 0000           ....#...(...
+changed into
+0008AD04 0400 0000 1400 0000 2800 0000           ........(...
+
+ 27 Fine            4 +% To Hit, +% damage done              41- 50    6    1    --WTB-    1100-  1700    8
+                                                             36- 50
+0008AD34 0400 0000 2900 0000 3200 0000           ....)...2...
+changed into
+0008AD34 0400 0000 2400 0000 3200 0000           ....$...2...
+
+
+Increasing price for Blacksmith Oil, because they can be bought at Grizwold:
+
+pos name              item type         item group          equip     qlvl  dur   price  pic  src  
+
+ 84 Blacksmith Oil    3 pot/scr/jewl     0 other            7 not       1     0    400   30    1  
+                                                                                  1000
+000A1EFC 9001 0000 9001 0000                     ........
+changed into
+000A1EFC E803 0000 E803 0000                     ........
+
+Increasing price for generic Blacksmith, Fortitude and Accuracy Oils:
+
+000A4028 0100 0000 0500 0000 0100 0000 0500 0000 ................
+000A4038 0200 0000 0100 0000 0500 0000 0E00 0000 ................
+000A4048 0100 0000 0500 0000 D007 0000 9001 0000 ................
+000A4058 9001 0000 D007 0000 9001 0000 9001 0000 ................
+000A4068 A00F 0000 204E 0000 9001 0000 D007 0000 .... N..........
+000A4078 2800 0000 2300 0000 2100 0000 2200 0000 (...#...!..."...
+000A4088 1F00 0000 2700 0000 2500 0000 2600 0000 ....'...%...&...
+000A4098 2700 0000 2800 0000                     '...(...
+changed into
+000A4054 E803 0000                               ....
+000A4060 E803 0000                               ....
+000A4068 401F 0000                               @...
+
+
+Replaced Orb of Revival by Oil of Accuracy:
+
+pos name                         item type          item group  equip     qlvl  dur   damage    AC    str mag dex  price  pic
+
+112 Orb of Revival               3 pot/scr/jewl     0 other     2 2-h      17     0    0- 0    0- 0    0  30   0   20000   22 
+    Oil of Accuracy                                             7 not                                      0        1000   30 
+
+000A2708 0100 0000 0302 0000 1600 0000 0000 0000 ................
+000A2718 1D51 4A00 0000 0000 1100 0000 0000 0000 .QJ.............
+000A2728 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2738 001E 0000 0000 0000 1700 0000 2500 0000 ............%...
+000A2748 0000 0000 204E 0000 204E 0000           .... N.. N..
+changed into
+000A2708 0100 0000 0307 0000 1E00 0000 0000 0000 ................
+000A2718 0457 4A00 0000 0000 1100 0000 0000 0000 .WJ.............
+000A2728 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2738 0000 0000 0000 0000 1F00 0000 0000 0000 ................
+000A2748 0100 0000 E803 0000 E803 0000           ............
+
+
+Lower prices for Elixirs again:
+
+000A1FE0 204E 0000 204E 0000                      N.. N..
+changed into
+000A1FE0 1027 0000 1027 0000                     .'...'..
+
+000A202C 204E 0000 204E 0000                      N.. N..
+changed into
+000A202C 1027 0000 1027 0000                     .'...'..
+
+000A2078 204E 0000 204E 0000                      N.. N..
+changed into
+000A2078 1027 0000 1027 0000                     .'...'..
+
+000A20C4 204E 0000 204E 0000                      N.. N..
+changed into
+000A20C4 1027 0000 1027 0000                     .'...'..
+
+
+Better damage for some axes:
+
+pos name                         magic name   item type         item group          equip     qlvl  dur   damage    AC    str mag dex  price  pic  src  
+
+  6 Cleaver                      Cleaver      1 weapon           2 axe              2 2-h      42    80   10-40    0- 0  120   0   0    2400  143    1   17
+                                                                                                          20-40
+000A07B0 0A00 0000 2800 0000                     ....(...
+changed into
+000A07B0 1400 0000 2800 0000                     ....(...
+
+135 Great Axe                    Axe          1 weapon           2 axe              2 2-h      24    70   12-30    0- 0  100   0   0    2000  101    1   22
+                                                                                                          15-30
+000A2DFC 0C00 0000 1E00 0000                     ........
+changed into
+000A2DFC 0F00 0000 1E00 0000                     ........
+
+
+Improved Optic Amulet: now +2 spell levels 
+
+0008CC2C 0E00 0000 0100 0000 0100 0000           ............
+changed into
+0008CC2C 0E00 0000 0200 0000 0200 0000           ............
+
+
+Improved Acolyte Amulet: now +60 mana
+
+0008E708 2100 0000 1E00 0000 1E00 0000           !...........
+changed into
+0008E708 2100 0000 3C00 0000 3C00 0000           !...<...<...
+
+
+More Tohit on Rod of Purity:
+
+0008DCC4 0000 0000 5000 0000 5000 0000           ....P...P...
+changed into
+0008DCC4 0000 0000 7800 0000 7800 0000           ....x...x...

@@ -1,0 +1,29 @@
+Increased monster chain activation effect, to ensure full activation of groups, and thus less possible desynchronisation:
+
+File offset 00075871
+
+:00476471 6A02                    push 00000002
+changed into
+:00476471 6A05                    push 00000005
+
+
+
+Decreased default light radius, to reduce the risk for stairtraps, and to allow for better planned encounters (with Seeing):
+
+File offset 00022DC2
+
+:004239C2 C745F00A000000          mov [ebp-10], 0000000A
+changed into
+:004239C2 C745F009000000          mov [ebp-10], 00000009
+
+File offset 0002309F
+
+:00423C9F 6A0A                    push 0000000A
+changed into
+:00423C9F 6A09                    push 00000009
+
+File offset 000574A2
+
+:004580A2 C684303E0100000A        mov byte ptr [eax+esi+0000013E], 0A
+changed into
+:004580A2 C684303E01000009        mov byte ptr [eax+esi+0000013E], 09

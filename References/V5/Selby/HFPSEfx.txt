@@ -1,0 +1,101 @@
+Prefix\Suffix & Unique Item effects for Hellfire v1.01
+ 
+ 00: + to hit 
+ 01: - to hit 
+ 02: + damage % 
+ 03: - damage % 
+ 04: + to hit and + damage % but weird behaviour (not
+ really sure how the numbers you give translate into the
+ numbers shown on screen) 
+ 05: - to hit and - damage, see above 
+ 06: + AC % 
+ 07: - AC % 
+ 08: + resist fire % 
+ 09: + resist lightning % 
+ 0a: + resist magic % 
+ 0b: + resist all & 
+ 0c: ? 
+ 0d: ? 
+ 0e: spell levels 
+ 0f: + charges 
+ 10: fire damage melee weapons 
+ 11: lightning damage melee 
+ 12: ? 
+ 13: + str 
+ 14: - str 
+ 15: + mag 
+ 16: - mag 
+ 17: + dex 
+ 18: - dex 
+ 19: + vit 
+ 1a: - vit 
+ 1b: + all 
+ 1c: - all 
+ 1d: + damage from enemies 
+ 1e: - damage from enemies 
+ 1f: + life 
+ 20: - life 
+ 21: + mana 
+ 22: - mana 
+ 23: + % dur 
+ 24: - % dur 
+ 25: indestructible 
+ 26: + light radius (1-4 = 10-40%) 
+ 27: - light radius 
+ 28: ? 
+ 29: multiple arrows (only
+ Hellfire) 
+ 2a: fire arrows 
+ 2b: lightning arrows 
+ 2c: unique picture 
+ 2d: damage to attacker 
+ 2e: - all mana 
+ 2f: ? 
+ 30: ? 
+ 31: ?
+ 32: fire damage (new in Hellfire) 
+ 33: ? 
+ 34: absorbs half trap damage 
+ 35: knockback 
+ 36: ? 
+ 37: steal mana 
+ 38: steal life 
+ 39: penetrate armour (bashing etc.) 
+ 3a: swiftness, speed, haste etc. 
+ 3b: hit recovery 
+ 3c: fast block 
+ 3d: + damage 
+ 3e: random speed arrows 
+ 3f: damage x-y (give range instead of base item damage) 
+ 40: altered dur 
+ 41: no str requirement 
+ 42: spell (followed by spell number, order as in spell table, 
+     then # charges) 
+ 43: ? (looks like haste) 
+ 44: one-handed sword 
+ 45: + % damage vs. demons (only melee) 
+ 46: all resistances = zero 
+ 47: ? 
+ 48: continuous damage when worn 
+ 49: steal life as undead crown 
+ 4a: infravision 
+ 4b: AC 
+ 4c: lightning damage 
+ 4d: charged bolt (as Thunderclap) 
+ 4e: ? 
+ 4f: - AC 
+ from here on new in Hellfire 
+ 50: - resist fire % 
+ 51: - resist lightning % 
+ 52: - resist magic % 
+ 53: ? 
+ 54: devastation 
+ 55: decay 
+ 56: peril 
+ 57: jester 
+ 58: crystalline 
+ 59: doppleganger 
+ 5a: + 40 AC vs. demons 
+ 5b: + 20 AC vs. demons 
+ 5c: move mana to life 
+ 5d: move life to mana 

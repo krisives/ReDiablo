@@ -1,0 +1,8 @@
+()Correctie Starting spell-level for Sorcerer (gaf nu slvl 1 en 0)
+
+File Offset=51E64
+
+:00452A64 C680C200000002          mov byte ptr [eax+000000C2], 02
+wordt
+:00452A64 C680E000000001          mov byte ptr [eax+000000E0], 01
+

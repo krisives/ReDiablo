@@ -1,0 +1,62 @@
+Knockback for Bonespirit
+
+
+File Offset 0002E976
+
+:0042F576 807D1300                cmp byte ptr [ebp+13], 00
+:0042F57A 750E                    jne 0042F58A
+:0042F57C F6400108                test [eax+01], 08
+wordt
+:0042F576 50                      push eax
+:0042F577 E816EF0000              call 0043E492
+:0042F57C 85C0                    test eax, eax
+:0042F77E 58                      pop eax
+:0042F77F 90                      nop
+
+
+
+Free Space made after DarkServant draining :
+
+File Offset 0003D7BD
+
+:0043E3BD 0F85CF000000            jne 0043E492
+wordt
+:0043E3BD 0F85F8000000            jne 0043E4BB
+
+
+
+Routine:
+
+File Offset 0003D892
+
+:0043E492 807D1300                cmp byte ptr [ebp+13], 00
+:0043E496 7408                    je 0043E4A0
+:0043E498 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0043E49C 740B                    je 0043E4A9
+:0043E49E EB06                    jmp 0043E4A6
+:0043E4A0 F6400108                test [eax+01], 08
+:0043E4A4 7503                    jne 0043E4A9
+:0043E4A6 33C0                    xor eax, eax
+:0043E4A8 C3                      ret
+:0043E4A9 6A01                    push 00000001
+:0043E4AB 58                      pop eax
+:0043E4AC C3                      ret
+
+
+
+Now some free space at :
+
+:0043E4AD 90                      nop
+:0043E4AE 90                      nop
+:0043E4AF 90                      nop
+:0043E4B0 90                      nop
+:0043E4B1 90                      nop
+:0043E4B2 90                      nop
+:0043E4B3 90                      nop
+:0043E4B4 90                      nop
+:0043E4B5 90                      nop
+:0043E4B6 90                      nop
+:0043E4B7 90                      nop
+:0043E4B8 90                      nop
+:0043E4B9 90                      nop
+:0043E4BA 90                      nop

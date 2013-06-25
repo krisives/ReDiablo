@@ -1,0 +1,14 @@
+Disabling 'staff' and 'scroll' overlay icons in the speedbook
+
+file offset 00003139
+
+:00403D39 C744241C36000000        mov [esp+1C], 00000036
+changed into
+:00403D39 C744241C34000000        mov [esp+1C], 00000034
+
+
+file offset 00003174
+
+:00403D74 C744241C35000000        mov [esp+1C], 00000035
+changed into
+:00403D74 C744241C34000000        mov [esp+1C], 00000034

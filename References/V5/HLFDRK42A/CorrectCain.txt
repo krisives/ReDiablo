@@ -1,0 +1,7 @@
+Correcting Cain's number of frames (priest8.cel).
+
+file offset 000754DD
+
+:004760DD 6A19                    push 00000019
+changed into
+:004760DD 6A21                    push 00000021

@@ -1,0 +1,52 @@
+
+First, this should be the fix for bows:
+
+0044FF4B: (0004F34B)
+xxxx xxxx xxxx xxxx xxxx xx8B 8604 7868
+0083 F806 7F1E 8A80 6DFF 4400 8A8E CACB
+6800 84C8 740E FF86 0478 6800 EBDD 001E
+100C 1018 xxxx xxxx xxxx xxxx xxxx xxxx
+
+I say should because I have a tendency to move other code out of my way and I can't recall if this is writing over code that you need. I think it is safe. But, as always, backup first.
+
+The code goes about doing the speeds in a slightly different way. One thing that I noticed about the melee weapon speeds is that multiple weapon speeds are not very compatable due to the code. For example, in my mod I have a spell that hastes the caster for a short period of time. However, if that person is using a an item with a quick attack, quick combined with haste will become a 'faster attack'. Anyway, that's more trivia than anything. The bow speed code that I wrote doesn't have that flaw, and is smaller (to fix in the avaiable space), but it probably consumes a few extra cycles (the reason why the original code was done the long way). A few extra cycles here and there are not that important (and will not be noticed).
+
+Dr. Zed
+
+http://members.xoom.com/drzed/
+
+Also, check out:
+http://www.personal.psu.edu/users/r/d/rdm139/
+and while you are there, check out the news for
+27 October 1999
+
+TECHNICAL DETAILS ================================
+
+Fix weapon speed for ranged attacks (i.e. bows).
+
+0044FF2D: Player Animation: Do Range Attack
+
+Normal Attack 01 02 03 04 05 06
+02 Quick Attack Skip 01 02 03 04 05
+04 Fast Attack Skip 01 Skip 02 03 04
+08 Faster Attack Skip 01 Skip 02 Skip 03
+10 Fastest Attack Skip------->01 Skip------->02
+
+Frame
+01 00 Don't Skip (PNU)
+02 1E Skip for 02 04 08 10
+03 10 Skip for 10
+04 0C Skip for 04 08
+05 10 Skip for 10
+06 18 Skip for 08 10
+
+0044FF4B: (0004F34B)
+8B86 04786800 mov eax, dword ptr [esi+00687804]
+83F8 06 cmp eax, 06
+7F [xx] jg 0044FF81
+8A80 6EFF4400 mov al, byte ptr [eax+0044FF6E]
+8A8E CACB6800 mov cl, byte ptr [esi+0068CBCA]
+84C8 test al, cl
+74 [xx] je 0044FF81
+FF86 04786800 inc dword ptr [esi+00687804]
+EB [xx] jmp 0044FF4B

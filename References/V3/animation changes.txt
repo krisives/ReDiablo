@@ -1,0 +1,338 @@
+Converting the cel tables to bytes
+
+
+First part is the original posting of Dr. Zed, What to change in Diablo. We added some notes (asm) to see what the changes do and to make it easier for to make the conversion to Hellfire. The second part are the same changes in Hellfire. We've tested them and Hellfire still runs with those changes :)
+
+
+Zamal & Zenda.
+
+
+
+Dr. Zed's Diablo Mod Forum
+            createbrowsesearchloginhelp  
+              Network54  >>  Dr. Zed's Diablo Mod Forum
+
+
+
+Yes, I had trouble with the response.
+by Dr. Zed 
+On the first post, the URL to the image got replaced with the image itself. 
+However, the image was on Xoom and Xoom replaced the image with it's own. So, I 
+deleted the post and tried to make another.
+
+Unfortuantly, it wouldn't take the second post, I kept getting the preview. 
+After a dozen or so attempts, I gave up.
+
+Viewing mpq's is tricky. Most viewers rely on an enclosed filelist to get a list 
+of the files contained within. However, I didn't update the filelist. The 
+filelist in the mpq is the same one found in the original patch file.
+
+However, the files from my list should be in there, and you only need to know 
+the filename to access them.
+
+In order to implement the expanded ojbs file, you have to do a bit more than 
+simply replace the original filename with the new filename in the exe. You also 
+have to rework three tables.
+
+Note that you can rework the tables before expanding them. This way, you can 
+test the changes and make sure they work before attempting to use the new 
+images.
+
+As always, backup before making changes. Also, if I say to paste something at a 
+location, don't insert the data, select an area, starting at the location, of 
+the same size as the data and replace the existing info with the new data. The 
+file size shouldn't change.
+
+The first table is found at 0047A648 (00079048). The table is 2D0 bytes long. It 
+is the width, in pixels, of each image. Copy it into a new file. In the new 
+file, do a find/replace for 000000 (three bytes of 00) and replace with nothing. 
+The new file will then be B4 bytes long. Copy and paste the new file back into 
+the exe at original location 0047A648 (00079048).
+
+Note that the 4D bytes following the B4 bytes will will be used for the width of 
+the new images. That will make the table 101h bytes in length. I don't have all 
+of that info yet, but you don't need to worry about that yet.
+
+The remaining 1CF bytes are free space and will be available for use.
+
+The second table is found at 0047A918 (00079318). The table is also 2D0 bytes 
+long. It is the height, in pixels, of each image. Copy it into a new file. In 
+the new file, do a find/replace for 000000 (three bytes of 00) and replace with 
+nothing. The new file will then be B4 bytes long. Copy and paste the new file at 
+it's original location.
+
+Note that the 4D bytes following the B4 bytes will will be used for the height 
+of the new images. That will make the table 101h bytes in length. Again, you 
+don't need the new info yet.
+
+Not all of the 1CF bytes remaining at the end of this table will be available, 
+since some will be used for the third table.
+
+There are changes which need to be made to the code in order for the tables to 
+be read as bytes instead of dwords;
+
+at (00006854) change C1E102566A1C8B8148A647005EA3949F4B008B to 
+566A1C900FB68148A647005EA3949F4B000FB6.
+
+:00407454 C1E102                  shl ecx, 02
+:00407457 56                      push esi
+:00407458 6A1C                    push 0000001C
+:0040745A 8B8148A64700            mov eax, dword ptr [ecx+0047A648]
+:00407460 5E                      pop esi
+:00407461 A3949F4B00              mov dword ptr [004B9F94], eax
+:00407466 8B8918A94700            mov ecx, dword ptr [ecx+0047A918]
+To
+:00407454 56                      push esi
+:00407455 6A1C                    push 0000001C
+:00407457 90                      nop
+:00407458 0FB68148A64700          movzx eax, byte ptr [ecx+0047A648]
+:0040745F 5E                      pop esi
+:00407460 A3949F4B00              mov dword ptr [004B9F94], eax
+:00407465 0FB68918A94700          movzx ecx, byte ptr [ecx+0047A918]
+
+at (0001B833) and (0001B98C) change 833CB5 to 9080BE.
+:0041C433 833CB518A9470054        cmp dword ptr [4*esi+0047A918], 00000054
+to
+:0041C433 90                      nop
+:0041C434 80BE18A9470054          cmp byte ptr [esi+0047A918], 54
+and
+:0041C58C 833CB518A9470054        cmp dword ptr [4*esi+0047A918], 00000054
+to
+:0041C58C 90                      nop
+:0041C58D 80BE18A9470054          cmp byte ptr [esi+0047A918], 54
+
+at (00006888) and (0000689A) change 8B048D to 0FB681.
+:00407488 8B048D48A64700          mov eax, dword ptr [4*ecx+0047A648]
+to
+:00407488 0FB68148A64700          movzx eax, byte ptr [ecx+0047A648]
+and
+:0040749A 8B048D18A94700          mov eax, dword ptr [4*ecx+0047A918]
+to
+:0040749A 0FB68118A94700          movzx eax, byte ptr [ecx+0047A918]
+
+at (0001BB9E) and (0001BD09) change 8B0CBD to 0FB68F.
+:0041C79E 8B0CBD48A64700          mov ecx, dword ptr [4*edi+0047A648]
+to
+:0041C79E 0FB68F48A64700          movzx ecx, byte ptr [edi+0047A648]
+and
+:0041C909 8B0CBD48A64700          mov ecx, dword ptr [4*edi+0047A648]
+to
+:0041C909 0FB68f48A64700          movzx ecx, byte ptr [edi+0047A648]
+
+at (0001B4F1) change 8B2CB5 to 0FB6AE.
+:0041C0F1 8B2CB548A64700          mov ebp, dword ptr [4*esi+0047A648]
+to
+:0041C0F1 0FB6AE48A64700          movzx ebp, byte ptr [esi+0047A648]
+
+at (0001B81E), (0001B973) and (0001BA76) change 8B3CB5 to 0FB6BE.
+:0041C41E 8B3CB548A64700          mov edi, dword ptr [4*esi+0047A648]
+to
+:0041C41E 0FB6BE48A64700          movzx edi, byte ptr [esi+0047A648]
+and
+:0041C573 8B3CB548A64700          mov edi, dword ptr [4*esi+0047A648]
+to
+:0041C573 0FB6BE48A64700          movzx edi, byte ptr [esi+0047A648]
+and
+:0041C676 8B3CB548A64700          mov edi, dword ptr [4*esi+0047A648]
+to
+:0041C676 0FB6BE48A64700          movzx edi, byte ptr [esi+0047A648]
+
+at (0001B5C0) and (0001B689) change 8B14BD to 0FB697.
+:0041C1C0 8B14BD48A64700          mov edx, dword ptr [4*edi+0047A648]
+to
+:0041C1C0 0FB69748A64700          movzx edx, byte ptr [edi+0047A648]
+and
+:0041C289 8B14BD48A64700          mov edx, dword ptr [4*edi+0047A648]
+to
+:0041C289 0FB69748A64700          movzx edx, byte ptr [edi+0047A648]
+
+at (0001B757) change 8B14B5 to 0FB696.
+:0041C357 8B14B548A64700          mov edx, dword ptr [4*esi+0047A648]
+to
+:0041C357 0FB69648A64700          movzx edx, byte ptr [esi+0047A648]
+
+Ok. At this point, the program should work. The changes made should have no 
+effect on the program. It has only resulted in freeing up some space for the 
+data for the new images. Test your program. If it crashes, or the images appear 
+off center, let me know (and check your changes).
+
+Assuming everything went well, you need to move the ground flip table that is at 
+00493C78 (00091A78). It is B0 bytes long. Copy it and paste it at 000794EB. Once 
+you have moved it, the area where it was is free space (you may want to note it 
+as available for use).
+
+The 4D bytes following the table will be the new ground flip info. For now, set 
+them to 00 (medium armor, i.e. chain).
+
+Now, for the code changes.
+
+At each of the following locations:
+(0001C6EE), (0001EC77), (00021872), 
+(0002288F), (00022A73), (00022AF6)
+change 783C4900 to EBAA4700. -> Error : should be 783C4900 to E8AA4700
+
+:0041D2EB 0FB680783C4900          movzx eax, byte ptr [eax+00493C78]
+:0041F874 0FB691783C4900          movzx edx, byte ptr [ecx+00493C78]
+:0042246F 0FB680783C4900          movzx eax, byte ptr [eax+00493C78]
+:0042348C 0FB680783C4900          movzx eax, byte ptr [eax+00493C78]
+:00423670 0FB680783C4900          movzx eax, byte ptr [eax+00493C78]
+:004236F3 0FB680783C4900          movzx eax, byte ptr [eax+00493C78]
+
+Now, the program should again work. Test it. All of the changes needed to use a 
+larger objcel file are in place. Plus, there are three locations with some free 
+space, which can be used (with caution, since they are not at the usual 
+offsets).
+
+To use the new cel file, find data\inv\objcurs.cel and replace it with 
+cels\objs.cel (filling the rest of the name with 00's). Of course, you will need 
+the patch file for this.
+
+If you use any of the new images, they will look like chain on the ground and 
+will either be off center or cause a crash. You need the missing data for the 
+three tables. I'll post this as soon as I have all of the info (I've got the 
+hellfire data, but I don't have the beta done yet).
+
+Dr. Zed
+
+Posted on Mar 19 2000 , 06:35 PM 
+
+Respond to this message
+
+Goto Forum Home 
+Responses 
+  Corrections. . Dr. Zed on Mar 19 2000 
+
+
+      Hide Header
+       Copyright © 1999 Network54. All rights reserved.   Terms of Use   Privacy 
+      Statement  
+
+
+*****************************************************************************************
+
+Same changes for Hellfire
+
+Calculation offset used for  .text (code) = 400C00
+                             .rdata = 401000
+                             .data = 401600
+                            
+Copying the data tables, do this the way as Dr.Zed described above
+Cel width table starts at 88628 and is 3C0 long, becomes F0 long
+Cel width table starts at 889E8 and is 3C0 long, becomes F0 long
+After both tables 1C bytes are to be used for the new images tto make the total length 10C bytes
+
+
+Code changes:
+
+Change 
+File offset: 00006E96
+:00407A96 C1E102                  shl ecx, 02
+:00407A99 56                      push esi
+:00407A9A 6A1C                    push 0000001C
+:00407A9C 8B8128964800            mov eax, dword ptr [ecx+00489628]
+:00407AA2 5E                      pop esi
+:00407AA3 A340164D00              mov dword ptr [004D1640], eax
+:00407AA8 8B89E8994800            mov ecx, dword ptr [ecx+004899E8]
+To
+:00407A96 56                      push esi
+:00407A97 6A1C                    push 0000001C
+:00407A99 90                      nop
+:00407A9A 0FB68128964800          movzx eax, byte ptr [ecx+00489628]
+:00407AA1 5E                      pop esi
+:00407AA2 A340164D00              mov dword ptr [004D1640], eax
+:00407AA7 0FB689E8994800          movzx ecx, byte ptr [ecx+004899E8]
+
+File offset: 00006ECA
+:00407ACA 8B048D28964800          mov eax, dword ptr [4*ecx+00489628]
+To
+:00407ACA 0FB68128964800          movzx eax, byte ptr [ecx+00489628]
+
+File offset: 00006EDC
+:00407ADC 8B048DE8994800          mov eax, dword ptr [4*ecx+004899E8]
+To
+:00407ADC 0FB681E8994800          movzx eax, byte ptr [ecx+004899E8]
+
+File offset: 0001DACA
+:0041E6CA 8B2CB528964800          mov ebp, dword ptr [4*esi+00489628]
+To
+:0041E6CA 0FB6AE28964800          movzx ebp, byte ptr [esi+00489628]
+
+File offset: 0001DBF1
+:0041E7F1 8B0CBD28964800          mov ecx, dword ptr [4*edi+00489628]
+To
+:0041E7F1 0FB68F28964800          movzx ecx, byte ptr [edi+00489628]
+
+File offset: 0001DD15
+:0041E915 8B2CBD28964800          mov ebp, dword ptr [4*edi+00489628]
+To
+:0041E915 0FB6AF28964800          movzx ebp, byte ptr [edi+00489628]
+
+File offset: 0001DE3C
+:0041EA3C 8B0CB528964800          mov ecx, dword ptr [4*esi+00489628]
+To
+:0041EA3C 0FB68E28964800          movzx ecx, byte ptr [esi+00489628]
+
+File offset: 0001DF60
+:0041EB60 8B3CB528964800          mov edi, dword ptr [4*esi+00489628]
+To
+:0041EB60 0FB6BE28964800          movzx edi, byte ptr [esi+00489628]
+
+File offset: 0001E145
+:0041ED45 8B3CB528964800          mov edi, dword ptr [4*esi+00489628]
+To
+:0041ED45 0FB6BE28964800          movzx edi, byte ptr [esi+00489628]
+
+File offset: 0001E29C
+:0041EE9C 8B3CB528964800          mov edi, dword ptr [4*esi+00489628]
+To
+:0041EE9C 0FB6BE28964800          movzx edi, byte ptr [esi+00489628]
+
+File offset: 0001DF75
+:0041EB75 833CB5E899480054        cmp dword ptr [4*esi+004899E8], 00000054
+To
+:0041EB75 90                      nop
+:0041EB76 80BEE899480054          cmp byte ptr [esi+004899E8], 54
+
+File offset: 0001E160
+:0041ED60 833CB5E899480054        cmp dword ptr [4*esi+004899E8], 00000054
+To
+:0041ED60 90                      nop
+:0041ED61 80BEE899480054          cmp byte ptr [esi+004899E8], 54
+
+File offset: 0001E42B
+:0041F02B 8B0CBD58964800          mov ecx, dword ptr [4*edi+00489658]
+to
+:0041F02B 0FB68F34964800          movzx ecx, byte ptr [edi+00489634] 
+
+File offset: 0001E5E9
+:0041F1E9 8B1CBD58964800          mov ebx, dword ptr [4*edi+00489658]
+to
+:0041F1E9 0FB69F34964800          movzx ebx, byte ptr [edi+00489634]
+
+
+Flip Table
+
+Starts at A41A0 and is E8 long, copy to 88CA8
+Total length of the new table will be 100h, so 18h bytes are for the new items
+
+File   Memory
+   Offset
+
+1F22F:0041FE2F 0FB680A0574A00          movzx eax, byte ptr [eax+004A57A0]
+to   :0041FE2F 0FB680A89C4800          movzx eax, byte ptr [eax+00489CA8]
+
+22363:00422F63 0FB689A0574A00          movzx ecx, byte ptr [ecx+004A57A0]
+to   :00422F63 0FB689A89C4800          movzx ecx, byte ptr [ecx+00489CA8]
+
+25FF3:00426BF3 0FB680A0574A00          movzx eax, byte ptr [eax+004A57A0]
+to   :00426BF3 0FB680A89C4800          movzx eax, byte ptr [eax+00489CA8]
+
+2729B:00427E9B 0FB680A0574A00          movzx eax, byte ptr [eax+004A57A0]
+to   :00427E9B 0FB680A89C4800          movzx eax, byte ptr [eax+00489CA8]
+
+2747F:0042807F 0FB680A0574A00          movzx eax, byte ptr [eax+004A57A0]
+to   :0042807F 0FB680A89C4800          movzx eax, byte ptr [eax+00489CA8]
+
+27502:00428102 0FB680A0574A00          movzx eax, byte ptr [eax+004A57A0]
+to   :00428102 0FB680A89C4800          movzx eax, byte ptr [eax+00489CA8]
+

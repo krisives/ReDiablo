@@ -1,0 +1,30 @@
+()Switch monsterslots:
+
+3-Zombie 		-> 0-Zombie (special status slot 0?)
+
+0-Hellstorm 		-> 80-Hellstorm
+
+80-DevilKinBrute	-> 3-DevilKinBrute
+
+
+4-Thunderlord		-> 76-Thunderlord
+
+76-Wizard		-> 4-Wizard
+
+
+75-leeg 		-> New LightningLord ? (nu slechts 3 voor Caves+Hell)
+
+
+()Load Missile GFX - Lightning Lords : ondersteuning voor alle types
+
+:0043AEDC 837DFC4F                cmp dword ptr [ebp-04], 0000004F
+wordt
+:0043AEDC 837DFC50                cmp dword ptr [ebp-04], 00000050
+
+
+()Met 75-NewLightningLord erbij ook:
+
+:0043AED6 837DFC4C                cmp dword ptr [ebp-04], 0000004C
+wordt
+:0043AED6 837DFC4B                cmp dword ptr [ebp-04], 0000004B
+

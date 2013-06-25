@@ -1,0 +1,298 @@
+Changes to oils
+
+Oil of Permanence is now Oil of the Ages, increases maximum durability to 200 and does no longer repair when used.
+Blacksmith Oil is changed into a small anvil, will only repair items for 25% and no longer increase durability. 
+The Oil of Repair is now called Blacksmith Oil and will add 1 to maximum durability as long as it is below 200, but not repair. 
+
+
+file offset 0002788B
+
+:0042848B 8B86F0000000            mov eax, dword ptr [esi+000000F0]
+:00428491 E99E000000              jmp 00428534
+changed into
+:0042848B 8B8EF0000000            mov ecx, dword ptr [esi+000000F0]
+:00428491 E98C000000              jmp 00428522
+:00428496 
+
+file offset 00027901
+
+:00428501 7D1F                    jge 00428522
+changed into
+:00428501 7D37                    jge 0042853A
+:00428503 
+
+file offset 0002792E
+
+:0042852E 8986F0000000            mov dword ptr [esi+000000F0], eax
+changed into
+:0042852E EB46                    jmp 00428576
+:00428530 90909090                4*nop
+
+file offset 00027970
+
+:00428570 8986EC000000            mov dword ptr [esi+000000EC], eax
+changed into
+:00428570 909090909090            6*nop
+
+file offset 0002796B
+
+:0042856B B8FF000000              mov eax, 000000FF
+:00428570 8986EC000000            mov dword ptr [esi+000000EC], eax
+changed into
+:0042856B B8C8000000              mov eax, 000000C8
+:00428570 E918B30200              jmp 0045388D
+:00428575 90                      nop
+
+Using some free space from obsolete 'Nakrul' books:
+
+file offset 00052C8D
+
+:0045388D 90                      nop
+:0045388E 0F85A7000000            jne 0045393B
+:00453894 803D5476690000          cmp byte ptr [00697654], 00
+:0045389B 0F859A000000            jne 0045393B
+changed into
+:0045388D 3B86F0000000            cmp eax, dword ptr [esi+000000F0]
+:00453893 0F8E124DFDFF            jle 004285AB
+:00453899 E9D84CFDFF              jmp 00428576
+:0045389E 909090                  3*nop
+
+
+Adjusting descriptions and names:
+
+000A48F8 636F 6D70 6C65 7465 6C79 2072 6570 6169 completely repai
+000A4908 7273 0000 0000 0000 0000 0000           rs..........
+changed into
+000A48F8 6164 6473 2031 2074 6F20 6475 7261 6269 adds 1 to durabi
+000A4908 6C69 7479 206F 6600 0000 0000           lity of.....
+
+000A4868 6D61 6B65 7320 616E 2069 7465 6D20 7665 makes an item ve
+000A4878 7279 2064 7572 6162 6C65 0000 0000 0000 ry durable......
+changed into
+000A4868 696E 6372 6561 7365 7320 6475 7261 6269 increases durabi
+000A4878 6C69 7479 2074 6F20 3230 3000 0000 0000 lity to 200.....
+
+000A48CC 7265 7374 6F72 6573 2032 3525 206F 6620 restores 25% of 
+000A48DC 616E 0000                               an..
+changed into
+000A48CC 7265 7374 6F72 6573 2032 3525 206F 6600 restores 25% of.
+000A48DC 0000 0000                               ....
+
+000A3B98 4F69 6C20 6F66 2041 6363 7572 6163 7900 Oil of Accuracy.
+changed into
+000A3B98 416E 7669 6C20 6F66 2052 6570 6169 7200 Anvil of Repair.
+
+
+pos name                         item type         item group   equip    mcode   qlvl  dur   damage    AC    str mag dex  price  pic  src  unique
+
+ 35 Blacksmith Oil (not found)   3 pot/scr/jewl     0 other     7 not     24h      1     0    0- 0    0- 0    0   0   0     100   30    0    0
+    Anvil of Repair                                                                                                         400  140
+
+000A102C 0000 0000 0307 0000 1E00 0000 0000 0000 ................
+000A103C F853 4A00 0000 0000 0100 0000 0000 0000 .SJ.............
+000A104C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A105C 0000 0000 0000 0000 2400 0000 0000 0000 ........$.......
+000A106C 0100 0000 6400 0000 6400 0000           ....d...d...
+changed into
+000A1034 8C00 0000                               ....
+000A103C 9851 4A00                               .QJ.
+000A1070 9001 0000 9001 0000                     ........
+
+ 83 Blacksmith Oil               3 pot/scr/jewl     0 other     7 not     24h      1     0    0- 0    0- 0    0   0   0     100   30    1    0
+    Anvil of Repair                                                                                                         400  140
+
+000A1E6C 0100 0000 0307 0000 1E00 0000 0000 0000 ................
+000A1E7C F853 4A00 0000 0000 0100 0000 0000 0000 .SJ.............
+000A1E8C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A1E9C 0000 0000 0000 0000 2400 0000 0000 0000 ........$.......
+000A1EAC 0100 0000 6400 0000 6400 0000           ....d...d...
+changed into
+000A1E74 8C00 0000                               ....
+000A1E7C 9851 4A00                               .QJ.
+000A1EB0 9001 0000 9001 0000                     ........
+
+ 84 Oil of Accuracy              3 pot/scr/jewl     0 other     7 not     1Fh      1     0    0- 0    0- 0    0   0   0     400   30    1    0
+    Blacksmith Oil                                                        23h                                                     29
+
+000A1EB8 0100 0000 0307 0000 1E00 0000 0000 0000 ................
+000A1EC8 9851 4A00 0000 0000 0100 0000 0000 0000 .QJ.............
+000A1ED8 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A1EE8 0000 0000 0000 0000 1F00 0000 0000 0000 ................
+000A1EF8 0100 0000 9001 0000 9001 0000           ............
+changed into
+000A1EC0 1D00 0000                               ....
+000A1EC8 F853 4A00                               .SJ.
+000A1EF0 2300 0000                               #...
+
+ 85 Oil of Sharpness             3 pot/scr/jewl     0 other     7 not     21h      1     0    0- 0    0- 0    0   0   0     400   30    1    0
+
+ 86 Oil                          3 pot/scr/jewl     0 other     7 not     1Eh     10     0    0- 0    0- 0    0   0   0       0   30    2    0
+                                                                                                                                              
+    Oil of Imperviousness                                                 28h      1
+    Oil of Mastery                                                        20h      5
+    Oil of Sharpness                                                      21h      1                                         
+    Oil of Death                                                          22h      5
+    Oil of Repair                                                         23h      2                                        2000
+ ->        Accuracy                                                       1Fh                                                400
+    Oil of Hardening                                                      27h      1                                         
+    Oil of Fortitude                                                      25h      5
+    Oil of Permanence                                                     26h     14
+ ->        the Ages
+    Oil of Hardening                                                      27h      1                                         
+    Oil of Imperviousness                                                 28h      5
+
+000A4060 D007 0000                               ....
+changed into
+000A4060 9001 0000                               ....
+
+000A4088 2300 0000                               #...
+changed into
+000A4088 1F00 0000                               ....
+
+000A4104 4F69 6C20 6F66 2052 6570 6169 7200 0000 Oil of Repair...
+000A4114 0000 0000 0000 0000 00                  .........
+changed into
+000A4104 4F69 6C20 6F66 2041 6363 7572 6163 7900 Oil of Accuracy.
+000A4114 0000 0000 0000 0000 00                  .........
+
+000A414F 4F69 6C20 6F66 2050 6572 6D61 6E65 6E63 Oil of Permanenc
+000A415F 6500 0000 0000 0000 00                  e........
+changed into
+000A414F 4F69 6C20 6F66 2074 6865 2041 6765 7300 Oil of the Ages.
+000A415F 0000 0000 0000 0000 00                  .........
+
+
+Providing the 'Anvil' cursor for Anvil of Repair:
+
+file offset 0002936A
+
+:00429F6A E9C5000000              jmp 0042A034
+changed into
+:00429F6A E902290100              jmp 0043C871
+:00429F6F 
+
+file offset 0000955C
+
+:0040A15C E86FE00100              call 004281D0
+changed into
+:0040A15C E921270300              jmp 0043C882
+:0040A161 
+
+Using space from obsolete 'Golem shooter' routine:
+
+file offset 0003BC71
+
+:0043C871 69C9E4000000            imul ecx, 000000E4
+:0043C877 0FB68120DD6900          movzx eax, byte ptr [ecx+0069DD20]
+:0043C87E 2C07                    sub al, 07
+:0043C880 744A                    je 0043C8CC
+:0043C882 2C07                    sub al, 07
+:0043C884 7446                    je 0043C8CC
+:0043C886 48                      dec eax
+:0043C887 7443                    je 0043C8CC
+:0043C889 2C05                    sub al, 05
+:0043C88B 743F                    je 0043C8CC
+:0043C88D 2C05                    sub al, 05
+:0043C88F 743B                    je 0043C8CC
+:0043C891 2C03                    sub al, 03
+:0043C893 7437                    je 0043C8CC
+:0043C895 48                      dec eax
+:0043C896 7434                    je 0043C8CC
+:0043C898 2C04                    sub al, 04
+:0043C89A 7430                    je 0043C8CC
+:0043C89C 48                      dec eax
+:0043C89D 48                      dec eax
+:0043C89E 742C                    je 0043C8CC
+:0043C8A0 48                      dec eax
+:0043C8A1 7429                    je 0043C8CC
+:0043C8A3 48                      dec eax
+:0043C8A4 7426                    je 0043C8CC
+:0043C8A6 EB21                    jmp 0043C8C9
+changed into
+:0043C871 83FA24                  cmp edx, 00000024
+:0043C874 0F85BAD7FEFF            jne 0042A034
+:0043C87A 59                      pop ecx
+:0043C87B 6A03                    push 00000003
+:0043C87D E9B2D7FEFF              jmp 0042A034
+:0043C882 51                      push ecx
+:0043C883 69C9C8550000            imul ecx, 000055C8
+:0043C889 030D14AE6E00            add ecx, dword ptr [006EAE14]
+:0043C88F 83B96455000024          cmp dword ptr [ecx+00005564], 00000024
+:0043C896 59                      pop ecx
+:0043C897 0F8409D9FCFF            je 0040A1A6
+:0043C89D E82EB9FEFF              call 004281D0
+:0043C8A2 E9BAD8FCFF              jmp 0040A161
+:0043C8A7 90                      nop 
+
+
+
+The following is information only.
+
+
+Rightclick on oil:
+
+:004298A3 55                      push ebp
+...
+:00429F0D 83FA2A                  cmp edx, 0000002A
+:00429F10 7F67                    jg 00429F79
+:00429F12 745B                    je 00429F6F
+:00429F14 83FA1F                  cmp edx, 0000001F
+:00429F17 0F8C46010000            jl 0042A063
+:00429F1D 83FA28                  cmp edx, 00000028
+:00429F20 0F8F3D010000            jg 0042A063
+:00429F26 8BC6                    mov eax, esi
+:00429F28 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00429F2E 69C0C8550000            imul eax, 000055C8
+:00429F34 89940864550000          mov dword ptr [eax+ecx+00005564], edx
+:00429F3B 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00429F41 0F851C010000            jne 0042A063
+:00429F47 33C0                    xor eax, eax
+:00429F49 3905DC124D00            cmp dword ptr [004D12DC], eax
+:00429F4F 7405                    je 00429F56
+:00429F51 A3DC124D00              mov dword ptr [004D12DC], eax
+:00429F56 390504556800            cmp dword ptr [00685504], eax
+:00429F5C 750A                    jne 00429F68
+:00429F5E C7050455680001000000    mov dword ptr [00685504], 00000001
+:00429F68 6A06                    push 00000006
+:00429F6A E9C5000000              jmp 0042A034
+...
+:0042A034 59                      pop ecx
+:0042A035 E8B3DAFDFF              call 00407AED				setup cursor
+:0042A03A EB27                    jmp 0042A063
+
+Setup cursor:
+
+:00407AED E9D8FFFFFF              jmp 00407ACA
+
+:00407ACA 0FB68128964800          movzx eax, byte ptr [ecx+00489628]
+:00407AD1 890D5C164D00            mov dword ptr [004D165C], ecx
+:00407AD7 A324164D00              mov dword ptr [004D1624], eax
+:00407ADC 0FB681E8994800          movzx eax, byte ptr [ecx+004899E8]
+:00407AE3 A31C164D00              mov dword ptr [004D161C], eax
+:00407AE8 E9A9FFFFFF              jmp 00407A96
+
+01	normal 'hand' cursor
+03	anvil
+04      recharge
+06	oil
+08      resurrect
+09      normal 'crosshair' cursor (scrolls and runes, spellnumber is stored at [Char+000000AC])
+0A      healother 
+0B	hourglass
+
+
+leftclick on item:
+
+:0040A0D9 A15C164D00              mov eax, dword ptr [004D165C]
+...
+:0040A18B 83F806                  cmp eax, 00000006
+:0040A18E 7520                    jne 0040A1B0
+:0040A190 A03C164D00              mov al, byte ptr [004D163C]
+:0040A195 3CFF                    cmp al, FF
+:0040A197 0F841D010000            je 0040A2BA
+:0040A19D 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0040A1A3 0FBED0                  movsx edx, al
+:0040A1A6 E8B2E10100              call 0042835D				apply oil on item
+:0040A1AB E912010000              jmp 0040A2C2
+
+

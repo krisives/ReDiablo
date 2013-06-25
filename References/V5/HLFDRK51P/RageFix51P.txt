@@ -1,0 +1,7 @@
+Disabling life loss after Rage:
+
+file offset 00023480
+
+:00424080 750E                    jne 00424090
+changed into
+:00424080 EB0E                    jmp 00424090

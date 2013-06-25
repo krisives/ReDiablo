@@ -1,0 +1,16 @@
+()Stun with Resist (Player vs. Player):
+
+:004326C0 8A843160010000          mov al, byte ptr [ecx+esi+00000160]
+wordt
+:004326C0 E9A0000000              jmp 00432765
+:004326C5 90                      nop
+:004326C6 90                      nop
+Werkt niet -> veroorzaakt illegal player crash
+
+Sorry, vergeten ecx=victim te zetten:
+:004326C0 E9A0000000              jmp 00432765
+()wordt dan
+:004326C0 E99D000000              jmp 00432762
+
+
+

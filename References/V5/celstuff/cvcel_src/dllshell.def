@@ -1,0 +1,15 @@
+EXPORTS
+    GetDllAuthor
+    GetDllVersion
+    GetExtension
+    GetDescription
+    MoreAbout
+    SupportsSaveFrames
+    SupportsSaveAnims
+    LoadObject
+    UnloadObject
+    SaveObject
+    SaveAnim
+    GetNumberOfFrames
+    LockFrame
+    UnLockFrame

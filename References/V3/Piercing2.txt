@@ -1,0 +1,55 @@
+Piercing
+
+Onderstaande routine doet nogal eens missen?
+
+:004529C3 8A8050550000            mov al, byte ptr [eax+00005550]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529D1(U)
+|
+:004529C9 84C0                    test al, al
+:004529CB 7406                    je 004529D3
+:004529CD D1F9                    sar ecx, 1
+:004529CF FEC8                    dec al
+:004529D1 EBF6                    jmp 004529C9
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529CB(C)
+|
+:004529D3 C3                      ret
+
+
+()Nieuw voorstel: helemaal geen Range-penalty if Penetrating.
+
+:004529C3 83B85055000000          cmp dword ptr [eax+00005550], 00000000
+:004529CA 90                      nop
+:004529CB 7406                    je 004529D3
+:004529CD 33C9                    xor ecx, ecx
+:004529CF 90909090                4*nop
+:004529D3 C3                      ret
+
+
+Met range penalty:
+
+* Referenced by a CALL at Address:
+|:0042F3C1   
+|
+:004529C3 50                      push eax
+:004529C4 8B8050550000            mov eax, dword ptr [eax+00005550]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529D1(U)
+|
+:004529CA 85C0                    test eax, eax
+:004529CC 7E06                    jle 004529D4
+:004529CE D1F9                    sar ecx, 1
+:004529D0 48                      dec eax
+:004529D1 EBF7                    jmp 004529CA
+:004529D3 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529CC(C)
+|
+:004529D4 C3                      ret
+:004529D5 90                      nop
+

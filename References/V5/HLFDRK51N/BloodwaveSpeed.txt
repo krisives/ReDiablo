@@ -1,0 +1,7 @@
+Lower Bloodwave speed (to improve chances for Knockback):
+
+file offset 00032603
+
+:00433203 6A0A                    push 0000000A
+changed into
+:00433203 6A07                    push 00000007

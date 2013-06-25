@@ -1,0 +1,124 @@
+Evasion no longer absorbs half of all ranged damage. Now it will only absorb 25%, but in addition give the character a chance to avoid any spell or ranged attack altogether (by adjusting the Final Tohit). This chance to avoid is at least 31% and improves with Dexterity, up to 63% for characters with 256 or higher Dexterity.
+
+
+000A4D64 6861 6C66 2072 616E 6765 6420 6174 7461 half ranged atta
+000A4D74 636B 2064 616D 6167 6500 0000           ck damage...
+changed into
+000A4D64 6865 6C70 7320 6176 6F69 6420 7261 6E67 helps avoid rang
+000A4D74 6564 2061 7474 6163 6B73 0000           ed attacks..
+
+
+
+Adjusting final ToHit for ranged MvP attacks:
+
+file offset 0002EB27
+
+:0042F727 E803000000              call 0042F72F
+changed into
+:0042F727 E8D4310200              call 00452900
+:0042F72C 
+
+
+Using free space from shrine changes:
+
+file offset 00051D00
+
+:00452900 E879BC0000              call 0045E57E
+:00452905 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:0045290B 0F852F070000            jne 00453040
+:00452911 B122                    mov cl, 22
+:00452913 E949020000              jmp 00452B61
+changed into
+:00452900 50                      push eax
+:00452901 52                      push edx
+:00452902 F6814355000010          test byte ptr [ecx+00005543], 10		Evasion
+:00452909 0F8422CEFDFF            je 0042F731
+:0045290F E9D5DBFDFF              jmp 004304E9
+:00452914 90909090                4*nop
+
+
+Using free space from improved Charmed Animals:
+
+file offset 0002F8E9
+
+:004304E9 90                      nop
+:004304EA 90                      nop
+:004304EB 90                      nop
+:004304EC 90                      nop
+:004304ED 888651DD6900            mov byte ptr [esi+0069DD51], al
+:004304F3 8BC3                    mov eax, ebx
+:004304F5 888650DD6900            mov byte ptr [esi+0069DD50], al
+:004304FB 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:00430502 E98F7FFFFF              jmp 00428496
+changed into
+:004304E9 8B8174010000            mov eax, dword ptr [ecx+00000174]
+:004304EF 40                      inc eax
+:004304F0 C1E803                  shr eax, 03
+:004304F3 6A40                    push 00000040
+:004304F5 5A                      pop edx
+:004304F6 2BD0                    sub edx, eax
+:004304F8 6A20                    push 00000020
+:004304FA 58                      pop eax
+:004304FB 3BD0                    cmp edx, eax
+:004304FD 7D02                    jge 00430501
+:004304FF 8BD0                    mov edx, eax
+:00430501 E92EF2FFFF              jmp 0042F734
+:00430506 90		          nop
+
+
+Adjusting Automiss routine:
+
+file offset 0002EB31
+
+:0042F731 0FB681B8010000          movzx eax, byte ptr [ecx+000001B8]
+:0042F738 C1E802                  shr eax, 02
+:0042F73B 6A5F                    push 0000005F
+:0042F73D 5A                      pop edx
+changed into
+:0042F731 6A5F                    push 0000005F
+:0042F733 5A                      pop edx
+:0042F734 0FB681B8010000          movzx eax, byte ptr [ecx+000001B8]
+:0042F73B C1E802                  shr eax, 02
+
+
+Adjusting damage absorption: 
+
+file offset 0003D77F
+
+:0043E37F F6814355000010          test byte ptr [ecx+00005543], 10		Evasion
+:0043E386 7402                    je 0043E38A
+:0043E388 D1FA                    sar edx, 1
+:0043E38A F6814355000080          test byte ptr [ecx+00005543], 80		Negating
+:0043E391 7408                    je 0043E39B
+:0043E393 837DF400                cmp dword ptr [ebp-0C], 00000000
+:0043E397 7502                    jne 0043E39B
+:0043E399 D1FA                    sar edx, 1
+:0043E39B C3                      ret
+changed into
+:0043E37F F6814355000080          test byte ptr [ecx+00005543], 80		Negating
+:0043E386 7408                    je 0043E390
+:0043E388 837DF400                cmp dword ptr [ebp-0C], 00000000
+:0043E38C 7502                    jne 0043E390
+:0043E38E D1FA                    sar edx, 1
+:0043E390 F6814355000010          test byte ptr [ecx+00005543], 10		Evasion
+:0043E397 E9F14A0100              jmp 00452E8D
+:0043E39C 
+
+
+Using free space from old Shimmering Shrine:
+
+file offset 0005228D
+
+:00452E8D 85C0                    test eax, eax
+:00452E8F 0F85D7010000            jne 0045306C
+:00452E95 E8FAFBFFFF              call 00452A94
+:00452E9A EB08                    jmp 00452EA4
+changed into
+:00452E8D 7409                    je 00452E98
+:00452E8F 50                      push eax
+:00452E90 8BC2                    mov eax, edx
+:00452E92 C1F802                  sar eax, 02
+:00452E95 2BD0                    sub edx, eax
+:00452E97 58                      pop eax
+:00452E98 C3                      ret
+:00452E99 909090                  3*nop

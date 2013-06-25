@@ -1,0 +1,29 @@
+Alerted boss seeks out minion instead of minion's target (This disables a change from 42K):
+
+file offset 0003EC1F
+
+:0043F81F 8B9630DD6900            mov edx, dword ptr [esi+0069DD30]
+:0043F825 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F82B 8B9634DD6900            mov edx, dword ptr [esi+0069DD34]
+:0043F831 899034DD6900            mov dword ptr [eax+0069DD34], edx
+changed into
+:0043F81F 8B96A8DC6900            mov edx, dword ptr [esi+0069DCA8]
+:0043F825 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F82B 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0043F831 899034DD6900            mov dword ptr [eax+0069DD34], edx
+
+
+Reducing range in which minions will no longer seek out their boss:
+
+file offset 0003EBC9
+
+:0043F7C9 83F807                  cmp eax, 00000007
+changed into
+:0043F7C9 83F806                  cmp eax, 00000006
+
+file offset 0003EBE1
+
+:0043F7E1 83F807                  cmp eax, 00000007
+changed into
+:0043F7E1 83F806                  cmp eax, 00000006
+

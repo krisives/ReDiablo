@@ -1,0 +1,132 @@
+Spell Driver (Missiles)
+
+Animations of missiles
+
+Starts at A6F38 to AA59C
+							Arrow		Fireball
+00 - Number in tabel					00		01	
+01 - Number of files					01		10
+02 - 03
+04 - 07 Spell File Pointer				80BE4A00	78BE4A
+08 	00 spell, 01 monster, 02 player graphic ?	02		00
+09 - 11	Always 0				
+12 - 15	Always 0
+16 - 19	Always 0
+20 - 23	Always 0
+24 - 27	Always 0
+28 - 31	Always 0
+32 - 35	Always 0
+36 - 39	Always 0
+40 - 43	Always 0
+44 - 47	Always 0
+48 - 51	Always 0
+52 - 55	Always 0
+56 - 59	Always 0
+60 - 63	Always 0
+64 - 67	Always 0
+68 - 71	Always 0
+72 - 75	Always 0
+76 - 79 ? cl2 1 - 4 (01 voor 1 t/m 3 bij guardian, cl2 hebben verschillend antal frames)
+80 - 83 ? cl2 5 - 8
+84 - 87 ? cl2 9 - 12
+88 - 91 ? cl2 13 - 16
+92 - 93 Qty of frames in CL2 1 - 4			10000000	0E0E0E0E
+96 - 99 Qty of frames in CL2 5 - 8					0E0E0E0E
+100 - 103 Qty of frames in CL2 9 - 12					0E0E0E0E
+104 - 107 Qty of frames in CL2 13 - 16					0E0E0E0E
+108 - 111 Animation Size cl2 1				60000000	60000000
+112 - 115 Animation Size cl2 2						60000000
+116 - 119 Animation Size cl2 3						60000000
+120 - 123 Animation Size cl2 4						60000000
+124 - 127 Animation Size cl2 5						60000000
+128 - 131 Animation Size cl2 6						60000000
+132 - 135 Animation Size cl2 7						60000000
+136 - 139 Animation Size cl2 8 						60000000
+140 - 143 Animation Size cl2 9						60000000
+144 - 147 Animation Size cl2 10						60000000
+148 - 151 Animation Size cl2 11						60000000
+152 - 155 Animation Size cl2 12						60000000
+156 - 159 Animation Size cl2 13						60000000
+160 - 163 Animation Size cl2 14						60000000
+164 - 167 Animation Size cl2 15						60000000
+168 - 171 Animation Size cl2 16 					60000000
+172 - 173 Animation Speed? cl2 1			10000000	10000000
+176 - 179 Animation Speed? cl2 2					10000000
+180 - 183 Animation Speed? cl2 3					10000000					
+184 - 187 Animation Speed? cl2 4					10000000
+188 - 191 Animation Speed? cl2 5					10000000
+192 - 195 Animation Speed? cl2 6					10000000
+196 - 199 Animation Speed? cl2 7					10000000
+200 - 203 Animation Speed? cl2 8					10000000
+204 - 207 Animation Speed? cl2 9					10000000
+208 - 211 Animation Speed? cl2 10					10000000
+212 - 215 Animation Speed? cl2 11					10000000
+216 - 219 Animation Speed? cl2 12					10000000
+220 - 223 Animation Speed? cl2 13					10000000
+224 - 227 Animation Speed? cl2 14					10000000
+228 - 231 Animation Speed? cl2 15					10000000
+232 - 235 Animation Speed? cl2 16					10000000
+
+* = Used in spelleffects table
+
+Number	Animation	#files	#frames		size	speed?	?		byte08	
+00 *	Arrows		01	10		60h	10h	0		02
+01 *	Fireba		10	0E		60h	10h	0
+02 *	Guard		03	0F,0E,03	60h	10h	01,01,01
+03 *	Lghning		01	08		60h	10h	0
+04 *	Firewal		02	0D,0B		80h	20h	0
+05 *	Magblos		01	0A		80h	20h	01
+06 *	Portal		02	10		60h	10h	0,01
+07 *	Bluexfr		01	13		A0	30h	0
+08 *	Bluexbk		01	13		A0	30h	0
+09 *	Manashld	01	01		60	10	0		02
+0A *	Blood		04	0F,08,08,08	60,80	10,20
+0B *	Bone		03	08		80	20	02
+0C *	Metlhit		03	0A		60	10	02
+0D *	Farrow		10	04		60	10
+0E	Doom		09	0F		60	10	01
+0F	?		01							01
+10 *	BlodBur		02	08		80	20	02
+11 *	Newexp		01	0F		60	10	01
+12	Shatter1	01	0C		80	20	01
+13 *	BigExp		01	0F		A0	30
+14 *	Inferno		01	14		60	10
+15 *	Thinlght	01	08		60	10
+16 *	Flare		01	10		80	20
+17 *	Flareexp	01	07		80	20
+18 *	Magball		08	10		80	20	01
+19 *	Krull		01	0E		60	10			01
+1A *	Minilthng	01	08		40	00	01
+1B *	Holy		10	0E		60	10
+1C	Holyexpl	01	08		A0	30
+1D *	Larrow		10	04		60	10
+1E	Firarwex	01	06		40	00
+1F *	Acidbf		10	08		60	10			01
+20 *	Acidpla		01	08		60	10			01
+21 *	Acidpud		02	09,04		60	10			01
+22 *	Ethrshld	01	01		60	10
+23 *	Firerun		08	0C		60	10	01
+24 *	Ressur1		01	10		60	10
+25 *	Sklball		09	10,..,08	60	10	01
+26 *	Rportal		02	10		60	10
+27 *	Fireplar	01	11		A0	30	01		01
+28	Scubmisb	01	10		60	10			01
+29	Scbsexpb	01	06		80	20			01
+2A	Scubmisc	01	10		60	10			01
+2B	Scbsexpc	01	06		80	20			01
+2C	Scubmisd	01	10		60	10			01
+2D	Scbsexpd	01	06		80	20			01
+2E *	Spawns		08	09		60	10			01
+2F *	reflect		01	01		A0	A0			02
+30 *	ms_ora		10	0F		60	10			01
+31	ms_bla		10	0F		60	08			01
+32 *	ms_reb		10	0F		60	08			01
+33 *	ms_yeb		10	0F		60	08			01
+34 *	rglows1		01	0A		60	08
+35 *	ex_yel2		01	0A		DC	4E			01
+36 *	ex_blu2		01	0A		D4	56			01
+37 *	ex_red3		01	07		2401	72			01
+38 *	ms_blb		10	0F		60	08			01
+39 *	ex_ora1		01	0D		60	F4FFFFFF		01
+3A *	ex_blu3		01	07		2401	72			01
+

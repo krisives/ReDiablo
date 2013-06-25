@@ -1,0 +1,57 @@
+Disabled 'collision' sound for Viper charge, because there is no real impact:
+
+file offset 00043AD6
+
+:004446D6 83F848                  cmp eax, 00000048			obsolete support for Incinerators
+:004446D9 EB13                    jmp 004446EE
+:004446DB 83F84B                  cmp eax, 0000004B
+:004446DE 7F0E                    jg 004446EE
+:004446E0 8B5648                  mov edx, dword ptr [esi+48]
+:004446E3 6A00                    push 00000000
+:004446E5 8BCF                    mov ecx, edi
+:004446E7 E8EEC3FFFF              call 00440ADA
+:004446EC EB21                    jmp 0044470F
+changed into
+:004446D6 80BE9900000018          cmp byte ptr [esi+00000099], 18	Viper attacktype
+:004446DD 750F                    jne 004446EE
+:004446DF EB2E                    jmp 0044470F
+:004446E1 9090                    2*nop
+
+Now 13 bytes free space from 004446E1 to 004446EE.
+
+
+Horned Runners more often charge and attack:
+
+file offset 00041CC5
+
+:004428C5 0FB68699000000          movzx eax, byte ptr [esi+00000099]	
+:004428CC 8D44002B                lea eax, dword ptr [eax+eax+2B]	Charge
+changed into
+:004428C5 E8E618FFFF              call 004341B0
+:004428CA D1E0                    shl eax, 1
+:004428CC 8D440038                lea eax, dword ptr [eax+eax+38]	Charge
+
+file offset 00041D6C
+
+:0044296C 0FB68699000000          movzx eax, byte ptr [esi+00000099]	
+:00442973 8D44001C                lea eax, dword ptr [eax+eax+1C]	Melee
+changed into
+:0044296C E83F18FFFF              call 004341B0
+:00442971 D1E0                    shl eax, 1
+:00442973 8D440020                lea eax, dword ptr [eax+eax+20]	Melee
+
+file offset 000335B0
+
+:004341B0 9090909090909090        8*nop
+changed into
+:004341B0 0FB68699000000          movzx eax, byte ptr [esi+00000099]
+:004341B7 C3                      ret
+
+
+Less delay in moving forward for Horned Runners:
+
+file offset 00041D9F
+
+:0044299F 8D5121                  lea edx, dword ptr [ecx+21]
+changed into
+:0044299F 8D5130                  lea edx, dword ptr [ecx+30]

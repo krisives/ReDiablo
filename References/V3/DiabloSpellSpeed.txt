@@ -1,0 +1,45 @@
+Spell speed in Diablo 1.07
+--------------------------
+
+Spell speeds are set in the INIT SPELL routines, using the 4e 'push' before CALL 0042A469.
+
+The following example is part of Firebolt code:
+
+
+:0042BD09 837D1CFF                cmp dword ptr [ebp+1C], FFFFFFFF	
+:0042BD0D 741C                    je 0042BD2B				caster = monster
+:0042BD0F 8B45FC                  mov eax, dword ptr [ebp-04]
+:0042BD12 69C0B0000000            imul eax, 000000B0
+:0042BD18 8B8058846400            mov eax, dword ptr [eax+00648458]	eax := slvl
+:0042BD1E 8D440010                lea eax, dword ptr [eax+eax+10]	eax := slvl*2 + 16
+:0042BD22 83F83F                  cmp eax, 0000003F			max.speed = 63
+:0042BD25 7C0B                    jl 0042BD32
+:0042BD27 6A3F                    push 0000003F
+:0042BD29 EB06                    jmp 0042BD31
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042BD0D(C)
+|
+:0042BD2B 6A10                    push 00000010				speed.mnstr = 16 
+:0042BD2D EB02                    jmp 0042BD31
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042BCA8(C)
+|
+:0042BD2F 6A1A                    push 0000001A				speed.trap = 26
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042BD29(U), :0042BD2D(U)
+|
+:0042BD31 58                      pop eax				eax := speed
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042BD25(C)
+|
+:0042BD32 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0042BD35 50                      push eax				store speed
+:0042BD36 56                      push esi
+:0042BD37 53                      push ebx
+:0042BD38 FF7508                  push [ebp+08]
+:0042BD3B 8BD7                    mov edx, edi
+:0042BD3D E827E7FFFF              call 0042A469				do the shooting

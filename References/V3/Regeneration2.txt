@@ -1,0 +1,37 @@
+Monster Regeneration
+
+Aangezien met de vorige versie een Golem en een CryptGolem elkaar niet dood konden krijgen, en de Golem ondertussen nog een HornedDeath erbij doodsloeg, leek me dit toch wat hoog.
+
+Vorige versie:
+
+:00443864 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:0044386A 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:00443870 80797201                cmp byte ptr [ecx+72], 01
+:00443874 0FB6C9                  movzx ecx, cl
+:00443877 7505                    jne 0044387E
+:00443879 D1E1                    shl ecx, 1
+:0044387B 90                      nop
+:0044387C 90                      nop
+:0044387D 90                      nop
+:0044387E 03C1                    add eax, ecx
+:00443880 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+
+
+()Voorstel: Regeneration divided by 4 (by 2 for Demons)
+
+:00443877 7505                    jne 0044387E
+:00443879 D1E1                    shl ecx, 1
+:0044387B 90                      nop
+wordt
+:00443877 7405                    je 0044387E
+:00443879 C1E902                  shr ecx, 02
+
+kleine aanpassing:
+:00443877 7402                    je 0044387B
+:00443879 D1E9                    shr ecx, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00443877(C)
+|
+:0044387B D1E9                    shr ecx, 1
+:0044387D 90                      nop

@@ -1,0 +1,22 @@
+Disabling the disturbing Butcher movie:
+
+file offset 0000879D
+
+:0040939D 6A01                    push 00000001
+* Possible StringData Ref from Data Obj ->"gendata\FButch3.smk"
+:0040939F B934544900              mov ecx, 00495434
+:004093A4 5A                      pop edx
+:004093A5 E8F9BD0300              call 004451A3
+changed into
+:0040939D 13*90                   13*nop
+
+
+Disabling Sierra's intro screen:
+
+file offset 000087B6
+
+:004093B6 6A07                    push 00000007
+:004093B8 E8A1E40700              Call 0048785E
+changed into
+:004093B6 90909090909090          7*nop
+

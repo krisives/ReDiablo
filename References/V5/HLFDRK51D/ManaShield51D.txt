@@ -1,0 +1,140 @@
+Modified Mana cost for Mana Shield damage absorbtion
+
+Mana = Damage * (1 + 1/(2*SLVL)) 
+changed into
+Mana = Damage * (1 + 1/(1+SLVL))
+
+Also optimized the code and removed the effective SLVL limit. So, at SLVL=0 the mana cost will be 200% of the damage, at SLVL=1 it will be 150%, at SLVL=2 it will be 133%, at SLVL=3 it will be 125%, and so on. At very high SLVL the improvements are very small, ofcourse (103% mana cost at SLVL=28).
+
+file offset 00036F4B
+
+:00437B4B 51                      push ecx
+:00437B4C E8E0570000              call 0043D331				eax = SLVL from MS in spellbook
+:00437B51 8955F8                  mov dword ptr [ebp-08], edx
+:00437B54 8955FC                  mov dword ptr [ebp-04], edx
+:00437B57 90                      nop
+:00437B58 59                      pop ecx
+:00437B59 837DFC0F                cmp dword ptr [ebp-04], 0000000F
+:00437B5D 7D0C                    jge 00437B6B
+:00437B5F 8345F802                add dword ptr [ebp-08], 00000002
+:00437B63 FF45FC                  inc [ebp-04]
+:00437B66 3945FC                  cmp dword ptr [ebp-04], eax
+:00437B69 7CEE                    jl 00437B59
+changed into
+:00437B4B 8B86887A6900            mov eax, dword ptr [esi+00697A88]	eax = SLVL from current MS spell effect
+:00437B51 8945FC                  mov dword ptr [ebp-04], eax
+:00437B54 40                      inc eax
+:00437B55 8945F8                  mov dword ptr [ebp-08], eax
+:00437B58 EB11                    jmp 00437B6B
+:00437B5A 909090                  3*nop
+:00437B5D ...
+:00437B69 9090                    2*nop
+
+Routine at 0043D331 is now obsolete.
+
+
+
+Less Mana Shield drain with higher SLVL
+
+Mana drain = (1 + CurMana/64)/64
+changed into
+Mana drain = (1 + (CurMana - 8*SLVL)/64)/64 
+
+(in Mana per game cycle, which is 1/20 sec)
+
+In other words, each 8 Spell levels in Mana Shield reduce the drain by one step, and thus allow a 64 Mana higher balance point (where drain and regeneration cancel eachother out).
+
+file offset 0005D02D
+
+:0045DC2D E85C44FFFF              call 0045208E
+changed into
+:0045DC2D E85B44FFFF              call 0045208D
+:0045DC32
+
+file offset 0005148D
+
+:0045208D 90                      nop
+:0045208E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452093 50                      push eax
+:00452094 51                      push ecx
+:00452095 57                      push edi
+:00452096 52                      push edx
+:00452097 53                      push ebx
+:00452098 6A01                    push 00000001
+:0045209A 58                      pop eax
+:0045209B BA68766900              mov edx, 00697668
+:004520A0 33DB                    xor ebx, ebx
+:004520A2 8B3A                    mov edi, dword ptr [edx]
+:004520A4 69FFB0000000            imul edi, 000000B0
+:004520AA 83BF587A69000D          cmp dword ptr [edi+00697A58], 0000000D
+:004520B1 7542                    jne 004520F5
+:004520B3 8B8FCC7A6900            mov ecx, dword ptr [edi+00697ACC]
+:004520B9 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004520BF 7534                    jne 004520F5
+:004520C1 6A01                    push 00000001
+:004520C3 58                      pop eax
+:004520C4 A30C114D00              mov dword ptr [004D110C], eax
+:004520C9 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:004520CF 69C9C8550000            imul ecx, 000055C8
+:004520D5 8B8439AC010000          mov eax, dword ptr [ecx+edi+000001AC]
+:004520DC 83F800                  cmp eax, 00000000
+:004520DF 7C14                    jl 004520F5
+:004520E1 C1E80C                  shr eax, 0C
+:004520E4 40                      inc eax
+:004520E5 298439AC010000          sub dword ptr [ecx+edi+000001AC], eax
+:004520EC 298439A4010000          sub dword ptr [ecx+edi+000001A4], eax
+:004520F3 EB0C                    jmp 00452101
+:004520F5 43                      inc ebx
+:004520F6 83C204                  add edx, 00000004
+:004520F9 3B1D48D06900            cmp ebx, dword ptr [0069D048]
+:004520FF 7CA1                    jl 004520A2
+:00452101 5B                      pop ebx
+:00452102 5A                      pop edx
+:00452103 5F                      pop edi
+:00452104 59                      pop ecx
+:00452105 58                      pop eax
+:00452106 C3                      ret
+:00452107 90                      nop
+
+changed into
+
+:0045208D 52                      push edx
+:0045208E 53                      push ebx
+:0045208F BA68766900              mov edx, 00697668
+:00452094 33DB                    xor ebx, ebx
+:00452096 8B3A                    mov edi, dword ptr [edx]			start active spell effects loop
+:00452098 69FFB0000000            imul edi, 000000B0
+:0045209E 83BF587A69000D          cmp dword ptr [edi+00697A58], 0000000D	check for MS spell effect
+:004520A5 7547                    jne 004520EE
+:004520A7 8B8FCC7A6900            mov ecx, dword ptr [edi+00697ACC]
+:004520AD 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]			check if local char is caster
+:004520B3 7539                    jne 004520EE
+:004520B5 6A01                    push 00000001
+:004520B7 58                      pop eax
+:004520B8 A30C114D00              mov dword ptr [004D110C], eax			set flag to update mana globe
+:004520BD 69C9C8550000            imul ecx, 000055C8
+:004520C3 030D14AE6E00            add ecx, dword ptr [006EAE14]
+:004520C9 81C1AC010000            add ecx, 000001AC
+:004520CF 48                      dec eax
+:004520D0 0301                    add eax, dword ptr [ecx]			eax = current mana
+:004520D2 7C26                    jl 004520FA
+:004520D4 C1E809                  shr eax, 09
+:004520D7 2B87887A6900            sub eax, dword ptr [edi+00697A88]		subtract slvl
+:004520DD 7D02                    jge 004520E1
+:004520DF 33C0                    xor eax, eax
+:004520E1 C1E803                  shr eax, 03
+:004520E4 40                      inc eax
+:004520E5 2901                    sub dword ptr [ecx], eax			substract from current mana
+:004520E7 83E908                  sub ecx, 00000008
+:004520EA 2901                    sub dword ptr [ecx], eax			substract from base current mana
+:004520EC EB0C                    jmp 004520FA
+:004520EE 43                      inc ebx					active spell effects loop
+:004520EF 83C204                  add edx, 00000004
+:004520F2 3B1D48D06900            cmp ebx, dword ptr [0069D048]
+:004520F8 7C9C                    jl 00452096
+:004520FA 5B                      pop ebx
+:004520FB 5A                      pop edx
+:004520FC C3                      ret
+:004520FD 90909090909090909090    10*nop
+:00452107 90                      nop
+

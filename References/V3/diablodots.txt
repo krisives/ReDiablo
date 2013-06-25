@@ -1,0 +1,44 @@
+by Jarulf
+
+Below is a letter sent to V&K long ago (well. last summer :). It should work OK as they have not complained as far as I can remember. Note that this should be applied to a NON modifed Diablo.exe (at elast unmodified as far as ending sequence and dots are concerned).
+
+
+For any masochists out there wanting to have as few bytes changed as possible, there are of course other solutions, however, this should work and is done the way it is due to previous changes done and sent, thus needing minimal new changes for VK at THAT time). I have only done some very small changes here compared to that solution. Both should work though.
+
+**********
+
+OK, first the dot stuff. Do this, compared to a NON modified Diablo.exe, do the modification I sent you last time at adress 436912. This is the actual modified routine that sets the dot. It must be modified this way, no matter what. I give it here for reference again.
+
+:00436912 50 push eax
+:00436913 8B0DE8835B00 mov ecx, dword ptr [005B83E8]
+:00436919 A174776800 mov eax, dword ptr [00687774]
+:0043691E 69C0D8540000 imul eax, 000054D8
+:00436924 8B9008CC6800 mov edx, dword ptr [eax+0068CC08]
+:0043692A 8D8008CC6800 lea eax, dword ptr [eax+0068CC08]
+:00436930 41 inc ecx
+:00436931 39CA cmp edx, ecx
+:00436933 7604 jbe 00436939
+:00436935 89D1 mov ecx, edx
+:00436937 8908 mov dword ptr [eax], ecx
+:00436939 58 pop eax
+:0043693A C3 ret
+
+Then att adress 4369e9 DO change the 6e to some high number like 7F or whatever you used to change it to.
+
+Now for the other two places where you previously DID change 6E to something else, KEEP it as 6E. What I have done is basically moved the call for setting dots from the routine that was used during the death sequence to the one used that normall kill off all monsters and so on.
+
+Then we need to modify some more:
+
+:00434DB8 E8551B0000 call 00436912
+:00434DBD EB05 jmp 00434DC4
+
+You will notice that this routine actully call the set dot routine and thus replaces the code here that called for the kill monsters and other stuff one. Remember we had to change this at twoplaces, so also do:
+
+:00434FC5 E848190000 call 00436912
+:00434FCA EB05 jmp 00434FD1
+
+Hopefully this should work better. I should have thought about this the first time arround.
+
+**********
+
+Well, that was it, happy doting....

@@ -1,0 +1,15 @@
+Durability warning icons will now appear for values lower as 5 (yellow), and for 1 point (red).
+
+
+File offset 00005E51
+
+:00406A51 83FE05                  cmp esi, 00000005
+changed into
+:00406A51 83FE04                  cmp esi, 00000004
+
+
+File offset 00005E93
+
+:00406A93 83FE02                  cmp esi, 00000002
+changed into
+:00406A93 83FE01                  cmp esi, 00000001

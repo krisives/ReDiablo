@@ -1,0 +1,77 @@
+Fixing Weird Shrine to always give +2 damage.
+
+file offset 00050FE1
+
+:00451BE1 90                      nop
+:00451BE2 90                      nop
+:00451BE3 90                      nop
+:00451BE4 90                      nop
+:00451BE5 90                      nop
+:00451BE6 90                      nop
+:00451BE7 90                      nop
+:00451BE8 90                      nop
+:00451BE9 90                      nop
+:00451BEA 90                      nop
+:00451BEB A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451BF0 8BC8                    mov ecx, eax
+:00451BF2 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451BF7 69C9C8550000            imul ecx, 000055C8
+
+:00451BFD 8BB40864090000          mov esi, dword ptr [eax+ecx+00000964]
+:00451C04 8D1408                  lea edx, dword ptr [eax+ecx]
+:00451C07 83FEFF                  cmp esi, FFFFFFFF
+:00451C0A 7410                    je 00451C1C
+:00451C0C 83FE05                  cmp esi, 00000005
+:00451C0F 740B                    je 00451C1C
+:00451C11 FF822C0A0000            inc dword ptr [edx+00000A2C]
+:00451C17 A114AE6E00              mov eax, dword ptr [006EAE14]
+
+:00451C1C 8BB408D80A0000          mov esi, dword ptr [eax+ecx+00000AD8]
+:00451C23 8D1408                  lea edx, dword ptr [eax+ecx]
+:00451C26 83FEFF                  cmp esi, FFFFFFFF
+:00451C29 7410                    je 00451C3B
+:00451C2B 83FE05                  cmp esi, 00000005
+:00451C2E 740B                    je 00451C3B
+:00451C30 E8D0060000              call 00452305
+:00451C35 90                      nop
+:00451C36 A114AE6E00              mov eax, dword ptr [006EAE14]
+
+:00451C3B 33FF                    xor edi, edi
+
+changed into
+
+:00451BE1 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451BE6 8BC8                    mov ecx, eax
+:00451BE8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451BED 69C9C8550000            imul ecx, 000055C8
+
+:00451BF3 8BB40864090000          mov esi, dword ptr [eax+ecx+00000964]
+:00451BFA 8D1408                  lea edx, dword ptr [eax+ecx]
+:00451BFD 83FEFF                  cmp esi, FFFFFFFF
+:00451C00 7411                    je 00451C13
+:00451C02 83FE05                  cmp esi, 00000005
+:00451C05 740C                    je 00451C13
+
+:00451C07 FF822C0A0000            inc dword ptr [edx+00000A2C]
+:00451C0D FF822C0A0000            inc dword ptr [edx+00000A2C]
+
+:00451C13 8BB408D80A0000          mov esi, dword ptr [eax+ecx+00000AD8]
+:00451C1A 8D1408                  lea edx, dword ptr [eax+ecx]
+:00451C1D 83FEFF                  cmp esi, FFFFFFFF
+:00451C20 7411                    je 00451C33
+:00451C22 83FE05                  cmp esi, 00000005
+:00451C25 740C                    je 00451C33
+
+:00451C27 FF82A00B0000            inc dword ptr [edx+00000BA0]
+:00451C2D FF82A00B0000            inc dword ptr [edx+00000BA0]
+
+:00451C33 9090                    2*nop
+...
+
+
+Now obsolete routine:
+
+:00452305 FF82A00B0000            inc dword ptr [edx+00000BA0]
+:0045230B FF82A00B0000            inc dword ptr [edx+00000BA0]
+:00452311 C3                      ret
+

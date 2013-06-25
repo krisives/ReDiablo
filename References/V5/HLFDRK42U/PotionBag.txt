@@ -1,0 +1,327 @@
+Potion Bag
+
+
+This bag is empty when found, and can be used to store up to 60 potions of one type. The first potion that goes into an empty bag determines the type. Filling the bag is done as with the Tome of Lore: pick up a potion in such a manner that it would go into the inventory. Adria and the Stone Shrine will not refill the bag.
+
+
+Providing name:
+
+000A3A16 5363 726F 6C6C 206F 6620 7468 6520 456C Scroll of the El
+000A3A26 656D 656E 7461 6C                       emental
+changed into
+000A3A16 506F 7469 6F6E 2042 6167 0000 0000 0000 Potion Bag......
+000A3A26 0000 0000 0000 00                       .......
+
+
+Potion Bag data: 
+
+000A161C 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A162C C45C 4A00 0000 0000 2800 0000 0000 0000 .\J.....(.......
+000A163C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A164C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A165C 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A161C 0100 0000 0307 0000 EF00 0000 0000 0000 ................
+000A162C 1650 4A00 0000 0000 2800 0000 0000 0000 .PJ.....(.......
+000A163C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A164C 0000 0000 0000 0000 3600 0000 0100 0000 ........6.......
+000A165C 0100 0000 C800 0000 C800 0000           ............
+
+
+Data table to retrieve Base Item number with a Magic code:
+
+000A5330 0000 0000 0000 0000 0000                ..........
+changed into
+000A5330 4E4D 4F50 0000 0000 5152                NMOP....QR
+
+
+Adjusting Adria's recharge option, to prevent her from changing the Bag:
+
+file offset 00033498
+
+:00434098 90                      nop
+:00434099 90                      nop
+:0043409A E940EFFEFF              jmp 00422FDF
+changed into
+:00434098 E94CFC0000              jmp 00443CE9					see below
+:0043409D 9090                    2*nop
+
+Now 16 bytes free space, from 00422FDF to 00422FEF.
+
+
+Adjusting Stone Shrine, to prevent it from changing the Bag:
+
+file offset 00051114
+
+:00451D14 83BC3094030000FF        cmp dword ptr [eax+esi+00000394], FFFFFFFF
+:00451D1C 740E                    je 00451D2C
+:00451D1E 8D8C3070040000          lea ecx, dword ptr [eax+esi+00000470]
+:00451D25 8B5104                  mov edx, dword ptr [ecx+04]
+:00451D28 3B11                    cmp edx, dword ptr [ecx]
+:00451D2A 7FBE                    jg 00451CEA
+changed into
+:00451D14 8D8C3094030000          lea ecx, dword ptr [eax+esi+00000394]
+:00451D1B 8339FF                  cmp dword ptr [ecx], FFFFFFFF
+:00451D1E 740C                    je 00451D2C
+:00451D20 83C170                  add ecx, 00000070
+:00451D23 83796436                cmp dword ptr [ecx+64], 00000036
+:00451D27 E9D31FFFFF              jmp 00443CFF					see below
+:00451D2C
+
+Now 8 bytes free space, from 00451CEA to 00451CF2.
+
+
+Add support for Potion Bag to the 'manual recharging' of the Tome of Lore:
+
+file offset 00020959
+
+:00421559 90                      nop
+:0042155A 85D2                    test edx, edx
+:0042155C 7428                    je 00421586					exit of no ID scroll
+:0042155E 8BF3                    mov esi, ebx
+:00421560 8BFA                    mov edi, edx
+:00421562 8BCE                    mov ecx, esi					ecx = character
+:00421564 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421568 50                      push eax
+:00421569 E8EF520500              call 0047685D					check backpack for 'edx'
+:0042156E 85C0                    test eax, eax
+:00421570 7414                    je 00421586					exit if no ID scroll in backpack
+:00421572 6A28                    push 00000028
+:00421574 5A                      pop edx					Tome of Lore (item #40)
+:00421575 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421579 50                      push eax
+:0042157A 8BCE                    mov ecx, esi					ecx = character
+:0042157C E8DC520500              call 0047685D					check backpack for 'edx'
+:00421581 E9F8A90400              jmp 0046BF7E                                  continue elsewhere
+changed into
+:00421559 85D2                    test edx, edx
+:0042155B 7429                    je 00421586					exit of no ID scroll or potion
+:0042155D 8BF3                    mov esi, ebx
+:0042155F 8BFA                    mov edi, edx
+:00421561 8BCE                    mov ecx, esi					ecx = character
+:00421563 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421567 50                      push eax
+:00421568 E8F0520500              call 0047685D					check backpack for 'edx'
+:0042156D 85C0                    test eax, eax
+:0042156F 7415                    je 00421586					exit if none in backpack
+:00421571 8B90DC000000            mov edx, dword ptr [eax+000000DC]
+:00421577 89542418                mov dword ptr [esp+18], edx
+:0042157B 83FA14                  cmp edx, 00000014
+:0042157E 6A28                    push 00000028					Tome of Lore
+:00421580 5A                      pop edx
+:00421581 E992270200              jmp 00443D18					see below
+:00421586 
+
+Now 8 bytes free space, from 0046BF7E to 0046BF86.
+
+
+Adjusting list of base items:
+
+file offset 0003B122
+
+:0043BD22 83FA1A                  cmp edx, 0000001A
+:0043BD25 7411                    je 0043BD38
+:0043BD27 83FA5E                  cmp edx, 0000005E
+:0043BD2A 740C                    je 0043BD38
+:0043BD2C 83FA6D                  cmp edx, 0000006D
+:0043BD2F 7407                    je 0043BD38
+:0043BD31 83FA70                  cmp edx, 00000070
+:0043BD34 7402                    je 0043BD38
+:0043BD36 33D2                    xor edx, edx
+:0043BD38 C3                      ret
+:0043BD39 90                      nop
+:0043BD3A 90                      nop
+:0043BD3B 90                      nop
+:0043BD3C 90                      nop
+:0043BD3D 90                      nop
+changed into
+:0043BD22 83FA18                  cmp edx, 00000018
+:0043BD25 7C14                    jl 0043BD3B
+:0043BD27 83FA1B                  cmp edx, 0000001B
+:0043BD2A 7C11                    jl 0043BD3D
+:0043BD2C 83FA1D                  cmp edx, 0000001D
+:0043BD2F 7C0A                    jl 0043BD3B
+:0043BD31 83FA1F                  cmp edx, 0000001F
+:0043BD34 7C07                    jl 0043BD3D
+:0043BD36 E91B800000              jmp 00443D56					see below
+:0043BD3B 33D2                    xor edx, edx
+:0043BD3D C3                      ret
+
+
+Add support for Potion Sack at right-clicking the Tome of Lore:
+
+file offset 00033EE7
+
+:00434AE7 E9FE51FFFF              jmp 00429CEA		
+:00434AEC E97255FFFF              jmp 0042A063
+:00434AF1
+changed into
+:00434AE7 E987F20000              jmp 00443D73					see below
+:00434AEC E97255FFFF              jmp 0042A063
+:00434AF1
+
+
+Increasing capacity of both Tome and Bag from 40 to 60:
+
+file offset 0006B386
+
+:0046BF86 83B8E400000028          cmp dword ptr [eax+000000E4], 00000028
+changed into
+:0046BF86 83B8E40000003C          cmp dword ptr [eax+000000E4], 0000003C
+
+
+Adjusting the display:
+
+file offset 000287A0
+
+:004293A0 53                      push ebx		
+:004293A1 56                      push esi
+:004293A2 E889090500              call 00479D30
+:004293A7 59                      pop ecx
+:004293A8 8BD5                    mov edx, ebp
+:004293AA 59                      pop ecx
+:004293AB 8BCE                    mov ecx, esi
+:004293AD E898B1FDFF              call 0040454A
+changed into
+:004293A0 68C8674A00              push 004A67C8
+:004293A5 56                      push esi
+:004293A6 E885090500              call 00479D30
+:004293AB 59                      pop ecx
+:004293AC 59                      pop ecx
+:004293AD 8BD5                    mov edx, ebp
+:004293AF 90                      nop
+:004293B0 EB21                    jmp 004293D3
+:004293B2 
+
+file offset 000287D1
+
+:004293D1 83BFDC00000036          cmp dword ptr [edi+000000DC], 00000036
+:004293D8 751D                    jne 004293F7
+:004293DA 90                      nop
+:004293DB 90                      nop
+:004293DC 90                      nop
+:004293DD 90                      nop
+:004293DE 90                      nop
+:004293DF 90                      nop
+:004293E0 8B9FE4000000            mov ebx, dword ptr [edi+000000E4]
+:004293E6 83FB01                  cmp ebx, 00000001
+:004293E9 0F8525A50200            jne 00453914
+:004293EF 68184F4900              push 00494F18
+:004293F4 EB0F                    jmp 00429405
+:004293F6 90                      nop
+changed into
+:004293D1 EB24                    jmp 004293F7
+:004293D3 8BCE                    mov ecx, esi
+:004293D5 E870B1FDFF              call 0040454A
+:004293DA 8B9FE4000000            mov ebx, dword ptr [edi+000000E4]
+:004293E0 E9F3A90100              jmp 00443DD8					see below
+:004293E5 59                      pop ecx
+:004293E6 83FB01                  cmp ebx, 00000001
+:004293E9 0F8525A50200            jne 00453914
+:004293EF 83C10C                  add ecx, 0000000C
+:004293F2 51                      push ecx
+:004293F3 90                      nop
+:004293F4 EB0F                    jmp 00429405
+:004293F6 90                      nop
+
+file offset 00052D15
+
+:00453915 680C4F4900              push 00494F0C
+changed into
+:00453915 51                      push ecx
+:00453916 90909090                4*nop
+
+
+000A4AE0 6368 6172 6765 6420 626F 6C74 7320 6F6E charged bolts on
+000A4AF0 2068 6974 7300 0000                      hits...
+changed into
+000A4AE0 2569 2050 6F74 696F 6E73 0000 3120 506F %i Potions..1 Po
+000A4AF0 7469 6F6E 0000 0000                     tion....
+
+
+Using free space from improved boss packs:
+
+file offset 000430E9
+
+:00443CE9 83EA1B                  sub edx, 0000001B
+:00443CEC 750A                    jne 00443CF8
+:00443CEE 83780427                cmp dword ptr [eax+04], 00000027
+:00443CF2 0F848E03FFFF            je 00434086
+:00443CF8 33C0                    xor eax, eax
+:00443CFA E98CA40200              jmp 0046E18B
+
+:00443CFF 7506                    jne 00443D07
+:00443D01 83796827                cmp dword ptr [ecx+68], 00000027
+:00443D05 750C                    jne 00443D13
+:00443D07 83C16C                  add ecx, 0000006C
+:00443D0A 8B5104                  mov edx, dword ptr [ecx+04]
+:00443D0D 3B11                    cmp edx, dword ptr [ecx]
+:00443D0F 7E02                    jle 00443D13
+:00443D11 8911                    mov dword ptr [ecx], edx
+:00443D13 E914E00000              jmp 00451D2C
+
+:00443D18 7F03                    jg 00443D1D
+:00443D1A 6A37                    push 00000037					Potion Bag
+:00443D1C 5A                      pop edx
+:00443D1D 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00443D21 50                      push eax
+:00443D22 8BCE                    mov ecx, esi					ecx = character
+:00443D24 E8342B0300              call 0047685D					check backpack for 'edx'
+:00443D29 85C0                    test eax, eax
+:00443D2B 7425                    je 00443D51					exit if Tome or Bag not found
+:00443D2D 8B542418                mov edx, dword ptr [esp+18]
+:00443D31 83FA14                  cmp edx, 00000014
+:00443D34 7F17                    jg 00443D4C
+:00443D36 83B8E400000000          cmp dword ptr [eax+000000E4], 00000000
+:00443D3D 7F06                    jg 00443D44
+:00443D3F 8990E8000000            mov dword ptr [eax+000000E8], edx
+:00443D45 3B90E8000000            cmp edx, dword ptr [eax+000000E8]
+:00443D4B 7505                    jne 00443D51
+:00443D4D E934820200              jmp 0046BF86					continue elsewhere
+:00443D52 E96EE1FDFF              jmp 00421EC5					exit
+
+:00443D57 83FA4D                  cmp edx, 0000004D
+:00443D5A 7C14                    jl 00443D70
+:00443D5C 83FA53                  cmp edx, 00000053
+:00443D5F 7C11                    jl 00443D72
+:00443D61 83FA5E                  cmp edx, 0000005E
+:00443D64 740C                    je 00443D72
+:00443D66 83FA6D                  cmp edx, 0000006D
+:00443D69 7407                    je 00443D72
+:00443D6B 83FA70                  cmp edx, 00000070
+:00443D6E 7402                    je 00443D72
+:00443D70 33D2                    xor edx, edx
+:00443D72 C3                      ret
+
+:00443D73 8BC7                    mov eax, edi
+:00443D74 8B7D08                  mov edi, dword ptr [ebp+08]
+:00443D78 83FF27                  cmp edi, 00000027				check for Tome of Lore
+:00443D7B 0F846C5FFEFF            je 00429CED		
+:00443D81 8B90E8000000            mov edx, dword ptr [eax+000000E8]		use max. charges as Magic code 
+:00443D87 4A                      dec edx
+:00443D88 D1EA                    shr edx, 1
+:00443D8A 0FB69230694A00          movzx edx, byte ptr [edx+004A6930]		data table
+:00443D91 8BC6                    mov eax, esi
+:00443D93 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00443D99 69C0C8550000            imul eax, 000055C8
+:00443D9F 03C1                    add eax, ecx
+:00443DA1 8BF8                    mov edi, eax
+:00443DA3 8D8FA4530000            lea ecx, dword ptr [edi+000053A4]
+:00443DA9 E8690DFEFF              call 00424B17					setup item data
+:00443DAE 8BCE                    mov ecx, esi
+:00443DB0 8D97A4530000            lea edx, dword ptr [edi+000053A4]
+:00443DB6 E86C0EFEFF              call 00424C27					provide seed
+:00443DBB C7870855000001000000    mov dword ptr [edi+00005508], 00000001	set requirements
+:00443DC5 8B8F64540000            mov ecx, dword ptr [edi+00005464]		gfx number
+:00443DCB 83C10C                  add ecx, 0000000C
+:00443DCE E81A3DFCFF              call 00407AED					create cursor shape
+:00443DD3 E98B62FEFF              jmp 0042A063
+
+:00443DD8 8B8FE0000000            mov ecx, dword ptr [edi+000000E0]
+:00443DDE 83F927                  cmp ecx, 00000027
+:00443DE1 7C07                    jl 00443DEA
+:00443DE3 680C4F4900              push 00494F0C
+:00443DE8 EB05                    jmp 00443DEF
+:00443DEA 68E0604A00              push 004A60E0
+:00443DEF E9F155FEFF              jmp 004293E5
+:00443DF4 90909090                4*nop

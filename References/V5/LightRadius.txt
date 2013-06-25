@@ -1,0 +1,81 @@
+
+Centering Light on character (original code):
+
+* Referenced by a CALL at Addresses :00459190, :0045950E, :004597A8   
+:00458FC5 55                      push ebp
+:00458FC6 8BEC                    mov ebp, esp
+:00458FC8 83EC0C                  sub esp, 0000000C
+:00458FCB 53                      push ebx
+:00458FCC 56                      push esi
+:00458FCD 8BF1                    mov esi, ecx
+:00458FCF 57                      push edi
+:00458FD0 83FE04                  cmp esi, 00000004
+:00458FD3 720D                    jb 00458FE2
+:00458FD5 56                      push esi
+* Possible StringData Ref from Data Obj ->"PM_ChangeLightOff: illegal player "
+:00458FD6 68B4614B00              push 004B61B4
+:00458FDB E88589FAFF              call 00401965
+:00458FE0 59                      pop ecx
+:00458FE1 59                      pop ecx
+:00458FE2 69F6C8550000            imul esi, 000055C8
+:00458FE8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458FED 8D1430                  lea edx, dword ptr [eax+esi]
+:00458FF0 8B84309C000000          mov eax, dword ptr [eax+esi+0000009C]
+:00458FF7 8B4A64                  mov ecx, dword ptr [edx+64]
+:00458FFA 8B7A60                  mov edi, dword ptr [edx+60]
+
+
+
+Adjusting player's Lightradius for possible change of items (original code):
+
+:00423C71 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423C76 03C6                    add eax, esi
+:00423C78 0FBE883E010000          movsx ecx, byte ptr [eax+0000013E]	ecx := old LR
+:00423C7F 3B4DF0                  cmp ecx, dword ptr [ebp-10]
+:00423C82 7443                    je 00423CC7				jmp if no change
+:00423C84 8B4DE0                  mov ecx, dword ptr [ebp-20]
+:00423C87 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00423C8D 7538                    jne 00423CC7				jmp if wrong char
+:00423C8F 8B5DF0                  mov ebx, dword ptr [ebp-10]		ebx := new LR
+:00423C92 8B889C000000            mov ecx, dword ptr [eax+0000009C]
+:00423C98 8BD3                    mov edx, ebx
+:00423C9A E8648C0000              call 0042C903				store LR
+:00423C9F 6A0A                    push 0000000A
+:00423CA1 5A                      pop edx
+:00423CA2 3BDA                    cmp ebx, edx
+:00423CA4 7C02                    jl 00423CA8
+:00423CA6 8BD3                    mov edx, ebx
+:00423CA8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423CAD 8B8C30A0000000          mov ecx, dword ptr [eax+esi+000000A0]
+:00423CB4 E8928F0000              call 0042CC4B				similar to other call
+:00423CB9 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423CBE 33D2                    xor edx, edx
+:00423CC0 889C303E010000          mov byte ptr [eax+esi+0000013E], bl
+
+
+Old LR is stored at [eax+006927AC], the new LR at [eax+00692790]:
+
+:0042C903 833D2C76690000          cmp dword ptr [0069762C], 00000000
+:0042C90A 8BC1                    mov eax, ecx
+:0042C90C 7547                    jne 0042C955
+:0042C90E 83F8FF                  cmp eax, FFFFFFFF
+:0042C911 7442                    je 0042C955
+:0042C913 6BC034                  imul eax, 00000034
+:0042C916 57                      push edi
+:0042C917 56                      push esi
+:0042C918 6A01                    push 00000001
+:0042C91A 5E                      pop esi
+:0042C91B 89B09C276900            mov dword ptr [eax+0069279C], esi
+:0042C921 8B8888276900            mov ecx, dword ptr [eax+00692788]
+:0042C927 8988A4276900            mov dword ptr [eax+006927A4], ecx
+:0042C92D 8B888C276900            mov ecx, dword ptr [eax+0069278C]
+:0042C933 8988A8276900            mov dword ptr [eax+006927A8], ecx
+:0042C939 8BB890276900            mov edi, dword ptr [eax+00692790]
+:0042C93F 8D8890276900            lea ecx, dword ptr [eax+00692790]
+:0042C945 89351C366900            mov dword ptr [0069361C], esi
+:0042C94B 89B8AC276900            mov dword ptr [eax+006927AC], edi
+:0042C951 5E                      pop esi
+:0042C952 8911                    mov dword ptr [ecx], edx
+:0042C954 5F                      pop edi
+:0042C955 C3                      ret
+

@@ -1,0 +1,51 @@
+The following modifications are done to the krull.cl2 file
+
+- Added 2 frames
+The original has 14 frames (0 - 13), the new one has 16 (0 - 15). Frame 1 and 12 are copied at the end
+
+Header info is from:
+
+0E000000 40000000 CB000000 57010000 
+E6010000 6E020000 FD020000 90030000
+21040000 AB040000 35050000 C1050000
+4C060000 D9060000 62070000 F1070000
+
+To
+
+10000000 48000000 D3000000 5F010000 
+EE010000 76020000 05030000 98030000
+29040000 B3040000 3D050000 C9050000 
+54060000 E1060000 6A070000 F9070000 
+85080000 0E090000
+
+2 frames more, so 2 dwords longer
+
+- Moved the animation higher up in the frame
+Changed the header info of each frame and moved 18h blank lines (7F) form the end to the beginning (twice that for the high version).
+
+Frame header info changed
+ from 		            to
+
+0A005900 72000000 	0A002300 72000000 
+0A005A00 73000000 	0A002300 73000000
+0A005D00 76000000 	0A002300 76000000
+0A005600 6F000000 	0A002300 6F000000 
+0A005D00 76000000	0A002300 76000000
+0A006100 7A000000	0A002300 7A000000
+0A005F00 78000000	0A002300 78000000
+0A005800 71000000	0A002300 71000000
+0A005800 71000000	0A002300 71000000
+0A005A00 73000000	0A002300 73000000
+0A005900 72000000	0A002300 72000000
+0A005B00 74000000	0A002300 74000000
+0A005700 70000000 	0A002300 70000000
+0A005D00 76000000	0A002300 76000000
+0A005A00 73000000	0A002300 73000000
+0A005700 70000000	0A002300 70000000
+
+Bytes moved from end to begin of frame:
+
+7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7F18
+
+Moving those bytes without changing the frameheader info wil result in a wrong size. The frame become much wider.
+Changing the header info alone wil also result in a wrong size, the frame will become much higher. The value 23 is taken from  the arrow.cl2 as an experiment and that worked. Luckily :)

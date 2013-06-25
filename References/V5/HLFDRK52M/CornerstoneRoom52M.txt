@@ -1,0 +1,177 @@
+Placing boss monsters in Cornerstone room by using the same method as for Butcher's room:
+
+Note that for some reason, bosses placed this way will have no minions. See also MonsterSelection52M.TXT
+
+
+File offset 0003B065
+
+:0043BC65 83FA1D                  cmp edx, 0000001D				boss 29 (The Killing Brute)
+:0043BC68 7535                    jne 0043BC9F
+:0043BC6A 33D2                    xor edx, edx
+:0043BC6C 33DB                    xor ebx, ebx
+:0043BC6E B9B05B5F00              mov ecx, 005F5BB0
+:0043BC73 85D2                    test edx, edx
+:0043BC75 7528                    jne 0043BC9F
+:0043BC77 33FF                    xor edi, edi
+:0043BC79 8BC1                    mov eax, ecx
+:0043BC7B 85D2                    test edx, edx
+:0043BC7D 7514                    jne 0043BC93
+:0043BC7F 81386F010000            cmp dword ptr [eax], 0000016F			check for unique tile in Butcher's room
+:0043BC85 0F94C2                  sete dl
+:0043BC88 47                      inc edi
+:0043BC89 05C0010000              add eax, 000001C0
+:0043BC8E 83FF70                  cmp edi, 00000070
+:0043BC91 7CE8                    jl 0043BC7B
+:0043BC93 83C104                  add ecx, 00000004
+:0043BC96 43                      inc ebx
+:0043BC97 81F9705D5F00            cmp ecx, 005F5D70
+:0043BC9D 7CD4                    jl 0043BC73
+changed into
+:0043BC65 E91E41FFFF              jmp 0042FD88
+:0043BC6A ...
+:0043BC75 7524                    jne 0043BC9B
+:0043BC77 ...
+:0043BC7D 7510                    jne 0043BC8F
+:0043BC7F 3930                    cmp dword ptr [eax], esi			check for varying unique tile
+:0043BC81 0F94C2                  sete dl
+:0043BC84 47                      inc edi
+:0043BC85 05C0010000              add eax, 000001C0
+:0043BC8A 83FF70                  cmp edi, 00000070
+:0043BC8D 7CEC                    jl 0043BC7B
+:0043BC8F 83C104                  add ecx, 00000004
+:0043BC92 43                      inc ebx
+:0043BC93 81F9705D5F00            cmp ecx, 005F5D70
+:0043BC99 7CD8                    jl 0043BC73
+:0043BC9B 47                      inc edi
+:0043BC9C 43                      inc ebx
+:0043BC9D C3                      ret
+:0043BC9E 90
+
+Using free space from AttackRoutines52L:
+
+File offset 0002F188
+
+:0042FD88 90                      nop
+:0042FD89 43                      inc ebx
+:0042FD8A 83C704                  add edi, 00000004
+:0042FD8D 3B1D48D06900            cmp ebx, dword ptr [0069D048]
+:0042FD93 7CC9                    jl 0042FD5E
+:0042FD95 8BC6                    mov eax, esi
+:0042FD97 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042FD9D 69C0C8550000            imul eax, 000055C8
+:0042FDA3 8D8C0820010000          lea ecx, dword ptr [eax+ecx+00000120]
+:0042FDAA 8A01                    mov al, byte ptr [ecx]
+:0042FDAC 8AD0                    mov dl, al
+:0042FDAE 80E202                  and dl, 02
+:0042FDB1 80FA02                  cmp dl, 02
+:0042FDB4 740E                    je 0042FDC4
+:0042FDB6 8AD0                    mov dl, al
+:0042FDB8 80E204                  and dl, 04
+:0042FDBB 80FA04                  cmp dl, 04
+changed into
+:0042FD88 83FA1D                  cmp edx, 0000001D				boss 29 (The Killing Brute)
+:0042FD8B 7508                    jne 0042FD95
+:0042FD8D 56                      push esi
+:0042FD8E BE6F010000              mov esi, 0000016F				find unique tile in Butcher's room
+:0042FD93 EB18                    jmp 0042FDAD
+:0042FD95 83FA3F                  cmp edx, 0000003F				boss 63
+:0042FD98 7508                    jne 0042FDA2
+:0042FD9A 56                      push esi
+:0042FD9B BE3D010000              mov esi, 0000013D				find unique tile in Cornerstone room
+:0042FDA0 EB0B                    jmp 0042FDAD
+:0042FDA2 83FA3C                  cmp edx, 0000003C				boss 60
+:0042FDA5 750C                    jne 0042FDB3
+:0042FDA7 56                      push esi
+:0042FDA8 BE3F010000              mov esi, 0000013F
+:0042FDAD E8B8BE0000              call 0043BC6A					find unique tile in Cornerstone room
+:0042FDB2 5E                      pop esi
+:0042FDB3 E9E7BE0000              jmp 0043BC9F
+:0042FDB8 909090909090            6*nop
+
+Now 204 free bytes (left) from 0042FDB8 to 0042FE84
+
+
+Anvil and Magnat (Golem bosses in Abyss) are now a Renegade Warrior and Fallen Rogue in the Cornerstone Room (without minions):
+
+pos name                     type                  attacktype        sub  pack  dlvl    HP   damage  MFL special	trn
+
+ 60 Anvil                    Iron Golem             2 Skeleton         4   3     C2   2300   45- 55  -II    0		GENERAL
+    Malicia                  Fallen Rogue          28 Lazarus          6   0     C1    400   20- 30  RRR     		GENRL
+
+000AFA00 8200 0000 4C17 4B00 841B 4B00 1600 FC08 ....L.K...K.....
+000AFA10 0204 2D37 3000 0300 0000 0000 0000 0000 ..-70...........
+changed into
+000AFA00 6B00 0000 4817 4B00 9C1B 4B00 1500 9001 k...H.K...K.....
+000AFA10 1C06 141E 4700 0000 0000 0000 0000 0000 ....G...........
+
+ 63 Magnat                   Copper Golem           2 Skeleton         3   3     C1   1700   40- 50  -II    0		GENERAL
+    Sir Greed                Renegade Warrior                          5   0           600   25- 55  RRR     		GENRL
+
+000AFA60 7A00 0000 2817 4B00 841B 4B00 1500 A406 z...(.K...K.....
+000AFA70 0203 2832 3000 0300 0000 0000 0000 0000 ..(20...........
+changed into
+000AFA60 3A00 0000 9915 4B00 9C1B 4B00 1500 5802 :.....K...K...X.
+000AFA70 0205 1937 4700 0000 0000 0000 0000 0000 ...7G...........
+
+Name changes:
+
+000B0148 0000 0000 416E 7669 6C00 00             ....Anvil..
+changed into
+000B0148 4D61 6C69 6369 6100 0000 00             Malicia....
+
+000B0128 4D61 676E 6174                          Magnat
+changed into
+000B0128 0000 0000 0000                          ......
+
+000AFF99 0000 0000 0000 0000 0000 0000 0000      ..............
+changed into
+000AFF99 5369 7220 4772 6565 6400 0000 0000      Sir Greed.....
+
+
+Speech for this new Renegade Warrior boss (to keep things simple in MP only):
+
+File offset 00050665
+
+:00451265 EB18                    jmp 0045127F
+:00451267 3C37                    cmp al, 37					Gharbad
+:00451269 7507                    jne 00451272
+:0045126B B9BB030000              mov ecx, 000003BB
+:00451270 EB0D                    jmp 0045127F
+:00451272 3C5D                    cmp al, 5D					Warlord of Blood
+:00451274 0F859826FFFF            jne 00443912
+:0045127A B9C6030000              mov ecx, 000003C6
+:0045127F E98226FFFF              jmp 00443906
+:00451284 90                      nop
+:00451285 90                      nop
+:00451286 90                      nop
+:00451287 90                      nop
+:00451288 90                      nop
+:00451289 90                      nop
+:0045128A 90                      nop
+:0045128B 90                      nop
+:0045128C 90                      nop
+:0045128D 90                      nop
+:0045128E 32C0                    xor al, al
+:00451290 F6C101                  test cl, 01
+:00451293 7501                    jne 00451296
+:00451295 40                      inc eax
+:00451296 C3                      ret
+changed into
+:00451265 EB23                    jmp 0045128A
+:00451267 3C37                    cmp al, 37					Gharbad
+:00451269 7507                    jne 00451272
+:0045126B B9BB030000              mov ecx, 000003BB
+:00451270 EB18                    jmp 0045128A
+:00451272 3C5D                    cmp al, 5D					Warlord of Blood
+:00451274 7507                    jne 0045127D
+:00451276 B9C6030000              mov ecx, 000003C6
+:0045127B EB0D                    jmp 0045128A
+:0045127D 3C40                    cmp al, 40					boss 63
+:0045127F 0F858D26FFFF            jne 00443912
+:00451285 B919030000              mov ecx, 00000319				Warrior: "Die!"
+:0045128A E97726FFFF              jmp 00443906
+:0045128F 90                      nop
+
+
+
+

@@ -1,0 +1,89 @@
+Adria:
+
+
+* Referenced by a CALL at Address:
+|:0046F2B9   
+|
+:0046DB5E 53                      push ebx
+:0046DB5F 33DB                    xor ebx, ebx
+:0046DB61 56                      push esi
+:0046DB62 53                      push ebx
+:0046DB63 6A03                    push 00000003
+
+* Possible StringData Ref from Data Obj ->"Witch's shack"
+                                  |
+:0046DB65 68EC864B00              push 004B86EC
+:0046DB6A 6A01                    push 00000001
+:0046DB6C 33C9                    xor ecx, ecx
+:0046DB6E 5E                      pop esi
+:0046DB6F 881D583F6F00            mov byte ptr [006F3F58], bl
+:0046DB75 56                      push esi
+:0046DB76 6A02                    push 00000002
+:0046DB78 5A                      pop edx
+
+
+
+Pepin:
+
+
+* Referenced by a CALL at Address:
+|:0046F30A   
+|
+:0046E799 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0046E79E 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0046E7A4 8BC8                    mov ecx, eax
+:0046E7A6 53                      push ebx
+:0046E7A7 69C9C8550000            imul ecx, 000055C8
+:0046E7AD 03CA                    add ecx, edx
+:0046E7AF 56                      push esi
+:0046E7B0 8B9198010000            mov edx, dword ptr [ecx+00000198]
+:0046E7B6 3B919C010000            cmp edx, dword ptr [ecx+0000019C]
+:0046E7BC 740D                    je 0046E7CB
+:0046E7BE 6A58                    push 00000058
+:0046E7C0 59                      pop ecx
+:0046E7C1 E8479DFAFF              call 0041850D			play sound (?)
+:0046E7C6 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046E7BC(C)
+|
+:0046E7CB 69C0C8550000            imul eax, 000055C8
+:0046E7D1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046E7D7 6A01                    push 00000001
+:0046E7D9 03C1                    add eax, ecx
+:0046E7DB 5E                      pop esi
+:0046E7DC 33DB                    xor ebx, ebx
+:0046E7DE 8BD6                    mov edx, esi
+:0046E7E0 8B889C010000            mov ecx, dword ptr [eax+0000019C]
+:0046E7E6 53                      push ebx
+:0046E7E7 898898010000            mov dword ptr [eax+00000198], ecx
+:0046E7ED A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0046E7F2 69C0C8550000            imul eax, 000055C8
+:0046E7F8 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046E7FE 6A03                    push 00000003
+:0046E800 03C1                    add eax, ecx
+
+* Possible StringData Ref from Data Obj ->"Welcome to the"
+                                  |
+:0046E802 68F0844B00              push 004B84F0
+:0046E807 56                      push esi
+:0046E808 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:0046E80E 898890010000            mov dword ptr [eax+00000190], ecx
+:0046E814 33C9                    xor ecx, ecx
+:0046E816 8935400E4D00            mov dword ptr [004D0E40], esi
+:0046E81C 881D583F6F00            mov byte ptr [006F3F58], bl
+:0046E822 891D84A96F00            mov dword ptr [006FA984], ebx
+:0046E828 E80BE2FFFF              call 0046CA38
+:0046E82D 33C9                    xor ecx, ecx
+:0046E82F 53                      push ebx
+:0046E830 6A03                    push 00000003
+
+* Possible StringData Ref from Data Obj ->"Healer's home"
+                                  |
+:0046E832 68A4894B00              push 004B89A4
+:0046E837 56                      push esi
+
+
+
+
+

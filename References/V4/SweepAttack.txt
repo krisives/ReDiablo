@@ -1,0 +1,90 @@
+Sweep attack for Barbarians with 2 swords or clubs:
+
+File Offset 0005B78B
+
+:0045C38B 83FA02                  cmp edx, 00000002
+:0045C38E 745D                    je 0045C3ED
+:0045C390 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+wordt
+:0045C38B 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+:0045C391 E9A85FFFFF              jmp 0045233E
+:0045C396 
+
+Using free space from Eldritch Shrine:
+
+File Offset 0005173E
+
+:0045233E 90                      nop
+:0045233F 8DB418A4530000          lea esi, dword ptr [eax+ebx+000053A4]
+:00452346 59                      pop ecx
+:00452347 F3                      repz
+:00452348 A5                      movsd
+:00452349 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045234E 8B4D08                  mov ecx, dword ptr [ebp+08]
+:00452351 8B8C08E0480000          mov ecx, dword ptr [eax+ecx+000048E0]
+:00452358 90                      nop
+:00452359 90                      nop
+:0045235A 90                      nop
+:0045235B 90                      nop
+:0045235C 90                      nop
+:0045235D 83F903                  cmp ecx, 00000003
+:00452360 755C                    jne 004523BE
+:00452362 6A02                    push 00000002
+:00452364 59                      pop ecx
+:00452365 E830E1FFFF              call 0045049A
+:0045236A 8BD0                    mov edx, eax
+:0045236C A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:0045233E 83FA02                  cmp edx, 00000002		Axe
+:00452341 0F84A6A00000            je 0045C3ED
+:00452347 83FA01                  cmp edx, 00000001		Sword
+:0045234A 7509                    jne 00452355
+:0045234C 83F804                  cmp eax, 00000004		Club
+:0045234F 7412                    je 00452363
+:00452351 3BC2                    cmp eax, edx
+:00452353 740E                    je 00452363
+:00452355 83FA04                  cmp edx, 00000004		Club
+:00452358 750E                    jne 00452368
+:0045235A 83F801                  cmp eax, 00000001		Sword
+:0045235D 7404                    je 00452363
+:0045235F 3BC2                    cmp eax, edx
+:00452361 7505                    jne 00452368
+:00452363 E985A00000              jmp 0045C3ED
+:00452368 E929A00000              jmp 0045C396
+:0045236D 90909090                4*nop
+
+
+Enabling Sweep Attack for Warrior with large sword or maul and no shield:
+
+File Offset 0005B77F
+
+:0045C37F 0F8560010000            jne 0045C4E5
+wordt
+:0045C37F 0F85E85FFFFF            jne 0045236D
+:0045C385 
+
+Using free space from Eldritch Shrine, after above changes:
+
+File Offset 0005176D
+
+:0045236D 90909090                4*nop
+:00452371 8D8C18A4530000          lea ecx, dword ptr [eax+ebx+000053A4]
+:00452378 E89A27FDFF              call 00424B17
+:0045237D A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452382 8D8C18A4530000          lea ecx, dword ptr [eax+ebx+000053A4]
+wordt
+:0045236D 84C0                    test al, al
+:0045236F 0F8570A10000            jne 0045C4E5
+:00452375 8B9164090000            mov edx, dword ptr [ecx+00000964]
+:0045237B 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+:00452381 E915A00000              jmp 0045C39B
+:00452386 909090                  3*nop
+
+
+Increasing Sweep Attack damage for all characters (1/4 -> 1/2):
+
+File Offset 0005AFA1
+
+:0045BBA1 C1FF02                  sar edi, 02
+wordt
+:0045BBA1 C1FF01                  sar edi, 01

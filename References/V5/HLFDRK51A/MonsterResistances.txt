@@ -1,0 +1,12 @@
+Improved monster resistances
+
+Spell damage will be 1/8, instead of 1/6, against resisting monsters:
+
+file offset 0003C83E
+
+:0043D43E 6A06                    push 00000006
+changed into
+:0043D43E 6A08                    push 00000008
+
+(This is a quickfix, and should be replaced with better code later)
+

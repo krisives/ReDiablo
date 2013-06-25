@@ -1,0 +1,13 @@
+
+
+
+:00405927 0FBE88B8010000          movsx ecx, byte ptr [eax+000001B8]
+:0040592E 0FBE8060010000          movsx eax, byte ptr [eax+00000160]
+:00405935 51                      push ecx
+:00405936 FF3485B85D4B00          push dword ptr [4*eax+004B5DB8]
+
+* Possible StringData Ref from Data Obj ->"%s, Level : %i"
+                                  |
+:0040593D 6810514900              push 00495110
+:00405942 56                      push esi
+:00405943 E878410700              call 00479AC0

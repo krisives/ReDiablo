@@ -1,0 +1,19 @@
+()Disable TheoQuest
+
+file offset: 88B8h
+
+:004094B8 750F                    jne 004094C9
+wordt
+:004094B8 EB0F                    jmp 004094C9
+
+()Disable CowQuest
+
+file offset: 88EEh
+
+:004094EE 750F                    jne 004094FF
+wordt
+:004094EE EB0F                    jmp 004094FF
+
+
+Met bovenstaande wijzigingen worden deze keywords niet meer herkend (dit is getest). Het automatisch aanzetten van de andere keywords is wat lastiger, maar IMO minder nodig.
+

@@ -1,0 +1,61 @@
+Doubling Spellbook Damage for Magic Missile
+
+
+Free space from previous changes to Spellbook Display:
+
+File Offset 0002E026
+
+:0042EC26 90                      nop
+:0042EC27 90                      nop
+:0042EC28 14AE                    adc al, AE
+:0042EC2A 6E                      outsb
+:0042EC2B 0038                    add byte ptr [eax], bh
+:0042EC2D 8C3E                    mov [esi], xx
+:0042EC2F B80100007E              mov eax, 7E000001
+:0042EC34 21FF                    and edi, edi
+:0042EC36 028B35E8AD6E            add cl, byte ptr [ebx+6EADE835]
+:0042EC3C 0069F6                  add byte ptr [ecx-0A], ch
+:0042EC3F C8550000                enter 0055, 00
+:0042EC43 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:0042EC49 40                      inc eax
+:0042EC4A 0FBEB43EB8010000        movsx esi, byte ptr [esi+edi+000001B8]
+:0042EC52 3BC6                    cmp eax, esi
+:0042EC54 7CDF                    jl 0042EC35
+:0042EC56 8B4508                  mov eax, dword ptr [ebp+08]
+:0042EC59 8908                    mov dword ptr [eax], ecx
+:0042EC5B 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+wordt
+:0042EC26 8B806C010000            mov eax, dword ptr [eax+0000016C]
+:0042EC2C C1F801                  sar eax, 01
+:0042EC2F 8D443002                lea eax, dword ptr [eax+esi+02]
+:0042EC33 8902                    mov dword ptr [edx], eax
+:0042EC35 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042EC3A 69C0C8550000            imul eax, 000055C8
+:0042EC40 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042EC46 8B84086C010000          mov eax, dword ptr [eax+ecx+0000016C]
+:0042EC4D C1F801                  sar eax, 01
+:0042EC50 8D443014                lea eax, dword ptr [eax+esi+14]
+:0042EC54 E9F6000000              jmp 0042ED4F
+:0042EC59 D1E6                    shl esi, 1
+:0042EC5B E9C6FFFFFF              jmp 0042EC26
+:0042EC60 90                      nop
+
+Setting '22'-NA to '06'-NA, Setting MagicMissile to '22' 
+
+0002E31F 0001 0203 0405 0606 0606 0607 0809 0A0B ................
+0002E32F 0B0C 0D0E 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 2323 231A 1B1C 1C00 1D1E 1F20 ....###........ 
+0002E34F 2121 22                                 !!"
+wordt
+0002E31F 0001 0203 0405 0606 0606 0607 0809 0A0B ................
+0002E32F 0B0C 0D0E 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 2323 231A 1B1C 1C22 1D1E 1F20 ....###...."... 
+0002E34F 2121 06                                 !!.
+
+Setting '22' to routine 0042EC59:
+
+0002E317 0AEA 4200                               ..B.
+wordt
+0002E317 59EC 4200                               Y.B.
+
+

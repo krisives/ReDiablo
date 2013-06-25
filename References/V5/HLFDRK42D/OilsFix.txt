@@ -1,0 +1,7 @@
+Accuracy and Hardening Oils gave more then intended.
+
+file offset 00027990
+
+:00428590 40                      inc eax
+changed into
+:00428590 90                      nop

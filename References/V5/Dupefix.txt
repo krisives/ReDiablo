@@ -1,0 +1,233 @@
+Not implemented!!
+
+*****************
+
+
+
+Dupefix for Diablo 1.07:
+
+:0041E5E2 E8D8140300              call 0044FABF
+:0041E5E7 90                      nop
+
+:0041EA5C E986100300              jmp 0044FAE7
+:0041EA61 90                      nop
+:0041EA62 90                      nop
+:0041EA63 90                      nop
+
+:0044FABF 6A5C                    push 0000005C
+:0044FAC1 8DB530CA6800            lea esi, dword ptr [ebp+0068CA30]
+:0044FAC7 BF9CBB6900              mov edi, 0069BB9C
+:0044FACC 90                      nop
+:0044FACD 59                      pop ecx
+:0044FACE F3                      repz
+:0044FACF A5                      movsd
+:0044FAD0 8DB0486D6300            lea esi, dword ptr [eax+00636D48]
+:0044FAD6 833D0CBD690027          cmp dword ptr [0069BD0C], 00000027
+:0044FADD 7E07                    jle 0044FAE6
+:0044FADF C6050CBD690027          mov byte ptr [0069BD0C], 27
+:0044FAE6 C3                      ret
+
+:0044FAE7 6A5C                    push 0000005C
+:0044FAE9 8DB514BD6800            lea esi, dword ptr [ebp+0068BD14]
+:0044FAEF BE9CBB6900              mov esi, 0069BB9C
+:0044FAF4 90                      nop
+:0044FAF5 8DBD30CA6800            lea edi, dword ptr [ebp+0068CA30]
+:0044FAFB 59                      pop ecx
+:0044FAFC F3                      repz
+:0044FAFD A5                      movsd
+:0044FAFE 5F                      pop edi
+:0044FAFF 5E                      pop esi
+:0044FB00 5D                      pop ebp
+:0044FB01 5B                      pop ebx
+:0044FB02 83C41C                  add esp, 0000001C
+:0044FB05 C3                      ret
+
+
+
+
+Diablo:
+
+:0041E5C5 8B442420                mov eax, dword ptr [esp+20]
+:0041E5C9 8BEB                    mov ebp, ebx
+:0041E5CB 69C070010000            imul eax, 00000170
+:0041E5D1 69EDD8540000            imul ebp, 000054D8
+:0041E5D7 6681A04C6D6300FF7F      and word ptr [eax+00636D4C], 7FFF
+:0041E5E0 6A5C                    push 0000005C
+:0041E5E2 8DB0486D6300            lea esi, dword ptr [eax+00636D48]
+:0041E5E8 8DBD30CA6800            lea edi, dword ptr [ebp+0068CA30]
+:0041E5EE 59                      pop ecx
+:0041E5EF 89742428                mov dword ptr [esp+28], esi
+:0041E5F3 F3                      repz
+:0041E5F4 A5                      movsd
+:0041E5F5 8BCB                    mov ecx, ebx
+:0041E5F7 89442424                mov dword ptr [esp+24], eax
+:0041E5FB E880FCFFFF              call 0041E280
+:0041E600 8BCB                    mov ecx, ebx
+:0041E602 E8F7FBFFFF              call 0041E1FE
+:0041E607 8BCB                    mov ecx, ebx
+:0041E609 E8A4FBFFFF              call 0041E1B2
+:0041E60E 8B8DF0CA6800            mov ecx, dword ptr [ebp+0068CAF0]
+:0041E614 83C10C                  add ecx, 0000000C
+:0041E617 E8388EFEFF              call 00407454
+:0041E61C 83BD38CA68000B          cmp dword ptr [ebp+0068CA38], 0000000B
+
+Hellfire:
+
+:004219C5 8BC2                    mov eax, edx
+:004219C7 69C074010000            imul eax, 00000174
+:004219CD 89442418                mov dword ptr [esp+18], eax
+:004219D1 3988B4636800            cmp dword ptr [eax+006863B4], ecx
+:004219D7 7409                    je 004219E2
+:004219D9 6681A084626800FF7F      and word ptr [eax+00686284], 7FFF
+:004219E2 8B442418                mov eax, dword ptr [esp+18]
+:004219E6 8BEB                    mov ebp, ebx
+:004219E8 69EDC8550000            imul ebp, 000055C8
+:004219EE 8DB080626800            lea esi, dword ptr [eax+00686280]
+:004219F4 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004219F9 6A5D                    push 0000005D
+:004219FB 8974242C                mov dword ptr [esp+2C], esi
+:004219FF 8DBC28A4530000          lea edi, dword ptr [eax+ebp+000053A4]
+:00421A06 59                      pop ecx
+:00421A07 F3                      repz
+:00421A08 A5                      movsd
+:00421A09 8BCB                    mov ecx, ebx
+:00421A0B E8D2F8FFFF              call 004212E2
+:00421A10 8BCB                    mov ecx, ebx
+:00421A12 E814F8FFFF              call 0042122B
+:00421A17 8BCB                    mov ecx, ebx
+:00421A19 E8C0F7FFFF              call 004211DE
+:00421A1E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00421A23 8B8C2864540000          mov ecx, dword ptr [eax+ebp+00005464]
+:00421A2A 83C10C                  add ecx, 0000000C
+:00421A2D E86460FEFF              call 00407A96
+:00421A32 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00421A37 03C5                    add eax, ebp
+:00421A39 83B8AC5300000B          cmp dword ptr [eax+000053AC], 0000000B
+
+
+
+***********************
+
+:004219EE 8DB080626800            lea esi, dword ptr [eax+00686280]
+changed into
+:004219EE E8????????              call 00??????
+:004219F3 90                      nop
+
+
+:00421EC5 5F                      pop edi
+:00421EC6 5E                      pop esi
+:00421EC7 5D                      pop ebp
+:00421EC8 5B                      pop ebx
+:00421EC9 83C41C                  add esp, 0000001C
+:00421ECC C3                      ret
+changed into
+:00421EC5 E9????????              jmp 00??????
+:00421ECA 909090                  3*nop
+
+
+***********************
+
+
+
+
+:0044FABF 6A5C                    push 0000005C
+:0044FAC1 8DB530CA6800            lea esi, dword ptr [ebp+0068CA30]
+:0044FAC7 BF9CBB6900              mov edi, 0069BB9C				address of last space in inventory
+:0044FACC 90                      nop
+:0044FACD 59                      pop ecx
+:0044FACE F3                      repz
+:0044FACF A5                      movsd
+:0044FAD0 8DB0486D6300            lea esi, dword ptr [eax+00636D48]
+:0044FAD6 833D0CBD690027          cmp dword ptr [0069BD0C], 00000027		number of items in inventory
+:0044FADD 7E07                    jle 0044FAE6
+:0044FADF C6050CBD690027          mov byte ptr [0069BD0C], 27
+:0044FAE6 C3                      ret
+
+becomes for HF:
+
+:004219FF 8DBC28A4530000          lea edi, dword ptr [eax+ebp+000053A4]
+:00422DBF 8BF7                    mov esi, edi
+
+:004219EE E8????????              call 00??????
+
+:00422C9E 51                      push ecx
+:0042075D 81C164460000            add ecx, 00004664
+:00401003 8BF9                    mov edi, ecx
+:004219F9 6A5D                    push 0000005D
+:0044FACD 59                      pop ecx
+:0044FACE F3                      repz
+:0044FACF A5                      movsd
+:004219EE 8DB080626800            lea esi, dword ptr [eax+00686280]
+:00422CCA 59                      pop ecx
+:0042075D 81C1D8470000            add ecx, 000047D8
+:0042F9A9 833927                  cmp dword ptr [ecx], 00000027
+:0044FADD 7E03                    jle 00??????
+:0047E523 C60127                  mov byte ptr [ecx], 27
+:0044FAE6 C3                      ret
+
+
+**************************
+
+:00401B8C 8BCB                    mov ecx, ebx					ebx = local character
+:004583B0 41                      inc ecx
+:004584B1 83F904                  cmp ecx, 00000004
+:00456E10 7202                    jb 00??????
+:0045852D 33C9                    xor ecx, ecx
+:0045AE04 69C9C8550000            imul ecx, 000055C8
+:0043C889 030D14AE6E00            add ecx, dword ptr [006EAE14]
+
+***********************************
+
+:0044FAE7 6A5C                    push 0000005C
+:0044FAE9 8DB514BD6800            lea esi, dword ptr [ebp+0068BD14]
+:0044FAEF BE9CBB6900              mov esi, 0069BB9C				address of last space in inventory
+:0044FAF4 90                      nop
+:0044FAF5 8DBD30CA6800            lea edi, dword ptr [ebp+0068CA30]
+:0044FAFB 59                      pop ecx
+:0044FAFC F3                      repz
+:0044FAFD A5                      movsd
+:0044FAFE 5F                      pop edi
+:0044FAFF 5E                      pop esi
+:0044FB00 5D                      pop ebp
+:0044FB01 5B                      pop ebx
+:0044FB02 83C41C                  add esp, 0000001C
+:0044FB05 C3                      ret
+
+becomes for HF:
+
+complications arise here, because of the handling of Tome and Bag.
+
+
+:0044FAE9 8DB514BD6800            lea esi, dword ptr [ebp+0068BD14]
+
+:004219EE E8????????              call 00??????
+:0042075D 81C164460000            add ecx, 00004664
+:00422222 8BF1                    mov esi, ecx
+
+:0044FAF5 8DBD30CA6800            lea edi, dword ptr [ebp+0068CA30]
+
+:0044FAE7 6A5D                    push 0000005D
+:0044FAFB 59                      pop ecx
+:0044FAFC F3                      repz
+:0044FAFD A5                      movsd
+:0044FAFE 5F                      pop edi
+:0044FAFF 5E                      pop esi
+:0044FB00 5D                      pop ebp
+:0044FB01 5B                      pop ebx
+:0044FB02 83C41C                  add esp, 0000001C
+:0044FB05 C3                      ret
+
+
+
+
+****************************************
+
+number of items in inventory:
+
+:00422B3C 8B88D8470000            mov ecx, dword ptr [eax+000047D8]
+
+00004664]			start last item (first + 39*174h)
+
++00000DB8]			start first inventory object
++00000DC0]			item type first inventory object
+

@@ -1,0 +1,333 @@
+Nova and Immolation Runes
+
+First, Nova and Immolation spell effects are adjusted to support the remote casting. This frees the two corresponding Rune spell effects for other uses. 
+
+Then, all Rune base items are made into Nova and Immolation Runes, and the corresponding Rune Spells are adjusted to call triple versions of the basic Nova and Immolation spell effects.
+
+One of the runes is changed into Orb of Recharging, which will act as the sorcerer's skill when right-clicked. 
+
+
+Adding a check on clear line-of-sight between cursor and caster to Nova/Immo initial code:
+
+file offset 00033FB4
+
+:00434BB4 8BF1                    mov esi, ecx
+:00434BB6 8B450C                  mov eax, dword ptr [ebp+0C]
+changed into
+:00434BB4 E9C7410000              jmp 00438D80
+:00434BB9 ...
+
+Using free space from Arcane Flames:
+
+file offset 00038180
+
+:00438D80 90                      nop
+:00438D81 8A8401B8010000          mov al, byte ptr [ecx+eax+000001B8]
+:00438D88 EB0A                    jmp 00438D94
+:00438D8A E825FE0400              call 00488BB4
+:00438D8F 8A02                    mov al, byte ptr [edx]
+:00438D91 0402                    add al, 02
+:00438D93 90                      nop
+:00438D94 8845FF                  mov byte ptr [ebp-01], al
+:00438D97 90                      nop
+:00438D98 90                      nop
+:00438D99 90                      nop
+:00438D9A 90                      nop
+:00438D9B 90                      nop
+:00438D9C B135                    mov cl, 35
+:00438D9E 90                      nop
+:00438D9F 90                      nop
+:00438DA0 6A14                    push 00000014
+:00438DA2 5A                      pop edx
+:00438DA3 E8B211FEFF              call 00419F5A
+:00438DA8 8BD8                    mov ebx, eax
+:00438DAA 0FB645FF                movzx eax, byte ptr [ebp-01]
+:00438DAE 8D440302                lea eax, dword ptr [ebx+eax+02]
+:00438DB2 C1E004                  shl eax, 04
+:00438DB5 D1F8                    sar eax, 1
+changed into
+:00438D80 8BF1                    mov esi, ecx
+:00438D82 8BC2                    mov eax, edx				char coordinate
+:00438D84 FF7510                  push [ebp+10]				cursor coordinate
+:00438D87 8B5508                  mov edx, dword ptr [ebp+08]		char coordinate
+:00438D8A FF750C                  push [ebp+0C]				cursor coordinate
+:00438D8D 8BC8                    mov ecx, eax
+:00438D8F E833B20000              call 00443FC7				check LOF
+:00438D94 85C0                    test eax, eax
+:00438D96 7408                    je 00438DA0
+:00438D98 8B450C                  mov eax, dword ptr [ebp+0C]
+:00438D9B E919BEFFFF              jmp 00434BB9
+:00438DA0 69F6B0000000            imul esi, 000000B0
+:00438DA6 C786C87A690001000000    mov dword ptr [esi+00697AC8], 00000001
+:00438DB0 5E                      pop esi
+:00438DB1 5B                      pop ebx
+:00438DB2 5D                      pop ebp
+:00438DB3 C21C00                  ret 001C
+:00438DB6 90                      nop
+
+
+Adjusting Nova update code to replace caster coordinates by cursor coordinates:
+
+file offset 000389D1
+
+:004395D1 8B9F5C7A6900            mov ebx, dword ptr [edi+00697A5C]
+:004395D7 894DF0                  mov dword ptr [ebp-10], ecx
+:004395DA 8B8F607A6900            mov ecx, dword ptr [edi+00697A60]
+changed into
+:004395D1 8B9FE87A6900            mov ebx, dword ptr [edi+00697AE8]
+:004395D7 894DF0                  mov dword ptr [ebp-10], ecx
+:004395DA 8B8FEC7A6900            mov ecx, dword ptr [edi+00697AEC]
+
+
+Adjusting Immolation update code to replace caster coordinates by cursor coordinates:
+
+file offset 00038B2F
+
+:0043972F 8B9F5C7A6900            mov ebx, dword ptr [edi+00697A5C]
+:00439735 894DF0                  mov dword ptr [ebp-10], ecx
+:00439738 8B8F607A6900            mov ecx, dword ptr [edi+00697A60]
+changed into
+:0043972F 8B9FE87A6900            mov ebx, dword ptr [edi+00697AE8]
+:00439735 894DF0                  mov dword ptr [ebp-10], ecx
+:00439738 8B8FEC7A6900            mov ecx, dword ptr [edi+00697AEC]
+
+
+Correcting Nova Spell data to call the Nova spell effect directly:
+
+48  49 Rune of Nova  magic/other   255      255   255   10    1   48   0    40- 80  91: -: - 
+                                                                                    42: -: -
+000B63D8 1250 0100 B082 4B00 0000 0000 0E00 0000 .P....K.........
+000B63E8 0A00 0000 0100 0000 0000 0000 6400 0000 ............d...
+000B63F8 545B 0000 013C 0000 0F00 0000 1E00 0000 T[...<..........
+000B6408 204E 0000 E803 0000                      N......
+changed into
+000B63F9 2A00 00                                 *..
+
+
+Correcting Immo Spell data to call the Immo spell effect directly:
+
+49  50 Rune of Immo  magic/other   255      255   255   10    1   48   0    40- 80  92: -: -  
+                                                                                    72: -: -  
+000B68E0 2950 0000 AC81 4B00 0000 0000 0E00 0000 )P....K.........
+000B68F0 0A00 0000 0100 0000 0000 0000 6400 0000 ............d...
+000B6900 525C 0000 013C 0000 0F00 0000 1E00 0000 R\...<..........
+000B6910 204E 0000 E803 0000                      N......
+changed into
+000B6901 4800 00                                 H..
+
+
+Correcting Nova Rune Spell data to call the Nova spell effect 3 times:
+
+48  49 Rune of Nova  magic/other   255      255   255   10    1   48   0    40- 80  91: -: - 
+                                                                                    42:42:42
+000B6AA0 31FF 0200 5C81 4B00 0000 0000 FFFF FFFF 1...\.K.........
+000B6AB0 FFFF FFFF 0100 0000 0000 0000 3000 0000 ............0...
+000B6AC0 585B 0000 010A 0000 2800 0000 5000 0000 X[......(...P...
+000B6AD0 401F 0000 2C01 0000                     @...,...
+changed into
+000B6AC1 2A2A 2A                                 ***
+
+
+Correcting Immolation Rune Spell data to call the Immolation spell effect 3 times:
+
+49  50 Rune of Immo  magic/other   255      255   255   10    1   48   0    40- 80  92: -: -  
+                                                                                    72:72:72
+000B6AD8 32FF 0200 4881 4B00 0000 0000 FFFF FFFF 2...H.K.........
+000B6AE8 FFFF FFFF 0100 0000 0000 0000 3000 0000 ............0...
+000B6AF8 585C 0000 010A 0000 2800 0000 5000 0000 X\......(...P...
+000B6B08 401F 0000 2C01 0000                     @...,...
+changed into
+000B6AF9 4848 48                                 HHH
+
+
+Adjusting the Rune Base Items:
+
+pos name                         magic name   qlvl  dur  damage    AC    str mag dex  price  pic  src  unique
+
+161 the Elemental                Rune          1     0    0- 0    0- 0    0   5   0     200  193    1    0
+    Nova Rune                                 24                             20         800  196
+
+000A3594 0100 0000 0307 0000 C100 0000 0000 0000 ................
+000A35A4 BC4D 4A00 B44D 4A00 0100 0000 0000 0000 .MJ..MJ.........
+000A35B4 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A35C4 0005 0000 0000 0000 2F00 0000 0000 0000 ......../.......
+000A35D4 0100 0000 C800 0000 C800 0000           ............
+changed into
+000A3594 0100 0000 0307 0000 C400 0000 0000 0000 ................
+000A35A4 6C4D 4A00 B44D 4A00 1800 0000 0000 0000 lMJ..MJ.........
+000A35B4 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A35C4 0014 0000 0000 0000 3100 0000 0000 0000 ........1.......
+000A35D4 0100 0000 2003 0000 2003 0000           .... ... ...
+
+
+162 Lightning Trap Rune          Rune          3     0    0- 0    0- 0    0   5   0     200  197    1    0
+    Immolation Rune                           24                             20         800  194
+
+000A35E0 0100 0000 0307 0000 C500 0000 0000 0000 ................
+000A35F0 A04D 4A00 B44D 4A00 0300 0000 0000 0000 .MJ..MJ.........
+000A3600 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A3610 0005 0000 0000 0000 3000 0000 0000 0000 ........0.......
+000A3620 0100 0000 C800 0000 C800 0000           ............
+changed into
+000A35E0 0100 0000 0307 0000 C200 0000 0000 0000 ................
+000A35F0 884D 4A00 B44D 4A00 1800 0000 0000 0000 .MJ..MJ.........
+000A3600 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A3610 0014 0000 0000 0000 3200 0000 0000 0000 ........2.......
+000A3620 0100 0000 2003 0000 2003 0000           .... ... ...
+
+
+163 Immolation Rune              Rune          7     0    0- 0    0- 0    0  10   0     400  194    1    0
+    Orb of Recharging                         18                                       1600  195
+
+000A362C 0100 0000 0307 0000 C200 0000 0000 0000 ................
+000A363C 884D 4A00 B44D 4A00 0700 0000 0000 0000 .MJ..MJ.........
+000A364C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A365C 000A 0000 0000 0000 3200 0000 0000 0000 ........2.......
+000A366C 0100 0000 9001 0000 9001 0000           ............
+changed into
+000A362C 0100 0000 0307 0000 C300 0000 0000 0000 ................
+000A363C A04D 4A00 B44D 4A00 1200 0000 0000 0000 .MJ..MJ.........
+000A364C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A365C 000A 0000 0000 0000 1500 0000 1B00 0000 ................
+000A366C 0100 0000 4006 0000 4006 0000           ....@...@...
+
+
+164 Immolation Rune              Rune          7     0    0- 0    0- 0    0  10   0     400  194    1    0
+                                                                             20         800
+000A3678 0100 0000 0307 0000 C200 0000 0000 0000 ................
+000A3688 884D 4A00 B44D 4A00 0700 0000 0000 0000 .MJ..MJ.........
+000A3698 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A36A8 000A 0000 0000 0000 3200 0000 0000 0000 ........2.......
+000A36B8 0100 0000 9001 0000 9001 0000           ............
+changed into
+000A36A9 14                                      .
+000A36BC 2003 0000 2003 0000                      ... ...
+
+
+165 Nova Rune                    Rune          7     0    0- 0    0- 0    0  10   0     400  196    1    0
+                                                                             20         800  
+000A36C4 0100 0000 0307 0000 C400 0000 0000 0000 ................
+000A36D4 6C4D 4A00 B44D 4A00 0700 0000 0000 0000 lMJ..MJ.........
+000A36E4 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A36F4 000A 0000 0000 0000 3100 0000 0000 0000 ........1.......
+000A3704 0100 0000 9001 0000 9001 0000           ............
+changed into
+000A36F5 14                                      .
+000A3708 2003 0000 2003 0000                      ... ...
+
+
+
+The following is informational only.
+
+
+Spell effects involved:
+
+2A	Nova
+A6800	2A00 0000 AF4B 4300 B295
+	4300 0100 0000 0102 0300
+	8200 0000 FFFF FFFF
+
+48	Immolation
+A6B48	4800 0000 AF4B 4300 1097
+	4300 0100 0000 0101 0100
+	6D00 0000 7000 0000
+
+5B	Greater Rune of Lightning
+A6D5C	5B00 0000 BE01 4300 D85A
+	4300 0100 0000 0100 3400
+	FFFF FFFF FFFF FFFF
+	
+5C	Greater Rune of Fire
+A6D78	5C00 0000 3E02 4300 D85A
+	4300 0100 0000 0100 3400
+	FFFF FFFF FFFF FFFF
+
+
+Original Nova/Immo init:
+
+:00434BAF 55                      push ebp
+:00434BB0 8BEC                    mov ebp, esp
+:00434BB2 53                      push ebx
+:00434BB3 56                      push esi
+:00434BB4 8BF1                    mov esi, ecx
+:00434BB6 8B450C                  mov eax, dword ptr [ebp+0C]
+:00434BB9 69F6B0000000            imul esi, 000000B0
+:00434BBF 837D1CFF                cmp dword ptr [ebp+1C], FFFFFFFF
+:00434BC3 57                      push edi
+:00434BC4 8986E87A6900            mov dword ptr [esi+00697AE8], eax	cursor coordinate
+:00434BCA 8B4510                  mov eax, dword ptr [ebp+10]
+:00434BCD 8986EC7A6900            mov dword ptr [esi+00697AEC], eax	cursor coordinate
+:00434BD3 0F8496000000            je 00434C6F
+...
+
+
+Immo Rune init:
+
+:0043023E 55                      push ebp
+:0043023F 8BEC                    mov ebp, esp
+:00430241 56                      push esi
+:00430242 8BC2                    mov eax, edx				char coordinate
+:00430244 FF7510                  push [ebp+10]				cursor coordinate
+:00430247 8B5508                  mov edx, dword ptr [ebp+08]		char coordinate
+:0043024A 8BF1                    mov esi, ecx
+:0043024C FF750C                  push [ebp+0C]				cursor coordinate
+:0043024F 8BC8                    mov ecx, eax
+:00430251 E8713D0100              call 00443FC7				check LOF
+:00430256 85C0                    test eax, eax
+:00430258 744F                    je 004302A9
+:0043025A 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:0043025D 85C9                    test ecx, ecx
+:0043025F 7C08                    jl 00430269
+:00430261 6A29                    push 00000029
+:00430263 5A                      pop edx
+:00430264 E893BD0300              call 0046BFFC
+...
+
+
+Nova Rune init:
+
+:004301BE 55                      push ebp
+:004301BF 8BEC                    mov ebp, esp
+:004301C1 56                      push esi
+:004301C2 8BC2                    mov eax, edx
+:004301C4 FF7510                  push [ebp+10]
+:004301C7 8B5508                  mov edx, dword ptr [ebp+08]
+:004301CA 8BF1                    mov esi, ecx
+:004301CC FF750C                  push [ebp+0C]
+:004301CF 8BC8                    mov ecx, eax
+:004301D1 E8F13D0100              call 00443FC7				check LOF
+:004301D6 85C0                    test eax, eax
+:004301D8 744F                    je 00430229				jmp to terminate and exit
+:004301DA 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004301DD 85C9                    test ecx, ecx
+:004301DF 7C08                    jl 004301E9				skip manacost if [ebp+1C] = 00000000
+:004301E1 6A12                    push 00000012
+:004301E3 5A                      pop edx
+:004301E4 E813BE0300              call 0046BFFC
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:004301DF(C)
+:004301E9 8D4510                  lea eax, dword ptr [ebp+10]
+:004301EC 6A0A                    push 0000000A
+:004301EE 50                      push eax
+:004301EF 8D550C                  lea edx, dword ptr [ebp+0C]
+:004301F2 8BCE                    mov ecx, esi
+:004301F4 E84FFEFFFF              call 00430048
+:004301F9 84C0                    test al, al
+:004301FB 742C                    je 00430229
+:004301FD 69F6B0000000            imul esi, 000000B0
+:00430203 8B5510                  mov edx, dword ptr [ebp+10]			cursor coordinate
+:00430206 8B4D0C                  mov ecx, dword ptr [ebp+0C]			cursor coordinate
+:00430209 C786E87A69002A000000    mov dword ptr [esi+00697AE8], 0000002A	store Nova spell effect
+:00430213 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:0043021A 6A08                    push 00000008
+:0043021C E853C6FFFF              call 0042C874
+:00430221 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:00430227 EB10                    jmp 00430239
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:004301D8(C), :004301FB(C)
+:00430229 69F6B0000000            imul esi, 000000B0
+:0043022F C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00430227(U)
+:00430239 5E                      pop esi
+:0043023A 5D                      pop ebp
+:0043023B C21C00                  ret 001C
+
+

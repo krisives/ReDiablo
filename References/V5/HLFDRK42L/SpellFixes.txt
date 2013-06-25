@@ -1,0 +1,47 @@
+Correcting the wrong charge- and manacost for Charged Bolt spell:
+
+file offset 00033F3C
+
+:00434B3C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00434B3F 6A1E                    push 0000001E
+:00434B41 E92A760300              jmp 0046C170
+:00434B46 90                      nop
+:00434B47 90                      nop
+:00434B48 90                      nop
+:00434B49 90                      nop
+:00434B4A 90                      nop
+changed into
+:00434B3C E935760300              jmp 0046C176
+:00434B41 10*90                   10*nop
+
+file offset 0006B570
+
+:0046C170 5A                      pop edx
+:0046C171 E886FEFFFF              call 0046BFFC
+changed into
+:0046C170 909090909090            6*nop
+
+file offset 0002F561
+
+:00430161 6A30                    push 00000030
+changed into
+:00430161 6A1E                    push 0000001E
+
+
+Changing the icon for Blood Wave:
+
+00093610 1B01 0203 0405 0607 0809 1C0D 0C11 100E ................
+00093620 300F 0B16 1315 2218 1914 1A1D 2526 272A 0.....".....%&'*
+00093630 2928 0A24 1E31 0F32 2E2F 2B2D 2312 3323 )(.$.1.2./+-#.3#
+00093640 2323 2323                               ####
+changed into
+0009361F 21                                      !
+
+Lower speed for Blood Wave, to enhance usefulness and display:
+
+file offset 00032603
+
+:00433203 6A10                    push 00000010
+changed into
+:00433203 6A0A                    push 0000000A
+

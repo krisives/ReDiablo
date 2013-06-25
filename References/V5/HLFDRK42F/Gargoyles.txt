@@ -1,0 +1,323 @@
+Fixing Gargoyle AI to let Gargoyle types enter Stone State when not active
+
+
+Adjusting Gargoyle AI code:
+
+If not active and not in Stone State, enter Stone State.
+
+file offset 00040E28
+
+:00441A28 8A86A0000000            mov al, byte ptr [esi+000000A0]
+:00441A2E 84C0                    test al, al
+:00441A30 745B                    je 00441A8D
+changed into
+:00441A28 E958910300              jmp 0047AB85
+:00441A2D 9090909090 
+
+Using free space from Command File code:
+
+file offset 00079F85
+
+:0047AB85 90                      nop
+:0047AB86 90                      nop
+:0047AB87 59                      pop ecx
+:0047AB88 3BC3                    cmp eax, ebx
+:0047AB8A 7509                    jne 0047AB95
+:0047AB8C 49                      dec ecx
+:0047AB8D 75D5                    jne 0047AB64
+:0047AB8F 33C9                    xor ecx, ecx
+:0047AB91 3BC3                    cmp eax, ebx
+:0047AB93 7409                    je 0047AB9E
+:0047AB95 B9FFFFFFFF              mov ecx, FFFFFFFF
+:0047AB9A 7202                    jb 0047AB9E
+:0047AB9C F7D9                    neg ecx
+:0047AB9E 58                      pop eax
+:0047AB9F 0BC0                    or eax, eax
+:0047ABA1 7509                    jne 0047ABAC
+:0047ABA3 F0                      lock
+:0047ABA4 FF0DD0197000            dec dword ptr [007019D0]
+:0047ABAA EB0E                    jmp 0047ABBA
+changed into
+:0047AB85 8A86A0000000            mov al, byte ptr [esi+000000A0]
+:0047AB8B 84C0                    test al, al
+:0047AB8D 0F859F6EFCFF            jne 00441A32
+:0047AB93 F6869C00000004          test byte ptr [esi+0000009C], 04
+:0047AB9A 750A                    jne 0047ABA6
+:0047AB9C 837E0400                cmp dword ptr [esi+04], 00000000
+:0047ABA0 0F844F6FFCFF            je 00441AF5
+:0047ABA6 E95E6FFCFF              jmp 00441B09
+:0047ABAB 90                      nop
+
+
+Adjusting Gargoyle Regeneration routine:
+
+If not active, set flags for Stone Mode and exit to prevent awakening when not damaged.
+
+file offset 3DE3D
+
+:0043EA3D 8BB0F8DC6900            mov esi, dword ptr [eax+0069DCF8]
+:0043EA43 8BB81CDD6900            mov edi, dword ptr [eax+0069DD1C]
+:0043EA49 8D901CDD6900            lea edx, dword ptr [eax+0069DD1C]
+:0043EA4F 83E1FD                  and ecx, FFFFFFFD
+:0043EA52 03FE                    add edi, esi
+:0043EA54 8BB018DD6900            mov esi, dword ptr [eax+0069DD18]
+:0043EA5A 83C904                  or ecx, 00000004
+:0043EA5D 3BFE                    cmp edi, esi
+:0043EA5F 898824DD6900            mov dword ptr [eax+0069DD24], ecx
+changed into
+:0043EA3D 83E1FD                  and ecx, FFFFFFFD
+:0043EA40 83C904                  or ecx, 00000004
+:0043EA43 898824DD6900            mov dword ptr [eax+0069DD24], ecx
+:0043EA49 E96F390100              jmp 004523BD
+:0043EA4E 90                      nop
+:0043EA4F 8BB81CDD6900            mov edi, dword ptr [eax+0069DD1C]
+:0043EA55 8D901CDD6900            lea edx, dword ptr [eax+0069DD1C]
+:0043EA5B 03FE                    add edi, esi
+:0043EA5D 8BB018DD6900            mov esi, dword ptr [eax+0069DD18]
+:0043EA63 3BFE                    cmp edi, esi
+
+Using free space from Eldritch Shrine modifications:
+
+file offset 000517BD
+
+:004523BD 90                      nop
+:004523BE 81450874010000          add dword ptr [ebp+08], 00000174
+:004523C5 FF4DF8                  dec [ebp-08]
+:004523C8 0F8502FFFFFF            jne 004522D0
+:004523CE B118                    mov cl, 18
+:004523D0 E98C070000              jmp 00452B61
+changed into
+:004523BD 80B828DD690000          cmp byte ptr [eax+0069DD28], 00
+:004523C4 0F84ACC6FEFF            je 0043EA76
+:004523CA 8BB0F8DC6900            mov esi, dword ptr [eax+0069DCF8]
+:004523D0 E97AC6FEFF              jmp 0043EA4F
+
+
+Reversing effect from Subtype on distance for awakening:
+
+file offset 00040E62
+
+:00441A62 41                      inc ecx
+:00441A63 41                      inc ecx
+:00441A64 3BC1                    cmp eax, ecx
+:00441A66 0F8D9D000000            jnl 00441B09					do not awake if D > SubType+2
+:00441A6C 57                      push edi
+:00441A6D E85E910300              call 0047ABD0
+:00441A72 59                      pop ecx
+:00441A73 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]
+:00441A7A 41                      inc ecx
+:00441A7B 41                      inc ecx
+:00441A7C 3BC1                    cmp eax, ecx
+changed into
+:00441A62 F7D9                    neg ecx
+:00441A64 83C106                  add ecx, 00000006
+:00441A67 3BC1                    cmp eax, ecx
+:00441A69 0F8D9A000000            jnl 00441B09					do not awake if D > 6-SubType
+:00441A6F 57                      push edi
+:00441A70 E85B910300              call 0047ABD0
+:00441A75 3BC1                    cmp eax, ecx
+:00441A77 59                      pop ecx
+:00441A78 909090909090            6*nop
+
+
+Gargoyle AI according to JG:
+
+By stone state is meant when in actual stone form. By stone mode is meant both when in stone state and while moving
+away from a target due to low HP. While in stone state, Gargoyles will heal faster than usual, see chapter 5.1.
+When finishing a circle walk, a monster using the Gargoyle attack type will start walking towards the last seen
+position of the target.
+
+Stone mode
+1. if D < Intf + 2, mark as not in stone mode
+2. if curHP >= maxHP/2, mark as not in stone mode
+3. if D >= Intf + 2, go into stone state, exit
+4. walk away from target
+General
+1. if not active, exit
+2. R = Rnd[100]
+3. if curHP < maxHP/2, go into stone mode
+Distance = 1
+1. if R >= 2텶ntf + 23, exit
+2. do melee attack
+Distance > 1, out of light
+1. if last action was walking and standtime is 0 and R < 2텶ntf + 78, walk towards last seen position of target,
+exit
+2. if standtime is greater than 1 second and R < 2텶ntf + 28, walk towards last seen position of target
+Distance 1 to 3, in light
+1. if target is in another are, use out of light AI
+2. if last action was walking and standtime is 0 and R < 2텶ntf + 78, walk towards last seen position of target,
+exit
+3. if standtime is greater than 1 second and R < 2텶ntf + 28, walk towards last seen position of target
+Distance > 1, in light
+1. if target is in another are, use out of light AI
+2. if D > 3 and Rnd[4] = 0, start circle walk, exit
+3. if last action was walking and standtime is 0 and R < 2텶ntf + 78, walk towards last seen position of target,
+exit
+4. if standtime is greater than 1 second and R < 2텶ntf + 28, walk towards last seen position of target
+
+
+Original Gargoyle AI code:
+
+:004419EC 51                      push ecx
+:004419ED 53                      push ebx
+:004419EE 55                      push ebp
+:004419EF 8BE9                    mov ebp, ecx
+:004419F1 56                      push esi
+:004419F2 81FDC8000000            cmp ebp, 000000C8
+:004419F8 57                      push edi
+:004419F9 0F830A010000            jnb 00441B09
+:004419FF 8BF5                    mov esi, ebp
+:00441A01 69F6E4000000            imul esi, 000000E4
+:00441A07 81C688DC6900            add esi, 0069DC88
+:00441A0D 8B7E20                  mov edi, dword ptr [esi+20]
+:00441A10 8B5E24                  mov ebx, dword ptr [esi+24]
+:00441A13 2BBEA8000000            sub edi, dword ptr [esi+000000A8]
+:00441A19 2B9EAC000000            sub ebx, dword ptr [esi+000000AC]
+:00441A1F E840B6FFFF              call 0043D064
+:00441A24 89442410                mov dword ptr [esp+10], eax
+:00441A28 8A86A0000000            mov al, byte ptr [esi+000000A0]		activation counter
+:00441A2E 84C0                    test al, al
+:00441A30 745B                    je 00441A8D					jump if not active
+:00441A32 F6869C00000004          test byte ptr [esi+0000009C], 04		
+:00441A39 7452                    je 00441A8D					jump if 'special' flag not 04
+:00441A3B 8BCD                    mov ecx, ebp
+:00441A3D E88CAEFFFF              call 0043C8CE
+:00441A42 0FB64651                movzx eax, byte ptr [esi+51]
+:00441A46 8B7E24                  mov edi, dword ptr [esi+24]
+:00441A49 8B4E20                  mov ecx, dword ptr [esi+20]
+:00441A4C 2BF8                    sub edi, eax
+:00441A4E 0FB64650                movzx eax, byte ptr [esi+50]
+:00441A52 2BC8                    sub ecx, eax
+:00441A54 51                      push ecx
+:00441A55 E876910300              call 0047ABD0
+:00441A5A 59                      pop ecx
+:00441A5B 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]		attack subtype
+:00441A62 41                      inc ecx
+:00441A63 41                      inc ecx
+:00441A64 3BC1                    cmp eax, ecx
+:00441A66 0F8D9D000000            jnl 00441B09					exit routine if D > subtype+2
+:00441A6C 57                      push edi
+:00441A6D E85E910300              call 0047ABD0
+:00441A72 59                      pop ecx
+:00441A73 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]
+:00441A7A 41                      inc ecx
+:00441A7B 41                      inc ecx
+:00441A7C 3BC1                    cmp eax, ecx
+:00441A7E 0F8D85000000            jnl 00441B09					exit routine if D > subtype+2
+:00441A84 83A69C000000FB          and dword ptr [esi+0000009C], FFFFFFFB	clear 04 from 'special' flag
+:00441A8B EB7C                    jmp 00441B09
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00441A30(C), :00441A39(C)
+|
+:00441A8D 837E0400                cmp dword ptr [esi+04], 00000000
+:00441A91 7576                    jne 00441B09					exit if 'special' flag <>0
+:00441A93 84C0                    test al, al
+:00441A95 7472                    je 00441B09					exit routine if inactive
+:00441A97 8B8690000000            mov eax, dword ptr [esi+00000090]		original life
+:00441A9D D1F8                    sar eax, 1
+:00441A9F 398694000000            cmp dword ptr [esi+00000094], eax		current life
+:00441AA5 7D04                    jge 00441AAB					jump if curlife > orglife/2
+:00441AA7 C6460802                mov [esi+08], 02				set 'damaged' flag
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00441AA5(C)
+|
+:00441AAB 807E0802                cmp byte ptr [esi+08], 02
+:00441AAF 754F                    jne 00441B00					jump if not 'damaged'
+:00441AB1 57                      push edi
+:00441AB2 E819910300              call 0047ABD0
+:00441AB7 59                      pop ecx
+:00441AB8 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]
+:00441ABF 41                      inc ecx
+:00441AC0 41                      inc ecx
+:00441AC1 3BC1                    cmp eax, ecx
+:00441AC3 7D30                    jge 00441AF5					jump if D >= subtype+2
+:00441AC5 53                      push ebx
+:00441AC6 E805910300              call 0047ABD0
+:00441ACB 59                      pop ecx
+:00441ACC 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]
+:00441AD3 41                      inc ecx
+:00441AD4 41                      inc ecx
+:00441AD5 3BC1                    cmp eax, ecx
+:00441AD7 7D1C                    jge 00441AF5					jump if D >= subtype+2
+:00441AD9 8B442410                mov eax, dword ptr [esp+10]
+:00441ADD 8BCD                    mov ecx, ebp
+:00441ADF 8B148520374B00          mov edx, dword ptr [4*eax+004B3720]
+:00441AE6 E84CDEFFFF              call 0043F937
+:00441AEB 85C0                    test eax, eax
+:00441AED 7511                    jne 00441B00
+:00441AEF C6460801                mov [esi+08], 01
+:00441AF3 EB0B                    jmp 00441B00
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00441AC3(C), :00441AD7(C)
+|
+:00441AF5 8BCD                    mov ecx, ebp
+:00441AF7 C6460801                mov [esi+08], 01
+:00441AFB E80F000000              call 00441B0F					enter Stone mode
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00441AAF(C), :00441AED(C), :00441AF3(U)
+|
+:00441B00 33D2                    xor edx, edx
+:00441B02 8BCD                    mov ecx, ebp
+:00441B04 E873F6FFFF              call 0044117C					normal combat mode
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004419F9(C), :00441A66(C), :00441A7E(C), :00441A8B(U), :00441A91(C)
+|:00441A95(C)
+|
+:00441B09 5F                      pop edi
+:00441B0A 5E                      pop esi
+:00441B0B 5D                      pop ebp
+:00441B0C 5B                      pop ebx
+:00441B0D 59                      pop ecx
+:00441B0E C3                      ret
+
+
+Original Gargoyle Regeneration:
+
+* Referenced by a CALL at Address:
+|:00443AAC   
+|
+:0043EA14 8BC1                    mov eax, ecx
+:0043EA16 56                      push esi
+:0043EA17 3DC8000000              cmp eax, 000000C8
+:0043EA1C 57                      push edi
+:0043EA1D 7361                    jnb 0043EA80
+:0043EA1F 69C0E4000000            imul eax, 000000E4
+:0043EA25 F68024DD690008          test byte ptr [eax+0069DD24], 08			'Vileness' flag
+:0043EA2C 7552                    jne 0043EA80
+:0043EA2E 83B8ECDC690001          cmp dword ptr [eax+0069DCEC], 00000001
+:0043EA35 7549                    jne 0043EA80
+:0043EA37 8B8824DD6900            mov ecx, dword ptr [eax+0069DD24]
+:0043EA3D 8BB0F8DC6900            mov esi, dword ptr [eax+0069DCF8]
+:0043EA43 8BB81CDD6900            mov edi, dword ptr [eax+0069DD1C]
+:0043EA49 8D901CDD6900            lea edx, dword ptr [eax+0069DD1C]
+:0043EA4F 83E1FD                  and ecx, FFFFFFFD
+:0043EA52 03FE                    add edi, esi
+:0043EA54 8BB018DD6900            mov esi, dword ptr [eax+0069DD18]
+:0043EA5A 83C904                  or ecx, 00000004
+:0043EA5D 3BFE                    cmp edi, esi
+:0043EA5F 898824DD6900            mov dword ptr [eax+0069DD24], ecx
+:0043EA65 7D04                    jge 0043EA6B
+:0043EA67 893A                    mov dword ptr [edx], edi
+:0043EA69 EB15                    jmp 0043EA80
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043EA65(C)
+|
+:0043EA6B 83E1FB                  and ecx, FFFFFFFB
+:0043EA6E 8932                    mov dword ptr [edx], esi
+:0043EA70 898824DD6900            mov dword ptr [eax+0069DD24], ecx
+:0043EA76 C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007		(ASM bug ebx=eax)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043EA1D(C), :0043EA2C(C), :0043EA35(C), :0043EA69(U)
+|
+:0043EA80 5F                      pop edi
+:0043EA81 33C0                    xor eax, eax
+:0043EA83 5E                      pop esi
+:0043EA84 C3                      ret
+

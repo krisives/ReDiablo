@@ -1,0 +1,140 @@
+FireBall (with Splash)
+
+SpellBook Damage        = (CLVL+2+Rnd[10]+Rnd[10])*2*(9/8)^SLVL
+Real Damage             = (CLVL+4+Rnd[10]+Rnd[10])*2*(9/8)^SLVL         
+
+Elemental (no Splash)
+
+SpellBook Damage        = (CLVL+2+Rnd[10]+Rnd[10])*2*(9/8)^SLVL        
+Real Damage             = (CLVL+2+Rnd[10]+Rnd[10])*(9/8)^SLVL
+
+Immolation (with Splash)
+
+SpellBook Damage        = ((Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+CLVL+5)/2)*5*(9/8)^SLVL 
+Real Damage (char/rune) = ((Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+CLVL+5)/2)*2*(9/8)^SLVL 
+Real Damage (unused)    = (Rnd[3]+Rnd[3]+Rnd[3]+Diff(DLVL))*2
+
+Nova (no Splash)
+
+SpellBook Damage        = ((Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+CLVL+5)/2)*5*(9/8)^SLVL 
+Real Damage (char/rune) = ((Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+CLVL+5)/2)*(9/8)^SLVL 
+Real Damage (trap)      = Rnd[3]+Rnd[3]+Rnd[3]+Diff(DLVL) 
+
+
+
+Changing Real Damages:
+
+
+FireBall   (CLVL+4+Rnd[10]+Rnd[10])*2*(9/8)^SLVL
+        -> (CLVL+1+Rnd[6]+Rnd[6])*2*(9/8)^SLVL  
+
+File Offset 00031209
+
+:00431E09 6A0A                    push 0000000A
+wordt
+:00431E09 6A06                    push 00000006
+
+File Offset 0003121F
+
+:00431E1F 6A0A                    push 0000000A
+wordt
+:00431E1F 6A06                    push 00000006
+
+File Offset 00031243
+
+:00431E43 8D4604                  lea eax, dword ptr [esi+04]
+wordt
+:00431E43 8D4601                  lea eax, dword ptr [esi+01]
+
+
+Nova/Imm   ((Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+CLVL+5)/2)*(9/8)^SLVL
+        -> ((Rnd[15]+Rnd[15]+Rnd[15]+Rnd[15]+Rnd[15]+CLVL+5)/2)*(9/8)^SLVL
+
+File Offset 00033FD9
+
+:00434BD9 6A06                    push 00000006
+wordt
+:00434BD9 6A0F                    push 0000000F
+
+
+Nova Trap  Rnd[3]+Rnd[3]+Rnd[3]+Diff(DLVL) 
+        -> Rnd[8]+Rnd[8]+Rnd[8]+Diff(DLVL) 
+
+File Offset 0003406F
+
+:00434C6F 6A03                    push 00000003
+wordt
+:00434C6F 6A08                    push 00000008
+
+File Offset 0003407D
+
+:00434C7D 6A03                    push 00000003
+wordt
+:00434C7D 6A08                    push 00000008
+
+File Offset 00034089
+
+:00434C89 6A03                    push 00000003
+wordt
+:00434C89 6A08                    push 00000008
+
+
+Correcting SpellBook Damages:
+
+
+FireBall   (CLVL+2+Rnd[10]+Rnd[10])*2*(9/8)^SLVL
+        -> (CLVL+1+Rnd[6]+Rnd[6])*2*(9/8)^SLVL
+
+File Offset 0002DE57
+
+:0042EA57 8D440004                lea eax, dword ptr [eax+eax+04]
+wordt
+:0042EA57 8D440002                lea eax, dword ptr [eax+eax+02]
+
+File Offset 0002DE8A
+
+:0042EA8A 8D4C0028                lea ecx, dword ptr [eax+eax+28]
+wordt
+:0042EA8A 8D4C0015                lea ecx, dword ptr [eax+eax+15]
+
+            
+Elemental  (CLVL+2+Rnd[10]+Rnd[10])*2*(9/8)^SLVL
+        -> (CLVL+2+Rnd[10]+Rnd[10])*(9/8)^SLVL
+
+File Offset 0002E0AA
+
+:0042ECAA 8D440004                lea eax, dword ptr [eax+eax+04]
+wordt
+:0042ECAA 40                      inc eax
+:0042ECAB 40                      inc eax
+:0042ECAC 9090                    2*nop
+         
+File Offset 0002E0DD
+
+:0042ECDD 8D4C0028                lea ecx, dword ptr [eax+eax+28]
+wordt
+:0042ECDD 8D4814                  lea ecx, dword ptr [eax+14]
+:0042ECE0 90                      nop
+
+
+Nova/Imm   ((Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+Rnd[6]+CLVL+5)/2)*5*(9/8)^SLVL 
+        -> ((Rnd[15]+Rnd[15]+Rnd[15]+Rnd[15]+Rnd[15]+CLVL+5)/2)*(9/8)^SLVL 
+
+File Offset 0002DF8F
+
+:0042EB8F 8D0480                  lea eax, dword ptr [eax+4*eax]
+wordt
+:0042EB8F 909090                  3*nop
+
+File Offset 0002DFB0
+
+:0042EBB0 83C11E                  add ecx, 0000001E
+wordt
+:0042EBB0 83C14B                  add ecx, 0000004B
+
+File Offset 0002DFCB
+
+:0042EBCB 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+wordt
+:0042EBCB 909090                  3*nop
+

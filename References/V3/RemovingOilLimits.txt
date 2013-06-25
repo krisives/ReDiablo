@@ -1,0 +1,60 @@
+Removing Oil Limits
+
+Limits are not needed, as all is stored in Dword and any benefit is lost with a new game. Makes Oils usable again for higher level characters.
+
+
+Accuracy	Adds 1-2% To Hit (if < 50)	 ->	no check
+Mastery		Adds 3-5% To Hit (if < 100)	 ->	no check	
+Sharpness	Adds 1 to maxdam (if max-min<30) ->	if max-min < 120
+Death		Adds 1 to mindame and 2 to maxdam (if max-min<30)	idem as Sharpness
+Hardening	Adds 1-2 AC (if < 60)		 ->     no check
+Imperviousness	Adds 3-5 AC (if < 120)		 ->     no check
+
+
+File Offset 0002784C
+
+:0042844C 83FA1E                  cmp edx, 0000001E
+wordt
+:0042844C 83FA78                  cmp edx, 00000078
+
+File Offset 00027875
+
+:00428475 83FF1E                  cmp edi, 0000001E		
+wordt
+:00428475 83FF78                  cmp edi, 00000078
+
+File Offset 00027987
+
+:00428587 7D22                    jge 004285AB
+wordt
+:00428587 7D00                    jge 00428589
+
+File Offset 0002799C
+
+:0042859C 7D0D                    jge 004285AB
+wordt
+:0042859C 7D00                    jge 0042859E
+
+
+Oils by JG
+
+Oil(1)			Cost	qlvl	Effect2	
+Blacksmith Oil(3)	100	1	Restores 20% of dur or add 1 to max dur	(if < 100)
+Oil of Accuracy		500	1	Adds 1-2% To Hit (if < 50)	
+Oil of  Sharpness	500	1	Adds 1 to max damage (if < 30)	
+Fortitude(3,2) 		500	5	Adds 10-50 to max and current durability (if < 200)	
+Permanence(3,4)		15000	17	Makes an item indestructible	
+Accuracy(4)		500	1	Adds 1-2% To Hit (if < 50)	
+Mastery(4)		2500	10	Adds 3-5% To Hit (if < 100)	
+Hardening(4)		2500	1	Adds 1-2 AC (if < 60)	
+Imperviousness(4)	2500	10	Adds 3-5 AC (if < 120)	
+Sharpness(4,5)		500	1	Adds 1 to max damage (if max-min < 30)
+Death(4,5)		2500	10	Adds 1 to min dame and 2 to max dam (if max-min<30)
+Skill(4,6)		1500	4	Decreases all requirements by 5-10 (may reach 0)
+
+1	Oils cannot be bought, only found in the dungeons.
+2	Only affects the item it is used on.
+3	Effect is permanent and carries over when you restart a new game.
+4	Only exists in single player.
+5	It is the difference between min and max damage that must be less than 30.
+6	All requirements are lowered by the same amount.

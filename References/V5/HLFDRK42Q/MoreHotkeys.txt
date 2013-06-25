@@ -1,0 +1,477 @@
+New fixed accelorator keys are added, and the existing ones for F1-F4 are adjusted. All will now support Skill, Item and Scroll, as well as Spell.
+
+Pressing key actions do not demand high performance, so these modifications use many different code places to fill up free space (hence the many jumps).
+
+
+Adding new hotkeys:				keycode
+
+A               Escape          (19h)  		41h				
+Q		Invincibility	(13h)		51h	(before: Questlog in SP)
+W		Firewall	(06h)		57h					
+E		Lightningwall	(28h)		45h 				
+R		Arcaneflames	(20h)		52h					
+T		Blood Wave	(0Fh)		54h				
+Y		Golem     	(15h)		59h		
+U               Charm		(10h)  		55h		
+
+
+Adjusting F1-F4 Class hotkeys:
+
+Warrior 
+F1:Healing			
+F2:Teleport 			
+F3:Barrier			
+F4:Stone Curse			
+Rogue
+F1:Healing			
+F2:Teleport			
+F3:Telekinesis SKILL
+F4:Stone Curse 			
+Sorcerer
+F1:Golem				-> Mana Shield
+F2:Teleport			
+F3:Mana Shield				-> Medusa Gaze
+F4:Stone Curse			
+Monk
+F1:Escape SKILL		        	-> Mana Shield
+F2:Teleport			
+F3:Mana Shield				-> Barrier
+F4:Stone Curse			
+Bard
+F1:Golem				-> Mana Shield
+F2:Teleport			
+F3:Mana Shield				-> Medusa Gaze
+F4:Stone Curse			
+Barbarian
+F1:Healing SKILL 		
+F2:Teleport 			
+F3:Barrier 			
+F4:Stone Curse 			
+
+
+Spell numbers:
+
+000A52EA 0217 2B08 0217 2108 1517 0B08 1917 0B08 ..+...!.........
+000A52FA 1517 0B08 0217 2B08 0000 0000 0000 0000 ......+.........
+changed into
+000A52EA 0217 2B08 0217 2108 0B17 0A08 0B17 2B08 ..+...!.......+.
+000A52FA 0B17 0A08 0217 2B08 1320 190F 1028 0615 ......+.. ...(..
+
+
+Skill indicators:
+
+000A5323 0101 0101 0101 0001 0101 0101 0001 0101 ................
+000A5333 0101 0101 0001 0101 0000 0000 00        .............
+changed into
+000A5323 1A21 1B19 0502 0000 0000 0000 0000 0000 .!..............
+000A5333 0000 0000 0000 0000 0000 0000 00        .............
+
+
+file offset 0000A02C
+
+:0040AC2C 0F84AE000000            je 0040ACE0
+changed into
+:0040AC2C E9DAF30100              jmp 0042A00B
+:0040AC31 5B                      pop ebx
+
+Using free space from adjusted Rune clicking:
+
+file offset 0002940B
+
+:0042A00B 69C0C8550000            imul eax, 000055C8
+:0042A011 C78401AC0000002F000000  mov dword ptr [ecx+eax+000000AC], 0000002F
+changed into
+:0042A00B 0F84CF0CFEFF            je 0040ACE0
+:0042A011 53                      push ebx
+:0042A012 E8670B0500              call 0047AB7E
+:0042A017 E9150CFEFF              jmp 0040AC31
+:0042A01C
+
+file offset 00079F7E
+
+:0047AB7E 90909090909090          7*nop
+changed into
+:0047AB7E 4B                      dec ebx
+:0047AB7F 4B                      dec ebx
+:0047AB80 EB29                    jmp 0047ABAB
+:0047AB82 909090                  3*nop
+
+file offset 00009FAD
+
+:0040ABAD 83EB40                  sub ebx, 00000040
+:0040ABB0 7407                    je 0040ABB9
+changed into
+:0040ABAD E93EF40100              jmp 00429FF0
+:0040ABB2
+
+Using free space from adjusted Rune clicking:
+
+file offset 000293F0
+
+:00429FF0 69C0C8550000            imul eax, 000055C8
+:00429FF6 C78401AC00000030000000  mov dword ptr [ecx+eax+000000AC], 00000030
+:0042A001 EB19                    jmp 0042A01C
+changed into
+:00429FF0 83EB40                  sub ebx, 00000040
+:00429FF3 0F84C00BFEFF            je 0040ABB9
+:00429FF9 E8AD0B0500              call 0047ABAB
+:00429FFE E9AF0BFEFF              jmp 0040ABB2
+:0042A003
+
+Using last free space from obsolete command file code:
+
+file offset 00079FAB
+
+:0047ABAB 90909090                4*nop
+:0047ABAF 894664                  mov dword ptr [esi+64], eax
+:0047ABB2 E9526FFCFF              jmp 00441B09
+:0047ABB7 909090                  3*nop
+:0047ABBA 8BC1                    mov eax, ecx
+:0047ABBC 5B                      pop ebx
+:0047ABBD 5E                      pop esi
+:0047ABBE 5F                      pop edi
+:0047ABBF C9                      leave
+:0047ABC0 C3                      ret
+changed into
+:0047ABAB 83FB01                  cmp ebx, 00000001
+:0047ABAE 740A                    je 0047ABBA
+:0047ABB0 83FB05                  cmp ebx, 00000005
+:0047ABB3 0F84726FFDFF            je 00451B2B					E = 5
+:0047ABB9 C3                      ret
+:0047ABBA 53                      push ebx
+:0047ABBB 43                      inc ebx
+:0047ABBC E96B6FFDFF              jmp 00451B2C					A = 2
+:0047ABC1
+
+file offset 00009FF9
+
+:0040ABF9 0F84D7010000            je 0040ADD6					
+changed into
+:0040ABF9 E8EE8C0400              call 004538EC
+:0040ABFE 90                      nop
+
+file offset 0000A122
+
+:0040AD22 0F84AE000000            je 0040ADD6
+changed into
+:0040AD22 E8C58B0400              call 004538EC
+:0040AD27 90                      nop
+
+Using free space from 'Nakrul' books:
+
+file offset 00052CEC
+
+:004538EC 90                      nop
+:004538ED 90                      nop
+:004538EE 90                      nop
+:004538EF 90                      nop
+:004538F0 7434                    je 00453926
+:004538F2 E80D120000              call 00454B04
+:004538F7 84C0                    test al, al
+:004538F9 742B                    je 00453926
+:004538FB B264                    mov dl, 64
+:004538FD 33C9                    xor ecx, ecx
+:004538FF E87A34FFFF              call 00446D7E
+:00453904 EB35                    jmp 0045393B
+:00453906 3C15                    cmp al, 15
+:00453908 721C                    jb 00453926
+:0045390A 8B861CE66D00            mov eax, dword ptr [esi+006DE61C]
+:00453910 C605A6B56E0002          mov byte ptr [006EB5A6], 02
+changed into
+:004538EC 741A                    je 00453908					Q = 0
+:004538EE 83FB01                  cmp ebx, 00000001
+:004538F1 7415                    je 00453908					R = 1
+:004538F3 83FB03                  cmp ebx, 00000003
+:004538F6 7410                    je 00453908					T = 3
+:004538F8 83FB04                  cmp ebx, 00000004
+:004538FB 740B                    je 00453908					U = 4
+:004538FD 83FB06                  cmp ebx, 00000006
+:00453900 7406                    je 00453908					W = 6
+:00453902 83FB08                  cmp ebx, 00000008
+:00453905 7406                    je 0045390D					
+:00453907 C3                      ret
+:00453908 E91EE2FFFF              jmp 00451B2B					
+:0045390D 53                      push ebx
+:0045390E 4B                      dec ebx
+:0045390F E918E2FFFF              jmp 00451B2C					Y = 7
+:00453914 909090                  3*nop
+
+
+Using free space from Gloomy Shrine:
+
+file offset 00050F2B
+
+:00451B2B FF89A00B0000            dec dword ptr [ecx+00000BA0]
+:00451B31 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451B37 8D1401                  lea edx, dword ptr [ecx+eax]
+:00451B3A 8D8AA00B0000            lea ecx, dword ptr [edx+00000BA0]
+:00451B40 8B929C0B0000            mov edx, dword ptr [edx+00000B9C]
+:00451B46 3911                    cmp dword ptr [ecx], edx
+:00451B48 7D02                    jge 00451B4C
+:00451B4A 8911                    mov dword ptr [ecx], edx
+changed into
+:00451B2B 53                      push ebx
+:00451B2C 380DC4EC6F00            cmp byte ptr [006FECC4], cl
+:00451B32 7402                    je 00451B36
+:00451B34 5B                      pop ebx
+:00451B35 C3                      ret
+:00451B36 51                      push ecx
+:00451B37 8BCB                    mov ecx, ebx
+:00451B39 0FB68902694A00          movzx ecx, byte ptr [ecx+004A6902]		spell number
+:00451B40 50                      push eax
+:00451B41 51                      push ecx
+:00451B42 E81F29FFFF              call 00444466					eax = local character
+:00451B47 E98A92FBFF              jmp 0040ADD6					
+:00451B4C
+
+file offset 0000A1D6
+
+:0040ADD6 E949750400              jmp 00452324
+:0040ADDB 90                      nop
+:0040ADDC 90                      nop
+:0040ADDD 90                      nop
+:0040ADDE 90                      nop
+:0040ADDF 90                      nop
+:0040ADE0 90                      nop
+:0040ADE1 90                      nop
+:0040ADE2 390D4CB36E00            cmp dword ptr [006EB34C], ecx
+:0040ADE8 890DE0124D00            mov dword ptr [004D12E0], ecx
+:0040ADEE 750A                    jne 0040ADFA
+:0040ADF0 E89B5C0500              call 00460A90
+:0040ADF5 E9B3FEFFFF              jmp 0040ACAD
+:0040ADFA 890D4CB36E00            mov dword ptr [006EB34C], ecx
+:0040AE00 E9A8FEFFFF              jmp 0040ACAD
+changed into
+:0040ADD6 0FBE8860010000          movsx ecx, byte ptr [eax+00000160]		ecx = character class
+:0040ADDD 0FBE9923694A00          movsx ebx, byte ptr [ecx+004A6923]		skill number
+:0040ADE4 59                      pop ecx
+:0040ADE5 3BCB                    cmp ecx, ebx
+:0040ADE7 7504                    jne 0040ADED					jmp if not a skill
+:0040ADE9 33DB                    xor ebx, ebx
+:0040ADEB EB11                    jmp 0040ADFE
+:0040ADED 80BC08C100000000        cmp byte ptr [eax+ecx+000000C1], 00
+:0040ADF5 0F8E20F8FFFF            jle 0040A61B					jmp if slvl<1
+:0040ADFB 6A01                    push 00000001
+:0040ADFD 5B                      pop ebx
+:0040ADFE E921750400              jmp 00452324					spell found
+:0040AE03 9090                    2*nop
+
+Using now available space:
+
+file offset 00051724
+
+:00452324 380DC4EC6F00            cmp byte ptr [006FECC4], cl
+:0045232A 750D                    jne 00452339
+:0045232C 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:00452333 0F84A98AFBFF            je 0040ADE2
+:00452339 E96F89FBFF              jmp 0040ACAD
+changed into
+:00452324 8988B4000000            mov dword ptr [eax+000000B4], ecx
+:0045232A 8998B8000000            mov dword ptr [eax+000000B8], ebx
+:00452330 C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:0045233A 58                      pop eax
+:0045233B 59                      pop ecx
+:0045233C 5B                      pop ebx
+:0045233D C3                      ret
+
+
+Handling of F1-F4:
+
+file offset 000099EB
+
+:0040A5EB 50                      push eax
+:0040A5EC 51                      push ecx
+:0040A5ED 8BCE                    mov ecx, esi
+:0040A5EF 83E970                  sub ecx, 00000070
+:0040A5F2 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0040A5F7 69C0C8550000            imul eax, 000055C8
+:0040A5FD 030514AE6E00            add eax, dword ptr [006EAE14]
+:0040A603 50                      push eax
+:0040A604 0FBE8060010000          movsx eax, byte ptr [eax+00000160]		character class
+:0040A60B C1E002                  shl eax, 02
+:0040A60E 03C8                    add ecx, eax
+:0040A610 0FB68123694A00          movzx eax, byte ptr [ecx+004A6923]		skill indicator
+:0040A617 0FB689EA684A00          movzx ecx, byte ptr [ecx+004A68EA]		spell number
+:0040A61E 8BD8                    mov ebx, eax
+:0040A620 58                      pop eax
+:0040A621 85DB                    test ebx, ebx					
+:0040A623 740A                    je 0040A62F					jmp if skill
+:0040A625 80BC08C100000001        cmp byte ptr [eax+ecx+000000C1], 01
+:0040A62D 7C16                    jl 0040A645					exit if spell and slvl<1
+:0040A62F 8988B4000000            mov dword ptr [eax+000000B4], ecx
+:0040A635 8998B8000000            mov dword ptr [eax+000000B8], ebx
+:0040A63B C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:0040A645 59                      pop ecx
+:0040A646 58                      pop eax
+:0040A647 E9AB020000              jmp 0040A8F7
+:0040A64C
+
+changed into
+
+:0040A5EB E805000000              call 0040A5F5
+:0040A5F0 E902030000              jmp 0040A8F7
+:0040A5F5 53                      push ebx
+:0040A5F6 51                      push ecx
+:0040A5F7 50                      push eax
+:0040A5F8 8BDE                    mov ebx, esi
+:0040A5FA 83EB70                  sub ebx, 00000070
+:0040A5FD E8649E0300              call 00444466					eax = local character
+:0040A602 0FBE8860010000          movsx ecx, byte ptr [eax+00000160]		ecx = character class
+:0040A609 C1E102                  shl ecx, 02
+:0040A60C 03CB                    add ecx, ebx
+:0040A60E 0FB689EA684A00          movzx ecx, byte ptr [ecx+004A68EA]		spell number
+:0040A615 51                      push ecx
+:0040A616 E9BB070000              jmp 0040ADD6					
+:0040A61B 
+
+Now 49 bytes free space, used for searching equipped spell item:
+
+:0040A61B 50                      push eax
+:0040A61C 6A07                    push 00000007
+:0040A61E 5B                      pop ebx
+:0040A61F 83B894030000FF          cmp dword ptr [eax+00000394], FFFFFFFF
+:0040A626 7415                    je 0040A63D					next if no item there
+:0040A628 39886C040000            cmp dword ptr [eax+0000046C], ecx
+:0040A62E 750D                    jne 0040A63D					next if wrong spell
+:0040A630 83B87004000000          cmp dword ptr [eax+00000470], 00000000
+:0040A637 0F8FA2860100            jg 00422CDF				        item with charges found
+:0040A63D 0574010000              add eax, 00000174
+:0040A642 4B                      dec ebx
+:0040A643 75DA                    jne 0040A61F					next equipped item
+:0040A645 58                      pop eax
+:0040A646 E9B9A40400              jmp 00454B04					nothing found, look for scroll
+:0040A64B 90                      nop
+
+
+Using some free space from Itemspells:
+
+file offset 000220DF
+
+:00422CDF 4A                      dec edx
+:00422CE0 8910                    mov dword ptr [eax], edx
+:00422CE2 E8881A0000              call 0042476F
+:00422CE7 5E                      pop esi
+:00422CE8 C3                      ret
+changed into
+:00422CDF 58                      pop eax
+:00422CE0 6A03                    push 00000003					item with charges found
+:00422CE2 5B                      pop ebx
+:00422CE3 E93CF60200              jmp 00452324					
+:00422CE8 90                      nop
+
+
+Using obsolete code from 'Nakrul' books, to look for scrolls:
+
+file offset 00053F04
+
+:00454B04 83E906                  sub ecx, 00000006
+:00454B07 7430                    je 00454B39
+:00454B09 49                      dec ecx
+:00454B0A 7418                    je 00454B24
+:00454B0C 49                      dec ecx
+:00454B0D 7534                    jne 00454B43
+:00454B0F 833DE0E06D0002          cmp dword ptr [006DE0E0], 00000002
+:00454B16 7503                    jne 00454B1B
+:00454B18 B001                    mov al, 01
+:00454B1A C3                      ret
+:00454B1B 8325E0E06D0000          and dword ptr [006DE0E0], 00000000
+:00454B22 EB1F                    jmp 00454B43
+:00454B24 A1E0E06D00              mov eax, dword ptr [006DE0E0]
+:00454B29 48                      dec eax
+:00454B2A F7D8                    neg eax
+:00454B2C 1BC0                    sbb eax, eax
+:00454B2E 24FE                    and al, FE
+:00454B30 40                      inc eax
+:00454B31 40                      inc eax
+:00454B32 A3E0E06D00              mov dword ptr [006DE0E0], eax
+:00454B37 EB0A                    jmp 00454B43
+:00454B39 C705E0E06D0001000000    mov dword ptr [006DE0E0], 00000001
+:00454B43 32C0                    xor al, al
+:00454B45 C3                      ret
+changed into
+:00454B04 51                      push ecx
+:00454B05 57                      push edi
+:00454B06 8BF9                    mov edi, ecx
+:00454B08 BB74010000              mov ebx, 00000174
+:00454B0D 8B90D8470000            mov edx, dword ptr [eax+000047D8]		number of items in backpack
+:00454B13 85D2                    test edx, edx
+:00454B15 7E0F                    jle 00454B26					jmp belt if no items here
+:00454B17 8D88940E0000            lea ecx, dword ptr [eax+00000E94]
+:00454B1D E805750000              call 0045C027					check number of items
+:00454B22 85D2                    test edx, edx
+:00454B24 7510                    jne 00454B36					jmp if scroll found
+:00454B26 6A08                    push 00000008
+:00454B28 5A                      pop edx					number of items in belt
+:00454B29 8D88E0480000            lea ecx, dword ptr [eax+000048E0]
+:00454B2F E8F3740000              call 0045C027					check number of items
+:00454B34 85D2                    test edx, edx
+:00454B36 5F                      pop edi
+:00454B37 59                      pop ecx
+:00454B38 7504                    jne 00454B3E					jmp if scroll found
+:00454B3A 58                      pop eax
+:00454B3B 59                      pop ecx
+:00454B3C 5B                      pop ebx
+:00454B3D C3                      ret
+:00454B3E 6A02                    push 00000002					scroll found
+:00454B40 5B                      pop ebx
+:00454B41 E9DED7FFFF              jmp 00452324
+:00454B46
+
+Using free space from disabled Critical Damage in PvP:
+
+file offset 0005B425
+
+:0045C025 8A8160010000            mov al, byte ptr [ecx+00000160]
+:0045C02B 84C0                    test al, al
+:0045C02D EB1B                    jmp 0045C04A
+:0045C02F 3C05                    cmp al, 05
+:0045C031 7517                    jne 0045C04A
+:0045C033 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0045C03A 6A64                    push 00000064
+:0045C03C B106                    mov cl, 06
+:0045C03E 5A                      pop edx
+:0045C03F E816DFFBFF              call 00419F5A
+:0045C044 3BC3                    cmp eax, ebx
+:0045C046 7D02                    jge 0045C04A
+:0045C048 D1E7                    shl edi, 1
+changed into
+:0045C025 EB23                    jmp 0045C04A
+:0045C027 56                      push esi
+:0045C028 83B92CFFFFFFFF          cmp dword ptr [ecx+FFFFFF2C], FFFFFFFF	
+:0045C02F 7411                    je 0045C042					next if no item here
+:0045C031 833915                  cmp dword ptr [ecx], 00000015
+:0045C034 7405                    je 0045C03B
+:0045C036 833916                  cmp dword ptr [ecx], 00000016
+:0045C039 7507                    jne 0045C042					next if not a scroll
+:0045C03B E811210100              call 0046E151
+:0045C040 7405                    je 0045C047					exit if matching scroll
+:0045C042 03CB                    add ecx, ebx
+:0045C044 4A                      dec edx
+:0045C045 7FE1                    jg 0045C028
+:0045C047 5E                      pop esi
+:0045C048 C3                      ret
+:0045C049 90                      nop 
+
+Using some free space from Itemspells:
+
+file offset 006D551
+
+:0046E151 909090909090            6*nop
+:0046E157 7511                    jne 0046E16A
+:0046E159 8B919C0E0000            mov edx, dword ptr [ecx+00000E9C]
+:0046E15F 3B91A00E0000            cmp edx, dword ptr [ecx+00000EA0]
+:0046E165 7403                    je 0046E16A
+:0046E167 6A01                    push 00000001
+:0046E169 58                      pop eax
+changed into
+:0046E151 8B7104                  mov esi, dword ptr [ecx+04]
+:0046E154 83B98800000000          cmp dword ptr [ecx+00000088], 00000000
+:0046E15B 7503                    jne 0046E160					requirements are met
+:0046E15D 6AFF                    push FFFFFFFF
+:0046E15F 5E                      pop esi
+:0046E160 3BF7                    cmp esi, edi					correct spell on scroll
+:0046E162 C3                      ret
+:0046E163 90909090909090          7*nop
+
+
+

@@ -1,0 +1,169 @@
+Alerted boss seeks out minion's target instead of alerting minion:
+
+file offset 0003EC1F
+
+:0043F81F 8B96A8DC6900            mov edx, dword ptr [esi+0069DCA8]
+:0043F825 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F82B 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0043F831 899034DD6900            mov dword ptr [eax+0069DD34], edx
+changed into
+:0043F81F 8B9630DD6900            mov edx, dword ptr [esi+0069DD30]
+:0043F825 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F82B 8B9634DD6900            mov edx, dword ptr [esi+0069DD34]
+:0043F831 899034DD6900            mov dword ptr [eax+0069DD34], edx
+
+
+Excluding non-activated Gargoyles in routine that interrupts Stone state:
+
+file offset 0003EB77
+
+:0043F777 8B8824DD6900            mov ecx, dword ptr [eax+0069DD24]
+:0043F77D 8D9024DD6900            lea edx, dword ptr [eax+0069DD24]
+:0043F783 F6C104                  test cl, 04
+:0043F786 741F                    je 0043F7A7
+:0043F788 51                      push ecx
+:0043F789 8B881CDD6900            mov ecx, dword ptr [eax+0069DD1C]
+:0043F78F 3B8818DD6900            cmp ecx, dword ptr [eax+0069DD18]
+:0043F795 59                      pop ecx
+:0043F796 750F                    jne 0043F7A7
+:0043F798 83E1FB                  and ecx, FFFFFFFB
+:0043F79B 890A                    mov dword ptr [edx], ecx
+:0043F79D C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+:0043F7A7 C3                      ret
+:0043F7A8 90                      nop
+:0043F7A9 90                      nop
+:0043F7AA 85C0                    test eax, eax
+:0043F7AC 744C                    je 0043F7FA
+:0043F7AE 80BE5DDD690002          cmp byte ptr [esi+0069DD5D], 02
+:0043F7B5 7543                    jne 0043F7FA
+changed into
+:0043F777 ...
+:0043F786 7428                    je 0043F7B0
+:0043F788 ...
+:0043F796 7518                    jne 0043F7B0
+:0043F798 80B828DD690000          cmp byte ptr [eax+0069DD28], 00
+:0043F79F 740F                    je 0043F7B0
+:0043F7A1 83E1FB                  and ecx, FFFFFFFB
+:0043F7A4 890A                    mov dword ptr [edx], ecx
+:0043F7A6 C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+:0043F7B0 C3                      ret
+:0043F7B1 909090909090            6*nop
+
+
+Minions (with lower activation count) close to their boss receive the same target, the others will try to regroup:
+
+file offset 0003EB72
+
+:0043F772 E983000000              jmp 0043F7FA
+changed into
+:0043F772 EB43                    jmp 0043F7B7
+:0043F774 909090                  3*nop 
+
+file offset 0003EBB7
+
+:0043F7B7 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043F7BD 2B87B0DC6900            sub eax, dword ptr [edi+0069DCB0]
+:0043F7C3 50                      push eax
+:0043F7C4 E807B40300              call 0047ABD0
+:0043F7C9 83F870                  cmp eax, 00000070
+:0043F7CC 59                      pop ecx
+:0043F7CD 7D2B                    jge 0043F7FA
+:0043F7CF 8B86ACDC6900            mov eax, dword ptr [esi+0069DCAC]
+:0043F7D5 2B87B4DC6900            sub eax, dword ptr [edi+0069DCB4]
+:0043F7DB 50                      push eax
+:0043F7DC E8EFB30300              call 0047ABD0
+:0043F7E1 83F870                  cmp eax, 00000070
+:0043F7E4 59                      pop ecx
+:0043F7E5 7D13                    jge 0043F7FA
+:0043F7E7 FE875EDD6900            inc byte ptr [edi+0069DD5E]
+:0043F7ED C6865DDD690001          mov byte ptr [esi+0069DD5D], 01
+:0043F7F4 EB04                    jmp 0043F7FA
+changed into
+:0043F7B7 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0043F7BD 2B87A8DC6900            sub eax, dword ptr [edi+0069DCA8]
+:0043F7C3 85C0                    test eax, eax
+:0043F7C5 7D02                    jge 0043F7C9
+:0043F7C7 F7D8                    neg eax
+:0043F7C9 83F807                  cmp eax, 00000007
+:0043F7CC 90                      nop
+:0043F7CD 7D1C                    jge 0043F7EB
+:0043F7CF 8B86ACDC6900            mov eax, dword ptr [esi+0069DCAC]
+:0043F7D5 2B87ACDC6900            sub eax, dword ptr [edi+0069DCAC]
+:0043F7DB 85C0                    test eax, eax
+:0043F7DD 7D02                    jge 0043F7E1
+:0043F7DF F7D8                    neg eax
+:0043F7E1 83F807                  cmp eax, 00000007
+:0043F7E4 90                      nop
+:0043F7E5 7D04                    jge 0043F7EB
+:0043F7E7 6A01                    push 00000001
+:0043F7E9 EB02                    jmp 0043F7ED
+:0043F7EB 6A02                    push 00000002
+:0043F7ED 58                      pop eax
+:0043F7EE 88865DDD6900            mov byte ptr [esi+0069DD5D], al
+:0043F7F4 EB04                    jmp 0043F7FA
+
+file offset 0003EBFA
+
+:0043F7FA 80BE5DDD690001          cmp byte ptr [esi+0069DD5D], 01
+:0043F801 7574                    jne 0043F877
+changed into
+:0043F7FA 80BE5DDD690000          cmp byte ptr [esi+0069DD5D], 00
+:0043F801 7474                    je 0043F877
+
+file offset 0003ECB4
+
+:0043F8B4 80B85DDD690001          cmp byte ptr [eax+0069DD5D], 01
+:0043F8BB 756A                    jne 0043F927
+changed into
+:0043F8B4 80B85DDD690000          cmp byte ptr [eax+0069DD5D], 00
+:0043F8BB 746A                    je 0043F927
+
+file offset 0003ECCE
+
+:0043F8CE 8D8E28DD6900            lea ecx, dword ptr [esi+0069DD28]
+:0043F8D4 3A9028DD6900            cmp dl, byte ptr [eax+0069DD28]
+:0043F8DA 7622                    jbe 0043F8FE
+:0043F8DC 8B96A8DC6900            mov edx, dword ptr [esi+0069DCA8]
+:0043F8E2 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F8E8 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0043F8EE 899034DD6900            mov dword ptr [eax+0069DD34], edx
+:0043F8F4 8A09                    mov cl, byte ptr [ecx]
+:0043F8F6 FEC9                    dec cl
+:0043F8F8 888828DD6900            mov byte ptr [eax+0069DD28], cl
+:0043F8FE 80B820DD69000C          cmp byte ptr [eax+0069DD20], 0C
+:0043F905 7520                    jne 0043F927
+:0043F907 E86BFEFFFF              call 0043F777
+:0043F90C EB19                    jmp 0043F927
+:0043F90E 90                      nop
+:0043F90F 90                      nop
+:0043F910 90                      nop
+:0043F911 90                      nop
+:0043F912 90                      nop
+:0043F913 F6C104                  test cl, 04
+:0043F916 740F                    je 0043F927
+:0043F918 83E1FB                  and ecx, FFFFFFFB
+:0043F91B 890A                    mov dword ptr [edx], ecx
+:0043F91D C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+changed into
+:0043F8CE 3A9028DD6900            cmp dl, byte ptr [eax+0069DD28]
+:0043F8D4 7643                    jbe 0043F919
+:0043F8D6 52                      push edx
+:0043F8D7 80B85DDD690001          cmp byte ptr [eax+0069DD5D], 01
+:0043F8DE 7415                    je 0043F8F5
+:0043F8E0 8B96A8DC6900            mov edx, dword ptr [esi+0069DCA8]
+:0043F8E6 8B8EACDC6900            mov ecx, dword ptr [esi+0069DCAC]
+:0043F8EC C6805DDD690001          mov byte ptr [eax+0069DD5D], 01
+:0043F8F3 EB0C                    jmp 0043F901
+:0043F8F5 8B9630DD6900            mov edx, dword ptr [esi+0069DD30]
+:0043F8FB 8B8E34DD6900            mov ecx, dword ptr [esi+0069DD34]
+:0043F901 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0043F907 898834DD6900            mov dword ptr [eax+0069DD34], ecx
+:0043F90D 5A                      pop edx
+:0043F90E 4A                      dec edx
+:0043F90F 889028DD6900            mov byte ptr [eax+0069DD28], dl
+:0043F915 90909090                4*nop
+:0043F919 80B820DD69000C          cmp byte ptr [eax+0069DD20], 0C
+:0043F920 7505                    jne 0043F927
+:0043F922 E850FEFFFF              call 0043F777
+:0043F927 
+

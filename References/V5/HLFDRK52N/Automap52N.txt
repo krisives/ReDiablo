@@ -1,0 +1,69 @@
+Automap will display locations for all characters.
+
+
+Offset 00015D6
+ 
+:004021D6 E8FD090000              call 00402BD8
+changed into 
+:004021D6 E8D0CE0300              call 0043F0AB
+:004021DB
+
+Offset 0001FDB
+ 
+:00402BDB A1E8AD6E00              mov eax, dword ptr [006EADE8] 
+changed into 
+:00402BDB 9090909090              5*nop
+
+Offset 0003E49F
+
+:0043F09F 8B09                    mov ecx, dword ptr [ecx]
+:0043F0A1 8D86F8DC6900            lea eax, dword ptr [esi+0069DCF8]
+:0043F0A7 83396E                  cmp dword ptr [ecx], 0000006E
+:0043F0AA 8B00                    mov eax, dword ptr [eax]
+:0043F0AC EB50                    jmp 0043F0FE
+:0043F0AE 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:0043F0B4 2B0D34F36100            sub ecx, dword ptr [0061F334]
+:0043F0BA 7905                    jns 0043F0C1
+:0043F0BC 83C9FF                  or ecx, FFFFFFFF
+:0043F0BF EB09                    jmp 0043F0CA
+:0043F0C1 33D2                    xor edx, edx
+:0043F0C3 85C9                    test ecx, ecx
+:0043F0C5 0F9FC2                  setg dl
+:0043F0C8 8BCA                    mov ecx, edx
+:0043F0CA 8BB6ACDC6900            mov esi, dword ptr [esi+0069DCAC]
+:0043F0D0 010D34F36100            add dword ptr [0061F334], ecx
+:0043F0D6 2B3538F36100            sub esi, dword ptr [0061F338]
+:0043F0DC 7905                    jns 0043F0E3
+:0043F0DE 83C9FF                  or ecx, FFFFFFFF
+:0043F0E1 EB07                    jmp 0043F0EA
+:0043F0E3 33C9                    xor ecx, ecx
+:0043F0E5 85F6                    test esi, esi
+:0043F0E7 0F9FC1                  setg cl
+:0043F0EA 010D38F36100            add dword ptr [0061F338], ecx
+:0043F0F0 3D8C000000              cmp eax, 0000008C
+:0043F0F5 756C                    jne 0043F163
+:0043F0F7 E8BCFEFFFF              call 0043EFB8
+:0043F0FC EB65                    jmp 0043F163
+changed into
+:0043F09F 8B09                    mov ecx, dword ptr [ecx]
+:0043F0A1 8D86F8DC6900            lea eax, dword ptr [esi+0069DCF8]
+:0043F0A7 8B00                    mov eax, dword ptr [eax]
+:0043F0A9 EB53                    jmp 0043F0FE
+:0043F0AB 6A03                    push 00000003 
+:0043F0AD 5E                      pop esi 
+:0043F0AE 8BC6                    mov eax, esi 
+:0043F0B0 69C0C8550000            imul eax, 000055C8 
+:0043F0B6 030514AE6E00            add eax, dword ptr [006EAE14]
+:0043F0BC 80781D00                cmp byte ptr [eax+1D], 00 
+:0043F0C0 7412                    je 0043F0D4
+:0043F0C2 8B4034                  mov eax, dword ptr [eax+34] 
+:0043F0C5 3A05D8B16000            cmp al, byte ptr [0060B1D8] 
+:0043F0CB 7507                    jne 0043F0D4
+:0043F0CD 8BC6                    mov eax, esi 
+:0043F0CF E8043BFCFF              call 00402BD8 
+:0043F0D4 4E                      dec esi 
+:0043F0D5 7DD7                    jge 0043F0AE
+:0043F0D7 C3                      ret 
+:0043F0D8 90909090                4*nop
+
+Now 38 bytes free space left from 0043F0D8 to 0043F0FE

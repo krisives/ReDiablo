@@ -1,0 +1,9 @@
+Diablo Activation sound
+
+Changed from 'nakrul2' to 'nakruls2' (the other weird sound as at Ghost activation)
+
+File Offset 00042CE1
+
+:004438E1 B9C7030000              mov ecx, 000003C7
+wordt
+:004438E1 B9E4030000              mov ecx, 000003E4

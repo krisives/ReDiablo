@@ -1,0 +1,20 @@
+()Bloodstar damage:
+
+Damage in Hellfire = slvl*3  + mag*3/8
+Damage in 2.3      = slvl*10 + mag/2
+
+Voorstel (al aanwezig in 24Z om uit te proberen) : Damage  = slvl*10 + Magic*3/2
+
+File Offset: 355E6
+
+:004361E6 2BC7                    sub eax, edi
+wordt
+:004361E6 03C7                    add eax, edi
+
+Spellbook:
+
+File Offset: 2E27F
+
+:0042EE7F 2BC8                    sub ecx, eax				
+wordt
+:0042EE7F 03C8                    add ecx, eax

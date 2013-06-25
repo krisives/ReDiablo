@@ -1,0 +1,73 @@
+Dungeon Entrance by CLVL (?)
+
+
+
+
+
+Dungeon area clvl needed to enter 1
+Church 1
+Catacombs 8
+Caves 13
+Hell 17
+Hive 15
+Crypt 15
+1 There is no requirement if you enter a level by going through a portal.
+
+
+
+
+
+:00475737 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0047573C 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00475742 8BC8                    mov ecx, eax
+:00475744 69C9C8550000            imul ecx, 000055C8
+:0047574A 03CA                    add ecx, edx
+:0047574C F6816855000001          test byte ptr [ecx+00005568], 01
+:00475753 751F                    jne 00475774
+:00475755 80B9B80100000A          cmp byte ptr [ecx+000001B8], 0A
+:0047575C 7D16                    jge 00475774
+:0047575E 6840010000              push 00000140
+:00475763 6A14                    push 00000014
+:00475765 6A30                    push 00000030
+:00475767 8BCE                    mov ecx, esi
+:00475769 5A                      pop edx
+:0047576A E8E6F9FFFF              call 00475155
+:0047576F A1E8AD6E00              mov eax, dword ptr [006EADE8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00475753(C), :0047575C(C)
+|
+:00475774 8BC8                    mov ecx, eax
+:00475776 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0047577C 69C9C8550000            imul ecx, 000055C8
+:00475782 03CA                    add ecx, edx
+:00475784 F6816855000002          test byte ptr [ecx+00005568], 02
+:0047578B 7530                    jne 004757BD
+:0047578D 80B9B80100000F          cmp byte ptr [ecx+000001B8], 0F
+:00475794 7D27                    jge 004757BD
+:00475796 684C010000              push 0000014C
+:0047579B 6A44                    push 00000044
+:0047579D 6A10                    push 00000010
+:0047579F 8BCE                    mov ecx, esi
+:004757A1 5A                      pop edx
+:004757A2 E8AEF9FFFF              call 00475155
+:004757A7 8BCE                    mov ecx, esi
+:004757A9 684B010000              push 0000014B
+:004757AE 6A46                    push 00000046
+:004757B0 6A10                    push 00000010
+:004757B2 5A                      pop edx
+:004757B3 E89DF9FFFF              call 00475155
+:004757B8 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0047578B(C), :00475794(C)
+|
+:004757BD 69C0C8550000            imul eax, 000055C8
+:004757C3 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004757C9 03C1                    add eax, ecx
+:004757CB F6806855000004          test byte ptr [eax+00005568], 04
+:004757D2 757B                    jne 0047584F
+:004757D4 80B8B801000014          cmp byte ptr [eax+000001B8], 14
+:004757DB 7D72                    jge 0047584F
+:004757DD 6A24                    push 00000024
+:004757DF 5F                      pop edi

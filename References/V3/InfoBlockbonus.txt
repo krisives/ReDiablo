@@ -1,0 +1,62 @@
+Info: Appearances of Block Bonus
+
+
+Creating Character:
+
+:00457EAA 8984318C010000          mov dword ptr [ecx+esi+0000018C], eax
+
+
+Substracting 50 (part of Flash spell secondairy code):
+
+:0043781D 8B80CC7A6900            mov eax, dword ptr [eax+00697ACC]
+:00437823 83F8FF                  cmp eax, FFFFFFFF
+:00437826 7415                    je 0043783D
+:00437828 69C0C8550000            imul eax, 000055C8
+:0043782E 8384308C010000CE        add dword ptr [eax+esi+0000018C], FFFFFFCE
+:00437836 8D84308C010000          lea eax, dword ptr [eax+esi+0000018C]
+
+
+Player vs. Player:
+
+:004325E1 8B9C398C010000          mov ebx, dword ptr [ecx+edi+0000018C]
+
+en
+:0045BF98 03978C010000            add edx, dword ptr [edi+0000018C]
+
+
+Melee vs. Player:
+
+:0043E2B3 03918C010000            add edx, dword ptr [ecx+0000018C]
+
+
+Missiles vs. Player:
+
+:0042F7A0 837DFCFF                cmp dword ptr [ebp-04], FFFFFFFF
+:0042F7A4 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0042F7A7 742C                    je 0042F7D5				jmp if Trap
+:0042F7A9 8B45FC                  mov eax, dword ptr [ebp-04]
+:0042F7AC 8B9174010000            mov edx, dword ptr [ecx+00000174]
+:0042F7B2 69C0E4000000            imul eax, 000000E4
+:0042F7B8 0FBE8048DD6900          movsx eax, byte ptr [eax+0069DD48]
+:0042F7BF D1E0                    shl eax, 1
+:0042F7C1 2BD0                    sub edx, eax
+:0042F7C3 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:0042F7CA 03918C010000            add edx, dword ptr [ecx+0000018C]	<-
+:0042F7D0 8D0442                  lea eax, dword ptr [edx+2*eax]
+:0042F7D3 EB0C                    jmp 0042F7E1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F7A7(C)
+|
+:0042F7D5 8B8174010000            mov eax, dword ptr [ecx+00000174]
+:0042F7DB 03818C010000            add eax, dword ptr [ecx+0000018C]	<-
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F7D3(U)
+|
+:0042F7E1 33D2                    xor edx, edx
+:0042F7E3 894508                  mov dword ptr [ebp+08], eax
+:0042F7E6 3BC2                    cmp eax, edx
+:0042F7E8 7D03                    jge 0042F7ED
+:0042F7EA 895508                  mov dword ptr [ebp+08], edx
+

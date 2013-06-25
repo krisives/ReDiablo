@@ -1,0 +1,133 @@
+Making Divine Cure more usable for all character classes, and adding animation for everyone who is affected
+
+
+Renamed Divine Cure into Divine Help:
+
+000A46AD 4469 7669 6E65 2043 7572 6500           Divine Cure.
+changed into
+000A46AD 4469 7669 6E65 2048 656C 7000           Divine Help.
+
+
+Duration of Divine Help now also depends on Clvl:
+
+
+file offset 00033E51
+
+:00434A51 8B83887A6900            mov eax, dword ptr [ebx+00697A88]
+:00434A57 85C0                    test eax, eax
+:00434A59 7502                    jne 00434A5D
+:00434A5B 33C0                    xor eax, eax
+:00434A5D 40                      inc eax
+:00434A5E C1E002                  shl eax, 02
+:00434A61 8983C87A6900            mov dword ptr [ebx+00697AC8], eax		duration = 4*(slvl+1), min. = 4
+changed into
+:00434A51 8B45FC                  mov eax, dword ptr [ebp-04]			eax = Slvl
+:00434A54 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00434A57 E82B410500              call 00488B87					edx = Clvl
+:00434A5C 03C2                    add eax, edx
+:00434A5E C1E002                  shl eax, 02
+:00434A61 8983C87A6900            mov dword ptr [ebx+00697AC8], eax		duration = 4*(slvl+clvl)
+
+
+Disabling previous method for the light animation, which only worked for the caster:
+
+file offset 0006B56F
+
+:0046C16F 803E55                  cmp byte ptr [esi], 55
+:0046C172 7533                    jne 0046C1A7
+:0046C174 E91389FCFF              jmp 00434A8C
+changed into
+:0046C16F EB36                    jmp 0046C1A7
+:0046C171 9090909090909090        8*nop
+:0046C179 
+
+Now 8 bytes free here, to be reserved for more 'special' spells.
+
+
+Adding lighteffect for all receiving characters to the primary spell effect code:
+
+file offset 00033E85
+
+:00434A85 5F                      pop edi
+:00434A86 5E                      pop esi
+:00434A87 5B                      pop ebx
+:00434A88 C9                      leave
+:00434A89 C21C00                  ret 001C
+:00434A8C FF751C                  push [ebp+1C]
+:00434A8F 8B550C                  mov edx, dword ptr [ebp+0C]
+:00434A92 8B4D08                  mov ecx, dword ptr [ebp+08]
+:00434A95 53                      push ebx
+:00434A96 FF75FC                  push [ebp-04]
+:00434A99 FF7518                  push [ebp+18]
+:00434A9C 6A3E                    push 0000003E
+:00434A9E FF75F8                  push [ebp-08]
+:00434AA1 FF750C                  push [ebp+0C]
+:00434AA4 FF7508                  push [ebp+08]
+:00434AA7 E8830C0000              call 0043572F
+:00434AAC E9F6760300              jmp 0046C1A7
+:00434AB1 90                      nop					free space from here
+:00434AB2 90                      nop
+:00434AB3 90                      nop
+:00434AB4 90                      nop
+:00434AB5 90                      nop
+:00434AB6 7505                    jne 00434ABD
+:00434AB8 833855                  cmp dword ptr [eax], 00000055
+:00434ABB 740A                    je 00434AC7
+:00434ABD 43                      inc ebx
+:00434ABE 83C204                  add edx, 00000004
+:00434AC1 3BD9                    cmp ebx, ecx
+:00434AC3 7CD9                    jl 00434A9E
+:00434AC5 EB23                    jmp 00434AEA
+:00434AC7 8B8EC87A6900            mov ecx, dword ptr [esi+00697AC8]
+:00434ACD 8B5070                  mov edx, dword ptr [eax+70]
+:00434AD0 BFFFFFFF7F              mov edi, 7FFFFFFF
+:00434AD5 2BF9                    sub edi, ecx
+:00434AD7 3BD7                    cmp edx, edi
+:00434AD9 7D05                    jge 00434AE0
+:00434ADB 03D1                    add edx, ecx
+:00434ADD 895070                  mov dword ptr [eax+70], edx
+:00434AE0 C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:00434AEA 5F                      pop edi
+:00434AEB 5E                      pop esi
+:00434AEC 5B                      pop ebx
+:00434AED C9                      leave
+:00434AEE C21C00                  ret 001C
+
+changed into
+
+:00434A85 33FF                    xor edi, edi
+:00434A87 33F6                    xor esi, esi
+:00434A89 E823000000              call 00434AB1				check if character is present
+:00434A8E 7514                    jne 00434AA4		
+:00434A90 8B503C                  mov edx, dword ptr [eax+3C]		character coordinate
+:00434A93 8B4838                  mov ecx, dword ptr [eax+38]		character coordinate
+:00434A96 57                      push edi				socalled Slvl
+:00434A97 57                      push edi				socalled damage
+:00434A98 56                      push esi				socalled caster
+:00434A99 57                      push edi				
+:00434A9A 6A3E                    push 0000003E				spell effect
+:00434A9C 57                      push edi				
+:00434A9D 52                      push edx				character coordinate
+:00434A9E 51                      push ecx				character coordinate
+:00434A9F E88B0C0000              call 0043572F
+:00434AA4 46                      inc esi
+:00434AA5 83FE04                  cmp esi, 00000004
+:00434AA8 72DF                    jb 00434A89
+:00434AAA 5F                      pop edi
+:00434AAB 5E                      pop esi
+:00434AAC 5B                      pop ebx
+:00434AAD C9                      leave
+:00434AAE C21C00                  ret 001C
+
+Routine to see if specific character (ESI) is on current level:
+
+:00434AB1 8BC6                    mov eax, esi
+:00434AB3 69C0C8550000            imul eax, 000055C8
+:00434AB9 030514AE6E00            add eax, dword ptr [006EAE14]
+:00434ABF 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:00434AC6 3B5034                  cmp edx, dword ptr [eax+34]
+:00434AC9 C3                      ret
+:00434ACA 909090                  3*nop
+
+Now 39 bytes free space from 00434ACA to 00434AF1.
+

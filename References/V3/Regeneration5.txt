@@ -1,0 +1,49 @@
+Monster Regeneration
+
+HLFDRK31:
+
+Regeneration routine after "MonsterResistance=1/6" routine on old DiabloDeath:
+
+File Offset = 3C849
+
+:0043D449 0FB65172                movzx edx, byte ptr [ecx+72]
+:0043D44D 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:0043D453 0FB6C9                  movzx ecx, cl
+:0043D456 4A                      dec edx
+:0043D457 7409                    je 0043D462
+:0043D459 4A                      dec edx
+:0043D45A 7403                    je 0043D45F
+:0043D45C C1E902                  shr ecx, 02
+:0043D45F C1E901                  shr ecx, 01
+:0043D462 C3                      ret
+:0043D463 90                      nop
+
+
+Tijdens een game met 3 players in Hell mode, was het bereiken van The Dark Ghost errug moeilijk. Het verslaan van de Ghost zelf bleek echter onmogelijk. Laurelin moest bijvoorbeeld toezien hoe het afvuren van honderden pijlen geen effect had. Onderbrekingen in het schieten om te Healen waren voldoende om alles terug te laten regenereren.
+
+Max. regeneration (only checked for Demons) = 50
+
+File Offset = 3C857
+
+:0043D457 7409                    je 0043D462
+wordt
+:0043D457 740A                    je 0043D463
+
+en
+
+File Offset = 3C863
+
+:0043D463 90                      nop
+:0043D464 59                      pop ecx
+:0043D465 8945FC                  mov dword ptr [ebp-04], eax
+:0043D468 6A14                    push 00000014
+:0043D46A 58                      pop eax
+:0043D46B 3945FC                  cmp dword ptr [ebp-04], eax
+wordt
+:0043D463 6A32                    push 00000032
+:0043D465 5A                      pop edx
+:0043D466 3BCA                    cmp ecx, edx
+:0043D468 7E02                    jle 0043D46C
+:0043D46A 8BCA                    mov ecx, edx
+:0043D46C C3                      ret
+:0043D46D 90                      nop

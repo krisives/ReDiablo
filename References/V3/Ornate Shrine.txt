@@ -1,0 +1,103 @@
+:00452950 85C0                    test eax, eax
+:00452952 0F8514070000            jne 0045306C
+:00452958 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0045295B 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00452961 0F8505070000            jne 0045306C
+:00452967 69C9C8550000            imul ecx, 000055C8
+:0045296D A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452972 808C080B01000040        or byte ptr [eax+ecx+0000010B], 40
+:0045297A 8D840808010000          lea eax, dword ptr [eax+ecx+00000108]
+:00452981 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452986 8A9408E0000000          mov dl, byte ptr [eax+ecx+000000E0]
+:0045298D 8D8408E0000000          lea eax, dword ptr [eax+ecx+000000E0]
+:00452994 80FA0F                  cmp dl, 0F
+:00452997 7D04                    jge 0045299D
+:00452999 FEC2                    inc dl
+:0045299B 8810                    mov byte ptr [eax], dl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452997(C)
+
+New:
+|
+:0045299D 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004529A0 83CAFF                  or edx, FFFFFFFF
+:004529A3 80FA08                  cmp dl, 08
+:004529A6 7E01                    jle 004529A8
+:004529A7 4A                      dec edx
+:004529A8 E877BE0000              call 0045E822
+:004529AD E9CA000000              jmp 00452A7D
+
+Old code now contains
+- Extra part for bone spirit/doom serpent
+- Piercing part for arrows
+- Fountains code, increase part
+- Magic Arrow -> replaced to diablo death
+- Town Shrine
+
+See the approriate files
+
+Old:
+|
+:0045299D A114AE6E00              mov eax, dword ptr [006EAE14]
+:004529A2 8D9408E0000000          lea edx, dword ptr [eax+ecx+000000E0]
+:004529A9 8A8408E0000000          mov al, byte ptr [eax+ecx+000000E0]
+:004529B0 3C0F                    cmp al, 0F
+:004529B2 7D04                    jge 004529B8
+:004529B4 FEC0                    inc al
+:004529B6 8802                    mov byte ptr [edx], al
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529B2(C)
+|
+:004529B8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004529BD 6A0A                    push 0000000A
+:004529BF 5B                      pop ebx
+:004529C0 8BBC08A8010000          mov edi, dword ptr [eax+ecx+000001A8]
+:004529C7 8D3408                  lea esi, dword ptr [eax+ecx]
+:004529CA 8BC7                    mov eax, edi
+:004529CC 99                      cdq
+:004529CD F7FB                    idiv ebx
+:004529CF 8B9EAC010000            mov ebx, dword ptr [esi+000001AC]
+:004529D5 8D96A4010000            lea edx, dword ptr [esi+000001A4]
+:004529DB 8BB6B0010000            mov esi, dword ptr [esi+000001B0]
+:004529E1 895508                  mov dword ptr [ebp+08], edx
+:004529E4 8B12                    mov edx, dword ptr [edx]
+:004529E6 2BF7                    sub esi, edi
+:004529E8 8B7D08                  mov edi, dword ptr [ebp+08]
+:004529EB 2BDA                    sub ebx, edx
+:004529ED 2BD0                    sub edx, eax
+:004529EF 8917                    mov dword ptr [edi], edx
+:004529F1 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:004529F7 29840AAC010000          sub dword ptr [edx+ecx+000001AC], eax
+:004529FE 8D940AAC010000          lea edx, dword ptr [edx+ecx+000001AC]
+:00452A05 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00452A0B 29840AB0010000          sub dword ptr [edx+ecx+000001B0], eax
+:00452A12 8D940AB0010000          lea edx, dword ptr [edx+ecx+000001B0]
+:00452A19 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00452A1F 29840AA8010000          sub dword ptr [edx+ecx+000001A8], eax
+:00452A26 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A2B 8D940AA8010000          lea edx, dword ptr [edx+ecx+000001A8]
+:00452A32 F78408AC010000C0FFFFFF  test dword ptr [eax+ecx+000001AC], FFFFFFC0
+:00452A3D 8D8408AC010000          lea eax, dword ptr [eax+ecx+000001AC]
+:00452A44 7F0F                    jg 00452A55
+:00452A46 8918                    mov dword ptr [eax], ebx
+:00452A48 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A4D 83A408A401000000        and dword ptr [eax+ecx+000001A4], 00000000
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452A44(C)
+|
+:00452A55 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A5A F78408B0010000C0FFFFFF  test dword ptr [eax+ecx+000001B0], FFFFFFC0
+:00452A65 8D8408B0010000          lea eax, dword ptr [eax+ecx+000001B0]
+:00452A6C 7F0F                    jg 00452A7D
+:00452A6E 8930                    mov dword ptr [eax], esi
+:00452A70 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A75 83A408A801000000        and dword ptr [eax+ecx+000001A8], 00000000
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452A6C(C)
+|
+:00452A7D B124                    mov cl, 24
+:00452A7F E9DD000000              jmp 00452B61

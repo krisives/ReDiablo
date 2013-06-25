@@ -1,0 +1,114 @@
+Enabling "Crucifixed Skeleton" as Cauldron animation
+
+
+Crucifix - 15 frames 
+Cauldron - 3 frames 
+Goat shrine - 10 frames 
+
+
+
+Following line determines what animation to load:
+
+:0044BE3A FF349D90504B00          push dword ptr [4*ebx+004B5090]	
+
+goatshrine, found at B3DC4/004B53C4, which is foud at 004B514C (B3B4C) -> ebx = 2Fh (47)
+cauldron, found at B3DB8/004B53B8, which is found at 4B5150 (B3B50) -> ebx = 30h (48)
+
+
+
+Cauldron sound:
+
+0009D9E0 5C43626F 6C742E77 61760000 5366785C \Cbolt.wav..Sfx\
+0009D9F0 4D697363 5C43616C 64726F6E 2E776176 Misc\Caldron.wav
+
+Starts at 49EFEC (9D9EC), which is found at 49793E (9633E), close to 49793D.
+
+This series starts at 4975B1 (95FB1), or close to 4975B0, which can be found in ASM.
+
+Soundnr = 65h (101) (of 38D ?)
+
+
+
+
+Hieronder de verschillende plaatsen van waaruit shrine-code wordt aangeroepen:
+
+1e call to shrines:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045060D(C)
+|
+:00450624 6A45                    push 00000045
+:00450626 8BD7                    mov edx, edi
+:00450628 8BCE                    mov ecx, esi
+:0045062A E8A5110000              call 004517D4			do the shrine
+:0045062F E937010000              jmp 0045076B
+
+
+2e call to shrines:
+
+* Referenced by a CALL at Addresses:
+|:004506FB   , :00453AFB   
+|
+:004533B8 53                      push ebx
+:004533B9 56                      push esi
+:004533BA 57                      push edi
+:004533BB 8BFA                    mov edi, edx
+:004533BD 8BF7                    mov esi, edi
+:004533BF 8BD9                    mov ebx, ecx
+:004533C1 6BF678                  imul esi, 00000078
+:004533C4 8B8E14E66D00            mov ecx, dword ptr [esi+006DE614]
+:004533CA E8586BFCFF              call 00419F27			set some flags
+:004533CF 8BCF                    mov ecx, edi
+:004533D1 E82D000000              call 00453403			eax:=0..21h
+:004533D6 8BD7                    mov edx, edi
+:004533D8 8BCB                    mov ecx, ebx
+:004533DA FF742410                push [esp+10]
+:004533DE 898618E66D00            mov dword ptr [esi+006DE618], eax
+:004533E4 E8EBE3FFFF              call 004517D4			do the shrine
+:004533E9 C786D8E56D0002000000    mov dword ptr [esi+006DE5D8], 00000002
+:004533F3 C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:004533FD 5F                      pop edi
+:004533FE 5E                      pop esi
+:004533FF 5B                      pop ebx
+:00453400 C20400                  ret 0004
+
+
+3e call to shrine:
+
+* Referenced by a CALL at Addresses:
+|:00450708   , :00453B1E   
+|
+:00453466 53                      push ebx
+:00453467 56                      push esi
+:00453468 57                      push edi
+:00453469 8BFA                    mov edi, edx
+:0045346B 8BF7                    mov esi, edi
+:0045346D 8BD9                    mov ebx, ecx
+:0045346F 6BF678                  imul esi, 00000078
+:00453472 8B8E14E66D00            mov ecx, dword ptr [esi+006DE614]
+:00453478 E8AA6AFCFF              call 00419F27			set some flags
+:0045347D 8BCF                    mov ecx, edi
+:0045347F E87FFFFFFF              call 00453403			eax:=0..21h
+:00453484 8BD7                    mov edx, edi
+:00453486 8BCB                    mov ecx, ebx
+:00453488 FF742410                push [esp+10]
+:0045348C 898618E66D00            mov dword ptr [esi+006DE618], eax
+:00453492 E83DE3FFFF              call 004517D4			do the shrine
+:00453497 C786E4E56D0003000000    mov dword ptr [esi+006DE5E4], 00000003
+:004534A1 83A6D0E56D0000          and dword ptr [esi+006DE5D0], 00000000
+:004534A8 5F                      pop edi
+:004534A9 5E                      pop esi
+:004534AA C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:004534B4 5B                      pop ebx
+:004534B5 C20400                  ret 0004
+
+
+4e call to Shrine:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00453A59(C)
+|
+:00453A9D 6A45                    push 00000045
+:00453A9F E830DDFFFF              call 004517D4
+:00453AA4 E9CB000000              jmp 00453B74
+

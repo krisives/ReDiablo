@@ -1,0 +1,114 @@
+Display when holding cursor over an item in Hellfire
+
+
+* Referenced by a CALL at Address:
+|:00405845   
+|
+:00428117 56                      push esi
+:00428118 8BF1                    mov esi, ecx
+:0042811A 69F674010000            imul esi, 00000174
+:00428120 83BE886268000B          cmp dword ptr [esi+00686288], 0000000B	Gold
+:00428127 743E                    je 00428167
+:00428129 83BEB862680000          cmp dword ptr [esi+006862B8], 00000000	ID flag
+:00428130 8D86FD626800            lea eax, dword ptr [esi+006862FD]		UnIDed name
+:00428136 7506                    jne 0042813E
+:00428138 8D86BD626800            lea eax, dword ptr [esi+006862BD]		IDed name
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428136(C)
+|
+:0042813E 50                      push eax
+:0042813F 68F0124D00              push 004D12F0
+:00428144 E8E71B0500              call 00479D30
+:00428149 8A86BC626800            mov al, byte ptr [esi+006862BC]		Normal/Magic/Unique
+:0042814F 59                      pop ecx
+:00428150 3C01                    cmp al, 01					Magic
+:00428152 59                      pop ecx
+:00428153 7505                    jne 0042815A
+:00428155 A2AC114D00              mov byte ptr [004D11AC], al			Color of text ?
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428153(C)
+|
+:0042815A 3C02                    cmp al, 02					Unique
+:0042815C 752A                    jne 00428188
+:0042815E C605AC114D0003          mov byte ptr [004D11AC], 03			Color of text ?
+:00428165 5E                      pop esi
+:00428166 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428127(C)
+|
+:00428167 8BB644636800            mov esi, dword ptr [esi+00686344]
+:0042816D 8BCE                    mov ecx, esi
+:0042816F E864EFFDFF              call 004070D8
+:00428174 50                      push eax
+:00428175 56                      push esi
+
+* Possible StringData Ref from Data Obj ->"%i gold %s"
+
+
+See properties of item on the ground (KP629 code of 1.08 converted)
+
+* Referenced by a CALL at Address:
+|:00405845   
+|
+:00428117 56                      push esi
+:00428118 8BF1                    mov esi, ecx
+:0042811A 69F674010000            imul esi, 00000174
+:00428120 81C680626800            add esi, 00686280			Convert index to ptr
+:00428126 837E080B                cmp dword ptr [esi+08], 0000000B	Gold
+:0042812A 743B                    je 00428167
+:0042812C 837E3800                cmp dword ptr [esi+38], 00000000	ID flag
+:00428130 8D463D                  lea eax, dword ptr [esi+3D]		UnIDed Name
+:00428133 7403                    je 00428138
+:00428135 83C040                  add eax, 00000040			IDed Name
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428133(C)
+|
+:00428138 50                      push eax
+:00428139 68F0124D00              push 004D12F0
+:0042813E E8ED1B0500              call 00479D30
+:00428143 8A463C                  mov al, byte ptr [esi+3C]		Normal/Magic/Unique
+:00428146 59                      pop ecx
+:00428147 3C02                    cmp al, 02				Unique
+:00428149 59                      pop ecx
+:0042814A 7502                    jne 0042814E
+:0042814C FEC0                    inc al
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042814A(C)
+|
+:0042814E A2AC114D00              mov byte ptr [004D11AC], al		Color of text
+:00428153 837E3800                cmp dword ptr [esi+38], 00000000	ID flag
+:00428157 8BCE                    mov ecx, esi
+:00428159 0F8471510100            je 0043D2D0
+:0042815F E8B7120000              call 0042941B				Display of IDed item
+:00428164 5E                      pop esi
+:00428165 C3                      ret
+
+
+:00428166 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042812A(C)
+|
+:00428167 8BB6C4000000            mov esi, dword ptr [esi+000000C4]
+:0042816D 8BCE                    mov ecx, esi
+:0042816F E864EFFDFF              call 004070D8
+:00428174 50                      push eax
+:00428175 56                      push esi
+
+* Possible StringData Ref from Data Obj ->"%i gold %s"
+
+and (placed in optimized location off diablo's death (10 bytes free))
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428159(C)
+|
+:0043D2D0 E8A0C3FEFF              call 00429675				Display of UnIDed item
+:0043D2D5 5E                      pop esi
+:0043D2D6 C3                      ret

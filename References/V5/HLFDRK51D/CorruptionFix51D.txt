@@ -1,0 +1,51 @@
+Minor fixing and optimizing for the Corruption fix from 51B, and also made the drain a little bit stronger.
+
+
+file offset 0005D038
+
+:0045DC38 F684304355000008        test byte ptr [eax+esi+00005543], 08
+:0045DC40 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0045DC43 7425                    je 0045DC6A
+:0045DC45 50                      push eax
+:0045DC46 03C6                    add eax, esi
+:0045DC48 53                      push ebx
+:0045DC49 51                      push ecx
+:0045DC4A 8B88AC010000            mov ecx, dword ptr [eax+000001AC]
+:0045DC50 6AF8                    push FFFFFFF8
+:0045DC52 5B                      pop ebx
+:0045DC53 03CB                    add ecx, ebx
+:0045DC55 7E05                    jle 0045DC5C
+:0045DC57 E8695AFFFF              call 004536C5
+:0045DC5C 59                      pop ecx
+:0045DC5D 5B                      pop ebx
+:0045DC5E 58                      pop eax
+:0045DC5F EB09                    jmp 0045DC6A
+:0045DC61 90                      nop
+:0045DC62 90                      nop
+:0045DC63 90                      nop
+:0045DC64 90                      nop
+:0045DC65 90                      nop
+:0045DC66 90                      nop
+:0045DC67 90                      nop
+:0045DC68 90                      nop
+:0045DC69 90                      nop
+
+changed into
+
+:0045DC38 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC3D 03C6                    add eax, esi
+:0045DC3F F6804355000008          test byte ptr [eax+00005543], 08
+:0045DC46 7422                    je 0045DC6A
+:0045DC48 8B88AC010000            mov ecx, dword ptr [eax+000001AC]
+:0045DC4E 85C9                    test ecx, ecx
+:0045DC50 7E18                    jle 0045DC6A
+:0045DC52 53                      push ebx
+:0045DC53 6AF6                    push FFFFFFF6
+:0045DC55 5B                      pop ebx
+:0045DC56 03CB                    add ecx, ebx
+:0045DC58 7F02                    jg 0045DC5C
+:0045DC5A 8BD9                    mov ebx, ecx
+:0045DC5C E8645AFFFF              call 004536C5
+:0045DC61 5B                      pop ebx
+:0045DC62 EB06                    jmp 0045DC6A
+:0045DC64 ...

@@ -1,0 +1,33 @@
+()Piercing for Bows - Reducing Distance penalty:
+
+dist^2/2  ->  dist^2/4 en dist^2/8 voor Penetrating resp. Piercing
+
+:0042F3C1 2BD1                    sub edx, ecx
+:0042F3C3 0FBE88B8010000          movsx ecx, byte ptr [eax+000001B8]
+:0042F3CA 2B9050550000            sub edx, dword ptr [eax+00005550]
+wordt
+:0042F3C1 E8FD350200              call 004529C3			              call PIERCING
+:0042F3C6 90		          nop
+:0042F3C7 2BD1                    sub edx, ecx
+:0042F3C9 0FBE88B8010000          movsx ecx, byte ptr [eax+000001B8]
+
+PIERCING: Alleen 'al' wordt gebruikt, omdat die even verderop weer gezet wordt.
+
+* Referenced by a CALL at Address:
+|:0042F3C1   
+|
+:004529C3 8A8050550000            mov al, byte ptr [eax+00005550]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529D1(U)
+|
+:004529C9 84C0                    test al, al
+:004529CB 7406                    je 004529D3
+:004529CD D1F9                    sar ecx, 1
+:004529CF FEC8                    dec al
+:004529D1 EBF6                    jmp 004529C9
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529CB(C)
+|
+:004529D3 C3                      ret

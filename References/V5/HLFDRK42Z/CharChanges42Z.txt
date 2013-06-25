@@ -1,0 +1,110 @@
+Disabled obsolete modification regarding Sweep for Warriors without a shield:
+
+file offset 0005B77F
+
+:0045C37F 0F85E85FFFFF            jne 0045236D
+changed into
+:0045C37F 0F8560010000            jne 0045C4E5
+:0045C385 
+
+Now 25 bytes free space from 0045236D to 00452386:
+
+file offset 0005176D
+
+:0045236D 84C0                    test al, al
+:0045236F 0F8570A10000            jne 0045C4E5
+:00452375 8B9164090000            mov edx, dword ptr [ecx+00000964]
+:0045237B 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+:00452381 E915A00000              jmp 0045C39B
+:00452386 
+
+
+
+Auto-equip staves for Monk:
+
+file offset 0001EDCB
+
+:0041F9CB 0F84C1000000            je 0041FA92
+changed into
+:0041F9CB 0F84EFFE0000            je 0042F8C0
+:0041F9D1 
+
+file offset 0002ECC0
+
+:0042F8C0 8B5508                  mov edx, dword ptr [ebp+08]
+:0042F8C3 8B0A                    mov ecx, dword ptr [edx]
+:0042F8C5 57                      push edi
+:0042F8C6 0FBEBBB8010000          movsx edi, byte ptr [ebx+000001B8]
+:0042F8CD 03CF                    add ecx, edi
+:0042F8CF 5F                      pop edi
+:0042F8D0 C3                      ret
+:0042F8D1 90                      nop
+changed into
+:0042F8C0 83B8AC5300000A          cmp dword ptr [eax+000053AC], 0000000A
+:0042F8C7 0F840401FFFF            je 0041F9D1
+:0042F8CD E9C001FFFF              jmp 0041FA92
+:0042F8D2 
+
+
+
+Minimum ToHit in PvP is now 25% (Max ToHit is still 50%). This is to keep friendly fire a factor against characters with very high AC.
+
+Melee Player vs. Player : Min chance to hit  5% -> 25%
+
+file offset 0005B335
+
+:0045BF35 6A05                    push 00000005
+changed into
+:0045BF35 6A19                    push 00000019
+
+Missile Player vs. Player : Min chance to hit  5% -> 25%
+
+file offset 00031984
+
+:00432584 83F805                  cmp eax, 00000005
+:00432587 7D03                    jge 0043258C
+:00432589 6A05                    push 00000005
+changed into
+:00432584 83F819                  cmp eax, 00000019
+:00432587 7D03                    jge 0043258C
+:00432589 6A19                    push 00000019
+
+
+
+
+Original Vitality bonus to damage for Barbarian restored: Vit*clvl / 100
+
+file offset 00023349
+
+:00423F49 6A4B                    push 0000004B
+changed into
+:00423F49 6A64                    push 00000064
+
+
+
+The previous fix for disappearing corpses made appearances unstable after death. This one has the acceptable side effect of showing characters without any armor, shield or weapon in their 'light' outfit (as originally).
+
+file offset 0005220E
+
+:00452E0E F78698010000C0FFFFFF    test dword ptr [esi+00000198], FFFFFFC0
+:00452E18 7E09                    jle 00452E23
+changed into
+:00452E0E 85D2                    test edx, edx
+:00452E10 7411                    je 00452E23
+:00452E12 9090909090909090        8*nop
+
+
+Improved fix to avoid 'plated' characters when no weapons are carried:
+
+file offset 0005220E
+
+changed into
+:00452E0E 85D2                    test edx, edx
+:00452E10 7504                    jne 00452E16
+:00452E12 85C0                    test eax, eax
+:00452E14 740D                    je 00452E23
+:00452E16 90                      nop
+:00452E17 90                      nop
+:00452E18 90                      nop
+:00452E19 90                      nop
+

@@ -1,0 +1,44 @@
+Show current number of charges (instead of maximum) on non-staff items with spells:
+
+Providing needed text:
+
+000A52B2 0000 6172 6D6F 723A 2025 6920 2049 6E64 ..armor: %i  Ind
+000A52C2 6573 7472 7563 7469 626C 6500 0000      estructible...
+changed into
+000A52B2 2569 2025 7320 6368 6172 6765 0000 0000 %i %s charge....
+000A52C2 0000 0000 0000 0000 0000 0000 0000      ..............
+
+file offset 00027DF1
+
+:004289F1 FFB6E8000000            push dword ptr [esi+000000E8]
+* Possible StringData Ref from Data Obj ->"%i %s charges"
+:004289F7 68D0654A00              push 004A65D0
+:004289FC E91D040000              jmp 00428E1E
+changed into
+:004289F1 8B86E4000000            mov eax, dword ptr [esi+000000E4]
+:004289F7 50                      push eax
+:004289F8 83F801                  cmp eax, 00000001
+:004289FB 90                      nop
+:004289FC E927AF0200              jmp 00453928
+:00428A01 
+
+file offset 00052D28
+
+:00453928 90909090                4*nop
+:0045392C E812ACFDFF              call 0042E543
+:00453931 B22D                    mov dl, 2D
+:00453933 33C9                    xor ecx, ecx
+:00453935 57                      push edi
+:00453936 E87B35FFFF              call 00446EB6
+:0045393B 5F                      pop edi
+:0045393C 5E                      pop esi
+:0045393D C3                      ret
+changed into
+:00453928 7507                    jne 00453931
+* Possible StringData Ref from Data Obj ->"%i %s charge"
+:0045392A 68B2684A00              push 004A68B2
+:0045392F EB05                    jmp 00453936
+* Possible StringData Ref from Data Obj ->"%i %s charges"
+:00453931 68D0654A00              push 004A65D0
+:00453936 E9E354FDFF              jmp 00428E1E
+:0045393B 909090                  3*nop

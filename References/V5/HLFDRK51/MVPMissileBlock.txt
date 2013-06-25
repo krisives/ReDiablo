@@ -1,0 +1,7 @@
+Lower maximum chance to block missiles:
+
+file offset 0002EBED
+
+:0042F7ED 6A5F                    push 0000005F
+changed into
+:0042F7ED 6A5A                    push 0000005A

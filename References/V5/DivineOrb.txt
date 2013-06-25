@@ -1,0 +1,22 @@
+*********** not implemented
+
+
+Global cast of stored spell:
+
+:0040A274 E8????????              call 00444466					eax = local char address
+:00421571 8B90AC000000            mov edx, dword ptr [eax+000000AC]		stored spell number
+:0042162F 50                      push eax
+:00423CC8 52                      push edx
+:0040A274 E8????????              call 0042F055					eax = slvl
+:00423CDD 5A                      pop edx
+:00423D04 59                      pop ecx
+:0040A281 50                      push eax
+:00423CC8 52                      push edx
+:004026BF 8BC1                    mov eax, ecx
+:0045C8EF FF703C                  push [eax+3C]					character coordinate
+:0045C8F2 FF7038                  push [eax+38]					character coordinate
+:0040A2A2 6A01                    push 00000001
+:0040A2A4 59                      pop ecx
+:0040A27F B20F                    mov dl, 0F					action = cast spell
+:0040A2A5 E8????????              call 00446E33					do global action
+:0040A2AA C3                      ret

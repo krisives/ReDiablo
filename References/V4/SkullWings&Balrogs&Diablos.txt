@@ -1,0 +1,337 @@
+Improving Balrog attacks, changing Undead Balrogs into Skullwings and make Fallen Angels use Inferno. 
+
+Apocalypse from monsters is now less fast, but Subtype and Resistances are improved to compensate.
+
+
+Disable influence by Subtype to initiate Inferno in melee range:
+
+File Offset 000414D6
+
+:004420D6 7C06                    jl 004420DE
+wordt
+:004420D6 9090                    nopnop
+
+
+Slighly increasing the chance for not Attacking in melee range (tuning for Subtypes 2-5):
+
+File Offset 0004150C
+
+:0044210C 6A64                    push 00000064
+wordt
+:0044210C 6A6E                    push 0000006E
+
+
+Increasing Inferno damage to compensate for lower Subtypes:
+
+2*(min+rnd[max-min])/64  ->  2*(max+rnd[max-min])/64
+
+File Offset 00034498
+
+:00435098 50                      push eax
+wordt
+:00435098 52                      push edx
+
+
+Setting new Subtypes, adjusting animation frames, giving Fallen Angels the now improved Balrog attack, and changing Undead Balrogs into Skull Wings (Bone Lord attacktype):
+
+ 13 Slayer                demon    26 Balrog  3  10-12    20   120- 140   60  100   12- 20
+                                              2
+ stand walk  attk1 frame   hr  death attk2 frame    playback speed
+    6     7    14     8     1    24     5     3     3   0   0   0   2   0
+                                                                
+000AAF70 A000 0000 1405 0000 F826 4B00 0100 0000 .........&K.....
+000AAF80 DC26 4B00 0100 0000 0000 0000 0000 0000 .&K.............
+000AAF90 0600 0000 0700 0000 0E00 0000 0100 0000 ................
+000AAFA0 1800 0000 0500 0000 0300 0000 0000 0000 ................
+000AAFB0 0000 0000 0000 0000 0200 0000 0000 0000 ................
+000AAFC0 D426 4B00 1216 1400 7800 0000 8C00 0000 .&K.....x.......
+000AAFD0 1A00 0000 0003 0000 0364 080C 1400 0300 .........d......
+000AAFE0 003C 0100 1100 1100 0000 0700 FC08 0000 .<..............
+wordt
+000AAFD8 02                                      .
+
+ 87 Vortex Lord           demon    26 Balrog  5  12-14    24   160- 180   70  120   18- 24
+                                              3
+ stand walk  attk1 frame   hr  death attk2 frame    playback speed
+    6     7    12     8     1    24     5     3     3   0   0   0   2   0
+                                                                    
+000AD470 A000 0000 BC02 0000 F826 4B00 0100 0000 .........&K.....
+000AD480 DC26 4B00 0100 0000 0100 0000 9826 4B00 .&K..........&K.
+000AD490 0600 0000 0700 0000 0C00 0000 0100 0000 ................
+000AD4A0 1800 0000 0500 0000 0300 0000 0000 0000 ................
+000AD4B0 0000 0000 0000 0000 0200 0000 0000 0000 ................
+000AD4C0 8C26 4B00 161A 1800 A000 0000 B400 0000 .&K.............
+000AD4D0 1A00 0000 0003 0000 0578 0812 1800 0300 .........x......
+000AD4E0 0046 0100 1100 1100 0000 0700 B40C 0000 .F..............
+wordt
+000AD4D8 03                                      .
+
+ 88 Balrog                demon    26 Balrog  6  14-15    27   180- 200   75  130   22- 30
+                                              4
+ stand walk  attk1 frame   hr  death attk2 frame    playback speed
+    6     7    11     8     1    24     5     3     3   0   0   0   2   0
+                                                                    
+000AD4F0 A000 0000 1405 0000 F826 4B00 0100 0000 .........&K.....
+000AD500 DC26 4B00 0100 0000 0100 0000 7426 4B00 .&K.........t&K.
+000AD510 0600 0000 0700 0000 0B00 0000 0100 0000 ................
+000AD520 1800 0000 0500 0000 0300 0000 0000 0000 ................
+000AD530 0000 0000 0000 0000 0200 0000 0000 0000 ................
+000AD540 6C26 4B00 1A1C 1B00 B400 0000 C800 0000 l&K.............
+000AD550 1A00 0000 0003 0000 0682 0816 1E00 0300 ................
+000AD560 004B 0100 1500 1500 0000 0700 3B0E 0000 .K..........;...
+wordt
+000AD558 04                                      .
+
+136 Fallen Angel          demon     6 GoatMan 3  C2-C4    32   270- 300  100  135   35- 45
+                                   26 Balrog  5
+ stand walk  attk1 frame   hr  death attk2 frame    playback speed
+    6     6    10     6     1    24     5     5     2   0   0   0   2   2
+                                              3     3                   0
+000AECF0 A000 0000 BC02 0000 F826 4B00 0100 0000 .........&K.....
+000AED00 DC26 4B00 0100 0000 0100 0000 BC26 4B00 .&K..........&K.
+000AED10 0600 0000 0600 0000 0A00 0000 0100 0000 ................
+000AED20 1800 0000 0500 0000 0200 0000 0000 0000 ................
+000AED30 0000 0000 0000 0000 0200 0000 0200 0000 ................
+000AED40 9828 4B00 2A2E 2000 0E01 0000 2C01 0000 .(K.*. .....,...
+000AED50 0600 0000 8001 0000 0387 0623 2D87 0528 ...........#-..(
+000AED60 3264 0100 3100 3100 0000 0700 7017 0000 2d..1.1.....p...
+wordt
+000AED28 0300 0000                               ....
+000AED3C 0000 0000                               ....
+000AED50 1A                                      .
+000AED58 05                                      .
+000AED5E 03                                      .
+
+ 59 Undead Balrog         undead   26 Balrog 10  C1-C2    29   200- 240  100  122   35- 50
+    Skull Wing                     39 Unknown 3                                     35- 40
+ stand walk  attk1 frame   hr  death attk2 frame    playback speed
+   10     8    20     8     6    24     4     3     3   0   0   0   0   0
+                                       16    12
+
+000B12E8 556E 6465 6164 2042 616C 726F 6700 0000 Undead Balrog...
+wordt
+000B12E8 536B 756C 6C20 5769 6E67 0000 0000 0000 Skull Wing......
+
+000AC670 8000 0000 1405 0000 7029 4B00 0100 0000 ........p)K.....
+000AC680 4C2C 4B00 BC02 0000 0000 0000 3829 4B00 L,K.........8)K.
+000AC690 0A00 0000 0800 0000 1400 0000 0600 0000 ................
+000AC6A0 1800 0000 0400 0000 0300 0000 0000 0000 ................
+000AC6B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AC6C0 E828 4B00 282A 1D00 C800 0000 F000 0000 .(K.(*..........
+000AC6D0 1A00 0000 0002 0000 0A7A 0823 3200 0300 .........z.#2...
+000AC6E0 0064 0000 3000 3100 0000 0700 6810 0000 .d..0.1.....h...
+wordt
+000AC680 C81D 4B00 0100                          ..K...
+000AC6A4 1000 0000                               ....
+000AC6D0 2700 0000 0000 0000 03                  '........
+000AC6DB 2328                                    #(
+000AC6DD 7A                                      z
+000AC6DE 0C                                      .
+000AC6DF 2328                                    #(
+000AC6E4 6A00 6A00                               j.j.
+
+ 96 Bone Lord             undead   39 Unknown 3  16-16    31   250- 280  100  135   40- 50
+    no changes
+ stand walk  attk1 frame   hr  death attk2 frame    playback speed
+   10     8    20     8     6    24    16    12     3   0   0   0   0   0
+
+000AD8F0 8000 0000 BC02 0000 7029 4B00 0100 0000 ........p)K.....
+000AD900 C81D 4B00 0100 0000 0100 0000 1031 4B00 ..K..........1K.
+000AD910 0A00 0000 0800 0000 1400 0000 0600 0000 ................
+000AD920 1800 0000 1000 0000 0300 0000 0000 0000 ................
+000AD930 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AD940 0409 4A00 1E1E 1F00 FA00 0000 1801 0000 ..J.............
+000AD950 2700 0000 0000 0000 0387 0828 3287 0C28 '..........(2..(
+000AD960 3264 0000 6A00 6A00 0000 0700 6B0F 0000 2d..j.j.....k...
+no changes
+
+ 17 Wrathfire             Slayer   26 Balrog  6  11Y    12      24       20   670   21- 32
+                                              3
+000AF4A0 0D00 0000 A81A 4B00 841B 4B00 0C00 9E02 ......K...K.....
+000AF4B0 1A06 1520 1100 0B00 0000 0000 0000 0000 ... ............
+wordt
+000AF4B1 03                                      .
+
+ 87 Gorefeast             Vortex   26 Balrog  7  11Y    13      26       24   760   20- 55
+                                              4
+000AFD60 5700 0000 C815 4B00 841B 4B00 0D00 F802 W.....K...K.....
+000AFD70 1A07 1437 1500 0B00 0000 0000 0000 0000 ...7............
+wordt
+000AFD71 04                                      .
+
+ 78 Blackskull            Balrog   26 Balrog  7  11Y    14      28       27   820   32- 48
+                                              5
+000AFC40 5800 0000 4C16 4B00 281B 4B00 0E00 3403 X...L.K.(.K...4.
+000AFC50 1A07 2030 1500 0B00 0000 0000 0000 0000 .. 0............
+wordt
+000AFC51 05                                      .
+
+ 72 Lionskull the Bent    UBalrog  26 Balrog 15  11Y    C1      26       29  1200   40- 60
+                                   39 Unknown 3                                     
+000AFB80 3B00 0000 A016 4B00 CC19 4B00 1500 B004 ;.....K...K.....
+000AFB90 1A0F 283C 3100 0B00 0000 0000 0000 0000 ..(<1...........
+wordt
+000AFB90 2703                                    '.
+000AFB94 6A00                                    j.
+
+
+Fix the loading of missile animations for new Skull Wing:
+
+File Offset 0003A453
+
+:0043B053 837DFC60                cmp dword ptr [ebp-04], 00000060
+:0043B057 7521                    jne 0043B07A
+:0043B059 B800080000              mov eax, 00000800
+:0043B05E 850538D66900            test dword ptr [0069D638], eax
+:0043B064 7514                    jne 0043B07A
+:0043B066 090538D66900            or dword ptr [0069D638], eax
+:0043B06C B132                    mov cl, 32
+:0043B06E E8B14AFFFF              call 0042FB24
+:0043B073 B137                    mov cl, 37
+:0043B075 E8AA4AFFFF              call 0042FB24
+:0043B07A 837DFC72                cmp dword ptr [ebp-04], 00000072
+:0043B07E 7500                    jne 0043B080
+:0043B080 
+wordt
+:0043B053 837DFC60                cmp dword ptr [ebp-04], 00000060	Bone Lord
+:0043B057 7406                    je 0043B05F
+:0043B059 837DFC3B                cmp dword ptr [ebp-04], 0000003B	Skullwing
+:0043B05D 7521                    jne 0043B080
+:0043B05F B800080000              mov eax, 00000800
+:0043B064 850538D66900            test dword ptr [0069D638], eax
+:0043B06A 7514                    jne 0043B080
+:0043B06C 090538D66900            or dword ptr [0069D638], eax
+:0043B072 B132                    mov cl, 32
+:0043B074 E8AB4AFFFF              call 0042FB24
+:0043B079 B137                    mov cl, 37
+:0043B07B E8A44AFFFF              call 0042FB24
+:0043B080 
+
+
+Adding 'Storm' sound to Skull Wing's attack spell:
+
+000A6E90 6600 0000 4A37 4300 E860 4300 0100 0000 f...J7C..`C.....
+000A6EA0 0103 3200 FFFF FFFF FFFF FFFF           ..2.........
+wordt
+000A6EA4 8D00 0000                               ....
+
+The sounds SWingS1 and SWingS2 are disabled by adding blank WAV files of the same name to the MPQ. Those sounds are not heared for the Skull Wing boss (a general bug which disables Secondary Attack sounds for bosses and their packs), and resembled the shooting sounds from Scowlers too much.
+
+
+Lowering chances for Apocalypse (too fast for FallenAngel type monsters now):
+
+Check for Spelltype is needed because this code is also used for other monsters.
+
+File Offset 00041111
+
+:00441D11 69C0F4010000            imul eax, 000001F4			
+:00441D17 D3F8                    sar eax, cl
+wordt
+:00441D11 8B55E8                  mov edx, dword ptr [ebp-18]
+:00441D14 E8FD7EFEFF              call 00429C16
+:00441D19
+
+File Offset 00041186
+
+:00441D86 69C0F4010000            imul eax, 000001F4		
+:00441D8C D3F8                    sar eax, cl
+wordt
+:00441D86 8B55E8                  mov edx, dword ptr [ebp-18]
+:00441D89 E8887EFEFF              call 00429C16
+:00441D8E
+
+File Offset 0004119E
+
+:00441D9E 69C0F4010000            imul eax, 000001F4
+:00441DA4 D3F8                    sar eax, cl
+wordt
+:00441D9E 8B55E8                  mov edx, dword ptr [ebp-18]
+:00441DA1 E8707EFEFF              call 00429C16
+:00441DA6
+
+Using free space from Small Potions:
+
+File Offset 00029016
+
+:00429C16 90                      nop
+:00429C17 03C6                    add eax, esi
+:00429C19 C1E705                  shl edi, 05
+:00429C1C 8A8860010000            mov cl, byte ptr [eax+00000160]
+:00429C22 80F902                  cmp cl, 02
+:00429C25 7502                    jne 00429C29
+:00429C27 D1E7                    shl edi, 1
+:00429C29 80F901                  cmp cl, 01
+:00429C2C 7506                    jne 00429C34
+:00429C2E 8BCF                    mov ecx, edi
+:00429C30 D1F9                    sar ecx, 1
+:00429C32 03F9                    add edi, ecx
+wordt
+:00429C16 83FA43                  cmp edx, 00000043
+:00429C19 7508                    jne 00429C23
+:00429C1B 69C096000000            imul eax, 00000096		Subtype*150
+:00429C21 EB06                    jmp 00429C29
+:00429C23 69C0F4010000            imul eax, 000001F4		Subtype*500
+:00429C29 D3F8                    sar eax, cl
+:00429C2B C3                      ret 
+:00429C2C 9090909090909090        8*nop
+
+
+Adjusting Subtypes and some Resistances, to compensate, for Apocalypse using monsters:
+
+110 The Dark Lord         demon    27 Diablo  3  26-26*   45  4000-4000  125  135   55- 62
+                                              5
+000ADFF0 A000 0000 1405 0000 9C22 4B00 0100 0000 ........."K.....
+000AE000 7C22 4B00 0100 0000 0000 0000 0000 0000 |"K.............
+000AE010 1000 0000 0500 0000 0A00 0000 0100 0000 ................
+000AE020 1200 0000 0C00 0000 0000 0000 0000 0000 ................
+000AE030 0000 0000 0000 0000 0200 0000 0000 0000 ................
+000AE040 6C22 4B00 3232 2D00 A00F 0000 A00F 0000 l"K.22-.........
+000AE050 1B00 0000 9003 0000 0387 0537 3E00 0800 ...........7>...
+000AE060 007D 0100 5500 5500 0000 0700 7017 0000 .}..U.U.....p...
+wordt
+000AE058 05                                      .
+000AE064 5500 7100                               U.q.
+
+137 The Dark Ghost        demon    27 Diablo  5  26-26*   60  3750-3750  125  135   58- 62
+                                              6
+000AED70 A000 0000 0100 0000 9C22 4B00 0100 0000 ........."K.....
+000AED80 7C22 4B00 0100 0000 0100 0000 BC26 4B00 |"K..........&K.
+000AED90 1000 0000 0400 0000 0900 0000 0100 0000 ................
+000AEDA0 1100 0000 0900 0000 0400 0000 0000 0000 ................
+000AEDB0 0000 0000 0000 0000 0200 0000 0000 0000 ................
+000AEDC0 781A 4B00 3232 3C00 A60E 0000 A60E 0000 x.K.22<.........
+000AEDD0 1B00 0000 9003 0000 0587 053A 3E85 063A ...........:>..:
+000AEDE0 3E7D 0100 4700 4700 0000 0700 7017 0000 >}..G.G.....p...
+wordt
+000AEDD8 06                                      .
+000AEDE4 7100 7100                               q.q.
+
+ 12 The Dark Ghost        DGhost   27 Diablo  4  11      0*     65       60  6000   58- 62
+                                              6
+000AF400 8900 0000 781A 4B00 9C1B 4B00 0000 7017 ....x.K...K...p.
+000AF410 1B04 3A3E 5500 0B00 0000 0000 0000 0000 ..:>U...........
+wordt
+000AF411 06                                      .
+000AF414 7100                                    q.
+
+ 25 Izual                 FAngel   27 Diablo  0   1     16$     32       32  1600   48- 62
+                                              3
+000AF5A0 8800 0000 AC1B 4B00 D41A 4B00 1000 4006 ......K...K...@.
+000AF5B0 1B00 303E 7100 0100 0000 0000 0000 0000 ..0>q...........
+wordt
+000AF5B1 03                                      .
+
+ 26 Wraith of Izual       FAngel   27 Diablo  3   1Y    C3      30       32  2000   54- 62
+                                              4
+000AF5C0 8800 0000 F419 4B00 CC19 4B00 1700 D007 ......K...K.....
+000AF5D0 1B03 363E 7100 0100 0000 0000 0000 0000 ..6>q...........
+wordt
+000AF5D1 04                                      .
+
+
+Adding APOC sound to Apocalypse cast by monsters:
+
+000A6ABC 4300 0000 A356 4300 B19F 4100 0000 0000 C....VC...A.....
+000A6ACC 0200 FF00 FFFF FFFF FFFF FFFF           ............
+wordt
+000A6AD0 5E00 0000                               ^...

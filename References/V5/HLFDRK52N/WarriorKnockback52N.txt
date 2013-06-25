@@ -1,0 +1,40 @@
+Warriors using a bow will automatically have Knockback.
+
+
+Modifying general equipment routine:
+
+File offset 0002328F
+
+:00423E8F 0F8509010000            jne 00423F9E
+changed into
+:00423E8F 0F859C940100            jne 0043D331
+:00423E95 
+
+
+Using free space from obsolete MS SLVL calculation:
+
+File offset 0003C731
+
+:0043D331 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043D336 6A0B                    push 0000000B
+:0043D338 59                      pop ecx
+:0043D339 03C8                    add ecx, eax
+:0043D33B 0FBE8C39C1000000        movsx ecx, byte ptr [ecx+edi+000000C1]
+:0043D343 0FBE843848550000        movsx eax, byte ptr [eax+edi+00005548]
+:0043D34B 03C1                    add eax, ecx
+:0043D34D 85C0                    test eax, eax
+:0043D34F 7D02                    jge 0043D353
+:0043D351 33C0                    xor eax, eax
+:0043D353 C3                      ret
+changed into
+:0043D331 84C0                    test al, al						check for Warrior
+:0043D333 7519                    jne 0043D34E
+:0043D335 83B96409000003          cmp dword ptr [ecx+00000964], 00000003		check for bow in first hand
+:0043D33C 7409                    je 0043D347
+:0043D33E 83B9D80A000003          cmp dword ptr [ecx+00000AD8], 00000003		check for bow in second hand
+:0043D345 7507                    jne 0043D34E
+:0043D347 80894155000008          or byte ptr [ecx+00005541], 08			set Knockback flag
+:0043D34E E94B6CFEFF              jmp 00423F9E
+:0043D353 90                      nop
+
+

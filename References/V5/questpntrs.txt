@@ -1,0 +1,262 @@
+Quests
+				Level
+#	Name			SP	MP
+00 - The Magic Rock		05
+01 - Black Mushroom		09
+02 - Gharbad The Weak		03
+03 - Andariel(Zhar The Mad)	08
+04 - Red Terror(Lachdanan)	0E
+05 - Diablo			0F
+06 - The Butcher		02	04
+07 - Ogden's Sign		04
+08 - Halls Of The Blind		08
+09 - Valor			05
+0A - Anvil Of Fury		0A
+0B - Warlord Of Blood		0D
+0C - The Curse Of King Leoric	03	05
+0D - Poisoned Water Supply	04
+0E - The Chamber Of Bone	06
+0F - Archbishop Lazarus		0F	0F
+10 - Grave Matters		11	11
+11 - Farmer's Orchard		09	09
+12 - Little Girl		11
+13 - Wandering Trader		13
+14 - Red Horror			11	11
+15 - h Thing (Na-Krul)		15	15
+16 - Cornerstone Of The World	15
+17 - The Jersey's Jersey	09	09
+
+
+Quest related pointers
+
+
+Level #    	[0060B1D8]	Contains level number
+
+Quest(SP) #	[0061CB00]	Contains sublevel number (SP) (also in MP used for checking Leoric)
+
+		[0061F314]	00	No active Mp Quest ?
+				other   contains level of QUest in MP ? or just a toggle
+
+
+		[006DDFC8]	00				Multi
+				01				Single
+		
+Questlevel #	[006EB358]	Contains level on which quest will appear in SP
+		[006EB35A]	00	No quest will appear
+
+		[004B6910]	00	Quest sp only
+				01	Quest sp and mp
+
+
+Quests in each group					Number Chosen	
+
+The Curse of King Leoric, Poisoned Water Supply		1	
+The Butcher, Gharbad the Weak, Ogden’s Sign		2	
+The Magic Rock, Valor, Halls of the Blind		2	
+Zhar the Mad, The Black Mushroom, Anvil of Fury		2	
+Warlord of Blood, Lachdanan				1	
+
+
+Data:
+
+Bytes	Effect 
+0     	SP dungeon level the quest appears in. 
+1 	MP dungeon level the quest appears in. 
+2 	Unknown = Sublevel data (1, 2 or 3)
+	All have FF here, except those with a value at byte 5... 
+3 	Quest number 
+4 	Don't know.... 
+5 	Special level setting (SP only) = Entrance Name
+	01 = King Leoric's Tomb
+	02 = The Chamber of Bone
+	03 = Maze
+	For some odd reason, the Ogden's Sign quest, which uses this,
+	does not have this value at this location.
+	4 = Dark Passage
+	5 = Unholy Altar 
+6-7 	Always zero 
+8-11 	MultiPlayer trigger flag
+	00 = SP only quest
+	01 = SP and MP quest 
+12-15 	Quest name pointer
+ 
+
+00 - The Magic Rock		05
+000B5308 05FF FF00 6400 0000 0000 0000 7300 0000 ....d.......s...
+000B5318 9C6C 4B00                               .lK.
+
+01 - Black Mushroom		09
+000B531C 09FF FF01 6400 0000 0000 0000 8000 0000 ....d...........
+000B532C 2455 4A00                               $UJ.
+
+02 - Gharbad The Weak		03
+000B5330 03FF FF02 6400 0000 0000 0000 9000 0000 ....d...........
+000B5340 886C 4B00                               .lK.
+
+03 - Zhar The Mad       	08
+000B5344 08FF FF03 6400 0000 0000 0000 9400 0000 ....d...........
+000B5354 0C19 4B00                               ..K.
+
+04 - Lachdanan 			14
+000B5358 0EFF FF04 6400 0000 0000 0000 5100 0000 ....d.......Q...
+000B5368 8819 4B00                               ..K.
+
+05 - Diablo			15
+000B536C 0FFF FF05 6400 0000 0100 0000 1900 0000 ....d...........
+000B537C 806C 4B00                               .lK.
+
+06 - The Butcher		02	04
+000B5380 0204 FF06 6400 0000 0100 0000 3F00 0000 ....d.......?...
+000B5390 F82B 4B00                               .+K.
+
+07 - Ogden's Sign		04
+000B5394 04FF FF07 6400 0000 0000 0000 0C00 0000 ....d...........
+000B53A4 706C 4B00                               plK.
+
+08 - Halls Of The Blind		08
+000B53A8 08FF FF08 6400 0000 0000 0000 ED00 0000 ....d...........
+000B53B8 5C6C 4B00                               \lK.
+
+09 - Valor			05
+000B53BC 05FF FF09 6400 0000 0000 0000 EC00 0000 ....d...........
+000B53CC 546C 4B00                               TlK.
+
+0A - Anvil Of Fury		10
+000B53D0 0AFF FF0A 6400 0000 0000 0000 5800 0000 ....d.......X...
+000B53E0 3455 4A00                               4UJ.
+
+0B - Warlord Of Blood		13
+000B53E4 0DFF FF0B 6400 0000 0000 0000 EE00 0000 ....d...........
+000B53F4 141B 4B00                               ..K.
+
+0C - The Curse Of King Leoric	03	05
+000B53F8 0305 010C 6401 0000 0100 0000 0100 0000 ....d...........
+000B5408 386C 4B00                               8lK.
+
+0D - Poisoned Water Supply	04
+000B540C 04FF 030D 6404 0000 0000 0000 2700 0000 ....d.......'...
+000B541C 206C 4B00                                lK.
+
+0E - The Chamber Of Bone	06
+000B5420 06FF 020E 6402 0000 0000 0000 EB00 0000 ....d...........
+000B5430 0C6C 4B00                               .lK.
+
+0F - Archbishop Lazarus		15	15
+000B5434 0F0F 010F 6405 0000 0100 0000 1700 0000 ....d...........
+000B5444 F86B 4B00                               .kK.
+
+10 - Grave Matters		17	17
+000B5448 1111 FF10 6400 0000 0100 0000 1101 0000 ....d...........
+000B5458 E86B 4B00                               .kK.
+
+11 - Farmer's Orchard		09	09
+000B545C 0909 FF11 6400 0000 0100 0000 1501 0000 ....d...........
+000B546C D46B 4B00                               .kK.
+
+12 - Little Girl		17
+000B5470 11FF FF12 6400 0000 0000 0000 1B01 0000 ....d...........
+000B5480 C86B 4B00                               .kK.
+
+13 - Wandering Trader/SparkWorm	19
+000B5484 13FF FF13 6400 0000 0000 0000 3201 0000 ....d.......2...
+000B5494 B46B 4B00                               .kK.
+
+14 - The Defiler		17	17
+000B5498 1111 FF14 6400 0000 0100 0000 1E01 0000 ....d...........
+000B54A8 6009 4A00                               `.J.
+
+15 - The Dark Ghost  		21	21
+000B54AC 1515 FF15 6400 0000 0100 0000 2301 0000 ....d.......#...
+000B54BC 781A 4B00                               x.K.
+
+16 - Cornerstone Of The World	21
+000B54C0 15FF FF16 6400 0000 0000 0000 2801 0000 ....d.......(...
+000B54D0 986B 4B00                               .kK.
+
+17 - The Jersey's Jersey	09	09
+000B54D4 0909 FF17 6400 0000 0100 0000 2C01 0000 ....d.......,...
+000B54E4 846B 4B00                               .kK.
+
+
+Used data:
+000B54E8 00FF 00FF FEFF FE00 0000 FFFF FFFE FE00 ................
+
+
+Pointers to "King Leoric's Tomb", "The Chamber of Bone", "Maze", "A Dark Passage" en "Unholy Altar":
+
+000B54F8 706B 4B00 0C6C 4B00 686B 4B00 586B 4B00 pkK..lK.hkK.XkK.
+000B5508 486B 4B00                               HkK.
+
+
+
+
+
+
+
+
+
+:0045F64B 891D4CB36E00            mov dword ptr [006EB34C], ebx
+:0045F651 C70578B66E0001000000    mov dword ptr [006EB678], 00000001
+:0045F65B 891D68B66E00            mov dword ptr [006EB668], ebx
+:0045F661 33ED                    xor ebp, ebp
+:0045F663 895C2410                mov dword ptr [esp+10], ebx
+:0045F667 BF0B694B00              mov edi, 004B690B			edi := QuestNumber
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045F6E5(C)
+|
+:0045F66C 80FA01                  cmp dl, 01
+:0045F66F 7606                    jbe 0045F677
+:0045F671 F6470501                test [edi+05], 01			test for MP Quest
+:0045F675 745E                    je 0045F6D5
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045F66F(C)
+|
+:0045F677 8A07                    mov al, byte ptr [edi]
+:0045F679 80FA01                  cmp dl, 01
+:0045F67C 8846FF                  mov byte ptr [esi-01], al		store Questnumber
+:0045F67F 7623                    jbe 0045F6A4
+:0045F681 8A47FE                  mov al, byte ptr [edi-02]		
+:0045F684 8BCD                    mov ecx, ebp
+:0045F686 8846FE                  mov byte ptr [esi-02], al		store MP level
+:0045F689 E81D70FEFF              call 004466AB
+:0045F68E 85C0                    test eax, eax
+:0045F690 7509                    jne 0045F69B
+:0045F692 C60601                  mov byte ptr [esi], 01
+:0045F695 885E12                  mov byte ptr [esi+12], bl
+:0045F698 895E16                  mov dword ptr [esi+16], ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045F690(C)
+|
+:0045F69B 8A15C8DF6D00            mov dl, byte ptr [006DDFC8]
+:0045F6A1 45                      inc ebp
+:0045F6A2 EB0F                    jmp 0045F6B3
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045F67F(C)
+|
+:0045F6A4 8A47FD                  mov al, byte ptr [edi-03]		
+:0045F6A7 C60601                  mov byte ptr [esi], 01
+:0045F6AA 8846FE                  mov byte ptr [esi-02], al		Store SP level
+:0045F6AD 885E12                  mov byte ptr [esi+12], bl
+:0045F6B0 895E16                  mov dword ptr [esi+16], ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045F6A2(U)
+|
+:0045F6B3 8A4702                  mov al, byte ptr [edi+02]		
+:0045F6B6 88460A                  mov byte ptr [esi+0A], al		sublevel name
+:0045F6B9 8A442410                mov al, byte ptr [esp+10]
+:0045F6BD 895E02                  mov dword ptr [esi+02], ebx
+:0045F6C0 895E06                  mov dword ptr [esi+06], ebx
+:0045F6C3 88460B                  mov byte ptr [esi+0B], al
+:0045F6C6 8A47FF                  mov al, byte ptr [edi-01]				
+:0045F6C9 884601                  mov byte ptr [esi+01], al		sublevel data
+:0045F6CC 8B4709                  mov eax, dword ptr [edi+09]
+:0045F6CF 885E13                  mov byte ptr [esi+13], bl
+:0045F6D2 89460E                  mov dword ptr [esi+0E], eax		quest details
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045F675(C)
+|

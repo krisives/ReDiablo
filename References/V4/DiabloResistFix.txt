@@ -1,0 +1,30 @@
+Fixing resistance vs. Lightning and Fire Arrows for Diablo and the Ghost
+
+File Offset 0002E763
+
+:0042F363 837D1400                cmp dword ptr [ebp+14], 00000000
+:0042F367 7410                    je 0042F379
+wordt
+:0042F363 E982A2FDFF              jmp 004095EA
+:0042F368 90                      nop
+
+Using last free space from Command file code:
+
+File Offset 000089EA
+
+:004095EA 90                      nop
+:004095EB 59                      pop ecx
+:004095EC 43                      inc ebx
+:004095ED 8A03                    mov al, byte ptr [ebx]
+:004095EF 84C0                    test al, al
+:004095F1 0F8517FEFFFF            jne 0040940E
+:004095F7 5E                      pop esi
+:004095F8 5F                      pop edi
+:004095F9 5B                      pop ebx
+:004095FA C9                      leave
+:004095FB C3                      ret
+wordt
+:004095EA 80BB78794A0000          cmp byte ptr [ebx+004A7978], 00
+:004095F1 0F84825D0200            je 0042F379
+:004095F7 E96D5D0200              jmp 0042F369
+:004095FC

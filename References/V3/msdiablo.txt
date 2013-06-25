@@ -1,0 +1,19 @@
+about Manashield damage reduction
+
+Try altering (0002EEE2) which should be FD.
+
+FD is -3. What it does is take the damage, divide by -3 and then add the result to the damage.
+
+Therefore damage = damage + (damage/-3)
+... which is ...
+damage = damage - (damage/3)
+
+But, if you make the number any positive number, the damage will be
+
+damage = damage + (damage/#)
+
+So making it 03 will increase damage by 1/3.
+Making it 05 will increase damage by 1/5.
+etc.
+
+Dr. Zed

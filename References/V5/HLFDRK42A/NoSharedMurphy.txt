@@ -1,0 +1,19 @@
+Restricting Murphy Shrine to user only, to ensure proper working (durability halved on one item, or loose all gold)
+
+file offset 00052396
+
+:00452F96 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452F9B 90                      nop
+:00452F9C 90                      nop
+:00452F9D 90                      nop
+:00452F9E 90                      nop
+:00452F9F 90                      nop
+:00452FA0 90                      nop
+:00452FA1 90                      nop
+:00452FA2 90                      nop
+:00452FA3 90                      nop
+:00452FA4 90                      nop
+changed to
+:00452F96 8B45FC                  mov eax, dword ptr [ebp-04]
+:00452F99 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00452F9F 0F85C7000000            jne 0045306C

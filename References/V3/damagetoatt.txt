@@ -1,0 +1,7 @@
+To Charlie
+by Jarulf 
+
+Hi there,
+
+I remember you saying you did not know where the 1-3 damage to attacker is done. I could not fiond it now so I poseted this instead. Take a look at 435ca1 and you will find it :)
+

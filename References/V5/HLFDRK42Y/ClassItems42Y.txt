@@ -1,0 +1,445 @@
+Class Items
+
+These items, found only with the highest level monsters in Hellmode, give a bonus to attributes when merely kept in inventory, but only for the matching character class.
+
+
+
+Class              Dex       Mag       Str        Vit           Item
+------------------------------------------------------------------------------------------------
+Warrior                       	       +(clvl+4)/2		Note     "Deed of Valour"       gfx 192/C0
+Rogue            +(clvl+4)/2                          		Teddy    "Teddy Bear"           gfx 188/BC
+Sorcerer                   +(clvl+4)/2        			Runebomb "Scrying globe"        gfx 187/BB
+Monk             +(clvl+4)/4           +(clvl+4)/4  		Auric    "Relic Box"		gfx 180/B4
+Bard             +(clvl+4)/4 +(clvl+4)/4                      	Chalice  "Silver Chalice"       gfx 231/E7
+Barbarian                                	  +(clvl+4)/2  	Claw     "Totem Claw"           gfx 041/29
+
+
+
+Providing names:
+
+0009FD48 5368 6172 7020 4265 616B 0000           Sharp Beak..
+changed into
+0009FD48 5465 6464 7920 4265 6172 0000           Teddy Bear..
+
+000A00E8 7468 6520 6A61 636B 616C 0000 7468 6520 the jackal..the 
+000A00F8 7675 6C74 7572 6500                     vulture.
+changed into
+000A00E8 5265 6C69 6320 6F66 2074 6865 2045 6173 Relic of the Eas
+000A00F8 7400 0000 0000 0000                     t.......
+
+000A01C0 7468 6520 666F 6F6C 0000 0000           the fool....
+changed into
+000A01C0 546F 7465 6D20 436C 6177 0000           Totem Claw..
+
+000A0202 0000 6174 726F 7068 7900 7061 7261 6C79 ..atrophy.paraly
+000A0212 7369 7300 0000                          sis...
+changed into
+000A0202 4465 6564 206F 6620 5661 6C6F 7572 0000 Deed of Valour..
+000A0212 0000 0000 0000                          ......
+
+000A0241 0000 0077 6561 6B6E 6573 7300 0000 0066 ...weakness....f
+000A0251 7261 696C 7479 00                       railty.
+changed into
+000A0241 5363 7279 696E 6720 476C 6F62 6500 0000 Scrying Globe...
+000A0251 0000 0000 0000 00                       .......
+
+000A028B 0074 6561 7273 0000 0070 6169 6E00 0000 .tears...pain...
+000A029B 00                                      .
+changed into
+000A028B 5369 6C76 6572 2043 6861 6C69 6365 0000 Silver Chalice..
+000A029B 00                                      .
+
+
+
+Setting name and image in item data:
+
+pos name                         magic name   item type         item group          equip     qlvl  dur   damage    AC    str mag dex  price  pic  src
+
+ 46 test (ignore)                             5 special          0 other            7 not      62     0    0- 0    0- 0    0   0   0       0    2    1 
+    Deed of Valour    
+
+000A1370 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A1380 C45C 4A00 0000 0000 3E00 0000 0000 0000 .\J.....>.......
+000A1390 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A13A0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A13B0 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A1378 C000 0000 0000 0000 0218 4A00           ..........J.
+
+ 47 test (ignore)                             5 special          0 other            7 not      62     0    0- 0    0- 0    0   0   0       0    2    1 
+    Teddy Bear    
+
+000A13BC 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A13CC C45C 4A00 0000 0000 3E00 0000 0000 0000 .\J.....>.......
+000A13DC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A13EC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A13FC 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A13C4 BC00 0000 0000 0000 4813 4A00           ........H.J.
+
+ 48 test (ignore)                             5 special          0 other            7 not      62     0    0- 0    0- 0    0   0   0       0    2    1 
+    Scrying Globe    
+
+000A1408 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A1418 C45C 4A00 0000 0000 3E00 0000 0000 0000 .\J.....>.......
+000A1428 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A1438 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A1448 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A1410 BB00 0000 0000 0000 4118 4A00           ........A.J.
+
+103 test (ignore)                             5 special          0 other            7 not      62     0    0- 0    0- 0    0   0   0       0    2    1 
+    Relic Box    
+
+000A245C 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A246C C45C 4A00 0000 0000 3E00 0000 0000 0000 .\J.....>.......
+000A247C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A248C 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A249C 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A2464 B400 0000 0000 0000 E816 4A00           ..........J.
+
+107 test (ignore)                             5 special          0 other            7 not      62     0    0- 0    0- 0    0   0   0       0    2    1 
+    Silver Chalice    
+
+000A258C 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A259C C45C 4A00 0000 0000 3E00 0000 0000 0000 .\J.....>.......
+000A25AC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A25BC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A25CC 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A2594 E700 0000 0000 0000 8B18 4A00           ..........J.
+
+111 test (ignore)                             5 special          0 other            7 not      62     0    0- 0    0- 0    0   0   0       0    2    1 
+    Totem Claw    
+
+000A26BC 0100 0000 0507 0000 0200 0000 0000 0000 ................
+000A26CC C45C 4A00 0000 0000 3E00 0000 0000 0000 .\J.....>.......
+000A26DC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A26EC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A26FC 0000 0000 0000 0000 0000 0000           ............
+changed into
+000A26C4 2900 0000 0000 0000 C017 4A00           ).........J.
+
+
+Adjusting EquipItem routine:
+
+file offset 000230C7
+
+:00423CC7 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423CCC 03C6                    add eax, esi
+:00423CCE 8B8868010000            mov ecx, dword ptr [eax+00000168]
+:00423CD4 034DEC                  add ecx, dword ptr [ebp-14]
+:00423CD7 898864010000            mov dword ptr [eax+00000164], ecx
+:00423CDD A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00423CE2 69C0C8550000            imul eax, 000055C8
+changed into
+:00423CC7 53                      push ebx
+:00423CC8 52                      push edx
+:00423CC9 6A00                    push 00000000
+:00423CCB 59                      pop ecx
+:00423CCC E850E80200              call 00452521
+:00423CD1 015DEC                  add dword ptr [ebp-14], ebx
+:00423CD4 ...
+:00423CDD 5A                      pop edx
+:00423CDE 5B                      pop ebx
+:00423CDF E898E80200              call 0045257C
+:00423CE4 90909090                4*nop 
+
+file offset 00023100
+
+:00423D00 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423D05 03C6                    add eax, esi
+:00423D07 8B8870010000            mov ecx, dword ptr [eax+00000170]
+:00423D0D 034DD0                  add ecx, dword ptr [ebp-30]
+:00423D10 89886C010000            mov dword ptr [eax+0000016C], ecx
+:00423D16 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00423D1B 69C0C8550000            imul eax, 000055C8
+changed into
+:00423D00 53                      push ebx
+:00423D01 52                      push edx
+:00423D02 6A01                    push 00000001
+:00423D04 59                      pop ecx
+:00423D05 E817E80200              call 00452521
+:00423D0A 015DD0                  add dword ptr [ebp-30], ebx
+:00423D0D ...
+:00423D16 5A                      pop edx
+:00423D17 5B                      pop ebx
+:00423D18 E85FE80200              call 0045257C
+:00423D1D 90909090                4*nop 
+
+file offset 00023139
+
+:00423D39 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423D3E 03C6                    add eax, esi
+:00423D40 8B8878010000            mov ecx, dword ptr [eax+00000178]
+:00423D46 034DE8                  add ecx, dword ptr [ebp-18]
+:00423D49 898874010000            mov dword ptr [eax+00000174], ecx
+:00423D4F A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00423D54 69C0C8550000            imul eax, 000055C8
+changed into
+:00423D39 53                      push ebx
+:00423D3A 52                      push edx
+:00423D3B 6A02                    push 00000002
+:00423D3D 59                      pop ecx
+:00423D3E E8DEE70200              call 00452521
+:00423D43 015DE8                  add dword ptr [ebp-18], ebx
+:00423D46 ...
+:00423D4F 5A                      pop edx
+:00423D50 5B                      pop ebx
+:00423D51 E826E80200              call 0045257C
+:00423D56 90909090                4*nop 
+
+file offset 00023172
+
+:00423D72 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423D77 03C6                    add eax, esi
+:00423D79 8B8880010000            mov ecx, dword ptr [eax+00000180]
+:00423D7F 034DF8                  add ecx, dword ptr [ebp-08]
+:00423D82 89887C010000            mov dword ptr [eax+0000017C], ecx
+:00423D88 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00423D8D 69C0C8550000            imul eax, 000055C8
+changed into
+:00423D72 53                      push ebx
+:00423D73 52                      push edx
+:00423D74 6A03                    push 00000003
+:00423D76 59                      pop ecx
+:00423D77 E8A5E70200              call 00452521
+:00423D7C 015DF8                  add dword ptr [ebp-08], ebx
+:00423D7F ...
+:00423D88 5A                      pop edx
+:00423D89 5B                      pop ebx
+:00423D8A E8EDE70200              call 0045257C
+:00423D8F 90909090                4*nop 
+
+
+Using free space from Holy Shrine adjustments:
+
+file offset 00051921
+
+:00452521 90                      nop
+:00452522 90                      nop
+:00452523 90                      nop
+:00452524 90                      nop
+:00452525 6A70                    push 00000070
+:00452527 B19F                    mov cl, 9F
+:00452529 5A                      pop edx
+:0045252A E82B7AFCFF              call 00419F5A
+:0045252F B19F                    mov cl, 9F
+:00452531 8BD8                    mov ebx, eax
+:00452533 6A70                    push 00000070
+:00452535 5A                      pop edx
+:00452536 E81F7AFCFF              call 00419F5A
+:0045253B 8BCB                    mov ecx, ebx
+:0045253D 6BC970                  imul ecx, 00000070
+:00452540 03C8                    add ecx, eax
+:00452542 8BD1                    mov edx, ecx
+:00452544 C1E202                  shl edx, 02
+:00452547 47                      inc edi
+:00452548 8BB2B05B5F00            mov esi, dword ptr [edx+005F5BB0]
+:0045254E 81FF00310000            cmp edi, 00003100
+:00452554 7EB4                    jle 0045250A
+:00452556 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0045255C E83B090000              call 00452E9C
+:00452561 69C9C8550000            imul ecx, 000055C8
+:00452567 03CA                    add ecx, edx
+:00452569 0FB615D4B16000          movzx edx, byte ptr [0060B1D4]
+:00452570 D1E2                    shl edx, 1
+:00452572 52                      push edx
+:00452573 6A00                    push 00000000
+:00452575 8B513C                  mov edx, dword ptr [ecx+3C]
+:00452578 56                      push esi
+:00452579 6AFF                    push FFFFFFFF
+:0045257B 6A4E                    push 0000004E
+:0045257D FF7170                  push [ecx+70]
+:00452580 8B4938                  mov ecx, dword ptr [ecx+38]
+:00452583 50                      push eax
+:00452584 53                      push ebx
+:00452585 E8A531FEFF              call 0043572F
+changed into
+:00452521 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452526 03C6                    add eax, esi
+:00452528 8BD9                    mov ebx, ecx
+:0045252A 0FBE8860010000          movsx ecx, byte ptr [eax+00000160]
+:00452531 0FBE91A45C4A00          movsx edx, byte ptr [ecx+004A5CA4]		Class Item number data
+:00452538 50                      push eax
+:00452539 51                      push ecx
+:0045253A 8B4DE0                  mov ecx, dword ptr [ebp-20]
+:0045253D 8D45F0                  lea eax, dword ptr [ebp-10]
+:00452540 50                      push eax
+:00452541 E817430200              call 0047685D					check inventory
+:00452546 C1E303                  shl ebx, 03
+:00452549 85C0                    test eax, eax
+:0045254B 59                      pop ecx
+:0045254C 58                      pop eax
+:0045254D 8B941868010000          mov edx, dword ptr [eax+ebx+00000168]		EBX determines Str/Mag/Dex/Vit
+:00452554 7421                    je 00452577
+:00452556 C1E105                  shl ecx, 05
+:00452559 03CB                    add ecx, ebx
+:0045255B C1E903                  shr ecx, 03
+:0045255E 0FBE89E0A24B00          movsx ecx, byte ptr [ecx+004BA2E0]		Class bonus data
+:00452565 85C9                    test ecx, ecx
+:00452567 740E                    je 00452577
+:00452569 0FBE98B8010000          movsx ebx, byte ptr [eax+000001B8] 		Clvl
+:00452570 83C304                  add ebx, 00000004
+:00452573 D3EB                    shr ebx, cl
+:00452575 EB02                    jmp 00452579
+:00452577 33DB                    xor ebx, ebx
+:00452579 8BCA                    mov ecx, edx
+:0045257B C3                      ret
+:0045257C A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452581 69C0C8550000            imul eax, 000055C8
+:00452587 C3                      ret
+:00452588 9090                    2*nop
+
+
+Data record for Class Item numbers:
+
+000A46A4 0000 0000 0000                          ......
+changed into
+000A46A4 2E2F 3067 6B6F                          ./0gko
+
+
+Data record for Class bonusses:
+
+000B8CE0 6C79 2079 6F75 2063 616E 2073 746F 7020 ly you can stop 
+000B8CF0 6869 6D20 6672 6F6D 2061 7474 6169 6E69 him from attaini
+changed into
+000B8CE0 0100 0000 0000 0100 0001 0000 0200 0200 ................
+000B8CF0 0002 0200 0000 0001 0000 0000 0000 0000 ................
+
+
+Adding support to dropping items on death:
+
+file offset 0003D870
+
+:0043E470 56                      push esi
+:0043E471 E84966FEFF              call 00424ABF				
+:0043E476 5E                      pop esi
+:0043E477 8B9E94010000            mov ebx, dword ptr [esi+00000194]
+:0043E47D 899E9C010000            mov dword ptr [esi+0000019C], ebx
+:0043E483 33DB                    xor ebx, ebx
+:0043E485 899E90010000            mov dword ptr [esi+00000190], ebx
+:0043E48B 899E98010000            mov dword ptr [esi+00000198], ebx
+:0043E491 C3                      ret
+changed into
+:0043E470 51                      push ecx
+:0043E471 E84966FEFF              call 00424ABF				
+:0043E476 59                      pop ecx
+:0043E477 33D2                    xor edx, edx
+:0043E479 E82E050200              call 0045E9AC		general 'setplayerhitpoints' routine
+:0043E47E C3                      ret
+:0043E47F 90909090                4*nop
+
+Now 19 bytes free space from 0043E47F to 0043E492.
+
+
+Using Rainbow Elixir character comment for Class Items:
+
+file offset 00020A19
+
+:00421619 0F85B1010000            jne 004217D0
+changed into
+:00421619 0F85F00A0300            jne 0045210F
+:0042161F
+
+Using free space from obsolete Cryptic Shrine
+
+file offset 0005150F
+
+:0045210F 85C0                    test eax, eax
+:00452111 0F85550F0000            jne 0045306C
+:00452117 8B7DFC                  mov edi, dword ptr [ebp-04]
+:0045211A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045211F E86A73FDFF              call 0042948E
+:00452124 D1EA                    shr edx, 1
+:00452126 8BF7                    mov esi, edi
+:00452128 69F6C8550000            imul esi, 000055C8
+:0045212E 8BDA                    mov ebx, edx
+:00452130 8B54303C                mov edx, dword ptr [eax+esi+3C]
+:00452134 8B4C3038                mov ecx, dword ptr [eax+esi+38]
+:00452138 53                      push ebx
+:00452139 6A00                    push 00000000
+:0045213B 57                      push edi
+:0045213C 03C6                    add eax, esi
+:0045213E 6AFF                    push FFFFFFFF
+:00452140 6A48                    push 00000048
+:00452142 FF7070                  push [eax+70]
+:00452145 52                      push edx
+:00452146 51                      push ecx
+:00452147 E8E335FEFF              call 0043572F
+:0045214C 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:00452152 69F6C8550000            imul esi, 000055C8
+:00452158 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045215D 03C6                    add eax, esi
+:0045215F 8B88B0010000            mov ecx, dword ptr [eax+000001B0]
+:00452165 8988AC010000            mov dword ptr [eax+000001AC], ecx
+:0045216B A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452170 03C6                    add eax, esi
+:00452172 8B88A8010000            mov ecx, dword ptr [eax+000001A8]
+:00452178 8988A4010000            mov dword ptr [eax+000001A4], ecx
+:0045217E B116                    mov cl, 16
+:00452180 E9DC090000              jmp 00452B61
+changed into
+:0045210F 0FBE8E60010000          movsx ecx, byte ptr [esi+00000160]
+:00452116 0FBE91A45C4A00          movsx edx, byte ptr [ecx+004A5CA4]		Class Item numbers
+:0045211D 3BC2                    cmp eax, edx
+:0045211F 753B                    jne 0045215C
+:00452121 8BC1                    mov eax, ecx
+:00452123 84C0                    test al, al
+:00452125 7424                    je 0045214B
+:00452127 48                      dec eax
+:00452128 7417                    je 00452141
+:0045212A 48                      dec eax
+:0045212B 7507                    jne 00452134
+:0045212D B933020000              mov ecx, 00000233
+:00452132 EB1C                    jmp 00452150
+:00452134 48                      dec eax
+:00452135 7507                    jne 0045213E
+:00452137 B973030000              mov ecx, 00000373
+:0045213C EB12                    jmp 00452150
+:0045213E 48                      dec eax
+:0045213F 7507                    jne 00452148
+:00452141 B99A020000              mov ecx, 0000029A
+:00452146 EB08                    jmp 00452150
+:00452148 48                      dec eax
+:00452149 7511                    jne 0045215C
+:0045214B B907030000              mov ecx, 00000307
+:00452150 890D18A25700            mov dword ptr [0057A218], ecx
+:00452156 893D14A25700            mov dword ptr [0057A214], edi
+:0045215C E96FF6FCFF              jmp 004217D0
+:00452161 90909090                4*nop
+
+
+Replacing comment for Rainbow Elixir with the one for Cathedral Map:
+
+file offset 00020AB1
+
+:004216B1 C70518A2570033020000    mov dword ptr [0057A218], 00000233
+:004216BB EB2E                    jmp 004216EB
+:004216BD 3C03                    cmp al, 03
+:004216BF 750C                    jne 004216CD
+:004216C1 C70518A2570073030000    mov dword ptr [0057A218], 00000373
+:004216CB EB1E                    jmp 004216EB
+:004216CD 3C04                    cmp al, 04
+:004216CF 750C                    jne 004216DD
+:004216D1 C70518A257009A020000    mov dword ptr [0057A218], 0000029A
+:004216DB EB0E                    jmp 004216EB
+:004216DD 3C05                    cmp al, 05
+:004216DF 750A                    jne 004216EB
+:004216E1 C70518A2570007030000    mov dword ptr [0057A218], 00000307
+changed into
+:004216B1 C70518A2570055020000    mov dword ptr [0057A218], 00000255
+:004216BB EB2E                    jmp 004216EB
+:004216BD 3C03                    cmp al, 03
+:004216BF 750C                    jne 004216CD
+:004216C1 C70518A2570095030000    mov dword ptr [0057A218], 00000395
+:004216CB EB1E                    jmp 004216EB
+:004216CD 3C04                    cmp al, 04
+:004216CF 750C                    jne 004216DD
+:004216D1 C70518A25700BC020000    mov dword ptr [0057A218], 000002BC
+:004216DB EB0E                    jmp 004216EB
+:004216DD 3C05                    cmp al, 05
+:004216DF 750A                    jne 004216EB
+:004216E1 C70518A2570029030000    mov dword ptr [0057A218], 00000329
+

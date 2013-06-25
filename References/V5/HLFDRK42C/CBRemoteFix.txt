@@ -1,0 +1,49 @@
+Preventing CB outside LOF:
+
+file offset 0006B56B
+
+:0046C16B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0046C16E 6A1E                    push 0000001E
+changed into
+:0046C16B E9B389FCFF              jmp 00434B23
+
+Using free space from fixed Seeing duration:
+
+file offset 00033F23
+
+:00434B23 90                      nop
+:00434B24 8B54241C                mov edx, dword ptr [esp+1C]
+:00434B28 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00434B2E 69D2C8550000            imul edx, 000055C8
+:00434B34 8D81C87A6900            lea eax, dword ptr [ecx+00697AC8]
+:00434B3A 8B94324C550000          mov edx, dword ptr [edx+esi+0000554C]
+:00434B41 8B08                    mov ecx, dword ptr [eax]
+:00434B43 0FAFD1                  imul edx, ecx
+:00434B46 C1FA07                  sar edx, 07
+:00434B49 03D1                    add edx, ecx
+changed into
+:00434B23 8B550C                  mov edx, dword ptr [ebp+0C]
+:00434B26 8B4D08                  mov ecx, dword ptr [ebp+08]
+:00434B29 FF7514                  push [ebp+14]
+:00434B2C FF7510                  push [ebp+10]
+:00434B2F E893F40000              call 00443FC7					Check LOF 
+:00434B34 85C0                    test eax, eax
+:00434B36 0F846B760300            je 0046C1A7
+:00434B3C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00434B3F 6A1E                    push 0000001E
+:00434B41 E92A760300              jmp 0046C170
+:00434B46 9090909090              5*nop
+
+
+Restoring larger number of Bolts from 42A:
+
+file offset 0006B579
+
+:0046C179 C1F802                  sar eax, 02
+:0046C17C 40                      inc eax
+:0046C17D 40                      inc eax
+changed into
+:0046C179 D1F8                    sar eax, 1
+:0046C17B 83C003                  add eax, 00000003
+
+

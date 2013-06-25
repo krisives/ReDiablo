@@ -1,0 +1,133 @@
+New Byclops boss 'Crosseye the Herder', always appears on level 12 and is accompanied by Cave Boars
+
+Force selection of Byclops and Cave Boar as available monster:
+
+file offset 00039E18
+
+:0043AA18 8BD7                    mov edx, edi				selection type = 4
+:0043AA1A 6A20                    push 00000020				Illusion Weaver
+:0043AA1C 59                      pop ecx
+:0043AA1D E83CFFFFFF              call 0043A95E				select this creature
+changed into
+:0043AA18 8BD3                    mov edx, ebx				selection type = 1
+:0043AA1A 6A76                    push 00000076				Cave Boar
+:0043AA1C 59                      pop ecx
+:0043AA1D E93F770100              jmp 00452161
+:0043AA22
+
+Using last codespace from removed Cryptic Shrine:
+
+file offset 00051561
+
+:00452161 90                      nop
+:00452162 90                      nop
+:00452163 90                      nop
+:00452164 90                      nop
+:00452165 8988AC010000            mov dword ptr [eax+000001AC], ecx
+:0045216B A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452170 03C6                    add eax, esi
+:00452172 8B88A8010000            mov ecx, dword ptr [eax+000001A8]
+:00452178 8988A4010000            mov dword ptr [eax+000001A4], ecx
+:0045217E B116                    mov cl, 16
+:00452180 E9DC090000              jmp 00452B61
+changed into
+:00452161 3C0C                    cmp al, 0C				Dlvl equal to 12 
+:00452163 7511                    jne 00452176
+:00452165 51                      push ecx
+:00452166 E8F387FEFF              call 0043A95E
+:0045216B 59                      pop ecx
+:0045216C 83C110                  add ecx, 00000010			Byclops
+:0045216F 8BD7                    mov edx, edi				selection type = 4
+:00452171 E8E887FEFF              call 0043A95E
+:00452176 8BD7                    mov edx, edi				selection type = 4
+:00452178 6A20                    push 00000020				Illusion Weaver
+:0045217A 59                      pop ecx
+:0045217B E8DE87FEFF              call 0043A95E
+:00452180 E99D88FEFF              jmp 0043AA22
+:00452185
+
+
+Select Cave Boar as minion:
+
+file offset 0003AE5B
+
+:0043BA5B E9FC4AFFFF              jmp 0043055C
+changed into
+:0043BA5B E9094BFFFF              jmp 00430569
+:0043BA60 
+
+file offset 0002F95C
+
+:0043055C 83F961                  cmp ecx, 00000061
+:0043055F 7503                    jne 00430564				skip if not Defiler
+:00430561 6A01                    push 00000001
+:00430563 5A                      pop edx
+:00430564 E80FB50000              call 0043BA78				create minions
+:00430569 E9F2B40000              jmp 0043BA60
+:0043056E 90                      nop
+:0043056F 90                      nop
+:00430570 90                      nop
+:00430571 90                      nop
+:00430572 C3                      ret
+:00430573 90                      nop
+:00430574 90                      nop
+changed into
+:0043055C 6A01                    push 00000001
+:0043055E 5A                      pop edx
+:0043055F E814B50000              call 0043BA78				create minions
+:00430564 E9F7B40000              jmp 0043BA60
+:00430569 83F961                  cmp ecx, 00000061
+:0043056C 74EE                    je 0043055C				jmp if Defiler
+:0043056E 83F92D                  cmp ecx, 0000002D
+:00430571 74E9                    je 0043055C				jmp if Cross Eye
+:00430573 EBEA                    jmp 0043055F
+:00430575
+
+
+Name change:
+
+000B0279 0000 0057 6172 6D61 6767 6F74 2074 6865 ...Warmaggot the
+000B0289 204D 6164 0000 00                        Mad...
+changed into
+000B0279 4372 6F73 7365 7965 2074 6865 2048 6572 Crosseye the Her
+000B0289 6465 7200 0000 00                       der....
+
+
+Setting up boss data:
+
+pos name                type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL 
+
+ 45 Warmaggot the Mad   Fire Drake            24 Viper            2   3Y    14$     28       23   770   37- 60  II-
+    Crosseye ...        Biclops                2 Skeleton         5   1     12                    800   24- 36  IRI 
+
+000AF820 5A00 0000 7C18 4B00 B018 4B00 0E00 0203 Z...|.K...K.....
+000AF830 1802 253C 1800 0300 0000 0000 0000 0000 ..%<............
+changed into
+000AF820 8600 0000 7918 4B00 281B 4B00 0C00 2003 ....y.K.(.K... .
+000AF830 0205 1824 2A00 0100 0000 0000 0000 0000 ...$*...........
+
+
+Doomtail minions for Doomskull the Unholy:
+
+pos name                      type                  attacktype        sub  pack  dlvl  
+ 34 Doomskull the Unholy      Dark Servant           0 Zombie           3   3Y    C3      
+                                                                            1
+000AF6C0 4700 0000 7019 4B00 271A 4B00 1700 B004 G...p.K.'.K.....
+000AF6D0 0003 2737 7800 0300 0000 0000 0000 0000 ..'7x...........
+changed into
+000AF6D6 0100                                    ..
+
+file offset 0002F973
+
+:00430573 EBEA                    jmp 0043055F
+:00430575 DEC9                    fmulp st(1), st(0)
+:00430577 DC45EC                  fadd qword ptr [ebp-14]
+changed into
+:00430573 83F922                  cmp ecx, 00000022
+:00430576 74E4                    je 0043055C
+:00430578 EBE5                    jmp 0043055F
+:0043057A 
+
+
+
+

@@ -1,0 +1,55 @@
+Experiments show that the following code is not (always) executed, and the increased chance below does not work and is not implemented.
+
+
+Chance of Traps on Chests:
+
+:0044CEEE 83BE08E66D0000          cmp dword ptr [esi+006DE608], 00000000
+:0044CEF5 8DBE08E66D00            lea edi, dword ptr [esi+006DE608]
+:0044CEFB 7539                    jne 0044CF36		jmp if already a Trap
+:0044CEFD 6A64                    push 00000064
+:0044CEFF 32C9                    xor cl, cl
+:0044CF01 5A                      pop edx
+:0044CF02 E853D0FCFF              call 00419F5A
+:0044CF07 83F80A                  cmp eax, 0000000A	10% chance for a Trap
+:0044CF0A 7D2A                    jge 0044CF36		jmp if no Trap to make
+:0044CF0C 8386C0E56D003F          add dword ptr [esi+006DE5C0], 0000003F
+:0044CF13 803DD4B1600002          cmp byte ptr [0060B1D4], 02	
+:0044CF1A C70701000000            mov dword ptr [edi], 00000001
+:0044CF20 7504                    jne 0044CF26
+:0044CF22 6A02                    push 00000002		to choose between 2 types
+:0044CF24 EB02                    jmp 0044CF28
+:0044CF26 6A06                    push 00000006		to choose between 6 types
+:0044CF28 5A                      pop edx
+:0044CF29 32C9                    xor cl, cl
+:0044CF2B E82AD0FCFF              call 00419F5A
+:0044CF30 898624E66D00            mov dword ptr [esi+006DE624], eax
+
+
+Increasing 10% chance for a Trap to 15+(DLVL/2)%
+
+File Offset 0004C302
+
+:0044CF02 E853D0FCFF              call 00419F5A
+:0044CF07 83F80A                  cmp eax, 0000000A
+wordt
+:0044CF02 E842D20200              call 0047A149
+:0044CF07 3BC2                    cmp eax, edx
+:0044CF09 90                      nop
+
+Using free space from disabled COMMAND.TXT
+
+File Offset 00079549
+
+:0047A149 90909090909090909090    10*nop
+:0047A153 8A044A                  mov al, byte ptr [edx+2*ecx]
+:0047A156 83E008                  and eax, 00000008
+:0047A159 C3                      ret
+:0047A15A 909090909090            6*nop
+wordt
+:0047A149 E80CFEF9FF              call 00419F5A
+:0047A14E 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:0047A155 D1EA                    shr edx, 1
+:0047A157 83C20F                  add edx, 0000000F
+:0047A15A C3                      ret
+
+

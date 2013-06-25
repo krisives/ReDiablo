@@ -1,0 +1,40 @@
+()Enable check on 'Multitest' without need for hacked Hellfrui.dll
+
+Ook getest.
+
+:00409587 50                      push eax
+wordt
+:00409587 53                      push ebx
+
+
+()Golem
+
+Aangezien met de nieuwe Regeneratie de Golem (=demon) behoorlijk beter wordt, wordt ie weer een beetje afgezwakt.
+
+()Hp  maxmana*2/3 + 10*slvl  ->  maxmana + 20*slvl -> maxmana*2/3 + 20*slvl	
+
+:00444F7D 6A03                    push 00000003
+wordt
+:00444F7D 6A02                    push 00000002
+wordt weer
+:00444F7D 6A03                    push 00000003
+
+()ToHit  40 + 2·clvl + 5·slvl  ->  48 + 2*clvl + 6*slvl -> Terug.
+
+:00445014 B305                    mov bl, 05
+wordt
+:00445014 B306                    mov bl, 06
+wordt weer
+:00445014 B305                    mov bl, 05
+
+()Min.Damage  8 + 2·slvl  ->  12 + 2*slvl	 ->  2 + 2*slvl
+
+:00445022 80C104                  add cl, 04
+wordt
+:00445022 80C106                  add cl, 06 	
+wordt nu
+:00445022 80C101                  add cl, 01 	
+
+:0042EC04 83C606                  add esi, 00000006
+wordt (spellbook)
+:0042EC04 83C601                  add esi, 00000001

@@ -1,0 +1,9 @@
+Regeneration check
+
+Enabling check on maximum regeneration for Undead and Animals (just to be sure) as for Demons.
+
+File Offset 0003C862
+
+:0043D462 C3                      ret
+wordt
+:0043D462 90                      nop

@@ -1,0 +1,44 @@
+
+Chests:
+
+:00451F69 8B37                    mov esi, dword ptr [edi]
+:00451F6B 6BF678                  imul esi, 00000078
+:00451F6E 8B8EC0E56D00            mov ecx, dword ptr [esi+006DE5C0]
+:00451F74 83F905                  cmp ecx, 00000005
+:00451F77 740A                    je 00451F83
+:00451F79 83F906                  cmp ecx, 00000006
+:00451F7C 7405                    je 00451F83
+:00451F7E 83F907                  cmp ecx, 00000007
+:00451F81 7529                    jne 00451FAC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:0044D915   , :0044DCC1   
+|
+:0044D946 53                      push ebx
+:0044D947 56                      push esi
+:0044D948 8BF1                    mov esi, ecx
+:0044D94A 57                      push edi
+:0044D94B 6BF678                  imul esi, 00000078
+:0044D94E 8B7C2414                mov edi, dword ptr [esp+14]
+:0044D952 8B442410                mov eax, dword ptr [esp+10]
+:0044D956 89BEC0E56D00            mov dword ptr [esi+006DE5C0], edi
+:0044D95C 6BFF2C                  imul edi, 0000002C
+:0044D95F 0FBE8F893F4B00          movsx ecx, byte ptr [edi+004B3F89]

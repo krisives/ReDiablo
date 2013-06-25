@@ -1,0 +1,219 @@
+Changes to Fallen One AI
+
+
+Adjusted Retreat distances:
+
+file offset 0004374E
+
+:0044434E 6A03                    push 00000003
+:00444350 EB02                    jmp 00444354
+:00444352 6A02                    push 00000002
+changed into
+:0044434E 6A04                    push 00000004
+:00444350 EB02                    jmp 00444354
+:00444352 6A03                    push 00000003
+
+
+Fixed Retreat distances:
+
+These were incorrect because Fallen Ones have been moved to other monster table entries.
+
+file offset 000437DC
+
+:004443DC 46434400                DWORD 00444346
+:004443E0 4A434400                DWORD 0044434A	Dark One: 5
+:004443E4 4E434400                DWORD 0044434E
+:004443E8 52434400                DWORD 00444352	Carver: 2
+:004443EC 55434400                DWORD 00444355
+:004443F0 55434400                DWORD 00444355
+:004443F4 55434400                DWORD 00444355
+:004443F8 55434400                DWORD 00444355
+:004443FC 46434400                DWORD 00444346
+:00444400 4A434400                DWORD 0044434A
+:00444404 4E434400                DWORD 0044434E	Devil Kin: 3
+:00444408 52434400                DWORD 00444352	Yellow One: 2
+changed into
+:004443DC 55434400                DWORD 00444355
+:004443E0 52434400                DWORD 00444352	Dark One: 3
+:004443E4 55434400                DWORD 00444355
+:004443E8 4A434400                DWORD 0044434A	Carver: 5
+:004443EC 55434400                DWORD 00444355
+:004443F0 55434400                DWORD 00444355
+:004443F4 55434400                DWORD 00444355
+:004443F8 55434400                DWORD 00444355
+:004443FC 55434400                DWORD 00444355
+:00444400 55434400                DWORD 00444355
+:00444404 4E434400                DWORD 0044434E	Devil Kin: 4
+:00444408 46434400                DWORD 00444346	Yellow One: 7
+
+
+Improved chance to do a 'warcry' by allowing it in all situations (except when already in 'warcry' mode):
+
+file offset 000402F9
+
+:00440EF9 8B86ECDC6900            mov eax, dword ptr [esi+0069DCEC]		frame counter
+:00440EFF 3B86E8DC6900            cmp eax, dword ptr [esi+0069DCE8]
+:00440F05 0F85D8000000            jne 00440FE3			
+:00440F0B 6A04                    push 00000004
+:00440F0D B171                    mov cl, 71
+:00440F0F 5A                      pop edx
+:00440F10 E84590FDFF              call 00419F5A
+:00440F15 85C0                    test eax, eax
+:00440F17 0F8537010000            jne 00441054					exit if 3:4
+changed into
+:00440EF9 80BE90DC690005          cmp byte ptr [esi+0069DC90], 05
+:00440F00 0F84DD000000            je 00440FE3					jmp if already in warcry mode
+:00440F06 9090909090              5*nop
+:00440F0B 6A1E                    push 0000001E
+:00440F0D ...
+:00440F17 0F85C6000000            jne 00440FE3					jmp if 29:30
+:00440F1D
+
+
+Increased life gain for entering 'warcry' mode:
+
+This life gain was nearly non-existant, and not depending on difficulty.
+
+file offset 00040333
+
+:00440F33 0FB68621DD6900          movzx eax, byte ptr [esi+0069DD21]		eax = subtype
+changed into
+:00440F33 0FB68E48DD6900          movzx ecx, byte ptr [esi+0069DD48]		ecx = mlvl
+
+file offset 00040346
+
+:00440F46 8D4C0002                lea ecx, dword ptr [eax+eax+02]		ecx = (1 + subtype)/32
+changed into
+:00440F46 C1E105                  shl ecx, 05					ecx = mlvl/2
+:00440F49 90                      nop
+
+
+Allow for life gain above normal maximum:
+
+file offset 00040350
+
+:00440F50 8BDF                    mov ebx, edi
+:00440F52 2BD9                    sub ebx, ecx
+:00440F54 3BDA                    cmp ebx, edx
+:00440F56 7C06                    jl 00440F5E
+:00440F58 03D1                    add edx, ecx
+:00440F5A 8910                    mov dword ptr [eax], edx
+:00440F5C EB02                    jmp 00440F60
+:00440F5E 8938                    mov dword ptr [eax], edi
+changed into
+:00440F50 03D1                    add edx, ecx
+:00440F52 8910                    mov dword ptr [eax], edx
+:00440F54 EB0A                    jmp 00440F60
+:00440F56 90909090909090909090    10*nop
+
+
+Shorter duration for 'warcry' mode (because it is now much more common):
+
+file offset 000403D4
+
+:00440FD4 83C169                  add ecx, 00000069
+changed into
+:00440FD4 83C140                  add ecx, 00000040
+
+
+Shadowcrow with the now improved Fallen One attack:
+
+****** Tryout, maybe Hidden attacktype is still better.
+
+pos name                     type                  attacktype        sub  pack  
+ 35 Shadowcrow               Dark One              15 Hidden           2   3Y   
+                                                    8 Fallen One       3
+000AF6F0 0F02                                    ..
+changed into
+000AF6F0 0803                                    ..
+
+
+Guardian Princes with the now improved Fallen One attack:
+
+This will make them use their special animation and sound.
+
+ 44 Guardian Prince        5  C4-C4    32     8     6    10     7     2    16     -     -     1   0   0   0   0   -
+                                                                                 12     6
+000ABEF0 A000 0000 0100 0000 6C2C 4B00 0000 0000 ........l,K.....
+000ABF00 4C2C 4B00 0000 0000 0100 0000 1031 4B00 L,K..........1K.
+000ABF10 0800 0000 0600 0000 0A00 0000 0200 0000 ................
+000ABF20 1000 0000 0000 0000 0100 0000 0000 0000 ................
+000ABF30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000ABF40 9027 4B00 2E2E 2000 4001 0000 6801 0000 .'K... .@...h...
+000ABF50 0200 0000 9003 0000 0585 0732 3C00 0000 ...........2<...
+000ABF60 0070 0000 2300 2300 0000 0700 6419 0000 .p..#.#.....d...
+changed into
+000ABF24 0C00 0000                               ....
+000ABF5E 06                                      .
+000ABF50 0800 0000                               ....
+000ABEFC 0100 0000                               ....
+000ABF04 0100 0000                               ....
+
+pos name                     type                  attacktype        sub  
+ 58 The Executioner          Guardian Prince        2 Skeleton         5
+                                                    8 Fallen One
+
+000AF9C0 2C00 0000 2819 4B00 A41A 4B00 1800 B80B ,...(.K...K.....
+000AF9D0 0205 3A3E 3100 0300 0000 0000 0000 0000 ..:>1...........
+changed into
+000AF9D0 08                                      .
+
+
+
+The following is information only:
+
+
+Fallen Ones, by JG
+
+Monster type		Walk time	Hit recovery time 	Attack time 	Hit time
+Fallen Ones with spear	0.55		0.55		 	0.65 / 0.65  	0.35 / 0.25 
+Fallen Ones with sword	0.60		0.55			0.65 / 0.75	0.40 / 0.25
+
+When a monster is killed, any Fallen Ones within 5 squares will be set into retreat mode. Depending on what subtype
+the monster is the distance it will retreat is as explained in the table below. The distance is the distance it will walk, not necessarily the final distance to the target if the target has moved since the start of the retreat.
+
+Fallen Ones Retreat distance
+
+Fallen One	7  (slot 4, 12)
+Carver		5  (slot 5, 13)
+Devil Kin	3  (slot 6, 14)
+Dark One	2  (slot 7, 15)
+
+Occasionally a Fallen One will do a war cry. It is recognized by the monster jumping up and screaming. When that
+happens any Fallen One within range (see table below), unless using another attack type, will be set into war cry
+mode. The war cry mode last for a specific time depending on the subtype doing the actual war cry, see table below.
+During the war cry mode, they will walk straight for the closest target and attack. If adjacent it will continue to attack without pausing until the time runs out for the war cry mode. Unfortunately the war cry mode also ends as soon as any close by monster is killed and the fallen one is set into retreat mode.
+
+Fallen Ones	Distance	Time (sec)	subtype
+
+Fallen One	4		5.25		0
+Carver		5		6.75		1
+Devil Kin	6		8.25		2
+Dark One	7		9.75		3
+
+When doing a war cry, the monster will gain 2텶ntf + 2 hit points. The current hit points will never go above the
+maximum value though.
+
+War cry
+1. if D = 1, do melee attack, exit
+2. walk towards target
+
+Retreating
+1. Walk away from target until distance achieved
+
+General
+1. if not active, exit
+2. if the monster has been standing for an even multiple of 0.55 seconds (0.60 if using a sword) and Rnd[4] =
+0, do war cry, exit
+3. if not active, exit
+4. R = Rnd[100]
+
+Distance = 1
+1. if last action was delay, do melee attack, exit
+2. if R < 2텶ntf + 20, do melee attack, exit
+3. do delay for (Rnd[10] + 10 - 2텶ntf)/20 seconds
+
+Distance > 1
+1. if last action was delay, walk towards last seen position of target, exit
+2. if R < 4텶ntf + 65, walk towards last seen position of target, exit
+3. do delay for (Rnd[10] + 15 - 2텶ntf)/20 seconds

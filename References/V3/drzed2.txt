@@ -1,0 +1,36 @@
+Hello Dr.Zed,
+
+>
+>Unfortunatly, I have had some feedback with expensive bows.  I got into a game with Raven >and McFrugal (and LtBr, but I believe that he was playing a Warrior and the other two were >Rogues).  Anyway, they had been using two unique bows (IIRC, Stone Bow and Eternal Glory) >which both had their cost set to 5000.  In order to more accuratly test things, I set their >cost to appropriate values (based on my formulas).  The bows ended up being 17000 and >98000!
+>
+
+I was wondering before why these bows were so popular, but now I know : the price of 5000 gold made the arrows very cheap. IMO you should set appropriate prices for all unique bows (and increase price on Knockback for bows, remember?). BTW a buying price of 17000 gold for 'Stone Bow' is not that much: a (plain) bow of Swiftness is 16000 gold.
+
+>
+>for reloading since they have more mana.  I think I'm going to add a class modifier to the >mana cost.  Half cost for Rogues and double cost forSorcerer. I'm also thinking of 
+>
+
+Perhaps you should give the Warrior this half cost also?
+
+>
+>incorporating a curve on all forms of item repair so that really expensive items are a bit >easier to manage.  However, I'll only do this if it really seems necessary since it >involves using up more codespace. Now, by halving the mana cost for the rogue, I would >effectivly be halving the repair cost.  What I want to do is also halve the repair cost at >gris for all items AND halve the amount of gold you get for selling magical items.  To 
+>
+
+IMO you should NOT decrease repair cost of all items, only for bows. This should be easy by changing the formula you are now using for arrow costs. High level warriors, especially those with a item 'of the Blood', don't need much gold for potions, books or item buying. Only by letting them repair expensive items, you can control the amount of gold they need.
+
+>
+>prevent from crippling starting characters, I will also up gold drops slightly, to >compensate for the devaluing of dlvl 1-2 magic itemdrops. By effectivly 'reducing >inflation' (less gold from items and less gold to repair), it effectivly increases the >relative value of mana and will help balance things to a degree.
+>
+
+When increasing gold drops, I think you want to be sure that deeper levels/difficulties do not benefit too much. Apart from that, I like the idea of 'reducing inflation', although I'm afraid it will not have as much impact on the game as you would like. IMO just lowering arrow cost by changing your formula for Griz' prices, and halving (or more!) the mana cost of the Fletchery (and increasing the max of 100 arrows) would be enough to solve most, if not all, of the problems.
+
+>
+>Oh, BTW, I got a unique bow from CoolDeath which has knockback.  I'll hold
+>on to it for you if you want it.
+>
+
+Must be Hailstorm! Since I haven't found Knuckle Duster and Diana's Grace yet, I would very much like to have it, although I vaguely remember there was some nasty drawback with that bow. 
+
+About this other version of 2.1.1, I assume the difference is in the prices for some unique bows. We would like to receive the newer version, especially if other unique bows (like Hailstorm?) are also 'fixed'.
+
+Zenda

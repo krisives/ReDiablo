@@ -1,0 +1,158 @@
+SOL flags:
+
+01 : prevent the presence of player/monsters/items
+02 : block line of sight
+04 : block missiles
+08 : allow transparence
+
+
+
+Modifications to Levels\L3Data\L3.SOL
+
+Some rockformations in Caves are changed to not allow walking and/or shooting over. 
+Tile 132 is fixed to keep items from dropping at unreachable places.
+All subtiles that are changed appear only once in L3.TIL,
+
+Tile 51		01 00 00 00 -> 05 00 00 00
+
+TIL		00000198 B700 B800 B900 BA00
+
+000000B7 01
+changed into
+000000B7 05
+	
+Tile 52		01 00 00 00 -> 05 05 00 00
+
+TIL		000001A0 BB00 BC00 BD00 BE00
+
+000000BB 0100
+changed into
+000000BB 0505
+	
+Tile 53		01 00 01 00 -> 05 00 01 00
+
+TIL		000001A8 BF00 C000 C100 C200
+	
+000000BF 01
+changed into
+000000BF 05
+
+Tile 54		01 00 01 00 -> 05 00 05 00
+
+TIL		000001B0 C300 C400 C500 C600
+
+000000C3 0100 01
+changed into
+000000C3 0500 05
+	
+Tile 58		01 01 01 00 -> 05 05 05 00
+
+TIL		000001D0 D300 D400 D500 D600
+	
+000000D3 0101 01
+changed into
+000000D3 0505 05
+
+Tile 62		01 00 01 00 -> 05 00 05 00
+
+TIL		000001F0 E300 E400 E500 E600
+	
+000000E3 0100 01
+changed into
+000000E3 0500 05
+
+Tile 66		01 00 00 00 -> 05 00 00 01
+
+TIL		00000210 F300 F400 F500 F600
+	
+000000F3 0100 0000
+changed into
+000000F3 0500 0001
+
+Tile 67		11 01 17 00 -> 11 05 17 00
+
+TIL		00000218 F700 F800 F900 FA00
+	
+000000F8 01
+changed into
+000000F8 05
+
+Tile 68		01 27 00 00 -> 05 27 05 00
+
+TIL		00000220 FB00 FC00 FD00 FE00
+	
+000000FB 0127 00
+changed into
+000000FB 0527 05
+
+Tile 69		01 07 00 00 -> 01 07 00 01
+
+TIL		00000228 FF00 1E00 0001 0101
+	
+00000101 00
+changed into
+00000101 01
+
+Tile 70		01 00 01 00 -> 05 01 05 00
+
+TIL		00000230 0201 0301 0401 0501
+	
+00000102 0100 01
+changed into
+00000102 0501 05
+
+Tile 71		01 01 00 00 -> 05 05 00 00
+
+TIL		00000238 0601 0701 0801 0901
+	
+00000106 0101
+changed into
+00000106 0505
+
+Tile 72		01 00 07 00 -> 05 00 07 00
+
+TIL		00000240 0A01 0B01 1E00 0C01
+	
+0000010A 01
+changed into
+0000010A 05
+
+Tile 73		01 01 03 00 -> 05 05 05 00
+
+TIL		00000248 0D01 0E01 0F01 1001
+	
+0000010D 0101 03
+changed into
+0000010D 0505 05
+
+Tile 74		01 00 01 00 -> 05 00 05 00
+
+TIL		00000250 1101 1201 1301 1401
+	
+00000111 0100 01
+changed into
+00000111 0500 05
+
+Tile 78		01 01 01 00 -> 05 05 05 00
+
+TIL		00000270 2101 2201 2301 2401
+	
+00000121 0101 01
+changed into
+00000121 0505 05
+
+Tile 79		01 00 07 00 -> 01 00 07 01 -> 05 00 07 05 (already changed for 52L)
+
+TIL		00000278 2501 2601 2701 2801
+	
+00000125 0100 0701
+changed into
+00000125 0500 0705
+
+Tile 132 	27 27 01 00 -> 27 27 00 01 -> 27 27 01 01 (already changed for 52L)
+
+TIL		00000420 E401 E501 E601 E701
+	
+000001E6 00
+changed into
+000001E6 01

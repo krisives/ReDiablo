@@ -1,0 +1,98 @@
+FireBall - Speed for monsters 16 -> 20
+
+:00431E92 6A10                    push 00000010
+
+Voorstel:
+
+:00431E92 6A14                    push 00000014
+
+
+
+Holy Bolt
+
+Damage = clvl + 9 + rnd[10]
+
+:004353AC 6A0A                    push 0000000A
+:004353AE 5A                      pop edx
+:004353AF E8A64BFEFF              call 00419F5A
+:004353B4 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353B7 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:004353BD 8BD1                    mov edx, ecx
+:004353BF 6A1F                    push 0000001F
+:004353C1 69D2C8550000            imul edx, 000055C8
+:004353C7 0FBE943AB8010000        movsx edx, byte ptr [edx+edi+000001B8]
+:004353CF 8D441009                lea eax, dword ptr [eax+edx+09]
+:004353D3 5A                      pop edx
+:004353D4 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:004353DA E81D6C0300              call 0046BFFC
+
+Voorstel:
+
+Damage = 2 + magic/8 + rnd[clvl]
+
+min: 2 + magic/8
+max: 2 + magic/8 + clvl
+
+Beter random door:
+
+:004353A4 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:004353AA 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353AD E8D5370500              call 00488B87
+:004353B2 B145                    mov cl, 45
+ 
+ipv. :
+
+:004353A4 B145                    mov cl, 45
+:004353A6 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:004353AC 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353AF E8D3370500              call 00488B87				call GET_CLVL
+
+:004353B4 E8A14BFEFF              call 00419F5A
+:004353B9 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353BC E8DD370500              call 00488B9E				call GET_MODMAGIC
+:004353C1 C1FA03                  sar edx, 03
+:004353C4 8D441002                lea eax, dword ptr [eax+edx+02]
+:004353C8 6A1F                    push 0000001F
+:004353CA 90                      nop
+:004353CB 90                      nop
+:004353CC 90                      nop
+:004353CD 90                      nop
+:004353CE 90                      nop
+:004353CF 90                      nop
+:004353D0 90                      nop
+:004353D1 90                      nop
+:004353D2 90                      nop
+:004353D3 5A                      pop edx
+
+Nieuw voorstel HB:
+
+Damage = 5 + magic/8 + rnd[clvl]
+:004353C4 8D441002                lea eax, dword ptr [eax+edx+02]
+wordt
+:004353C4 8D441005                lea eax, dword ptr [eax+edx+05]
+
+
+GET_CLVL
+
+in/out: ecx = charnum
+out:    edx = clvl
+out:    edi = 006EAE14
+
+:00488B87 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:00488B8D 8BD1                    mov edx, ecx
+:00488B8F 69D2C8550000            imul edx, 000055C8
+:00488B95 0FBE943AB8010000        movsx edx, byte ptr [edx+edi+000001B8]
+:00488B9D C3                      ret
+
+
+GET_MODMAGIC
+
+in/out: ecx = charnum
+out:    edx = modmagic
+out:    edi = 006EAE14
+
+:00488B9E 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:00488BA4 8BD1                    mov edx, ecx
+:00488BA6 69D2C8550000            imul edx, 000055C8
+:00488BAC 8B943A6C010000          mov edx, dword ptr [edx+edi+0000016C]
+:00488BB3 C3                      ret

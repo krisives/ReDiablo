@@ -1,0 +1,44 @@
+(*)Manashield - Lower drain
+
+:004520E1 C1E80D                  shr eax, 0D
+wordt
+:004520E1 C1E80E                  shr eax, 0E
+
+
+()Manashield - Correct slvl for damage absorption
+
+:00437B4B 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+wordt
+:00437B4B 51                      push ecx
+:00437B4C E8E0570000              call 0043D331		Get MS-slvl
+
+:00437B58 90                      nop
+wordt
+:00437B58 59                      pop ecx
+
+Get MS-slvl, geplaatst op vervolg oude DiabloDeath routine, na de Warplord/Blink check.
+
+:0043D331 90                      nop
+:0043D332 8BCB                    mov ecx, ebx
+:0043D334 69F6E4000000            imul esi, 000000E4
+:0043D33A 8B9664DD6900            mov edx, dword ptr [esi+0069DD64]
+:0043D340 FFB6D0DC6900            push dword ptr [esi+0069DCD0]
+:0043D346 81C2B8000000            add edx, 000000B8
+:0043D34C E849F9FFFF              call 0043CC9A
+:0043D351 33C0                    xor eax, eax
+:0043D353 C7868CDC690006000000    mov dword ptr [esi+0069DC8C], 00000006
+wordt
+:0043D331 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043D336 6A0B                    push 0000000B
+:0043D338 59                      pop ecx
+:0043D339 03C8                    add ecx, eax
+:0043D33B 0FBE8C39C1000000        movsx ecx, byte ptr [ecx+edi+000000C1]
+:0043D343 0FBE843848550000        movsx eax, byte ptr [eax+edi+00005548]
+:0043D34B 03C1                    add eax, ecx
+:0043D34D 85C0                    test eax, eax
+:0043D34F 7D02                    jge 0043D353
+:0043D351 33C0                    xor eax, eax
+:0043D353 C3                      ret
+:0043D354 909090909090909090      9*nop
+
+

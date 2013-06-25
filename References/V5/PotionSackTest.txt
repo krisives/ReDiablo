@@ -1,0 +1,414 @@
+This method has major drawbacks. NOT IMPLEMENTED
+
+
+*******************
+
+semi-working version = HLFDRKDROPTEST.EXE  (with tome of lore dropping full mana)
+
+*************
+
+
+Potion sack data: 
+
+magic code = 36h
+spell code = 1
+use once
+
+
+
+Add support for Potion Sack at right-clicking the Tome of Lore:
+
+file offset 00033EE7
+
+:00434AE7 E9FE51FFFF              jmp 00429CEA		
+:00434AEC E97255FFFF              jmp 0042A063
+:00434AF1
+changed into
+:00434AE7 E96B970300              jmp 0046E257
+:00434AEC E97255FFFF              jmp 0042A063
+:00434AF1
+
+
+
+Using free space from itemspells:
+
+file offset 0006D657
+
+:0046E257 90                      nop
+:0046E258 90                      nop
+:0046E259 90                      nop
+:0046E25A 90                      nop
+:0046E25B 90                      nop
+:0046E25C 90                      nop
+:0046E25D 90                      nop
+:0046E25E 7409                    je 0046E269
+:0046E260 83BA380A00001B          cmp dword ptr [edx+00000A38], 0000001B
+:0046E267 753B                    jne 0046E2A4
+:0046E269 8BB2400A0000            mov esi, dword ptr [edx+00000A40]
+:0046E26F 3BB2440A0000            cmp esi, dword ptr [edx+00000A44]
+:0046E275 742D                    je 0046E2A4
+:0046E277 81EC74010000            sub esp, 00000174
+:0046E27D 8DB25C090000            lea esi, dword ptr [edx+0000095C]
+:0046E283 899C2488010000          mov dword ptr [esp+00000188], ebx
+:0046E28A 6A5D                    push 0000005D
+:0046E28C 59                      pop ecx
+:0046E28D 8BFC                    mov edi, esp
+:0046E28F F3                      repz
+:0046E290 A5                      movsd
+:0046E291 83C9FF                  or ecx, FFFFFFFF
+:0046E294 E8F4FEFFFF              call 0046E18D
+:0046E299 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046E29F A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0046E2A4 8BD0                    mov edx, eax
+:0046E2A6 33FF                    xor edi, edi
+:0046E2A8 69D2C8550000            imul edx, 000055C8
+:0046E2AE 39BC0AD8470000          cmp dword ptr [edx+ecx+000047D8], edi
+
+changed into
+
+:0046E257 8BC7                    mov eax, edi
+:0046E259 8B7D08                  mov edi, dword ptr [ebp+08]
+:0046E25C 83FF27                  cmp edi, 00000027			check for Tome of Lore ** 28 for test
+:0046E25F 0F8488BAFBFF            je 00429CED		
+:0046E265 8BB8E8000000            mov edi, dword ptr [eax+000000E8]	use max. charges as Magic code 
+:0046E26B 8BC6                    mov eax, esi
+:0046E26D 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046E273 69C0C8550000            imul eax, 000055C8
+:0046E279 03C1                    add eax, ecx
+:0046E27B 8B503C                  mov edx, dword ptr [eax+3C]		character coordinate
+:0046E27E 8B4838                  mov ecx, dword ptr [eax+38]		character coordinate
+:0046E281 33C0                    xor eax, eax
+:0046E283 50                      push eax
+:0046E284 6A01                    push 00000001				00 makes items disappear when left alone
+:0046E286 57                      push edi				edi = Magic Code for new base item
+:0046E287 50                      push eax			
+:0046E288 50                      push eax		
+:0046E289 E805000000              call 0046E293				create and drop new item
+:0046E28E E9D0BDFBFF              jmp 0042A063
+:0046E293 55                      push ebp
+:0046E294 8BEC                    mov ebp, esp
+:0046E296 51                      push ecx
+:0046E297 51                      push ecx
+:0046E298 53                      push ebx
+:0046E299 56                      push esi
+:0046E29A 57                      push edi
+:0046E29B 8955FC                  mov dword ptr [ebp-04], edx
+:0046E29E 894DF8                  mov dword ptr [ebp-08], ecx
+:0046E2A1 6A0F                    push 0000000F				fake dlvl = 15
+:0046E2A3 58                      pop eax				
+:0046E2A4 E9E494FBFF              jmp 0042778D
+:0046E2A9 9090909090              5*nop
+
+
+this only works correctly for game creator, and for those alone on a level
+
+**************
+hlfdrkdroptest:
+
+:0046E285 50                      push eax
+:0046E286 6A01                    push 00000001				00 makes items disappear when left alone
+:0046E288 57                      push edi				edi = Magic Code for new base item
+:0046E289 50                      push eax			
+:0046E28A 50                      push eax		
+changed into
+:0046E285 EB24                    jmp 0046E2AB
+:0046E287 90                      nop
+
+
+:0046E2AB 6A00                    push 00000000
+:0046E2AD 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:0046E2B3 7504                    jne 00??????
+:0046E2B5 6A01                    push 00000001
+:0046E2B7 EBCD                    jmp 0046E286
+:0046E2B9 6A00                    push 00000000
+:0046E2BB EBC9                    jmp 0046E286
+:0046E2BD 90
+
+**************
+
+
+MAX charges is needed to store the type of sack, thus Stone shrine and Adria need adjusted
+
+potion type		code
+
+full healing		02
+healing			03
+mana			06
+full mana		07
+rejuvenation		12
+full rejuvenation	13
+
+
+
+
+Removing support for equipped Tome of Lore:  DONT!!!!!!!!!!!!!!!!!
+
+file offset 0001F5B7
+
+:004201B7 0F85568E0100            jne 00439013
+changed into
+:004201B7 0F85DB050000            jne 00420798
+
+This frees the following code:						************ 21 bytes free !NOT!
+
+:00439010 90                      nop
+:00439011 90                      nop
+:00439012 90                      nop
+:00439013 83B8380A000017          cmp dword ptr [eax+00000A38], 00000017
+:0043901A 0F857877FEFF            jne 00420798
+:00439020 E99871FEFF              jmp 004201BD
+
+
+
+Adjusting Adria, to prevent her from changing the sack:
+
+file offset 00033498
+
+:00434098 90                      nop
+:00434099 90                      nop
+:0043409A E940EFFEFF              jmp 00422FDF
+changed into
+:00434098 E94CFC0000              jmp 00443CE9
+:0043409D 9090                    2*nop
+
+
+Now 16 bytes free space:						***********************
+
+:00422FDF 83EA1B                  sub edx, 0000001B
+:00422FE2 0F849E100100            je 00434086
+:00422FE8 33C0                    xor eax, eax
+:00422FEA E99CB10400              jmp 0046E18B
+
+
+
+Adjusting Stone Shrine, to prevent it from changing the sack:
+
+file offset 00051114
+
+:00451D14 83BC3094030000FF        cmp dword ptr [eax+esi+00000394], FFFFFFFF
+:00451D1C 740E                    je 00451D2C
+:00451D1E 8D8C3070040000          lea ecx, dword ptr [eax+esi+00000470]
+:00451D25 8B5104                  mov edx, dword ptr [ecx+04]
+:00451D28 3B11                    cmp edx, dword ptr [ecx]
+:00451D2A 7FBE                    jg 00451CEA
+changed into
+:00451D14 8D8C3094030000          lea ecx, dword ptr [eax+esi+00000394]
+:00451D1B 8339FF                  cmp dword ptr [ecx], FFFFFFFF
+:00451D1E 740C                    je 00451D2C
+:00451D20 83C170                  add ecx, 00000070
+:00451D23 83796436                cmp dword ptr [ecx+64], 00000036
+:00451D27 E9D31FFFFF              jmp 00443CFF
+:00451D2C
+
+
+
+Now 8 bytes free space:								***********************
+
+file offset 000510EA
+
+:00451CEA 8911                    mov dword ptr [ecx], edx		
+:00451CEC EB3E                    jmp 00451D2C
+:00451CEE 90                      nop
+:00451CEF 90                      nop
+:00451CF0 90                      nop
+:00451CF1 90                      nop
+
+
+Using free space from improved boss packs:
+
+file offset 000430E9
+
+:00443CE9 90                      nop
+:00443CEA 90                      nop
+:00443CEB 754C                    jne 00443D39
+:00443CED 0FB6835CDD6900          movzx eax, byte ptr [ebx+0069DD5C]
+:00443CF4 8D9B5CDD6900            lea ebx, dword ptr [ebx+0069DD5C]
+:00443CFA 69C0E4000000            imul eax, 000000E4
+:00443D00 2BB0B0DC6900            sub esi, dword ptr [eax+0069DCB0]
+:00443D06 56                      push esi
+:00443D07 E8C46E0300              call 0047ABD0
+:00443D0C 83F804                  cmp eax, 00000004
+:00443D0F 59                      pop ecx
+:00443D10 7D93                    jge 00443CA5
+:00443D12 0FB603                  movzx eax, byte ptr [ebx]
+:00443D15 69C0E4000000            imul eax, 000000E4
+:00443D1B 2BB8B4DC6900            sub edi, dword ptr [eax+0069DCB4]
+:00443D21 57                      push edi
+:00443D22 E8A96E0300              call 0047ABD0
+:00443D27 83F804                  cmp eax, 00000004
+:00443D2A 59                      pop ecx
+:00443D2B 0F8D74FFFFFF            jnl 00443CA5
+
+changed into
+
+:00443CE9 83EA1B                  sub edx, 0000001B
+:00443CEC 750A                    jne 00443CF8
+:00443CEE 83780427                cmp dword ptr [eax+04], 00000027
+:00443CF2 0F848E03FFFF            je 00434086
+:00443CF8 33C0                    xor eax, eax
+:00443CFA E98CA40200              jmp 0046E18B
+
+:00443CFF 7506                    jne 00443D07
+:00443D01 83796827                cmp dword ptr [ecx+68], 00000027
+:00443D05 750C                    jne 00443D13
+:00443D07 83C16C                  add ecx, 0000006C
+:00443D0A 8B5104                  mov edx, dword ptr [ecx+04]
+:00443D0D 3B11                    cmp edx, dword ptr [ecx]
+:00443D0F 7E02                    jle 00443D13
+:00443D11 8911                    mov dword ptr [ecx], edx
+:00443D13 E914E00000              jmp 00451D2C
+:00443D18 909090                  3*nop
+
+
+********************************
+
+
+Add support for Potion Sack to the 'manual recharging' of the Tome of Lore:
+
+
+
+:0042153D 8BC3                    mov eax, ebx
+:0042153F 69C0C8550000            imul eax, 000055C8
+:00421545 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042154B 8D3401                  lea esi, dword ptr [ecx+eax]
+:0042154E 8B960C550000            mov edx, dword ptr [esi+0000550C]
+:00421554 E8C9A70100              call 0043BD22					check for all ID scroll base items
+:00421559 90                      nop
+:0042155A 85D2                    test edx, edx
+:0042155C 7428                    je 00421586					exit of no ID scroll
+:0042155E 8BF3                    mov esi, ebx
+:00421560 8BFA                    mov edi, edx
+:00421562 8BCE                    mov ecx, esi					ecx = character
+:00421564 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421568 50                      push eax
+:00421569 E8EF520500              call 0047685D					check backpack for 'edx'
+:0042156E 85C0                    test eax, eax
+:00421570 7414                    je 00421586					exit if no ID scroll in backpack
+:00421572 6A28                    push 00000028
+:00421574 5A                      pop edx					Tome of Lore (item #40)
+:00421575 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421579 50                      push eax
+:0042157A 8BCE                    mov ecx, esi					ecx = character
+:0042157C E8DC520500              call 0047685D					check backpack for 'edx'
+:00421581 E9F8A90400              jmp 0046BF7E                                  continue elsewhere
+:00421586 E93A090000              jmp 00421EC5                                  exit
+:0042158B
+
+changed into
+
+:0042153D ...
+
+:00421559 85D2                    test edx, edx
+:0042155B 74??                    je 00421586					exit of no ID scroll or potion
+:0042155D 8BF3                    mov esi, ebx
+:0042155F 8BFA                    mov edi, edx
+:00421561 8BCE                    mov ecx, esi					ecx = character
+:00421563 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421567 50                      push eax
+:00421568 E8????????              call 0047685D					check backpack for 'edx'
+:0042156D 85C0                    test eax, eax
+:0042156F 74??                    je 00421586					exit if none in backpack
+:00421571 8B90DC000000            mov edx, dword ptr [eax+000000DC]
+:00421577 89542418                mov dword ptr [esp+18], edx
+:0042157B 83FA14                  cmp edx, 00000014
+:0042157E 6A28                    push 00000028					Tome of Lore
+:00421580 5A                      pop edx
+:00421581 E9????????              jmp 00??????					continue elsewhere
+:00421586
+
+
+63b
+:0042157F 7F03                    jg 00??????
+:00421581 6A37                    push 00000037					Potion Sack
+:00421587 5A                      pop edx
+:00421575 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421579 50                      push eax
+:0042157A 8BCE                    mov ecx, esi					ecx = character
+:0042157C E8????????              call 0047685D					check backpack for 'edx'
+:0046BF7E 85C0                    test eax, eax
+:0046BF80 74??                    je 00??????					exit if Tome or Sack not found
+
+:0041253C 8B542418                mov edx, dword ptr [esp+18]
+:0042157B 83FA14                  cmp edx, 00000014
+:0047F714 7F??                    jg 00??????
+
+:0046BF86 83B8E400000000          cmp dword ptr [eax+000000E4], 00000000
+:0046BF8D 7F06                    jg 00??????
+:00430B2E 8990E8000000            mov dword ptr [eax+000000E8], edx
+:00422C6E 3B90E8000000            cmp edx, dword ptr [eax+000000E8]
+:00422C74 7505                    jne 00??????
+
+:00421581 E9????????              jmp 0046BF86					continue elsewhere
+:00421581 E9????????              jmp 00421EC5					exit
+:00421586
+
+
+
+
+continuing:
+
+:0046BF7E 85C0                    test eax, eax
+:0046BF80 742C                    je 0046BFAE					exit if Tome of Lore not found
+:0046BF82 8B542414                mov edx, dword ptr [esp+14]
+
+:0046BF86 83B8E400000028          cmp dword ptr [eax+000000E4], 00000028
+:0046BF8D 7D1F                    jge 0046BFAE					exit if already 40 scrolls in it
+:0046BF8F FF80E4000000            inc dword ptr [eax+000000E4]			add 'scroll' to Tome
+:0046BF95 8BD7                    mov edx, edi					ID scroll
+:0046BF97 8D442414                lea eax, dword ptr [esp+14]
+:0046BF9B 50                      push eax
+:0046BF9C 8BCE                    mov ecx, esi
+:0046BF9E E8BAA80000              call 0047685D					check backpack for 'edx'
+:0046BFA3 8B542414                mov edx, dword ptr [esp+14]			found at address 'edx'
+:0046BFA7 8BCE                    mov ecx, esi
+:0046BFA9 E8D14EFBFF              call 00420E7F					destroy item at address 'edx'
+:0046BFAE E9125FFBFF              jmp 00421EC5					exit
+:0046BFB3 90                      nop
+
+
+
+Adjusting list of base items:
+
+28b
+:0043BD22 83FA1A                  cmp edx, 0000001A
+:0043BD25 7411                    je 0043BD38
+:0043BD27 83FA5E                  cmp edx, 0000005E
+:0043BD2A 740C                    je 0043BD38
+:0043BD2C 83FA6D                  cmp edx, 0000006D
+:0043BD2F 7407                    je 0043BD38
+:0043BD31 83FA70                  cmp edx, 00000070
+:0043BD34 7402                    je 0043BD38
+:0043BD36 33D2                    xor edx, edx
+:0043BD38 C3                      ret
+:0043BD39 90                      nop
+:0043BD3A 90                      nop
+:0043BD3B 90                      nop
+:0043BD3C 90                      nop
+:0043BD3D 90                      nop
+changed into
+:0043BD22 83FA18                  cmp edx, 00000018
+:0043BD25 7C14                    jl 0043BD3B
+:0043BD27 83FA1B                  cmp edx, 0000001B
+:0043BD2A 7C11                    jl 0043BD3D
+:0043BD2C 83FA1D                  cmp edx, 0000001D
+:0043BD2F 7C0A                    jl 0043BD3B
+:0043BD31 83FA1F                  cmp edx, 0000001F
+:0043BD34 7C07                    jl 0043BD3D
+:0043BD36 E9????????              jmp 00??????
+:0043BD3B 33D2                    xor edx, edx
+:0043BD3D C3                      ret
+
+
+28b
+:0043BD22 83FA4D                  cmp edx, 0000004D
+:0043BD25 7C14                    jl 00??????
+:0043BD27 83FA53                  cmp edx, 00000053
+:0043BD2A 7C11                    jl 00??????
+:0043BD27 83FA5E                  cmp edx, 0000005E
+:0043BD2A 740C                    je 00??????
+:0043BD2C 83FA6D                  cmp edx, 0000006D
+:0043BD2F 7407                    je 00??????
+:0043BD31 83FA70                  cmp edx, 00000070
+:0043BD34 7402                    je 00??????
+:0043BD3B 33D2                    xor edx, edx
+:0043BD3D C3                      ret

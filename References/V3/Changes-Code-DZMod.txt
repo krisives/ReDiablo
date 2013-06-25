@@ -1,0 +1,4295 @@
+Note: Most of the code is new code placed in areas which I have cleared out during other changes.  So some code that might look like changes to existing code is actually new code which is simply being inserted where available.
+
+Also, some of it may have errors/typos and can be inaccurate. <disclaimer, *g*>
+
+======== BEGIN code changes ========
+
+CODE CHANGES  Asm 0041FFEB..0042001A..0042009A
+
+Multiply base character damage for two-handed weapons (except for bows).
+
+	Asm 0041FFEB..0042001A
+
+	Hex 0007883E; Asm 0047943E (Was all zeroes)
+
+0047943E:
+83BEBC806800FF	cmp dword ptr [esi+006880BC], FFFFFFFF	?slot empty?
+742B			je Return
+83BE1882680000	cmp dword ptr [esi+00688218], 00000000	?req. met?
+7422			je Return
+80BE7181680002	cmp byte ptr [esi+00688171], 02	left hand & 2-H
+7519			jne Return
+83BEBC80680003	cmp dword ptr [esi+006880BC], 00000003	item type & Bow
+7509			jne Multi
+83BED878680000	cmp dword ptr [esi+006880BC], 00000000	class & warrior
+7507			jne Return
+
+Multi: Multiply base damage by 1.5
+8BC8			mov ecx, eax
+C1E901		shr ecx, 01
+03C1			add eax, ecx
+
+Return:
+C3			ret
+
+NOTE: This has been changed, but the changes to this document were lost in a crash.  See the EXE for details.
+
+	Warrior's bow damage vs. Rogue's (assuming maxed, but unmodified stats)
+		Clasic Diablo	52% (49% w' swiftness)
+		DZ Mod		78% (74% w' swiftness)
+		Note: Adding the Warrior's Dex to their damage would bring it close to 100%
+
+Cursed Resists changed from 0% resist all to half reistances
+
+	Asm: 0041FFEB..0042001A..0042009A
+
+	??? 493c75 ???
+
+Change max blocking to 80%
+
+	0042AD98: (0002A198)	Trap/Monster vs. Player
+	from:	83FB647E036A645B
+	to:	83FB507E036A505B
+
+	0042B13E: (0002A53E)	Player vs. Player
+	from:
+		894D10	mov dword ptr [ebp+10], ecx
+		7907		jns 0042B14A
+		83651000	and dword ptr [ebp+10], 00000000
+		8B4D10	mov ecx, dword ptr [ebp+10]
+
+		3BCB		cmp ecx, ebx
+		7E05		jle 0042B153
+		895D10	mov dword ptr [ebp+10], ebx
+		8BCB		mov ecx, ebx
+	to:
+		6A50		push 00000050
+		5B		pop ebx
+		894D10	mov dword ptr [ebp+10], ecx
+		7904		jns next
+		6A00		push 00000000
+		59		pop ecx
+		90		nop
+
+		3BCB		cmp ecx, ebx
+		7E02		jle next
+		8BCB		mov ecx, ebx
+
+		894D10	mov dword ptr [ebp+10], ecx
+
+	00435B4A: (00034F4A)	Monster vs. Player
+	from:	83F9647E036A6459
+	to:	83F9507E036A5059
+    HF: 0043E2BD: (3D6BD)    
+        from:   83FA647E036A645A 
+        to:     83FA507E036A505A
+        
+	0044FBA9: (0004EFA9)	Player vs. Player
+	from: 83F9647E036A6459
+	to:	83F9507E036A5059
+
+CALL Sort_Small_Items_In_Backpack
+
+0041E5D1:
+was 69 EDD85400 00
+now e8(9DAE0500)90
+
+
+00479473:
+xxxxxx69 EDD85400 00505152 53566A0A 5B8DB5AF BE68008D 859CBE68 00803E00 750656E8 2A000000 4E4B75F1 6A145B8B CE2BCB80 39007506 51E81400 000085DB 740583EB 0AEBE84E 3BC67CE0 5E5B5A59 58C35A53 578BFA33 DB2BC38A 0880F900 7E1BF6D9 8A50013A CA74128A 500A3ACA 740BF6D9 880FC600 0003C3EB 0F03C383 C30A83FB 1E7CD240 3BC67CCB 5F5BC300 C3
+
+		GLOBAL VARIABLES
+	ebp	initial value - character #
+		returns pointer to character
+
+		LOCAL VARIABLES
+	eax	pointer to backpack
+		looking for item to move
+		sweeps 14..1D looking at 3-column
+	ebx	loop counter
+	ecx	temporary values
+	esi	pointer to backpack
+		looks for empty slot
+		sweeps 27..1E looking at single slot
+		sweeps 1D..14 looking at 3-column
+	ebp	pointer to character
+
+			00479473:
+69EDD8540000	imul ebp, 000054D8
+50			push eax
+51			push ecx
+52			push edx
+53			push ebx
+56			push esi
+
+			(* Init bottom row loop *)
+6A0A			push 0000000A
+5B			pop ebx
+8DB5AFBE6800	lea esi, dword ptr [ebp+0068BEAF]
+
+			(* Init 3-column sweep *)
+8D859CBE6800	lea eax, dword ptr [ebp+0068BE9C]
+
+
+			LOOP1:
+803E00		cmp byte ptr [esi], 0
+75(07)		jne NEXT1
+======
+8BCE			mov ecx, esi
+E8(29000000)	call Move_Small_Item
+
+			NEXT1:
+4E			dec esi
+4B			dec ebx	
+75(F0)		jne LOOP1
+
+			LOOP2A:
+6A14			push 00000014
+5B			pop ebx
+
+			LOOP2B:
+8BCE			mov ecx, esi
+2BCB			sub ecx, ebx
+803900		cmp byte ptr [ecx], 0
+75(05)		jne NEXT2B
+======
+E8(14000000)	call Move_Small_Item
+
+			NEXT2B:
+85DB			test ebx, ebx
+74(05)		je NEXT2A
+83EB0A		sub ebx, 0000000A
+EB(E9)		jmp LOOP2B
+
+			NEXT2A:
+4E			dec esi
+3BC6			cmp eax, esi
+7C(E1)		jl LOOP2A
+
+5E			pop esi
+5B			pop ebx
+5A			pop edx
+59			pop ecx
+58			pop eax
+C3			ret
+	
+CALL Move_Small_Item
+
+	USED BY SUB-ROUTINE
+	eax	FROM PARENT
+		pointer to backpack
+		looking for item to move
+		sweeps 14..1D looking at 3-column
+	ebx	loop variable
+	ecx	passes the vacant slot
+	esi	used from parent but unchanged
+
+004794C2:	Move_Small_Item:
+53		push ebx
+57		push edi
+3BC6		cmp eax, esi
+7D(3C)	jge END_SUB-ROUTINE
+8BF9		mov edi, ecx
+
+004794CA:	LOOP3A:
+33DB		xor ebx, ebx			set ebx to 0 (used for vertical sweep: 00, 0A, 14 = 00,10,20)
+
+004794CC:	LOOP3B:
+2BC3		sub eax, ebx			offset eax by vertical sweep
+8A08		mov cl, byte ptr [eax]
+80F900	cmp cl, 00
+7E(20)	jle NEXT3B				square empty or used as filler space, jump
+F6D9		neg cl				set cl to filler value
+8A5001	mov dl, byte ptr [eax+01]
+3ACA		cmp cl, dl				does item fill to the right?
+74(17)	je NEXT3B				if it fills, next
+
+83FB14	cmp ebx, 14
+74(07)	je MOVEITEM				If item is on top row, it can't fill to the top, so move it.
+
+If eax started sweeping on the bottom row (I don't know if it can do this, but it might), then this will cause 1x2 items (e.g. a dagger) along to top to be moved improperly.  By removing it (replacing it with NOPs), the code might fail to move a 1x1 properly if found along the top since the code below will be looking out of range, but it won't cause harm and will fix the improper movement.
+
+8A50F6	mov dl, byte ptr [eax-0A]
+3ACA		cmp cl, dl				does item fill to the top?
+74(0B)	je NEXT3B				if it fills, next
+
+004794EA:	MOVE ITEM:
+F6D9		neg cl				restore cl to positive value
+880F		mov byte ptr [edi], cl		set new location to hold item
+C60000	mov byte ptr [eax], 00		set old location to hold nothing
+03C3		add eax, ebx			restore eax, undoing vertical sweep
+EB(0F)	jmp END_SUB-ROUTINE
+
+004794F5:	NEXT3B:
+03C3		add eax, ebx			restore eax, undoing vertical sweep
+83C30A	add ebx, 0000000A			increase vertical sweep by 0A (10)
+83FB1E	cmp ebx, 0000001E
+7C(CD)	jl LOOP3B
+		(*NEXT3A*)
+40		inc eax
+3BC6		cmp eax, esi
+7C(C6)	jl LOOP3A
+
+00479504:	END_SUB-ROUTINE:
+5F		pop edi
+5B		pop ebx
+C3		ret
+
+----------------
+
+00458C9B: (0005809B)
+from: 14 bytes
+
+7509			jne 00458CA6
+0FB68820796800	movzx ecx, byte ptr [eax+00687920]
+EB03			jmp 00458CA9
+
+0FB6C9		movzx ecx, cl
+
+to: 14 bytes
+
+0FB6C9		movzx ecx, cl
+7509			jne 00458CA9
+
+8B8828796800	mov ecx, dword ptr [eax+00687928]
+C1E906		shr ecx, 6
+
+----------------
+
+Allow witch to recharge ANY weapon with charges, not just staves:
+
+0045ACA2: (0005A0A2)
+90 x 9
+
+0045AD7F: (0005A17F)
+EB [07]	jmp .......
+90 x 7
+
+The following is necessary to allow witch to ignore items using the 'current charges' value to store data.
+
+Was:
+0045ACB7: (0005A0B7)
+74 [03]	je ........
+
+Now:
+0045ACB7: (0005A0B7)
+7D [03]	jge ........
+
+Was:
+0045AD94: (0005A194)
+74 [29]	je 0045ADBF
+
+Now:
+0045AD94: (0005A194)
+7D [29]	jge 0045ADBF
+
+----------------------------------------------------------------
+
+Allows spells to be cast from any equipped item:
+
+WAS:
+0041F608:
+mov eax, ecx
+imul eax, 000054D8
+cmp dword ptr [eax+006880BC], FFFFFFFF	left hand & empty
+je 0041F648						hand empty, end
+cmp dword ptr [eax+00688190], 00000017	magic code & staff
+jne 0041F648					not a staff, end
+mov edx, dword ptr [eax+00688194]		spell code
+cmp edx, dword ptr [eax+0068782C]		spell to cast
+jne 0041F648					not casting staff's spell
+mov edx, dword ptr [eax+00688198]		current charges
+lea eax, dword ptr [eax+00688198]		current charges
+test edx, edx
+jle 0041F648					<=0, ret
+dec edx
+mov dword ptr [eax], edx			-1 charge
+jmp 0042044F
+
+0041F648:
+ret
+
+NOW: 64 bytes (was 65)
+
+0041F608:		(19 bytes)
+53			push ebx
+8BC1			mov eax, ecx
+51			push ecx
+69C0 D8540000	imul eax, 000054D8
+6A07			push 00000007
+8D88 787B6800	lea ecx, dword ptr [eax+00687B78]
+5B			pop ebx
+
+:LOOP			(33 bytes)
+8379 84 FF		cmp dword ptr [ecx-7C], FFFFFFFF
+74[1B]		je NEXT					no item, NEXT
+8B51 5C		mov edx, dword ptr [ecx+5C]		spell code (E0)
+3B90 2C786800	cmp edx, dword ptr [eax+0068782C]	spell to cast
+75[10]		jne NEXT					not item's spell, NEXT
+8379 60 00		cmp dword ptr [ecx+60], 0
+7E[0A]		jle NEXT					<=0, ret
+
+(1EA32)
+FF49 60		dec (dword ptr) [ecx+60]
+59			pop ecx
+5B			pop ebx
+E9[130E0000]	jmp 0042044F
+
+:NEXT			(12 bytes)
+81C1 70010000	add ecx, 00000170
+4B			dec ebx
+75[D6]		jne LOOP
+59			pop ecx
+5B			pop ebx
+C3			ret
+
+----------------------------------------------------------------
+
+Code for ring of shielding
+
+Was:
+
+00420242: 8B8E 9C836800	mov ecx, dword ptr [esi+0068839C]
+					set ecx to armor's item type (06 = Leather, 08 = Mail, 09 = Plate)
+Now
+00420242:	E8 [EB920500]	call 00479532
+		90			nop
+
+00479532:	50			push eax
+		8B45 88		mov eax, dword ptr [ebp-78]
+		A9 01000000		test eax, 00000001
+		58			pop eax
+		74 [1B]		je END_SHIELDING
+
+HAVE_SHIELD_RING
+		80BE B4786800 01	cmp byte ptr [esi+006878B4], 01
+		74[12]		je END SHIELDING					have shield, skip
+		83F8 02		cmp eax, 00000002					sword
+		74[05]		je SHIELD						sword, add shield
+		83F8 06		cmp eax, 00000006					club
+		75[08]		jne END_SHIELDING					not sword or club, don't add shield
+SHIELD
+		C686 B4786800 01	mov byte ptr [esi+006878B4], 01		sword or club, add shield
+		40			inc eax						If shield, +1 to eax
+END_SHIELDING
+		8B8E 9C836800	mov ecx, dword ptr [esi+0068839C]
+						set ecx to armor's item type (06 = Leather, 08 = Mail, 09 = Plate)
+		C3			ret
+
+80BEB478680001741283F802740583F8
+067508C686B478680001408B8E9C8368
+00C3
+
+
+-------------------------------------------------------------------------------------
+
+Init New Data Section
+
+Was:
+
+0041FD01:
+83EC 74		sub esp, 00000074
+
+0041FD6D:
+C745 98 07000000	mov [ebp-68], 00000007
+
+Now:
+
+dword ptr [ebp-78] : Bonus Flags
+
+0041FD01:
+83EC 78		sub esp, 00000078
+
+0041FD6D:
+E9 [95970500]	jmp INIT_SPECIAL_DATA:
+9090			nop x 2
+
+00479507: INIT_SPECIAL_DATA:
+C745 98 07000000	mov [ebp-68], 00000007
+C745 88 00000000	mov [ebp-78], 00000000
+E9 [5A68FAFF]	jmp back
+
+-------------------------------------------------------------------------------------
+
+Intercept processing equiped items effects on character.
+
+Was:
+
+0041FDDE:
+8B47 90		mov eax, dword ptr [edi-70]
+0145 E0		add dword ptr [ebp-20], eax
+
+
+Now:
+
+dword ptr [ebp-78] : Bonus Flags
+
+0041FDDE:
+E9 [37970500]	jmp 0047951A
+90			nop
+
+0047951A:
+8B47 90		mov eax, dword ptr [edi-70]
+0145 E0		add dword ptr [ebp-20], eax
+
+83BF 5CFFFFFF 08	cmp dword ptr [edi+FFFFFF5C], 00000008]	Item Graphic (08 = Bracer of Shielding)
+75 [04]		jne NEXT
+834D 88 01		or dword ptr [ebp-78], 00000001
+
+E9 [B268FAFF]	jmp 0041FDE4
+
+----------------------------------------------------------------
+
+Facinating shrine
+
+(Similar changes were made to Sacred and Ornate, calling the same PENALIZE MANA code.)
+
+If spell level<8, add two levels (as normal).
+Otherwise, if spell level<15, only add one.
+
+Rather than perminantly draining 10% max mana, subtract 2 magic points and appropriate max mana.  Also drain current mana to 10%.
+
+00447B62:	3C08	cmp al, 08
+
+00447B80:
+E8 [07000000]	call 00447B8C					PENALIZE MANA
+B1 15			mov cl, 15
+E9 [54080000]	jmp 004483E0
+
+00447B8C: PENALIZE MANA
+8B99 24796800	mov ebx, dword ptr [ecx+00687924]		modified current Mana
+6A 0A			push 0000000A
+8BC3			mov eax, ebx
+5E			pop esi
+99			cdq
+F7FE			idiv esi						modified current Mana div 10
+2BD8			sub ebx, eax
+8BC3			mov eax, ebx
+2981 24796800	sub dword ptr [ecx+00687924], eax		modified current Mana - 90% modified current Mana
+2981 1C796800	sub dword ptr [ecx+0068791C], eax		base current Mana - 90% modified current Mana
+6A 02			push 00000002
+58			pop eax
+2981 E4786800	sub dword ptr [ecx+006878E4], eax		modified Mag-2
+2981 E8786800	sub dword ptr [ecx+006878E8],	eax		base Mag-2
+8B99 D8786800	mov ebx, dword ptr [ecx+006878D8]		set eax to class
+83FB 02		cmp ebx, 00000002
+75 [03]		jne SKIP NEXT LINE
+83C0 02		add eax, 00000002
+C1E0 06		shl eax, 06
+2981 28796800	sub dword ptr [ecx+00687928], eax		modified max Mana
+2981 20796800	sub dword ptr [ecx+00687920], eax		base max Mana
+C3			ret
+
+fill 35 bytes with 90 (nop) until, but not including the following line:
+
+00447BF7:	85C0	test eax, eax
+
+------------------------------------------------------------------------
+
+Rainbow Elixer
+
+00424826:
+0F84 [D2370200]	je RAINBOW_ELIXER_INIT
+
+00447FFE:		RAINBOW_ELIXER_INIT:
+E8 [05000000]	call RAINBOW_ELIXER_PROCESS
+E9 [44CDFDFF]	jmp 00424D4C
+
+00448008:		RAINBOW_ELIXER_PROCESS:
+53			push ebx
+8BD9			mov ebx, ecx				character #
+57			push edi
+8BFA			mov edi, edx				points to gain (i.e. 1)
+
+50			push eax
+
+C1E1 04		shl ecx, 04
+E8 [884A0000]	call 0044CA9F				CALL Points-To-Max
+
+	eax - Initial value is discarded.
+		Returns the points needed until maximum stats are reached.
+	ecx - Initial value should be the character's number shl 4.
+		Returns the address of the character's record.  PNU
+	edx - Initial value is discarded.
+		Returns the character's class with an shl 04.  PNU
+
+83F8 01		cmp eax, 00000001                 - compare ptm to 1
+7C [07]		jl SKIP
+8381 FC786800 01	add dword ptr [ecx+006878FC], 01
+
+00448023:		SKIP:
+58			pop eax
+6A 01			push 00000001
+8BCB			mov ecx, ebx
+5A			pop edx
+E8 [0287FDFF]	call 00420730
+5F			pop edi
+5B			pop ebx
+C3			ret
+
+----------------------------------------------------------------
+
+Max gold piles as gold is picked up.
+
+Was: (7 bytes)
+
+0041CD61:	cmp eax, 00004E20				20k piles in the DZ mod
+0041CD66:	jg 0041CDA3
+0041CD68:	........
+
+Now:
+0041CD61:
+E9 [CBB20200]	jmp MAX_PILE
+90 90			nop x 2
+
+00448031:	MAX_PILE:
+3D 204E0000		cmp eax, 00004E20
+0F8E [4B4DFDFF]	jle 0041CD87
+	Was 0041CD68 before I modified other code
+C706 204E0000	mov dword ptr [esi], 00004E20
+2D 204E0000		sub eax, 00004E20
+8985 F4CA6800	mov dword ptr [ebp+0068CAF4], eax
+8D46 FC		lea eax, dword ptr [esi-04]
+51			push ecx
+E8 [84020000]	call 004482DA
+59			pop ecx
+E9 [474DFDFF]	jmp 0041CDA3
+
+0041E62C: (7 bytes)
+			mov esi, eax
+			jmp 0041E975
+
+0041E62C:
+E9 [A6950200]	jmp UPDATE_PILE
+
+00447BD7:		UPDATE_PILE:
+8BF0			mov esi, eax
+8B4424 20		mov eax, dword ptr [esp+20]	item # to pick up
+51			push ecx
+69C0 70010000	imul eax, 00000170
+8B8D F4CA6800	mov ecx, dword ptr [ebp+0068CAF4]
+8988 0C6E6300	mov dword ptr [eax+00636E0C], ecx
+59			pop ecx
+E9 [7F6DFDFF]	jmp 0041E975
+
+--------------------------------------------------------
+
+Fix to the 'duping' bug. (anti-dupe fix)
+
+0041E5E2
+0041E...
+0041EA5C
+
+0041E5E2:
+E8 [6488FEFF]	call 00406E4B
+90			nop
+
+00406E4B:
+6A5C			push 0000005C
+8DB5 30CA6800	lea esi, dword ptr [ebp+0068CA30]		item on cursor
+BF 9CBB6900		mov edi, 0069BB9C
+59			pop ecx
+F3			repz
+A5			movsd
+8DB0 486D6300	lea esi, dword ptr [eax+00636D48]
+833D 0CBD6900 27	cmp dword ptr [0069BD0C], 00000027
+7E [07]		jle SKIP
+C605 0CBD6900 27	mov byte ptr [0069BD0C], 27	max player #4 at 39 items
+			SKIP:
+C3			ret
+
+0041EA5C:
+E9 [B5980200]	jmp 0042092E	<00448316>
+90 90 90		nop x3
+
+0042092E:	<00448316:>
+6A5C			push 0000000C
+	(8DB5 14BD6800	lea esi, dword ptr [ebp+0068BD14])
+BE 9CBB6900		mov esi, 0069BB9C
+90			nop
+8DBD 30CA6800	lea edi, dword ptr [ebp+0068CA30]
+59			pop ecx
+F3			repz
+A5			movsd
+5F			pop edi
+5E			pop esi
+5D			pop ebp
+5B			pop ebx
+83C4 1C		add esp, 0000001C
+C3			ret
+
+Was:
+0041E5BF:
+0F84 [97040000]	je 0041EA5C
+
+Now:
+0041E5BF: (0001D9BF)
+0F84 [xxxxxxxx]	je 0042093F
+
+=================================================
+
+Was: 0041E1FE:	0082h (130) bytes
+
+69C9D85400005783B90CCB68001875708B9110CB68008D8110CB68006BD2388A926C344A00889191CB68008B000FBEBC083978680085FF744756538A9991CB68006A640FB6C35E8D04806A64C1E00299F7FE02C35B0FB6F0888191CB68004F8D04B6C1E00299F7FB03C63DFF0000007E09808991CB6800FF33FF85FF75BD5B5E5FC3
+
+Called from 0041E50E, 0041E602
+
+Was: 00425335: Set_Magic_Requirement_For_Spell_Book_From_Item_ECX	006A6228
+
+Called from 0042065A, 004254FC
+
+Area cleared and new code with new calls created.
+
+0042C1C5: (0002B5C5) <called from 0041E50E and 0041E602>
+53			push ebx
+8BD9			mov ebx, ecx
+69DB D8540000	imul ebx, 000054D8
+81C3 30CA6800	add ebx, 0068CA30
+69C9 D8540000	imul ecx, 000054D8				character record
+E8 [81D30400]	call 00479560
+5B			pop ebx
+C3			ret
+
+<0042065A, 004254FC>
+
+0041E25E: (0001D65E)
+53			push ebx
+8BD9			mov ebx, ecx
+69DB 70010000	imul ebx, 00000170
+81C3 28626A00	add ebx, 006A6228
+8B0D 74776800	mov ecx, dword ptr [00687774]
+69C9 D8540000	imul ecx, 000054D8				character record
+E8 [E2B20500]	call 00479560
+5B			pop ebx
+C3			ret
+
+004206AF: (0001FAAF) <mid code>
+53			push ebx
+	52		push edx
+	50		push eax
+8D9E 9FFEFFFF	lea ebx, dword ptr [esi+FFFFFE9F]
+8BCF			mov ecx, edi		
+E8 [A18E0500]	call 00479560
+	58		pop eax
+	5A		pop edx
+5B			pop ebx
+EB [38]		jmp 004206FC
+
+eax - used
+ebx = Item record
+ecx = Character record offset
+edx - used
+edi - preserved
+
+00479560:		Set_Magic_Requirement_For_Spell_Book
+57			push edi						preserve edi
+83BB DC000000 18	cmp dword ptr [ebx+000000DC], 00000018	Magic Code of item & Book
+0F85 [80000000]	jne EXIT						no, jump out of routine
+8B93 E0000000	mov edx, dword ptr [ebx+000000E0]		Spell code of item
+8BC2			mov eax, edx					Spell code of item
+6BD2 38		imul edx, 00000038				spell record
+0FB692 6C344A00	movzx edx, byte ptr [edx+004A346C]		magic req. for level 1 book
+0FBEBC08 39786800	movsx edi, byte ptr [eax+ecx+00687839]	set loop counter to character's slvl
+8A83 7D000000	mov al, byte ptr [ebx+0000007D]
+3C 42			cmp al, 42					Book
+75 [07]		jne NOT BOOK
+83FF 04		cmp edi, 00000004
+7D [45]		jge ZERO
+EB [34]		jmp LOOP
+
+			NOT BOOK:
+3C 4D			cmp al, 4D					Manual
+75 [11]		jne NOT MANUAL
+83FF 08		cmp edi, 00000008
+7D [3A]		jge ZERO
+83FF 04		cmp edi, 00000004
+7D [26]		jge LOOP
+BF 04000000		mov edi, 00000004
+EB [1F]		jmp LOOP
+
+			NOT MANUAL:
+3C 54			cmp al, 54					Tome
+75 [11]		jne NOT TOME
+83FF 0C		cmp edi, 00000000C
+7D [25]		jge ZERO
+83FF 08		cmp edi, 00000008
+7D [11]		jge LOOP
+BF 08000000		mov edi, 00000008
+EB [0A]		jmp LOOP
+
+			NOT TOME:
+83FF 0C		cmp edi, 0000000C
+7D [05]		jge LOOP
+BF 0C000000		mov edi, 0000000C
+
+			LOOP:
+8BC2			mov eax, edx					store current magic req.
+8D1492		lea edx, dword ptr [edx+4*edx]		5 x magic req.
+C1EA02		shr edx, 02						5/4 x magic req. (120%)
+85FF			test edi, edi
+74 [05]		je CHECK MAX REQ					if counter is 0, jump out of routine
+4F			dec edi						dec counter
+EB [F1]		jmp LOOP
+
+			ZERO:
+33C0			xor eax, eax
+
+			CHECK MAX REQ:
+81FA FF000000	cmp edx, 000000FF
+7E [02]		jle SET REQ
+B0FF			mov al, FF
+
+SET REQ:
+8883 61010000	mov byte ptr [ebx+00000161], al		set new magic req.
+
+EXIT:
+5F			pop edi
+C3			ret
+
+--------------------------------------------------------
+
+??? 00425335:
+
+??? jmp 00479566
+
+
+
+=================================================
+
+0041E1B2: Check_requirements_for_item_on_cursor
+
+Called from 0041DF80, 0041E517, 0041E609
+
+Note on related code: 0042459A & 00424799 - Required stat description.  Need to alter if adding 'vit req'.
+
+0041E1B2: (0001D5B2)
+				mov eax, ecx					character #
+				imul eax, 000054D8				character offset
+				add eax, 00687778					start of character data
+				movsx ecx, byte ptr [eax+00005418]		Strength Requirment of item on cursor
+				and dword ptr [eax+0000541C], 00000000	set req. met to 'don't use'
+				cmp dword ptr [eax+00000164], ecx		modified Str & requirement
+(0001D5D3)
+7C [28]			jl RET						(0001D5D3)
+0FB688 19540000		movzx ecx, byte ptr [eax+00005419]
+3988 6C010000		cmp dword ptr [eax+0000016C], ecx		mod magic
+7C [19]			jl RET
+
+NOT USED:	83B8 94530000 18		cmp dword ptr [eax+00005394], 00000018	Magic Code & Book
+NOT USED:	75 [04]			jne SKIP
+
+NOT USED:	85C9				test ecx, ecx
+NOT USED:	74 [19]			je RET
+
+				SKIP:
+0FBE88 1A540000		movsx ecx, byte ptr [eax+0000541A]
+3988 74010000		cmp dword ptr [eax+00000174], ecx		mod dex
+7C [0A]			jl RET
+C780 1C540000 01000000	mov dword ptr [ebx+0000541C], 00000001	set req. met to TRUE
+
+				RET:
+C3				ret
+
+-------------------------------------------------
+
+Obsolete books....
+
+was
+
+0041F7BC:
+cmp dword ptr [edi+00000164], ecx	req met & not met
+
+edi = item record
+esi = character record offset
+
+now
+0041F7BC: (0001EBBC)
+E9 [030F0000]	jmp 004206C4
+90			nop
+
+004206C4: (0001FAC4)
+
+83BF DC000000 18	cmp dword ptr [edi+000000DC], 00000018
+75 [1C]		jne END
+80BF 61010000 00	cmp byte ptr [edi+00000161], 00
+75 [13]		jne END
+
+0FB686 D8786800	movzx eax, byte ptr [esi+006878D8]
+8B0C85 8BF34200	mov ecx, dword ptr [4*eax+0042F38B]
+E9 [xxxxxxxx]	jmp 0041F7ED
+
+END:
+398F 64010000	cmp dword ptr [edi+00000164], ecx	req met & not met
+E9 [xxxxxxxx]	jmp 0041F7C2
+
+(0002E78B)
+ED020000		02ED: Warrior		"I can already do that."
+80020000		0280:	Rogue			"I can already do that."
+19020000		0219:	Sorcerer		"I can already do that."
+
+--------------------------------------------------------
+
+Change fireball to Flamestrike
+
+0042C1E2 up to, but not including 0042C24E
+
+changed fireball code to match lightning code.
+Updated out-of-routine jumps (none found) and calls (not all are detailed below).
+Then made other (detailed) changes.
+
+[B08CFEFF] (0002E3C3) call 00417C77
+[A48CFEFF] (0002E3CF) call 00417C77
+[778CFEFF] (0002E3FC) call 00417C77
+[5D8CFEFF] (0002E416) call 00417C77
+[4FB5FFFF] (0002E43F) call 0042A592
+[64F0FFFF] (0002E543) call 0042E1AB
+?? (0002E525) push ? 1D
+
+<mid code>
+0042C106: (0002B506)
+
+8B9E 58846400	mov ebx, dword ptr [esi+00648458]
+50			push eax
+52			push edx
+6A 05			push 00000005
+8BC3			mov eax, ebx
+C1E0 01		shl eax, 01
+5D			pop ebp
+99			cdq
+F7FD			idiv ebp
+40			inc eax
+E9 [xxxxxxxx]	jmp ?
+
+?: (0005B675)
+03E8			add ebp, eax
+89AE 98846400	mov dword ptr [esi+00648498], ebp
+5A			pop edx
+58			pop eax
+5F			pop edi
+5E			pop esi
+5B			pop ebx
+5D			pop ebp
+C21C00		ret 001C
+
+Length of strike based on duration:
+
+Duration	Length	slvl	slvl + ( slvl x 2 div 5 ) + 1
+--------	----------	----	-----------------------------
+  01		 0 squares	 0	 1
+  02		 1 square	 1	 2
+03--04	 2 squares	 2	 3
+  05		 3 squares	 3	 5
+06--07	 4 squares	 4	 6
+  08		 5 squares	 5	 8
+  09		 6 squares	 6	 9
+0A--0B	 7 squares	 7	10
+  0C		 8 squares	 8	..
+0D--0E	 9 squares	 9	..
+  0F		10 squares	10	..
+  10		11 squares	11	..
+11--12	12 squares	12	..
+  13		13 squares	13	..
+14--15	14 squares	14	..
+  16		15 squares	15	22
+  17		16 squares
+  --		--
+  +7		+5
+
+--------------------------------------------------------
+
+Limit the speech for the death of King Leoric for non-boss monsters.
+
+Boss monster slot #1
+
+Magic Resistance value: 14
+
+Was:
+00453050:	A1 74776800	mov eax, dword ptr [00687774]
+
+Now:
+00453050: (00052450):
+E9 [119DFCFF] 	jmp 0041CD66
+
+0041CD66: (0001C166):
+50			push eax
+A0 94C74900		mov al, byte ptr [0049C794]
+3881 24E76400	cmp byte ptr [ecx+0064E724], al
+58			pop eax
+0F85 [36630300]	jne 004530AF
+A1 74776800		mov eax, dword ptr [00687774]
+E9 [D2620300]	jmp 00453055
+
+------------------------------------------------
+
+Remove the speech for Firewater (Item 0F, 10 and 1C
+
+0041E362: (0001D762)
+5E	pop esi
+5B	pop ebx
+C3	ret
+90's up to, but not including 0041E466
+
+------------------------------------------------
+
+================================================================
+
+Wirt's Price cap changed to 453333 at 1 location
+
+Other's cap changed to 680000 at 3 locations
+
+Gold bundels from 5k to 20k
+
+- - - - - - - - - - - - - - - - - - - - - - - - -
+
+00406E36: CALL set image for gold in cursor.
+		Only called from one location, where gold is split from gold in the backpack (or belt).
+
+00406E3C: (0000623C)
+8D81 F0CA6800	lea eax, dword ptr [ecx+0068CAF0]
+51			push ecx
+E8 [92140400]	call 004482DA
+59			pop ecx
+EB [27]		jmp 00406E72
+90's up to, but not including 00406E72 (8B08....)
+
+06243: 2.5k, 06258: 1k
+
+- - - - - - - - - - - - - - - - - - - - - - - - -
+
+NOTE: A lot of the gold related code was changed, and re-changed, and re-changed to the point where these note should be considered little more than hints.
+
+1A30E: 5k	Related to click tick count.
+
+0041CD85: (0001C185) ??? Droped item on ground???
+8906			mov dword ptr [esi], eax
+50			push eax
+8D46 FC		lea eax, dword ptr [esi-04]
+E8 [4AB50200]	call 004482DA
+58			pop eax
+
+1C162: 5k, 1C169: 2.5k, 1C17B: 1k
+
+0041CDF2: (0001C1F2)
+8906			mov dword ptr [esi], eax
+8D46 FC		lea eax, dword ptr [esi-04]
+51			push ecx
+E8 [DDB40200]	call 004482DA
+59			pop ecx
+EB [1B]		jmp 0041CE1B
+90's up to, but not including 0041CE1B (8B4C....)
+
+1C1DE: 5k, 1C1F3: 2.5k, 1C205: 1k
+
+0041CEA4: (0001C2A4) <following code from B1 to B7 at 0041E50E, 0041E602>
+8B8D F4CA6800	mov ecx, dword ptr [ebp+0068CAF4]
+8D83 C4856800	lea eax, dword ptr [ebx+006885C4]
+E8 [28B40200]	call 004482DD
+EB [25]		jmp 0041CEDC
+90's up to, but not including 0041CEDC (8B4C....)
+
+1C2AC: 2.5k, 1C2C0: 1k
+
+0041D6CF: (0001CACF) <NOT IMPLEMENTED, CAUSED A BUG>
+51			push ecx
+8BCA			mov ecx, edx
+8D81 C4856800	lea eax, dword ptr [ebx+006885C4]
+E8 [FDAB0200]	call 004482DA
+59			pop ecx
+E9 [A2030000]	jmp 0041DA85
+90's up to, but not including 0041D708
+
+1CAB5: 5k, 1CAD1: 2.5k, 1CAE4: 1k
+
+1CB2C: 2.5k - ? I'm not sure what these are for ?
+1CB42: 1k   - ? I'm not sure what these are for ?
+
+0041D7A5: (0001CBA5) <bad code>
+51			push ecx
+8BC8			mov ecx, eax
+8D83 C4856800	lea eax, dword ptr [ebx+006885C4]
+E8 [2AAB0200]	call 004482DD
+59			pop ecx
+E9 [CC020000]	jmp 0041DA85
+90's up to, but not including 0041D7E0
+
+1CB9B: 5k, 1CBA6: 2.5k, 1CBBC: 1k
+
+1CDCA: 2.5k
+1CDE0: 1k
+
+<This following code isn't quite right>
+0041D96D: (0001CD6D) Odd code regarding ecx+], edi
+51			push ecx
+8BCA			mov ecx, edx
+8D81 70BF6800	lea eax, dword ptr [ecx+0068BF70]
+E8 [5FA90200]	call 004482DA
+59			pop ecx
+E9 [FA000000]	jmp 0041DA7B
+90's up to, but not including 0041D9A6
+
+1CD53: 5k, 1CD6F: 2.5k, 1CD82: 1k
+
+5k at 0041ED74 - Related to clock ticks, not gold.
+
+There's a 'set gold's picture routine at 00420913 which is used by 8 different locations.
+
+00420913: (0001FD13)
+51			push ecx
+8B89 C4000000	mov ecx, dword ptr [ecx+000000C4]
+8D83 C0000000	lea eax, dword ptr [ebx+000000C0]
+E8 [B8790200]	call 004482DD
+59			pop ecx
+C3			ret
+90's up to, but not including 00420948
+
+1FD1A: 2.5k, 1FD2C: 1k
+
+0042152D: (0002092D)
+8986 0C6E6300	mov dword ptr [esi+00636E0C], eax
+8D86 086E6300	lea eax, dword ptr [esi+00636E08]
+51			push ecx
+E8 [9B6D0200]	call 004482DA
+59			pop ecx
+EB [17]		jmp 00421559
+90's up to, but not including 00421559
+
+20923: 5k, 2092E: 2.5k, 20949: 1k
+
+0043E073, 0043E0DA, 0043EE00,	Related to click tick count.
+
+0004DD1F	5k related to gold piles. change to (204E0000)
+0004DF18	5k related to gold piles. change to (204E0000)
+
+0042306F: (0002246F)
+8986 0C6E6300	mov dword ptr [esi+00636E0C], eax
+8D86 086E6300	lea eax, dword ptr [esi+00636E08]
+51			push ecx
+E8 [59520200]	call 004482DA
+59			pop ecx
+E9 [C0000000]	jmp 00423147
+90's up to, but not including 004230B0
+
+22470: 2.5k, 2248C: 1k
+
+50619: 5k - max pile created when gold picked up while inventory closed.
+
+5k clock tick stuff at 00457960, 00457BC4, 
+
+5k for gold code at 0005B6F2, 0005BBDF
+
+There's another set gold's picture routine at 0045C24B which is used by 9 different locations.
+
+0045C25A: (0005B65A)
+8B88 C8856800	mov ecx, dword ptr [eax+006885C8]
+8D83 C4856800	lea eax, dword ptr [ebx+006885C4]
+E9 [72C0FEFF]	jmp 004482DD
+90's up to, but not including 0045C291
+
+5B662: 2.5k, 5B675: 1k
+
+There's a third set gold's picture routine at 0045C291 which is used by 5 different locations.
+
+0045C2A0: (0005B6A0)
+8B88 74BF6800	mov ecx, dword ptr [eax+0068BF74]
+8D83 70BF6800	lea eax, dword ptr [ebx+0068BF70]
+E9 [2CC0FEFF]	jmp 004482DD
+90's up to, but not including 0045C2D7
+
+5B6A8: 2.5k, 5B6BB: 1k
+
+5BE14: 5k - max pile created.
+
+5000 = 00001388
+2500 = 000009C4
+1000 = 000003E8
+
+20000 = 00004E20
+10000 = 00002710
+ 5000 = 00001388
+
+================================================================
+
+Rainbow Elixer (Name: 919A5)  Item # 7  Magic Code 1C (New)
+
+------------------------------------------------
+
+Remove 25% mana cost reduction for rogues.
+00458CE4:
+EB [0E]	jmp 00458CF4
+90's up to, but not including 00458CF4
+
+------------------------------------------------
+
+change character description to:
+
+	NAME
+	Level : %i
+	Hit Points %i of %i
+	Mana %i of %i
+	ARMOR NAME
+
+Current mana is not accurate.  Mana line changed to 'Mana %i max.'
+
+Was:
+00405513:
+E8 [C1ECFFFF]	call 004041D9
+EB [06]		jmp 00405520
+
+Now:
+00405513:
+E9 [F38C0100]	jmp NEW
+90 90			nop x 2
+
+0041E20B:		NEW: (0001D60B)
+E8 [C95FFEFF]	call 004041D9
+
+0FBE05 A09F4B00	movsx eax, byte ptr [004B9FA0]
+69C0 D8540000	imul eax, 000054D8
+8B88 24796800	mov ecx, dword ptr [eax+00687924]
+8B80 28796800	mov eax, dword ptr [eax+00687928]
+C1F9 06		sar ecx, 06
+C1F8 06		sar eax, 06
+51			push ecx
+50			push eax
+68 C93B4900		push "Mana %i max."
+56			push esi
+E8 [04D20400]	call 0046B440
+83C4 10		add esp, 00000010
+8BCE			mov ecx, esi
+6A 01			push 00000001
+5A			pop edx
+E8 [905FFEFF]	call 004041D9
+
+E9 [D272FEFF]	jmp 00405520
+
+------------------------------------------------
+
+Click on the dead town guy...
+........
+00462B36:
+........
+(00061F56)	000002D1 ->	00000309
+(00061F6E)	0000026A ->	0000029C
+(00061F87)	00000203 ->	00000235
+
+=================================================
+
+Blood Fury - Spell # 16h, Spell effect #10h
+
+00093968: Blood Boil
+Spell Effect Code:		10000000
+Init Stats:				0041E365
+Update Spell Effect:		0041E3D1
+00000000
+0100FF00
+75000000
+FFFFFFFF
+
+[esp+1C] = caster's player number
+
+0041E365:	(0001D765)
+
+?: Blood Fury - Init (6C bytes)
+69C9 B0000000		imul ecx, 000000B0
+56				push esi
+C781 98846400 10020000	mov dword ptr [ebx+00648498], 00000210	duration
+8B81 58846400		mov eax, dword ptr [ecx+00648458]		slvl
+85C0				test eax, eax
+7E18				jle AFTER_SLVL_BONUS
+8BD0				mov edx, eax
+
+
+
+?: SLVL_BONUS_LOOP
+8B81 98846400		mov eax, dword ptr [ecx+00648498]
+8BF0				mov esi, eax
+C1FE03			sar esi, 03
+03F0				add esi, eax
+4A				dec edx
+89B198846400		mov dword ptr [ecx+00648498], esi
+75 EA				jne SLVL_BONUS_LOOP
+
+				: AFTER_SLVL_BONUS
+8B5424 1C			mov edx, dword ptr [esp+1C]		caster's #
+8D81 98846400		lea eax, dword ptr [ecx+00648498]	duration
+69D2 D8540000		imul edx, 000054D8			caster's rec
+8B08				mov ecx, dword ptr [eax]		spell duration
+8B92 D4CB6800		mov edx, dword ptr [edx+0068CBD4]	duration bonus
+0FAFD1			imul edx, ecx
+C1FA 07			sar edx, 07					div 80h (128)
+03D1				add edx, ecx				add bonus
+807C24 18 00		cmp byte ptr [esp+18], 00
+8910				mov dword ptr [eax], edx		set duration
+75 [0C]			jne 0042D8C6
+8B4C24 1C			mov ecx, dword ptr [esp+1C]		caster's #
+6A 16				push 00000016				new spell #
+5A				pop edx
+E8 [56A90300]		call 00458D23
+
+0042D8C6:
+5E				pop esi
+C2 1C00			ret 001C
+
+------------------------------------------------
+
+0041E3D1:	(0001D7D1)
+?: Blood Boil - Update Spell Effect (41h bytes)
+	imul ecx, 000000B0
+	dec dword ptr [ecx+00648498]		dec duration
+	push esi
+	lea eax, dword ptr [ecx+00648498]	duration
+	lea esi, dword ptr [ecx+0064849C]	caster/trap index
+	push edi
+	push 00000001
+	mov edi, dword ptr [esi]		caster/trap index
+	mov eax, dword ptr [eax]		duration
+	imul edi, 000054D8
+	pop edx					1
+	
+808F C8CB6800 40	or byte ptr [edi+0068CBC8], 40
+808F CACB6800 90	or byte ptr [edi+0068CBCA], 90
+
+	test eax, eax				duration
+	jne SKIP				duration<>0, jump
+	mov dword ptr [ecx+0064845C], edx	stop effect
+	mov ecx, dword ptr [esi]		caster/trap index
+[E7180000]	call 0041FCFE				Create_Character_Stats
+	to turn off effects if charcter doesn't have item which do the effects.
+
+	SKIP:
+	pop edi
+	pop esi
+	ret
+
+=================================================
+
+Make 'Staff Recharge' damage temporary at byte 7C
+
+004238FC:
+8B81 E8000000		mov eax, dword ptr [ecx+000000E8]	Max staff charges
+56				push esi
+0FB6B1 7C000000		movzx esi, byte ptr [ecx+7C]		Staff charge damage
+2BC6				sub eax, esi
+8BB1 E4000000		mov esi, dword ptr [ecx+000000E4]	Current charges
+42				inc edx					[1..(clvl/book slvl+1)]+1
+C1EA 01			shr edx, 01					bonus/2
+3BF0				cmp esi, eax				current & max
+74 [14]			je EXIT					full, jump
+48				dec eax					max-1
+85C0				test eax, eax
+74 [0F]			je EXIT					no charges, jump
+
+0042391B:			LOOP:
+03F2				add esi, edx				add edx to current charges
+3BF0				cmp esi, eax				current & max
+7D [03]			jge END OF LOOP				current>=max, jump
+48				dec eax					max-1
+75 [F7]			jne LOOP					max not 0, LOOP
+
+00423924:			END OF LOOP:
+3BF0				cmp esi, eax				current & max
+7E [02]			jle EXIT					current<=max, jump
+8BF0				mov esi, eax				if cur>max, set cur to max
+
+0042392A:			EXIT:
+89B1 E4000000		mov dword ptr [ecx+000000E4], esi	set current charges
+8B81 E8000000		mov eax, dword ptr [ecx+000000E8]	previous max
+2BC6				sub eax, esi				less current = 'damage'
+8841 7C			mov byte ptr [ecx+7C], al
+5E				pop esi
+C3				ret
+
+=================================================
+
+change Enchanted Shrine
+	add 1 to a random spell on each page (if the spell is known)
+	subtract 1 from a random spell (if the slvl is above 0).
+
+004479C5: (00046DC5)
+test eax, eax
+jne 00448492					pop edi, esi, ebx, leave, ret 4.
+mov eax, dword ptr [ebp-04]
+cmp eax, dword ptr [00687774]			current player
+jne 00448492					pop edi, esi, ebx, leave, ret 4.
+mov esi, dword ptr [ebp-04]
+
+004479DF: (00046DDF) Begining of changes
+69F6 D8540000	imul esi, 000054D8
+C745 F8 05000000	mov [ebp-08], 00000005				page counter
+BF 104D4800		mov edi, 00484D10					addr of page 1
+
+004479F1:		LOOP1:
+6A 07			push 00000007
+5A			pop edx
+E8 [7E02FDFF]	call 00417C77				set_eax_to_Rnd[edx]
+C1E0 02		shl eax, 02
+8D1407		lea edx, dword ptr [edi+eax]
+8B0A			mov ecx, dword ptr [edx]		spell # of spell in book
+49			dec ecx
+7C [2C]		jl NEXT					if skill or blank, jump
+6A 01			push 00000001
+33D2			xor edx, edx
+58			pop eax
+E8 [82440200]	call 0046BE90				shl edx:eax, cl
+2386 80786800	and eax, dword ptr [esi+00687880]	first 32 of 36 bits for known spells
+2396 84786800	and edx, dword ptr [esi+00687884]	last 4 of 36 bits
+0BC2			or eax, edx
+74 [12]		je NEXT					if random spell isn't known, SKIP
+03CE			add ecx, esi
+8A81 3A786800	mov al, byte ptr [ecx+0068783A]	spell level of spell #edi
+3C 0F			cmp al, 0F
+7D [06]		jge NEXT
+FE81 3A786800	inc byte ptr [ecx+0068783A]
+
+00447A30:		NEXT:
+83C7 1C		add edi, 1C
+FF4D F8		dec [ebp-08]
+75 [B9]		jne LOOP1
+6A 23			push 00000023
+5A			pop edx
+E8 [3702FDFF]	call 00417C77				set_eax_to_Rnd[edx]
+42			inc edx
+C1E2 02		shl edx, 02
+2BFA			sub edi, edx
+8B0F			mov ecx, dword ptr [edi]
+49			dec ecx
+7C [12]		jl END
+03CE			add ecx, esi
+8A81 3A786800	mov al, byte ptr [ecx+0068783A]
+FEC8			dec al
+7C [06]		jl END
+8881 3A786800	mov byte ptr [ecx+0068783A], al
+
+00447A5D:		END:
+B1 13			mov cl, 13
+E9 [7C090000]	jmp 004483E0
+
+90's up to, but not including 00447AAE (00046EAE)
+
+=================================================
+
+Clairvoyance - Spell #11h, Spell effect #1Ch
+
+Quickling - Spell #13h, Spell effect #20h
+
+[esp+1C] = caster's player number
+
+00425335:	(00024735)
+00425335: Clairvoyance - Init (?  bytes)
+69C9 B0000000		imul ecx, 000000B0
+56				push esi
+BA 30060000			mov edx, 00000630
+
+8B81 58846400		mov eax, dword ptr [ecx+00648458]		slvl
+E8 [xxxxxxxx]		call 004326CE			CALL SET EDX TO EDX * [(9/8)^EAX]
+
+8991* 98846400		mov dword ptr [ecx+00648498], edx		duration
+
+8B5424 1C			mov edx, dword ptr [esp+1C]		caster's #
+8991 9C846400		mov dword ptr [ecx+0064849C], edx	caster/trap index
+
+8D81 98846400		lea eax, dword ptr [ecx+00648498]	duration
+69D2 D8540000		imul edx, 000054D8			caster's rec
+8B08				mov ecx, dword ptr [eax]		spell duration
+8B92 D4CB6800		mov edx, dword ptr [edx+0068CBD4]	duration bonus
+0FAFD1			imul edx, ecx
+C1FA 07			sar edx, 07					div 80h (128)
+03D1				add edx, ecx				add bonus
+807C24 18 00		cmp byte ptr [esp+18], 00
+8910				mov dword ptr [eax], edx		set duration
+75 [18]			jne EXIT
+
+8B4C24 1C			mov ecx, dword ptr [esp+1C]
+81FF 10030000		cmp edi, 00000310			effect data offset & Clairvoyance
+74 [04]			je CLAIRVOYANCE
+6A 13				push 00000013			(00000380 = Quickling)
+EB [02]			jmp SKIP
+				CLAIRVOYANCE:
+6A 11				push 00000011				spell #
+				SKIP:
+5A				pop edx
+E8 [8A390300]		call 00458D23
+
+0042539D:			EXIT:
+5E				pop esi
+C2 1C00			ret 001C
+
+------------------------------------------------
+
+Clairvoyance - Spell #11h, Spell effect #1Ch
+
+Quickling - Spell #13h, Spell effect #20h
+
+004477BB:	(00046BBB)
+?: Clairvoyance - Update Spell Effect (41h bytes)
+69C9 B0000000	imul ecx, 000000B0
+
+
+FF89 98846400	dec dword ptr [ecx+00648498]		dec duration
+56			push esi
+8DB1 9C846400	lea esi, dword ptr [ecx+0064849C]	caster/trap index
+57			push edi
+6A 01			push 00000001
+8B3E			mov edi, dword ptr [esi]		caster/trap index
+69FF D8540000	imul edi, 000054D8
+5A			pop edx					1
+
+
+0FB687 98786800	movzx eax, byte ptr [edi+00687898]
+
+8BB1 28846400	mov esi, dword ptr [ecx+00648428]
+83FE 1C		cmp esi, 0000001C
+74 [04]		je CLAIRVOYANCE
+6A 04			push 00000004	(Quickling)
+EB [02]		jmp SKIP
+			CLAIRVOYANCE:
+6A 02			push 00000002	(Clairvoyance)
+			SKIP:
+5E			pop esi
+0BC6			or eax, esi
+83B9 98846400 00	cmp dword ptr [ecx+00648498], 00
+7F [0A]		jg SKIP		(jne is 75)		duration<>0, jump
+8991 5C846400	mov dword ptr [ecx+0064845C], edx	stop effect
+F7D6			not esi
+23C6			and eax, esi
+
+			SKIP:
+8887 98786800	mov byte ptr [edi+00687898], al
+5F			pop edi
+5E			pop esi
+C3			ret
+
+Clairvoyance	Bit Flag [Character Offset+00687898], 02
+Quickling		Bit Flag [Character Offset+00687898], 04
+
+----------------------------------------------------------------
+
++ Damage Taken and - Damage Taken changed to x2 for Nightmare and x3 for Hell
+
+Change the descripion:
+
+Was:
+423F92 & 423F96	DWORD 00423C4F
+
+Now:
+423F92 & 423F96	DWORD 00423087
+
+Version #1 (NOT USED: x1, x2, x3)
+00423087: (00022487)
+8B3D E8835B00	mov edi, dword ptr [005B83E8]
+83FF 00		cmp edi, 00
+0F84 [B90B0000]	je 00423C4F
+47			inc edi
+8B86 28010000	mov eax, dword ptr [esi+00000128]
+
+0FAFC7		imul eax, edi
+
+57			push edi
+50			push eax
+68 FF3B4900		push 00493BFF	"%+i damage from enemies (x%i)"
+E9 [470C0000]	jmp 00423CF3
+
+Version #2 (CURRENT: x1, x2, x4)
+00423087: (00022487)
+8B3D E8835B00	mov edi, dword ptr [005B83E8]
+83FF 00		cmp edi, 00
+0F84 [B90B0000]	je 00423C4F
+*C1E7 01		shl edi, 01
+8B86 28010000	mov eax, dword ptr [esi+00000128]
+
+0FAFC7		imul eax, edi
+
+57			push edi
+50			push eax
+68 FF3B4900		push 00493BFF	"%+i damage from enemies (x%i)"
+E9 [450C0000]	jmp 00423CF3
+
+
+Change the value in the character record.
+
+Was:
+0041FF0B: 8986 CCCB6800	mov dword ptr [esi+0068CBCC], eax
+
+Now:
+
+0041FF0B: (0001F30B)
+E9 [xxxxxxxx]	jmp 0041CE00
+90			nop
+
+Version #1
+0041CE00: (0001C200)
+8B1D E8835B00	mov ebx, dword ptr [005B83E8]
+43			inc ebx
+0FAFC3		imul eax, ebx
+
+8986 CCCB6800	mov dword ptr [esi+0068CBCC], eax
+E9 [BAE9FFFF]	jmp 0041FF11
+
+Version #1
+0041CE00: (0001C200)
+8B1D E8835B00	mov ebx, dword ptr [005B83E8]
+85DB			test ebx, ebx
+74 [06]		je SKIP NEXT TWO LINES
+C1E3 01		shl ebx, 01
+0FAFC3		imul eax, ebx
+
+8986 CCCB6800	mov dword ptr [esi+0068CBCC], eax
+E9 [F6300000]	jmp 0041FF11
+
+------------------------------------------------------
+
+Show monster hit points under clairvoyance.
+
+WAS
+0043B33D:
+833B1E	cmp dword ptr [ebx], 0000001E
+7C68		jl 0043B3AA
+0043B342:........
+
+NOW:
+0043B33D: (0003A73D)
+E9 [DD0DFFFF]	jmp 0042C11F
+
+0042C11F: (0002B51F)
+A1 74776800		mov eax, dword ptr [00687774]
+69C0 D8540000	imul eax, 000054D8
+8A80 98786800	mov al, byte ptr [eax+00687898]
+A8 02			test al, 02
+75 [0E]		jne CLAIRVOYANCE
+833B1E		cmp dword ptr [ebx], 0000001E
+0F8D [05F20000]	jnl 0043B342
+E9 [68F20000]	jmp 0043B3AA
+
+0042C142:		CLAIRVOYANCE:
+A1 809F4B00		mov eax, dword ptr [004B9F80]
+69C0 E4000000	imul eax, 000000E4
+8B88 ECE66400	mov ecx, dword ptr [eax+0064E6EC]	current hp
+8B80 E8E66400	mov eax, dword ptr [eax+0064E6E8]	max hp
+
+C1E9 06		shr ecx, 06
+C1E8 06		shr eax, 06
+
+3BCD			cmp ecx, ebp				min hp & 1
+7D [02]		jge SKIP NEXT LINE			min>=1, skip
+8BCD			mov ecx, ebp				set min to 1
+3BC5			cmp eax, ebx
+7D [02]		jge SKIP NEXT LINE
+8BC5			mov eax, ebp
+50			push eax
+51			push ecx
+68 A8504800		push 004850A8				"Hit Points: %i-%i
+E9 [21F20000]	jmp 0043B398
+
+----------------------------------------------------------------
+
+dangerous test fooling with something related to clock ticks.
+
+Locations with the value 5000 related to elapsed clock ticks.
+
+(0001A30E), (0001E176), (0003D473)
+0043E073, 0043E0DA, 0043EE00,	Related to click tick count.
+00457960 (guessing clock tick related)
+
+Changes didn't affect games with only one player.
+
+----------------------------------------------------------------
+
+Was
+0042371A:
+83BE 806D6300 00	cmp dword ptr [esi+00636D80], 00000000	id'ed & no
+
+Now:
+0042371A: (00022B1A)
+E9 [6BBA0000]	jmp 0042F18A
+90 90			nop x 2
+
+0042F18A: (0002E58A)
+A1 74776800		mov eax, dword ptr [00687774]		local character #
+69C0 D8540000	imul eax, 000054D8			local character offset
+51			push ecx
+8A88 98786800	mov cl, byte ptr [eax+00687898]
+F6C1 02		test cl, 02
+75 [0D]		jne SKIP
+59			pop ecx
+83BE 806D6300 00	cmp dword ptr [esi+00636D80], 00000000
+E9 [7345FFFF]	jmp 00423721
+
+0042F1AE:		SKIP:
+
+50			push eax
+51			push ecx
+8D8E 486D6300	lea ecx, dword ptr [esi+00636D48]
+52			push edx
+
+8A41 3C		mov al, byte ptr [ecx+3C]	NMU
+3C 02			cmp al, 02
+75 [01]		jne END OF COLOR
+40			inc eax
+
+END OF COLOR:
+A2 049B4B00		mov byte ptr [004B9B04], al		text color
+
+8D41 3D		lea eax, dword ptr [ecx+3D]
+8B51 38		mov edx, dword ptr [ecx+38]
+C1E2 06		shl edx, 6
+03C2			add eax, edx
+51			push ecx
+50			push eax
+68 489C4B00		push 004B9C48
+E8 [D5C40300]	call 0046B6B0
+58			pop eax
+58			pop eax
+59			pop ecx
+
+B8 02444200		mov eax, 00424402
+8379 38 00		cmp dword ptr [ecx+38], 00000000
+75 [05]		jne SKIP NEXT LINE
+05 10020000		add eax, 00000210
+
+FFD0			call eax
+
+5A			pop edx
+59			pop ecx
+58			pop eax
+
+5E			pop esi
+83C4 08		add esp, 08
+E9 [2463FDFF]	jmp 00405520
+
+----------------------------------------------------------------
+
+Change 'durability' to 'arrows' as a feature for bows.
+
+Durability will store number of arrows, with each point representing 10 arrows.
+The vit req (temporary memory) will store the one's place for arrows used.
+
+Display number of arrows during mouseover
+
+Was:
+0042441B: (0002381B)
+8B85 F0000000	mov eax, dword ptr [ebp+000000F0]
+
+00424634: (00023A34)
+8B86 F0000000	mov eax, dword ptr [esi+000000F0]
+
+Now:
+0042441B: (0002381B)
+E9 [E7AD0000]	jmp 0042F207
+90			nop
+
+00424634: (00023A34)
+E9 [13AC0000]	jmp 0042F24C
+90			nop
+
+0042F207: (0002E607)
+837D 08 03		cmp dword ptr [ebp+08], 03	(Item Type & Bow)
+8B85 F0000000	mov eax, dword ptr [ebp+000000F0]
+0F85 [0A52FFFF]	jne 00424421
+2C 00			sub al, 00
+50			push eax
+0FB68D 63010000	movzx ecx, byte ptr [ebp+00000163]
+51			push ecx
+0FB68D EC000000	movzx ecx, byte ptr [ebp+000000EC]
+80E9 00		sub cl, 00
+51			push ecx
+FFB5 D0000000	push dword ptr [ebp+000000D0]
+FFB5 CC000000	push dword ptr [ebp+000000CC]
+68 9E344900		push 0049349E	"damage: %i-%i  arrows: %i%i of %i0"
+53			push ebx
+E8 [FCC10300]	call 0046B440
+83C4 1C		add esp, 0000001C
+E9 [1652FFFF]	jmp 00424462
+
+0042F24C: (0002E64C)
+837E 08 03		cmp dword ptr [esi+00000008], 03	(Item Type & Bow)
+8B86 F0000000	mov eax, dword ptr [esi+000000F0]
+0F85 [DE53FFFF]	jne 0042463A
+2C 00			sub al, 00
+
+50			push eax
+0FB68E 63010000	movzx ecx, byte ptr [esi+00000163]
+51			push ecx
+0FB68E EC000000	movzx ecx, byte ptr [esi+000000EC]
+80E9 00		sub cl, 00
+51			push ecx
+
+FFB6 D0000000	push dword ptr [esi+000000D0]
+FFB6 CC000000	push dword ptr [esi+000000CC]
+68 9E344900		push 0049349E	"damage: %i-%i  arrows: %i%i of %i0"
+57			push edi
+E8 [B7C10300]	call 0046B440
+83C4 1C		add esp, 0000001C
+E9 [EA53FFFF]	jmp 0042467B
+
+----------------------------------------------------------------
+
+Reduce arrows when an arrow is fired.
+
+Was:
+0044FFEC:
+E8 [C7F5FFFF]	call 0044F5B8
+
+Now:
+0044FFEC: (0004F3EC)
+E8 [86C1FDFF]	call 0042C177
+
+0042C177: (0002B577)
+
+53			push ebx
+55			push ebp
+56			push esi
+57			push edi
+8BF9			mov edi, ecx
+3B3D 74776800	cmp edi, dword ptr [00687774]
+0F85 [4C350200]	jne 0044F6D5
+6A 01			push 0000001
+83CD FF		or ebp, FFFFFFFF
+5B			pop ebx
+0FB686 A0816800	movzx eax, byte ptr [esi+006881A0]
+0FB68E 17826800	movzx ecx, byte ptr [esi+00688217]
+83F9 00		cmp ecx, 00000000
+75 [04]		jne SKIP
+48			dec eax
+83C1 0A		add ecx, 0A
+			SKIP:
+49			dec ecx
+8986 A0816800	mov dword ptr [esi+006881A0], eax
+888E 17826800	mov byte ptr [esi+00688217], cl
+03C8			add ecx, eax
+33C0			xor eax, eax
+83F9 00		cmp ecx, 00
+0F8F [15350200]	jg 0044F6D5
+E9 [F4340200]	jmp 0044F6B9	Destroy bow.
+
+----------------------------------------------------------------
+
+display arrows when buying from Griswold.
+
+Was:
+00459DB2:
+FFB6 EC000000	push dword ptr [esi+000000EC]
+
+Now:
+00459DB2: (000591B2)
+E9 [DA54FDFF]	jmp 0042F291
+90			nop
+
+0042F291: (0002E691)
+837E 08 03		cmp dword ptr [esi+08], 03
+74 [0B]		je SKIP
+FFB6 EC000000	push dword ptr [esi+000000EC]
+E9 [16AB0200]	jmp 00459DB8
+
+SKIP:
+0FB68E 63010000	movzx ecx, byte ptr [esi+00000163]
+51			push ecx
+0FB68E EC000000	movzx ecx, byte ptr [esi+000000EC]
+51			push ecx
+68 F1374900		push 004937F1 "Arr: %i%i/%i0, "
+57			push edi
+E8 [83C10300]	call 0046B440
+83C4 14		add esp, 00000014
+57			push edi
+E9 [0AAB0200]	jmp 00459DD0
+
+----------------------------------------------------------------
+
+find bow repair cost
+
+for non-bow items:
+RpC = 0.15 � Price � (1 - CurDur/MaxDur)	For magical and unique items
+RpC = 0.50 � Price � (1 - CurDur/MaxDur)	For non magical and unidentified items
+
+for bows:
+RpC = 0.15 � Price/100 � (Max Arrows - Current Arrows)	For magical and unique items
+	e.g. magical bow, bow cost 10000, cost per arrow 15 per arrow
+RpC = 0.50 � Price/200 � (Max Arrows - Current Arrows)	For non magical and unidentified items
+	e.g. starting bow, bow cost 100, cost per arrow 0.50
+
+The cost for magical arrows is probably too high.  This needs to be tested.  If this formula doesn't work, use the item's unided cost and use non-magical formuma.
+
+Was:
+0045A6F6:
+2B85 EC000000	sub eax, dword ptr [ebp+000000EC]
+
+
+Now:
+0045A6F6: (00059AF6)
+E9 [A6ACFCFF]	jmp 004253A1
+90			nop
+
+004253A1: (000247A1)
+2B85 EC000000	sub eax, dword ptr [ebp+000000EC]		subtract current durability
+837D 08 03		cmp dword ptr [ebp+08], 03
+0F85 [4B530300]	jne 0045A6FC
+6BC0 0A		imul eax, 0A					x 10 (for arrows)
+0FB68D 63010000	movzx ecx, byte ptr [ebp+00000163]		vit req. (extra arrows)
+90 90 (x 2BC1)	sub eax, ecx					subtract extra arrows
+E9 [40530300]	jmp 0045A702	skip a 'x 100' and a '/MaxDur'
+
+Note:
+the 'extra arrows' are disabled in since gris doesn't reset them yet.
+
+----------------------------------------------------------------
+
+Remove extra arrows when Gris repairs
+
+00421A53:
+
++77 from cur dur
+
+----------------------------------------------------
+
+Make the skills slvl 15.
+			class		not class	not+4
+1A Item Repair	0
+1B Staff Recharge	2		-3		1
+1C Trap Disarm	1		-2		2
+
+			#	# shl 1A (26)
+1A Item Repair	0	
+1B Staff Recharge	1	04000000
+1C Trap Disarm	2	08000000
+
+Was:
+0044D009:
+........
+
+Now
+0044D009: (0004C409)
+0FB686 D8786800		movzx eax, byte ptr [esi+006878D8]
+85C0				test eax, eax
+74 [05]			je SKIP
+F7D0				not eax
+83C0 04			add eax, 04
+				SKIP:
+C68406 53786800 0F	mov byte ptr [esi+eax+00687853], 0F
+C1E0 01			shl eax, 01
+75 [03]			jne SKIP
+6A 01				push 00000001
+58				pop eax
+				SKIP:
+C1E0 19			shl eax, 19
+8986 88786800		mov dword ptr [esi+00687888], eax
+EB [xx]			jmp 0044D03D
+90				nop
+	up to, but not including 0044D03D
+
+----------------------------------------------------------------
+
+Make 'fire arrow' have a casting cost (including using charges on staves).
+
+Was:
+0042B93E:	69C0 D8540000	imul eax, 000054D8
+
+Now:
+0042B93E: (0002AD3E)
+E9 [83390000]	jmp 0042F2C6
+90			nop
+
+0042F2C6: (0002E6C6)
+69C0 D8540000	imul eax, 000054D8
+50			push eax
+53			push ebx
+51	push ecx
+52	push edx
+56			push esi
+57			push edi
+8B4D 1C		mov ecx, dword ptr [ebp+1C]		ecx to player number
+6A 10			push 00000010				The spell number in the DZMod
+5A			pop edx
+E8 [469A0200]	call 00458D23
+5F			pop edi
+5E			pop esi
+5A	pop edx
+59	pop ecx
+5B			pop ebx
+58			pop eax
+E9 [5CC6FFFF]	jmp 0042B944
+
+I'm push/poping any register which might need to be preserved since this code introduced some bug without the push/pops.
+
+----------------------------------------------------------------
+
+Stone Curse
+
+Make SC'ed monster IMMUNE to attacks, not automatically hit.
+
+Find "+0064E660], " just after a "cmp byte ptr [REGISTER], 20" to find all 'hit monster' code sections.
+  HF: +0069DC90
+
+0042A763	Monster/Trap attacks Monster with Spell  HF: 0042F105 ?
+0042A943	Player attacks Monster with Spell
+00435912	Monster/Trap attacks Monster
+0044F724	Player attacks Monster
+
+Find the "0064E65C], 0000000F" and change the following 'if equal, auto-hit' to auto-miss.
+     HF:  0069DC8C
+
+		Was			Now
+
+ 0042A81F	399E 5CE66400	EB [06]             
+(00029C1F)	74 [07]		90 (x 6)
+HF: 0042F1C1    399E 5CE66400	EB [06]             
+        	74 [07]		90 (x 6)
+
+ 0042AA68	7504 8365F400	0F84 [79010000]    
+(00029E68)	jne 0042AA6E; and dword ptr [ebp-0C], 00000000
+		je 0042ABE7
+ HF: 0042F424	7504 8365F000	0F84 [A1010000]    
+(00029E68)	jne 0042F42A; and dword ptr [ebp-10], 00000000
+		je 0042F5CB
+
+Monster/Trap attacks Monster:
+Was:
+00435936: (00034D36)            HF: 0043DB5E
+33DB		xor ebx, ebx
+
+Now:
+8BDD		mov ebx, ebp
+	Note: ebp is pointing to the stack, so it is a safe bet that it won't less than 100 (I'm assuming that it's sign bit wouldn't be on) Same assumption is made in HF with the next change
+
+ 0044F769	8365FC00		834DFC7F      
+(0004EB69)	and dword ptr [ebp-04], 00000000
+		or dword ptr [ebp-04], 0000007F
+ HF: 0045B91B   895DE8                  896DE8
+                mov dword ptr [ebp-18], ebx
+                mov dword ptr [ebp-18], ebp
+
+----------------------------------------------------------------
+
+Initialize seed for shrines:
+
+Was:
+00447549:
+FF248D 99844400	jmp dword ptr [4*ecx+00448499]
+
+Now:
+00447549: (00046949)
+E9 [E10D0000]	jmp ?
+90 90			nop x 2
+
+0044832F: (0004772F)
+51			push ecx
+8B0D E05F6300	mov ecx, dword ptr [00635FE0]
+E8 [09F9FCFF]	call 00417C44
+59			pop ecx
+FF248D 99844400	jmp dword ptr [4*ecx+00448499]
+
+----------------------------------------------------------------
+
+Add code for Circlets.
+
+Was:
+0041FF68:
+8B86 E0786800	mov eax, dword ptr [esi+006878E0]
+
+Now:
+0041FF68: (0001F368)
+E9 [7BF30000]	jmp 0042F2E8
+90			nop
+
+0042F2E8: (0002E6E8)
+83BE FC7A6800 07	cmp dword ptr [esi+00687AFC], 07	Helm's item type & Helm (checks if character is wearing a helm)
+75 [3D]		jne EXIT
+83BE 587C6800 00	cmp dword ptr [esi+00687C58], 00	req. met and false
+74 [34]		je EXIT
+8B86 5C7C6800	mov eax, dword ptr [esi+00687C5C]	base item number
+83F8 1F		cmp eax, 1F
+7C [29]		jl EXIT
+83F8 21		cmp eax, 21
+7F [24]		jg EXIT
+8B45 F0		mov eax, dword ptr [ebp-10]
+C1F8 03		sar eax, 03
+0145 F0		add dword ptr [ebp-10], eax
+8B45 EC		mov eax, dword ptr [ebp-14]
+C1F8 03		sar eax, 03
+0145 EC		add dword ptr [ebp-14], eax
+8B45 D0		mov eax, dword ptr [ebp-30]
+C1F8 03		sar eax, 03
+0145 D0		add dword ptr [ebp-30], eax
+8B45 CC		mov eax, dword ptr [ebp-34]
+C1F8 03		sar eax, 03
+0145 CC		add dword ptr [ebp-34], eax
+			EXIT:
+8B86 E0786800	mov eax, dword ptr [esi+006878E0]
+E9 [350CFFFF]	jmp 0041FF6E
+
+----------------------------------------------------------------
+
+Set picture for gold pile <this code replaces previous new code which was buggy>
+
+20000 = 00004E20
+10000 = 00002710
+ 5000 = 00001388
+
+    0 -  4999 = Small	04
+ 5000 -  9999 = Medium	05
+10000 - 19999 = Large	06
+        20000 = Pouch	31
+
+ASSEMBLY NOTE: esp points to the next available dword on the stack.  esp+04 points to the last dword pushed.
+
+CALL Set gold pile's image.
+
+To use this call:
+	If the gold pile's value is not stored in the same item record, push two dword whoes sum is the address of the gold pile's value.
+
+	push two dwords whoes sum is the address of the gold pile's image data
+		(i.e. if the address is eax+0F, then push eax and 0000000F)
+
+	make one of the two calls.  One is for when the value address is pushed and one for when it is not.
+
+	If gold pile's value was pushed, add 10h to esp, otherwise, pop an available register twice.
+
+NOTE:
+
+If this code still suffers from the 'crash when quickly opening inventory when leaving townfolk which just processed a gold transaction', try setting the image for the gold pile to 04 (small pile) before the call (in case an interrupt is triggered during the call).
+		(this is incase of a theoretical interrupt)
+
+00421547: (00020947)
+	<CALL HERE IF PILE VALUE IS NOT IN THE SAME RECORD>
+	<THIS REQUIRES PILE VALUE ADDRESS TO BE PUSHED FIRST, IN TWO PARTS>
+55			push ebp
+8BEC			mov ebp, esp
+50			push eax
+8B45 08		mov eax, dword ptr [ebp+08]		address value #1
+0345 0C		add eax, dword ptr [ebp+0C]		address value #2
+51			push ecx
+8B4D 10		mov ecx, dword ptr [ebp+10]		address value #1
+034D 14		add ecx, dword ptr [ebp+14]		address value #2
+8B09			mov ecx, dword ptr [ecx]		pile value
+E9 [13650200]	jmp 00447A72
+
+00447A64: (00046E64) (48h bytes)
+	<CALL HERE IF PILE VALUE IS IN SAME RECORD AS IMAGE>
+55			push ebp
+8BEC			mov ebp, esp
+50			push eax
+8B45 08		mov eax, dword ptr [ebp+08]		address value #1
+0345 0C		add eax, dword ptr [ebp+0C]		address value #2
+51			push ecx
+8B48 04		mov ecx, dword ptr [eax+04]		pile value
+
+00447A72:		AFTER PILE VALUE
+81F9 88130000	cmp ecx, 00001388			5000 = small pile
+7D [08]		jge SKIP
+C700 04000000	mov dword ptr [eax], 00000004
+EB [26]		jmp RET
+
+SKIP:
+81F9 10270000	cmp ecx, 00002710			10000 = medium pile
+7D [08]		jge SKIP
+C700 05000000	mov dword ptr [eax], 00000005
+EB [16]		jmp RET
+
+SKIP:
+81F9 204E0000	cmp ecx, 00004E20
+7D [08]		jge SKIP
+C700 06000000	mov dword ptr [eax], 00000006
+EB [06]		jmp RET
+
+SKIP:
+C700 31000000	mov dword ptr [eax], 00000031
+
+RET:
+59			pop ecx
+58			pop eax
+5D			pop ebp
+C3			ret
+
+--------------------------------------------------------
+
+Set gold image for
+	gold on cursor after some gold is split from a pile of gold.
+
+WAS:
+00406E36:	(called from 00406E19)
+<image at ecx*54D8 + 0068CAF0>
+<value is in item record>
+<call>
+<eax should be set to address of gold pile's image>
+<ecx should be set to the dword at [eax]+0C>
+<code should jump to 004074AB>
+
+NOW:
+0042F339: (0002E739)	(26h bytes; called from 00406E19)
+69C9 D8540000	imul ecx, 000054D8
+8D81 F0CA6800	lea eax, dword ptr [ecx+0068CAF0]
+50			push eax
+6A 00			push 00000000
+C700 04000000	mov dword ptr [eax], 00000004
+	NOTE: The above line is probably not necessary, but is harmless.
+E8 [xxxxxxxx]	call 00447A64
+59			pop ecx
+59			pop ecx
+8B08			mov ecx, dword ptr [eax]
+83C1 0C		add ecx, 0000000C
+E9 [xxxxxxxx]	jmp 004074AB
+
+--------------------------------------------------------
+
+This section of code is used when a pile of gold is auto-inventoried (picked up with the inventory closed).
+
+Was:
+0041CD61:
+<dword ptr [ebp+0068CAF4] is the value of the pile in transit (stored in the cursor memory)>
+<dword ptr [esi] is the value of a spot in the inventory known to be gold>
+<eax is the sum of value of the piles>
+<ecx is the value of the pile in inventory>
+If the sum is over the limit,
+	move enough gold to inventory pile to max it
+	and jump to 0041CDA3.
+If the sum is within gold pile limits,
+	move the gold to the inventory pile
+	and jump to 0041CD91
+
+0041CD61:
+E9 [xxxxxxxx]	jmp ?
+
+00448031:
+				cmp eax, 00004E20
+				jle 0041CD85
+				mov dword ptr [esi], 00004E20
+				sub eax, 00004E20
+				mov dword ptr [ebp+0068CAF4], eax
+0044804D: (0004744D)
+C786 FCFFFFFF 31000000	mov dword ptr [esi-04], 00000031
+E9 [474DFDFF]		jmp 0041CDA3
+
+0041CD85: (0001C185)
+8906			mov dword ptr [esi], eax
+56			push esi
+6A FC			push FFFFFFFC
+E8 [D5AC0200]	call 00447A64
+59			pop ecx
+59			pop ecx
+0041CD91:
+
+--------------------------------------------------------
+
+? gold is being auto-inventoried (again?  perhaps for townsfolk)
+
+This time, I'm not going to bother maxing existing piles until I know when this code is used.  I'm not sure, but I would guess that it is used by townsfolk.
+
+Was:
+0041CDF2:
+<set [esi] to eax>
+<set [esi-04] to image based on eax>
+<jump to 0041CE1B>
+
+Now
+0041CDF2: (0001C1F2)
+8906			mov dword ptr [esi], eax
+56			push esi
+6A FC			push FFFFFFFC
+E8 [xxxxxxxx]	call 00447A64
+59			pop ecx
+59			pop ecx
+EB [1B]		jmp 0041CE1B
+
+NOTE: Based on some tests involving an infinite loop, I'm not sure if this code is ever used.
+
+--------------------------------------------------------
+
+?gold image of gold created in dungeon
+
+0042152D:
+<set [esi+00636E0C] to eax>
+<set [esi+00636E08] to image>
+<proceed to 00421559>
+
+0042152D: (0002092D)
+8986 0C6E6300	mov dword ptr [esi+00636E0C], eax
+56			push esi
+68 086E6300		push 00636E08
+E8 [26650200]	call 00447A64
+59			pop ecx
+59			pop ecx
+5F			pop edi
+5E			pop esi
+5B			pop ebx
+C9			leave
+C2 0400		ret 0004
+
+00421484: (00020884)
+0F85 [xxxxxxxx]	jne 00421540
+
+--------------------------------------------------------
+
+gold image
+
+Was:
+0042306F:
+<set [esi+00636E0C] to eax>
+<set [esi+00636E08] to image>
+<proceed to 00423147>
+This covers up to, but not including 004230B0
+
+Now:
+0042306F: (0002246F)
+8986 0C6E6300	mov dword ptr [esi+00636E0C], eax
+56			push esi
+68 086E6300		push 00636E08
+E8 [E4490200]	call 00447A64
+59			pop ecx
+59			pop ecx
+E9 [C0000000]	jmp 00423147
+
+--------------------------------------------------------
+
+0041CEA4:
+<set [ebx+006885C4] to image based on value at [ebp+0068CAF4]
+<continue at 0041CEDC>
+
+0041CEA4: (0001C2A4)
+55			push ebp
+68 F4CA6800		push 0068CAF4
+53			push ebx
+68 C4856800		push 006885C4
+E8 [xxxxxxxx]	call 00421547
+83C4 10		add esp, 00000010
+EB [22]		jmp 0041CEDC
+
+--------------------------------------------------------
+
+Was:
+0045C2A0:
+<set [ebx+0068BF70] to image based on value at [eax+0068BF74]>
+
+0045C2A0: (0005B6A0)
+50			push eax
+68 74BF6800		push 0068BF74
+53			push ebx
+68 70BF6800		push 0068BF70
+E8 [xxxxxxxx]	call 00421547
+83C4 10		add esp, 10
+C3			ret
+
+--------------------------------------------------------
+
+Was:
+0041D6CF:
+<set [ecx+006885C4] to image based on >
+<proceed to 0041DA85>
+
+Now:
+0041D6CF: (0001CACF)
+51			push ecx
+68 C4856800		push 006885C4
+E8 [8AA30200]	call 00447A64
+59			pop ecx
+59			pop ecx
+E9 [A4030000]	jmp 0041DA85
+
+NOTE: Based on the size of [ecx+006885C4], the code actually sets the image of either [ecx+006885C4] (for a large pile) or [ebx+006885C4] (for a small or medium pile).  Since ecx is not the same as ebx, this seems like an error.
+
+--------------------------------------------------------
+
+Was:
+0041D732:
+C745 08 12000000	mov [ebp+08], 00000012
+E9 [47030000]	jmp 0041DA85
+
+Now:
+0041D732: (0001CB32)
+C745 08 12000000	mov [ebp+08], 00000012
+E9 [xxxxxxxx]	jmp 00406E36
+
+00406E36: (00006236)
+81FB 204E0000	cmp ebx, 00004E20
+7C [07]		jl SKIP
+C745 08 31000000	mov [ebp+08], 0000003D
+E9 [3B6C0100]	jmp 0041DA85
+
+--------------------------------------------------------
+
+Was:
+0041D7A5:
+<set [ebx+006885C4] to image based on [ebx+0068CAF4]>
+<jmp to 0041DA85>
+
+NOTE: The actual code does set [ebx+006885C4], but, based on tests, it should be setting [edx+006885C4]
+
+Now:
+0041D7A5: (0001CBA5)
+53			push ebx
+68 F4CA6800		push 0068CAF4
+52			push edx		! This is what works, but not what the code did.
+68 C4856800		push 006885C4
+E8 [xxxxxxxx]	call 00421547
+83C4 10		add esp, 10
+E9 [xxxxxxxx]	jmp to 0041DA85
+<clear up to, but not including 0041D7E0>
+
+--------------------------------------------------------
+
+Was:
+0041D96D:
+<set [ecx+0068BF70] to image>
+<jmp to 0041DA7B>
+
+Now:
+0041D96D: (0001CD6D)
+51			push ecx
+68 70BF6800		push 0068BF70
+E8 [xxxxxxxx]	call 00447A64
+59			pop ecx
+59			pop ecx
+E9 [xxxxxxxx]	jmp 0041DA7B
+
+<clear up to, but not including, 0041D9A6>
+
+--------------------------------------------------------
+
+Used when gold is moved to belt.
+
+Was:
+0041D9D0:
+C745 08 12000000	mov [ebp+08], 00000012
+E9 [xxxxxxxx]	jmp 0041DA7B
+
+Now:
+0041D9D0: (0001CDD0)
+C745 08 12000000	mov [ebp+08], 00000012
+E9 [xxxxxxxx]	jmp 0041CEBA
+
+0041CEBA: (0001C2BA)
+81FB 204E0000	cmp ebx, 00004E20
+7C [07]		jl SKIP
+C745 08 31000000	mov [ebp+08], 0000003D
+E9 [xxxxxxxx]	jmp 0041DA7B
+
+--------------------------------------------------------
+
+Was:
+00420919:
+<set [ebx+000000C0] to image based on [ecx+000000C4]>
+<ret>
+
+Now:
+00420919: (0001FD19)
+51			push ecx
+68 C4000000		push 000000C4
+53			push ebx
+68 C0000000		push 000000C0
+E8 [xxxxxxxx]	call 00421547
+83C4 10		add esp, 10
+C3			ret
+
+<clear up to, but not including 00420948>
+
+--------------------------------------------------------
+
+Was:
+0045C260:
+<set [ebx+006885C4] to image based on [eax+006885C8]>
+<ret>
+
+Now:
+0045C260: (0005B660)
+50			push eax
+68 C8856800		push 006885C8
+50			push eax		! should be eax !
+68 C4856800		push 006885C4
+E8 [xxxxxxxx]	call 00421547
+83C4 10		add esp, 10
+C3			ret
+
+<clear up to, but not including 0045C291>
+
+--------------------------------------------------------
+
+Was:
+0041D708: jumped to from 0041D6BB
+........
+0041D71E:
+89B9 C4856800	mov dword ptr [ecx+006885C4], edi
+
+Now:
+0041D703: jumped to from 0041D6BB
+0041D719:
+50			push eax
+6A 31			push 00000031
+58			pop eax
+8981 C4856800	mov dword ptr [ecx+006885C4], eax
+58			pop eax
+
+--------------------------------------------------------
+
+Enhance Item Repair
+
+	When 'Item Repair' is used on an item, each time the durability drops, enchance the item as appropriate.
+
+	If (rnd[14]+charges) div 2<clvl, inc charges
+
+Was:
+00423834:
+E8 [3E44FFFF]	call 00417C77
+
+Now:
+00423834: (00022C34)
+E8 [xxxxxxxx]	call 0042F35F
+
+0042F35F: (0002E75F)
+83BE E8000000 00	cmp dword ptr [esi+000000E8], 00000000
+75 [1D]		jne EXIT
+52			push edx
+6A 14			push 00000014
+5A			pop edx
+E8 [xxxxxxxx]	call 00417C77		set_eax_to_Rnd[edx]
+5A			pop edx
+0386 E4000000	add eax, dword ptr [esi+000000E4]
+
+C1E8 01		shr eax, 1
+
+3BC3			cmp eax, ebx
+7D [06]		jge EXIT
+FF86 E4000000	inc dword ptr [esi+000000E4]
+EXIT:
+E8 [xxxxxxxx]	call 00417C77
+C3			ret
+
+--------------------------------------------------------
+
+Remove the 'tally gold on belt' section of Tally_Gold
+
+0041F9E5: (0001EDE5) CALL Tally_Gold
+xor eax, eax				set eax to 0
+imul ecx, 000054D8			set ecx to char rec
+push esi
+push edi
+
+mov edi, 00000170				set edi to item size
+
+mov edx, dword ptr [ecx+0068BE84]		#of Items
+test edx, edx
+jle 0041FA37					if 0, jump
+lea ecx, dword ptr [ecx+006885C8]		Unided $
+
+0041FA27:
+cmp dword ptr [ecx+FFFFFF44], 0000000B
+jne 0041FA32
+add eax, dword ptr [ecx]
+
+0041FA32:
+add ecx, edi					next item
+dec edx						dec counter
+jne 0041FA27					loop if not 0
+
+0041FA37:
+pop edi
+pop esi
+ret
+
+--------------------------------------------------------
+
+Relocating some code to free some consecutive space.
+
+Was:
+0041EA5C:
+E9 [B5980200]	jmp 00448316
+
+00448316:
+........
+
+Now:
+0041EA5C: (0001DE5C)
+E9 [xxxxxxxx]	jmp 0042092E
+
+0042092E: (0001FD2E)
+........
+
+--------------------------------------------------------
+
+Enhance Items which have been repaired by 'Item Repair'
+
+  Use charges to add as follows:
+	Weapons without charges: +charges% To Hit
+	Armor, Helms and Shields: +charges% armor
+
+Was:
+0041FDC8:
+80BF D8FEFFFF 00		cmp byte ptr [edi+FFFFFED8], 00
+
+Now:
+0041FDC8: (0001F1C8)
+E9 [xxxxxxxx]		jmp 004482DA
+90 90				nop x 2
+
+004482DA: (000476DA)
+50				push eax
+51				push ecx
+837F 84 00			cmp dword ptr [edi-7C], 00000000
+75 [39]			jne EXIT
+8B47 80			mov eax, dword ptr [edi-80]		charges
+85C0				test eax, eax
+74 [32]			je EXIT
+0FB68E 30796800		movzx ecx, byte ptr [esi+00687930]
+C1E1 01			shl ecx, 01
+3BC1				cmp eax, ecx
+7E [xx]			jle SKIP
+8BC1				mov eax, ecx
+
+				SKIP:
+0FB68F 5AFFFFFF		movzx ecx, byte ptr [edi+FFFFFF5A]
+49				dec ecx	(01 Weapon)
+74 [15]			je WEAPON
+49				dec ecx	(02 Armor)
+75 [15]			jne EXIT
+
+				ARMOR:
+0FAF87 70FFFFFF		imul eax, dword ptr [edi+FFFFFF70]	set eax to charges*AC
+6A 64				push 00000064
+99				cdq
+59				pop ecx					set ecx to 64h (100)
+F7F9				idiv ecx					divide by 100 for %
+0145 D8			add dword ptr [ebp-28], eax		add +%ACbonus to +AC
+EB [03]			jmp EXIT
+
+				WEAPON:
+0145 DC			add dword ptr [ebp-24], eax		add to +%to hit
+
+				EXIT:
+59				pop ecx
+58				pop eax
+80BF D8FEFFFF 00		cmp byte ptr [edi+FFFFFED8], 00
+E9 [xxxxxxxx]		jmp 0041FDCF
+
+Note: The +damage was buggy and not really needed.  The Warrior's shortcomming is definatly to hit, so +% to hit is more than enough.
+
+Note:	D1E0				shl eax, 1
+Note:	0145 E0			add dword ptr [ebp-20], eax	add to +%damage
+
+Note: dword ptr [ebp-20]	+%damage (appears to only affect if the damage is in blue)
+Note:	dword ptr [ebp-64]	min damage
+Note:	dword ptr [ebp-60]	max damage
+
+Also Note: The +% armor for shields and helms is rather ineffective compared to weapons and body armor.  Proprotional dur. damage might fix that.
+
+--------------------------------------------------------
+
+Alter mana shield
+
+	Mana is reduced proportionally (e.g. A loss of 10% of life will result in a loss of 10% mana), with Sorcerer's getting a 1:2 reduction and Warrior's getting a 2:1 increase.
+
+Proportional	( Damage x Mod Max Mana / Mod Max Life )
+Based on class	( Damage taken x 2 ) sar ( class )
+
+Total	( ( Damage x Mod Max Mana x 2 ) Div Mod Max Life ) sar Class
+
+Was:
+0042FAD3:
+........	(up to, but not including 0042FAF5)
+
+Now:
+0042FAD3: (0002EED3)
+85D2			test edx, edx		damage
+7D [02]		jge SKIP NEXT LINE
+33D2			xor edx, edx		minimum of 0
+51			push ecx
+C1E2 01		shl edx, 01			damage x 2
+8B8E 28796800	mov ecx, dword ptr [esi+00687928]
+0FAFD1		imul edx, ecx		damage x 2 x Mod Max Mana
+8A8E D8786800	mov cl, byte ptr [esi+006878D8]
+D3EA			shr edx, cl			shr Class
+8BC2			mov eax, edx
+
+8B8E 14796800	mov ecx, dword ptr [esi+00687914]
+99			cdq
+F7F9			idiv ecx			/ Mod Max Life
+8BD0			mov edx, eax
+59			pop ecx
+
+<data from 0042FAF5..>
+
+<removed code at 0042FB2B up to, but not including ?0042FB49>
+
+--------------------------------------------------------
+
+Remove some of the tainted shrine code (Tainted shrines are disabled)
+
+Remove from 004483E7, up to, but not including 00448466
+
+--------------------------------------------------------
+
+Change '10% of mana added to armor class' to a variable %.
+
+Was:
+00422082:	8F1E4200	DWORD 00421E8F
+
+Now:
+00422082:	E7834400	DWORD 004483E7
+
+Was 00421E8F (0002128F)	2C bytes
+	DYNAMIC JUMP - 4D 10% of mana added to armor class
+
+Now:
+004483E7: (000477E7)
+
+mov eax, esi
+* push 00000064
+imul eax, 00000170
+pop edi
+lea ecx, dword ptr [eax+00636E1C]	AC
+mov eax, dword ptr [00687774]
+imul eax, 000054D8
+mov eax, dword ptr [eax+00687920]
+sar eax, 06
+* 0FAFC3	imul eax, ebx
+cdq
+idiv edi					10%
+add dword ptr [ecx], eax		add to AC
+* E9 [xxxxxxxx]	jmp 00421EE9
+
+Note: ebx stores % value.
+
+--------------------------------------------------------
+
+Change text description
+	from	'10% of mana added to armor class'
+	to	'% of mana added to armor class'
+
+Was:
+00424052: (00023452)
+DWORD 00423ECE
+
+00423ECE:
+push 00494198	"% of mana added to armor"
+jmp 00423F0F
+
+Now:
+00424052: (00023452)
+9FB44300	DWORD 0043B49F
+
+0043B49F: (0003A89F)
+80BE BD000000 03	cmp byte ptr [esi+000000BD], 03	Equipment Placement & Body Armor
+74 [04]		je SKIP NEXT TWO LINES
+6A 05			push 00000005
+EB [02]		jmp SKIP NEXT LINE
+6A 0A			push 0000000A
+68 98414900		push 00494198	"%i%% of mana added to armor"
+E9 [xxxxxxxx]	jmp 00423EFB
+
+
+--------------------------------------------------------
+
+Change gold pile drops to be more balanced for difficulty
+
+In classic Diablo, gold piles range from 10 to 20 times the dlvl.  For nightmare and hell difficulty, 16 and 32 are added to the dlvl used.
+
+		Was:	Now:
+000208C8:	10	08
+000208DE:	10	08
+000208F6:	20	10
+0002090C:	20	10
+
+For nightmare, add 08
+For hell, add 16
+
+--------------------------------------------------------
+
+Halve arrow cost for magical bows
+
+Was:
+0045A6E6:
+8985 C4000000	mov dword ptr [ebp+000000C4], eax
+
+Now:
+0045A6E6: (00059AE6)
+E9 [xxxxxxxx]	jmp 0042FAFE
+90			nop
+
+0042FAFE: (0002EEFE)
+837D 08 03		cmp dword ptr [ebp+08], 03
+75 [02]		jne SKIP NEXT LINE
+D1F8			sar eax, 1
+8985 C4000000	mov dword ptr [ebp+000000C4], eax
+E9 [xxxxxxxx]	jmp 0045A6EC
+
+--------------------------------------------------------
+
+change 0001FD1F from 53 to 51 to fix the 'crash when you die' bug.
+
+--------------------------------------------------------
+
+Load Hit Recovery Animation in place of Blocking Animation for characters which do not have a shield.
+
+Was:
+0044BF3A:
+0F84 [C7000000]	je 0044C007
+
+Now:
+0044BF3A: (0004B33A)
+0F84 [xxxxxxxx]	je ?
+
+(0001D81A)
+							Was: (00003C71)
+80BE 44090000 03	cmp byte ptr [esi+00000944], 03
+0F84 [xxxxxxxx]	je 0044C007
+80BE 60010000 02	cmp byte ptr [esi+00000160], 02
+0F84 [xxxxxxxx]	je 0044C007
+
+8BBE D0540000	mov edi, dword ptr [esi+000054D0]
+C745 FC 00224A00	mov [ebp-04], 004A2200			"HT"
+E9 [xxxxxxxx]	jmp 0044BF4D
+
+			None	Axe	Bow	Club	Staff	Sword
+004A21E4:	LM..
+	Warrior:	?	?	?	?	?	?
+	Rogue:	?	?	XX	?	?	?
+	Sorcerer:	?	?	?	?	?	XX
+004A21E8:	FM..
+	Warrior:	?	?	?	?	?	?
+	Rogue:	?	?	XX	?	?	?
+	Sorcerer:	?	?	?	?	?	XX
+004A21EC:	QM..
+	Warrior:	?	?	?	?	?	?
+	Rogue:	?	?	XX	?	?	?
+	Sorcerer:	?	?	?	?	?	XX
+004A21F0:	DT..
+	Warrior:	?	?	?	?	?	?
+	Rogue:	?	?	NA	?	?	?
+	Sorcerer:	?	?	?	?	?	NA
+004A21F4:	BL..							Blocking
+	Warrior:	?	?	?	?	?	?
+	Rogue:	?	?	NA	?	?	?
+	Sorcerer:	?	?	?	?	?	NA
+004A2200:	HT..
+	Warrior:	OK	OK	OK	OK	OK	OK
+	Rogue:	OK	OK	XX*	OK	OK	OK
+	Sorcerer:	?	?	?	?	XX	?
+
+* It loads OK when changing weapons, but crashs when you change levels with it equiped.
+
+			None	Axe	Bow	Club	Staff	Sword
+004A2204:	ST..
+	Warrior:	?	XX	?	?	?	?
+	Rogue:	?	?	?	?	?	?
+	Sorcerer:	?	?	?	?	?	XX
+004A2208:	AS..
+	Warrior:	?	XX	?	?	?	?
+	Rogue:	?	?	?	?	?	?
+	Sorcerer:	?	?	?	?	?	XX
+004A220C:	WL..
+	Warrior:	?	XX	?	?	?	XX
+	Rogue:	?	?	?	?	?	?
+	Sorcerer:	?	?	?	?	XX	?
+004A2210:	AW..							Walking
+	Warrior:	XX	XX	XX	XX	?	XX
+	Rogue:	OK	OK	XX	OK	OK	OK
+	Sorcerer:	?	?	?	?	XX	?
+004A2214:	AT..
+	Warrior:	?	XX	?	?	?	?
+	Rogue:	?	?	?	?	?	?
+	Sorcerer:	?	?	?	?	XX	?
+
+NOTE: The following code is NOT IMPLEMENTED, since it is for ranged attacks, and dodging is for melee only.
+
+Allow player without shield to block, with 1/2 of the chance.
+
+Was:
+0042AD26:
+........
+
+Now:
+0042AD26: (0002A126)
+6A 64			push 00000064
+B1 49			mov cl, 49
+5A			pop edx
+E8 [47CFFEFF]	call 00417C77
+80BE B4786800 00	cmp byte ptr [esi+006878B4], 00
+75 [09]		jne SKIP
+C1E0 01		shl eax, 01
+EB [04]		jmp SKIP
+C1E0 03		shl eax, 03
+90			nop
+			SKIP:
+8945 FC		mov dword ptr [ebp-04], eax
+
+the above is for magical/ranged attacks.
+
+During actions where one cannot normally block, the chance to block is reduced to 1/8, with a max of 10%.	normally no blocking....
+
+The following code IS IMPLEMENTED
+
+Allow a Warrior or Rogue which is not using a bow to dodge
+
+Was:
+00435B0D: (00034F0D)
+
+Now:
+00435B0D: (00034F0D)
+6A 64			push 00000064
+B1 62			mov cl, 62
+5A			pop edx
+E8 [6021FEFF]	call 00417C77
+E9 [xxxxxxxx]	jmp ?
+
+90 x 6		nop x 6
+
+NORMALY CAN'T BLOCK: 00435B22
+6A 64			push 00000064
+58			pop eax
+
+00421E8F: (0002128F)	28 (40) bytes
+80BE B4786800 00	cmp byte ptr [esi+006878B4], 00	have shield
+75 [15]		jne ALLOW BLOCKING
+80BE D8786800 02	cmp byte ptr [esi+006878D8], 02	class & Sorcerer
+74 [11]		je NO DODGING/BLOCKING
+83BE B0786800 01	cmp dword ptr [esi+006878B0], 00000001	have bow
+74 [08]		je NO DODGING/BLOCKING
+			PARRYING:
+C1E0 01		shl eax, 01
+			ALLOW BLOCKING:
+E9 [xxxxxxxx]	jmp 00435B25
+			NO DODGING/BLOCKING:
+E9 [xxxxxxxx]	jmp 00435B22
+
+above for melee attacks.
+
+--------------------------------------------------------
+
+Turn off Clairvoyance and Quickling when changing levels
+
+Change (0002AC5C) from FE to F8
+
+--------------------------------------------------------
+
+Make 'Staff Recharge' cost mana based on spell's casting cost per charge
+
+Was:
+004238BB:
+........					1F (31) bytes
+E8 [1D000000]	call 004238FC
+
+Now:
+004238BB: (00022CBB)
+8BD1			mov edx, ecx	spell code
+8BCF			mov ecx, edi	character #
+50			push eax
+E8 [xxxxxxxx]	call 00458C34	affects eax, ecx and edx
+8BD0			mov edx, eax	casting cost
+58			pop eax
+53			push ebx
+8BDA			mov ebx, edx	casting cost
+
+0FBE88 DC000000	movsx ecx, byte ptr [eax+000000DC]	slvl of item recharge
+
+<begin version #1 (This was an INCREASE in cost)>
+C1E9 02		shr ecx, 02		slvl of IR div 4
+D3EB			shr ebx, cl		cost/var
+<end version #1>
+
+<begin version #2 (This is a DISCOUNT in cost>
+0FAFD9		imul ebx, ecx
+C1EB 05		shr ebx, 05
+<end version #2>
+
+8BCE			mov ecx, esi
+E8 [1E000000]	call 004238FD
+5B			pop ebx
+
+
+
+eax		cost/var
+ecx		item record		available
+edx		cost+cost/var	available
+esi		item record
+
+eax	character record
+ebx	current mod mana
+ecx	item record
+edx	mana cost per charge
+esi	current charges
+edi	max staff charges
+
+004238FD: (00022CFD)
+
+57				push edi
+8BB9 E8000000		mov edi, dword ptr [ecx+000000E8]	Max staff charges
+56				push esi
+8BB1 E4000000		mov esi, dword ptr [ecx+000000E4]	Current charges
+*2BD3				sub edx, ebx	cost+cost/var
+8B98 AC010000		mov ebx, dword ptr [eax+000001AC]	mod current mana
+
+				LOOP:
+3BF7				cmp esi, edi				current & max
+74 [09]			je EXIT					full, exit
+3BDA				cmp ebx, edx			mana & cost per charge
+7C [05]			jl EXIT				not enough, exit
+46				inc esi				add 1 charge
+2BDA				sub ebx, edx			subtract mana
+EB [F3]			jmp LOOP
+
+				EXIT:
+89B1 E4000000		mov dword ptr [ecx+000000E4], esi	set current charges
+8B88 AC010000		mov ecx, dword ptr [eax+000001AC]	mod current mana
+8998 AC010000		mov dword ptr [eax+000001AC], ebx
+2BCB				sub ecx, ebx
+2988 A4010000		sub dword ptr [eax+000001A4], ecx
+5E				pop esi
+5F				pop edi
+C3				ret
+
+----------------------------------------------------------------
+
+Change Black Death to -1 Vitality
+
+change 00035007 from 40 to 
+
+Was:
+00435C0A:
+83C0 C0	add eax, FFFFFFC0
+8901		mov dword ptr [ecx], eax
+
+Now:
+00435C0A: (0003500A)
+E9 [xxxxxxxx]	jmp ?
+
+00448419: (00047819)
+83BE F8786800 00	cmp dword ptr [esi+006878F8], 00	base vit
+0F84 [xxxxxxxx]	je 00435C5C
+FF8E F4786800	dec dword ptr [esi+006878F4]	mod. vit
+FF8E F8786800	dec dword ptr [esi+006878F8]	base vit
+83C0 C0		add eax, FFFFFFC0
+80BE D8786800 00	cmp byte ptr [esi+006878D8], 00
+75 [0A]		jne SKIP
+83C0 C0		add eax, FFFFFFC0
+8386 0C796800 C0	add dword ptr [esi+0068790C], FFFFFFC0
+
+			SKIP:
+8901			mov dword ptr [ecx], eax
+E9 [xxxxxxxx]	jmp 00435C0F
+
+----------------------------------------------------------------
+
+Fix monsters with bad animation
+
+Fix Unravelers by bypassing 'w' animation
+
+Unravelers 							change to
+n	6E (110)	neutral		OK
+w	77 (119)	walking		NA		n
+a	61 (97)	attacking		flawed	s
+h	68 (104)	hit recovery	?
+d	64 (100)	death			OK
+s	73 (115)	second animation	looks like an attack
+
+Fix the Incinerator group's attack animation.
+
+Incinerator							change to
+n	6E (110)	neutral		?
+w	77 (119)	walking		?
+a	61 (97)	attacking		Flawed	(h didn't look good)
+								(n crashed upon use)
+h	68 (104)	hit recovery	?
+d	64 (100)	death			?
+s	73 (115)	second animation	?
+
+'Fix' the Golem group.
+
+Golem								change to
+n	6E (110)	neutral		NA		a
+w	77 (119)	walking		OK
+a	61 (97)	attacking		OK
+h	68 (104)	hit recovery	NA		a
+d	64 (100)	death			?
+s	73 (115)	second animation	?
+
+Was:
+0043233F:
+80F9 73	cmp cl, 73			"s"
+75 [09]	jne 0043234D
+
+Now:
+0043233F: (0003173F)
+E9 [xxxxxxxx]	jmp 0043970F
+
+0043970F: (00038B0F)
+80F9 73		cmp cl, 73			"s"
+0F84 [2C8CFFFF]	je 00432344
+50			push eax
+8B83 788E4900	mov eax, dword ptr [ebx+00498E78]
+
+			UNRAVELER WALKING:
+3D C4DC4900		cmp eax, 0049DCC4		Unravelers
+75 [12]		jne INCINERATOR
+80F9 77		cmp cl, 77			"w" - missing
+75 [04]		jne UNRAVELER ATTACK
+B1 6E			mov cl, 6E			substitute "n"
+EB [2C]		jmp EXIT
+
+			UNRAVELER ATTACK:
+80F9 61		cmp cl, 61			"a" - missing
+75 [27]		jne EXIT
+B1 73			mov cl, 73			substitute "s"
+EB [23]		jmp EXIT
+
+			INCINERATOR:
+3D C4E04900		cmp eax, 0049E0C4		Incinerators
+75 [09]		jne GOLEM
+80F9 61		cmp cl, 61			"a" - flawed
+75 [17]		jne EXIT
+B1 77			mov cl, 77			substitute "w"	(00038B45)
+EB [13]		jmp EXIT
+
+			GOLEM:
+3D 00DB4900		cmp eax, 0049DB00		Golem
+75 [0C]		jne EXIT
+80F9 6E		cmp cl, 6E			"n" - missing
+74 [05]		je SKIP
+80F9 68		cmp cl, 68			"h" - missing
+75 [02]		jne EXIT
+			SKIP:
+B1 61			mov cl, 61			substitute "a"
+
+			EXIT:
+58			pop eax
+E9 [xxxxxxxx]	jmp 0043234D
+
+
+----------------------------------------------------------------
+
+Fix sound for Wyrms
+
+000912BB	"Monsters\Worm\Worm%c%i.WAV"
+
+Change 00098880 from C0E34900 to BB344900
+Change 00098900 from xxxxxxxx to BB344900
+Change 00098980 from xxxxxxxx to BB344900
+Change 00098A00 from xxxxxxxx to BB344900
+
+----------------------------------------------------------------
+
+Disable Leo's skeleton spawning code:
+
+0043970A: (00038B0A)
+E9 [A5000000]	jmp 004397B4
+90			nop
+.... up to, but not including 004397B4
+
+----------------------------------------------------------------
+
+NOTE:
+Look for single player code by searching for 
+0067A990	01 = Singleplayer
+		?00 = Multi-player
+		?02+? = Battle.net
+
+0040A911
+	004335B3
+	0042B848
+	00408544
+	0041B948
+	0042834E
+
+----------------------------------------------------------------
+
+Fix The Arch-Litch by changing sounds used.
+
+----------------------------------------------------------------
+
+NOTE:
+Prevent game from ending when Diablo dies
+
+Note: Quick fix....
+Note: (Change 004369EE from 75 to EB)
+Note: (Change 00434DB6 from 75 to EB)
+
+004369F0: (00035DF0)
+
+50			push eax
+
+8B86 C8E66400	mov eax, dword ptr [esi+0064E6C8]
+3D 8C000000		cmp eax, 0000008C
+75 [xx]		jne EXIT
+
+51			push ecx
+52			push edx
+8B0D E8835B00	mov ecx, dword ptr [005B83E8]
+41			inc ecx
+A1 74776800		mov eax, dword ptr [00687774]
+69C0 D8540000	imul eax, 000054D8
+8B90 08CC6800	mov edx, dword ptr [eax+0068CC08]
+8D80 08CC6800	lea eax, dword ptr [eax+0068CC08]
+3BD1			cmp edx, ecx
+7F [02]		jg SKIP NEXT LINE
+8908			mov dword ptr [eax], ecx
+5A			pop edx
+59			pop ecx
+EXIT:
+58			pop eax
+EB [24]		jmp 00436A40
+90			nop	(fill with 90's up to, but not including 00436A40)
+
+Change 00434DB6 (000341B6) from 75 to EB
+
+Change 00434FC3 (000343C3) from 75 to EB
+
+----------------------------------------------------------------
+
+Change the code that puts the skill in spellbook, page 1 slot 1.
+Have it put Quickling in the new skill slot on page 5.
+
+Now:
+00404875: (00003C75)
+884D4800 13000000
+
+00404885: (00003C85)
+904D4800 13000000
+
+00404895: (00003C95)
+8C4D4800 13000000
+
+----------------------------------------------------
+
+Free more single-player code:
+
+Was:
+0040DB74:
+Called from
+	0040A69C
+	0040DBA5 (internal single player)
+	0040DBE5 (internal single player)
+
+0040A69C:	E8 [D3340000]
+
+Now:
+0040A69C: (00009A9C)	E8 [4A350000]
+
+0040DB74: (0000CF74)
+90	up to, but not including 0000CFEB
+
+0040DBEB: (0000CFEB)
+56	push esi
+57	push edi
+8BF2	mov esi, edx
+8BF9	mov edi, ecx
+0040DBF1:
+........
+
+----------------------------------------------------
+
+Free more single-player code:
+
+changed 00428A8F..
+
+----------------------------------------------------
+
+Monster mouseovers and Clairvoyance.
+
+Monster Name
+Total Kills
+Hit Points
+Resists
+Imunities
+
+Alter kills needed for data by 15.
+
+0F (15) Kills	Hit Points : %i-%i	(min-max)
+1E (30) Kills	Magic Resistance/Immunity
+
+Clairvoyance
+	Increase effective number of kills by 15.
+
+000F (15) Kills & 0100 Clairvoyance
+			Resistance/Immunity Hints
+001E (30) Kills & 0100 Clairvoyance
+			Hit Points %i of %i	(cur-max)
+003C (60) Kills & 0100 Clairvoyance
+			Monster Type (Animal, Undead, Demon)
+
+Was
+0043B30A..0043B4B9	1B0 (432) bytes
+
+
+Now:				(~564) bytes
+0043B30A: (0003A70A)
+53			push ebx
+55			push ebp
+56			push esi
+57			push edi
+8BF9			mov edi, ecx	base monster type
+BE 189B4B00		mov esi, 004B9B18
+8D1CBD 10E06400	lea ebx, dword ptr [4*edi+0064E010]
+8B1B			mov ebx, dword ptr [ebx]
+53			push ebx		number killed
+68 34FE4900		push 0049FE34	"Total kills : %i"
+56			push esi
+E8 [16010300]	call 0046B440
+83C4 0C		add esp, 0000000C		clear pushs
+8BCE			mov ecx, esi
+6A 01			push 00000001
+5D			pop ebp
+8BD5			mov edx, ebp
+E8 [A08EFCFF]	call 004041D9
+83FB 6F		cmp ebx, 0000006F		max at 6F
+7E [03]		jle SKIP NEXT TWO LINE
+6A 6F			push 0000006F
+5B			pop ebx
+
+A1 74776800		mov eax, dword ptr [00687774]
+69C0 D8540000	imul eax, 000054D8
+8A80 98786800	mov al, byte ptr [eax+00687898]
+A8 02			test al, 02
+74 [06]		je SKIP next line
+81C3 0F010000	add ebx, 0000010F
+
+6681FB 0F00		cmp bx, 000F
+7C [22]		jl RESISTS SECTION
+
+0043B363: (0003A763)
+
+6681FB 1E01		cmp bx, 011E
+0F8D [2DD7FEFF]	jnl CLAIRVOYANCE
+E9 [0128FDFF]	jmp HIT POINT RANGE
+
+0043B373: (0003A773)	END OF HIT POINT SECTION:
+
+COPY OF 0043B398..0043B3A9:	12 (18) bytes
+
+RESISTS SECTION:	(based on 0043B3AA)
+
+8BC3			mov eax, ebx
+C1E7 07		shl edi, 07
+833D E8835B00 02	cmp dword ptr [005B83E8], 00000002
+74 [09]		je HELL DIFF
+0FB79F E48E4900	movzx ebx, word ptr [edi+00498EE4]
+EB [07]		jmp SKIP NEXT LINE (HELL DIFF)
+
+HELL DIFF:
+0FB79F E68E4900	movzx ebx, word ptr [edi+00498EE6]
+
+3C 1E			cmp al, 1E
+
+0043B3A5: (0003A7A5)
+
+0F8C [DF000000]	jl to CHECK FOR CLAIRVOYANCE RESISTANCE HINTS
+
+COPY OF 0043B3D2..0043B4AE	DD (221) bytes
+EB [0A]		jmp EXIT
+
+
+0043B48A: (0003A88A)
+CHECK FOR CLAIRVOYANCE RESISTANCE HINTS:
+
+663D 0F01		cmp ax, 010F
+0F8D [xxxxxxxx]	jnl 00439761
+
+EXIT: (0003A894)
+
+5F			pop edi
+892D EC9A4B00	mov dword ptr [004B9AEC], ebp
+5E			pop esi
+5D			pop ebp
+5B			pop ebx
+C3			ret
+
+<BEGIN ELSEWHERE>
+00428A9B: (00027E9B)		CLAIRVOYANCE: (44) bytes
+A1 809F4B00		mov eax, dword ptr [004B9F80]
+69C0 E4000000	imul eax, 000000E4
+8B88 ECE66400	mov ecx, dword ptr [eax+0064E6EC]	current hp
+8B80 E8E66400	mov eax, dword ptr [eax+0064E6E8]	max hp
+C1E9 06		shr ecx, 06
+C1E8 06		shr eax, 06
+3BCD			cmp ecx, ebp				cur hp & 1
+7D [02]		jge SKIP NEXT LINE			cur>=1, skip
+33C9			xor ecx, ecx				set cur to 0
+50			push eax
+51			push ecx
+68 A8504800		push 004850A8				"Hit Points %i of %i"
+E9 [A9280100]	jmp END OF HIT POINT SECTION
+<END ELSEWHERE>
+
+<BEGIN ELSEWHERE>
+0040DB74: (0000CF74)
+HIT POINT RANGE:
+COPY OF 0043B342..0043B397:	56 (86) bytes
+E9 [A4D70200]	jmp END OF HIT POINT SECTION
+<END ELSEWHERE>
+
+<BEGIN ELSEWHERE>
+00439761: (00038B61)
+If monster immune to zero	Check Resists instead
+
+F6C3 38		test bl, 38
+74 [03]		je SKIP NEXT LINE
+C1EB 03		shr ebx, 03
+83E3 07		and ebx, 00000007
+C1E3 02		shl ebx, 02		x 4 for address
+
+8BBB xxxxxxxx	mov edi, dword ptr [ebx+0041D6E1]
+
+			0041D6E1: (0001CAE1)
+			Address of:	68 (104) bytes
+			00000000
+			"Avoid Magic"	004A3FAE	0C bytes
+			"Avoid Fire"	0041D7BE	0B bytes
+			"Use Lightning"	004934D6	0E bytes
+			"Avoid Lightning"	004948AA	10 bytes
+			"Use Fire"		0041D7C9	09 bytes
+			"Use Magic"		0041D7D2	0A bytes
+			00000000
+
+85FF			test edi, edi
+74 [18]		je EXIT
+
+57			push edi
+68 6F484900		push 0049486F	"%s-based spells"
+56			push esi
+*E8 [xxxxxxxx]	call 0046B440
+83C4 0C		add esp, 0000000C
+8BD5			mov edx, ebp
+8BCE			mov ecx, esi
+E8 [xxxxxxxx]	call 004041D9
+E9 [FE1C0000]	jmp EXIT		(00038B91)
+<END ELSEWHERE>
+
+----------------------------------------------------
+
+Fix the name of "Armor", the stands which hold a suit of magical armor.
+
+Change (00049169) to 55394900
+
+----------------------------------------------------
+
+Have Clairvoyance detect shrine behind Goat Shrines and Cauldrons
+
+NOT YET IMPLEMENTED
+
+Was:
+00449D6F:
+68 2C1C4A00		push 004A1C2C	"Goat Shrine"
+EB [45]		jmp 00449DBB
+68 201C4A00		push 004A1C20	"Cauldron"
+EB [3E]		jmp 00449DBB
+
+Now:
+00449D6F: (0004916F)
+E9 [xxxxxxxx]	jmp GOAT SHRINE
+90 90			nop x 2
+E9 [xxxxxxxx]	jmp CAULDRON
+90 90			nop x 2
+
+GOAT SHRINE:
+68 2C1C4A00		push 004A1C2C	"Goat Shrine"
+EB [05]		jmp CHECK FOR CLAIRVOYANCE
+
+CAULDRON:
+68 201C4A00		push 004A1C20	"Cauldron"
+
+CHECK FOR CLAIRVOYANCE:
+A1 74776800		mov eax, dword ptr [00687774]
+69C0 D8540000	imul eax, 000054D8
+			mov eax, dword ptr [eax+00687898]
+			test eax, 00000002
+74 [xx]		je EXIT
+
+<get shrine>
+
+57			push ???
+68 xxxxxxxx		push xxxxxxxx	"(%s Shrine)"
+56			push esi
+*E8 [xxxxxxxx]	call 0046B440
+83C4 0C		add esp, 0000000C
+8BD5			mov edx, ebp
+8BCE			mov ecx, esi
+E8 [xxxxxxxx]	call 004041D9
+E9 [031D0000]	jmp EXIT
+
+
+EXIT:
+E9 [xxxxxxxx]	jmp 00449DBB
+
+----------------------------------------------------
+
+Change mana shield so that it brings the casters life to full.
+
+Find: cmp dword ptr [eax+00648428], 0000000D
+
+00420313	Updates local player's mana shield data	Obsolete
+0042A408	?
+00431D9E	performs a call.  The changes to the call are below.
+00435BCA
+00440BF9
+0044ED28
+
+Was:
+0042FABE:
+8B8F B8846400	mov ecx, dword ptr [edi+006484B8]
+
+Now:
+0042FABE: (0002EEBE)
+8B8E 14796800	mov ecx, dword ptr [esi+00687914]
+
+?Was:
+?0042FB0B:
+?8B87 BC846400	mov eax, dword ptr [edi+006484BC]
+?
+?Now:
+?0042FB0B: (0002EF0B)
+?8B86 0C796800	mov eax, dword ptr [esi+0068790C]
+
+Was:
+0042FB29:
+8B87 BC846400	mov eax, dword ptr [edi+006484BC]
+
+Now:
+0042FA29: (0002EF29)
+8B86 0C796800	mov eax, dword ptr [esi+0068790C]
+
+NOT IMPLEMENTED
+Buggy.  When inventory was manipulated (including backpack), mana was lost.
+Trying changing BOTH stored life values
+
+--------------------------------------------------------
+
+Change monster hit points to a dword
+
+004326A8: (00031AA8)
+53			push ebx
+0FB61F		movzx ebx, byte ptr [edi]
+C1E3 07		shl ebx, 07
+81C3 C88E4900	add ebx, 00498EC8
+8B93 04000000	mov edx, dword ptr [ebx+00000004]
+8B03			mov eax, dword ptr [ebx]
+2BD0			sub edx, eax
+B1 58			mov cl, 58
+42			inc edx
+E8 [B055FEFF]	call 00417C77
+8B0B			mov ecx, dword ptr [ebx]
+03C1			add eax, ecx
+5B			pop ebx
+EB [11]		jmp 004326DF
+
+The following will remove the 255 hit point limit from monsters and cause Diablo's hit points to be calculated like all other monsters (from the monster data).
+
+(00031AA8)
+xxxx xxxx xxxx xxxx 530F B61F C1E3 0781
+C3C8 8E49 008B 9304 0000 008B 032B D0B1
+5842 E8B0 55FE FF8B 0B03 C15B EB11 xxxx
+
+--------------------------------------------------------
+
+Fast movement / Running in town
+
+0044F15C:	'DoWalk call'	called from 00451443
+which is called from a dynamic jump at 00451431	(when eax = 1)
+
+Was:
+004514DE:
+41144500	DWORD 00451441
+
+00451441:
+8BCD			mov ecx, ebp
+E8 [14DDFFFF]	call 0044F15C
+EB [4F]		jmp 00451499
+
+Now:
+004514DE: (000508DE)
+CFDB4000		DWORD 0040DBCF
+
+(0000CFCF)
+8BCD			mov ecx, ebp
+E8 [xxxxxxxx]	call 0044F15C
+803D 00C55B00 00	cmp byte ptr [005BC500], 00
+75 [07]		jne SKIP NEXT TWO
+8BCD			mov ecx, ebp
+E8 [xxxxxxxx]	call 0044F15C
+E9 [xxxxxxxx]	jmp 00451499
+
+004514E2: (000508E2)
+x		DWORD x
+
+(00027ECA)
+8BCD			mov ecx, ebp
+E8 [xxxxxxxx]	call 0044F2D6
+803D 00C55B00 00	cmp byte ptr [005BC500], 00
+75 [07]		jne SKIP NEXT TWO
+8BCD			mov ecx, ebp
+E8 [xxxxxxxx]	call 0044F2D6
+E9 [xxxxxxxx]	jmp 00451499
+
+004514E6: (000508E6)
+x		DWORD 00439796
+
+(00038B96)
+8BCD			mov ecx, ebp
+E8 [xxxxxxxx]	call 0044F42A
+803D 00C55B00 00	cmp byte ptr [005BC500], 00
+75 [07]		jne SKIP NEXT TWO
+8BCD			mov ecx, ebp
+E8 [xxxxxxxx]	call 0044F42A
+E9 [xxxxxxxx]	jmp 00451499
+
+00451453:	other movement call
+
+--------------------------------------------------------
+
+Append +% from item repair to description
+
+Now:
+0041F4AB: (0001E8AB)
+E9 [8D410900]	jmp 004B363D
+
+004B363D: (DATA:B143D)
+3C FF			cmp al, FF
+74 [2A]		je EXIT	(jump if slot is empty)
+83BF E8000000 00	cmp dword ptr [edi+000000E8], 00
+75 [21]		jne EXIT	(jump if item has max charges)
+83BF E4000000 00	cmp dword ptr [edi+000000E4], 00
+74 [18]		je EXIT	(jump if item doesn't have cur charges)
+
+FFB7 xxxxxxxx	push dword ptr [edi+000000E4]
+56			push esi
+68 xxxxxxxx		push 004B3632	"%s (+%i%%)"
+56			push esi
+E8 [xxxxxxx]	call 0046B440
+
+004B3665:	GOLD EXIT:
+8A45 FF		mov al, byte ptr [ebp-01]
+83C4 10		add esp, 00000010
+
+EXIT:
+5F			pop edi
+5E			pop esi
+5B			pop ebx
+C9			leave
+C3			ret
+
+0041F457: (0001E857)
+E9 [xxxxxxxx]	jmp 004B3665 (GOLD EXIT)
+
+--------------------------------------------------------
+
+Change description of unusable books at witch's
+
+Was:
+00459E05:
+68 943F4A00		push 004A3F94	"No required attributes"
+
+Now:
+00459E05: (00059205)
+E9 [xxxxxxxx]	jmp ?
+90 90			nop x 2
+
+004B3681: (DATA:B1481)
+83BE DC000000 18	cmp dword ptr [esi+000000DC], 18
+74 [07]		je SKIP NEXT TWO LINES
+68 943F4A00		push 004A3F94	"No required attributes"
+EB [05]		jmp SKIP NEXT LINE
+68 70364B00		push 004B3670	"No new knowledge"
+E9 [xxxxxxxx]	jmp 00459E71
+
+--------------------------------------------------------
+
+Change description of unusable books during mouseover
+
+Was:
+004243A3:
+68 78474900		push 00494778	"Right click to read"
+
+Now:
+004243A3: (000237A3)
+E9 [xxxxxxxx]	jmp ?
+
+0045C2BB: (0005B6BB)
+80BF 61010000 00	cmp byte ptr [edi+00000161], 00
+74 [07]		je SKIP NEXT TWO LINES
+68 78474900		push 00494778	"Right click to read"
+EB [05]		jmp SKIP NEXT LINE
+68 70364B00		push 004B3670	"No new knowledge"
+E9 [xxxxxxxx]	jmp 004243A8
+
+--------------------------------------------------------
+
+Weapon speeds (see 0044FD31)
+
+ORIGINAL SPEED CHART: (In theory, see below)
+Speed			Frame
+Normal Attack	01	02	03	04	05	06
+Quick Attack	Skip	01	02	03	04	05
+Fast Attack		Skip	01	Skip	02	03	04
+Faster Attack	Skip	01	Skip	02	Skip	03
+Fastest Attack	Skip------->01	Skip------->02
+
+The problem, frame 01 never hits the code, so the # of skiped frames are (0,0,1,2,2)
+
+44fd48 01 02
+44fd5f 01 02
+44fd64 03 04
+44fd78 01 02
+44fd7d 03 04
+44fd82 05 06
+44fd96 01 02
+44fd9b 04 05
+
+4F148: 01 -> 02
+4F15F: 01 -> 02
+4F164: 03 -> 04
+4F178: 01 -> 02
+4F17D: 03 -> 04
+4F182: 05 -> 06
+4F196: 01 -> 02
+4F19B: 04 -> 05
+
+--------------------------------------------------------
+
+=======================================================
+
+Fix weapon speed for ranged attacks (i.e. bows).
+
+0044FF2D:	Player Animation: Do Range Attack
+
+	Normal Attack	01	02	03	04	05	06
+02	Quick Attack	Skip	01	02	03	04	05
+04	Fast Attack		Skip	01	Skip	02	03	04
+08	Faster Attack	Skip	01	Skip	02	Skip	03
+10	Fastest Attack	Skip------->01	Skip------->02
+
+Frame
+01	00	Don't Skip (PNU)
+02	1E	Skip for	02	04	08	10
+03	10	Skip for				10
+04	0C	Skip for		04	08
+05	10	Skip for				10
+06	18	Skip for			08	10
+
+0044FF4B: (0004F34B)
+8B86 04786800	mov eax, dword ptr [esi+00687804]
+83F8 06		cmp eax, 06
+7F [xx]		jg 0044FF81
+8A80 6EFF4400	mov al, byte ptr [eax+0044FF6E]
+8A8E CACB6800	mov cl, byte ptr [esi+0068CBCA]
+84C8			test al, cl
+74 [xx]		je 0044FF81
+FF86 04786800	inc dword ptr [esi+00687804]
+EB [xx]		jmp 0044FF4B
+
+=======================================================
+
+Make '+200% damage vs. demons' into 'double damage vs. demons'
+
+....changed text.
+
+HF: 45BAFE - 45BBOE Demonslaying
+    45BB0F - 45BB29 Devastation
+    45BB67 - 45BB9A Jester
+
+Was:             
+0044F8B4:     
+8D3C7F	lea edi, dword ptr [edi+2*edi]
+
+Now:
+0044F8B4:
+C1E7 01	shl edi, 01
+
+HF: Jester
+Was:
+0045BDD8
+8D0480  lea eax, dword ptr [eax+4*eax]
+
+Now:
+0045BDD8
+8d0440  lea eax, dword ptr [eax+2*eax]
+=======================================================
+
+Bone Spirit - Make 1/3 Hp into 1/6 Hp
+
+HF:		Was	Now
+Player vs Monster
+42F456 (2E856)	6A03	6A06
+42F845 (2EC45)	6A03	6A06
+Player vs Player
+432621 (31A21)	6A03	6A06
+
+=======================================================
+
+Gloomy Shrine
+	+4% Item Repair Bonus to Armor
+	-2% Item Repair Bonus to Weapons
+
+Weird Shrine
+	+2% Item Repair Bonus to Weapons
+
+	Min = 0, Max = 2*clvl
+
+Relocate after Weird shrine pointer at 004484A5
+
+Note: ECX is shrine type #.
+	Gloomy Shrine	02
+	Weird Shrine	03
+
+004476FB:
+85C0			test eax, eax
+0F85 [8F0D0000]	jne 00448492
+8B45 FC		mov eax, dword ptr [ebp-04]		player #
+3B05 &4776800	cmp eax, dword ptr [00687774]		player # & local player
+0F85 [540D0000]	jne 00448466
+69C0 D8540000	imul eax, 000054D8			player offset
+
+<changes start here>
+00447718: (00046B18)
+8B98 84BE6800	mov ebx, dword ptr [eax+0068BE84]
+83C3 07		add ebx, 00000007
+51			push ecx
+8D88 707B6800	lea ecx, dword ptr [eax+00687B70]
+58			pop eax
+
+00447729:		LOOP:
+8379 74 00		cmp dword ptr [ecx+74], 00000000
+75 [19]		jne NEXT
+8B71 70		mov esi, dword ptr [ecx+70]
+8B51 8C		mov edx, dword ptr [ecx-74]
+85D2			test edx, edx
+7E [xx]		jle NEXT					misc or empty, next
+83FA 04		cmp edx, 00000004				sword, axe, bow, mace
+7E [xx]		jle WEAPON					weapon
+83FA 09		cmp edx, 00000009				shield, leather, helm, mail, plate
+7E [xx]		jle ARMOR					armor
+83FA 0A		cmp edx, 0000000A				staff
+74 [xx]		je WEAPON					weapon
+
+00447748:		NEXT:
+81C1 70010000	add ecx, 00000170
+4B			dec ebx
+75 [xx]		jne LOOP
+
+8AC8			mov cl, al
+80C1 0C		add cl, 0C
+
+33C0			xor eax, eax
+E9 [xxxxxxxx]	jmp 004483E0
+
+			ARMOR:	+4% Item Repair Bonus to Armor
+			EAX	02	+4% Item Repair Bonus to Armor
+
+3C02			cmp al, 02
+75 [xx]		jne NEXT
+83C6 04		add esi, 00000004
+EB [xx]		jmp UPDATE
+
+			WEAPON:	-2% Item Repair Bonus to Weapons
+			EAX	02	-2% Item Repair Bonus to Weapons
+			EAX	03	+2% Item Repair Bonus to Weapons
+3C 02			cmp al, 02
+75 [03]		jne SKIP NEXT LINE
+83EE 02		sub esi, 02
+3C 03			cmp al, 03
+75 [03]		jne SKIP NEXT LINE
+83C6 02		add esi, 00000002
+
+			UPDATE:
+85F6			test esi, esi
+7D [02]		jge SKIP NEXT LINE
+33F6			xor esi, esi
+
+8B90 30796800	mov edx, dword ptr [eax+00687930]
+D1E2			shl edx, 1
+3951 70		cmp dword ptr [ecx+70], edx
+7D [xx]		jge NEXT
+3BF2			cmp esi, edx
+7C [02]		jl SKIP NEXT LINE
+8BF2			mov esi, edx
+
+8971 70		mov dword ptr [ecx+70], esi
+EB [xx]		jmp NEXT
+
+-------------------------------------------------
+
+Gold fix:
+
+find FFFFEC78 and replace with FFFFB1E0
+
+Two instances, probably Witch and Griswold
+
+-------------------------------------------------
+
+Cast spells from non-staff items
+
+0041D5CA: (0001C9CA)	Auto-select from non-staff
+EB [0B]	jmp D7
+90 x (11)	nop x (11)
+
+The reason that spells on non-staff uniques didn't work is because 00688190 needs to be 17!
+
+Find when 47E2C4 is 42 (spell) and set it's magic code to 17.
+
+00422917, 42421B
+
+Uniques
+
+00422917 -> ?00422056 -> 0042182D
+
+Was:
+0042182D: (00020C2D)
+........
+
+Now:
+0042182B: (00020C2B)
+8988 306E6300	mov dword ptr [eax+00636E30], ecx
+E9 [xxxxxxxx]	jmp 00421EE9
+90 (nop) up to 00020C51
+
+00422056: (00021456)
+DWORD:	00447792
+
+00447792: (00046B92)
+8BC6			mov eax, esi
+8B4D 08		mov ecx, dword ptr [ebp+08]
+69C0 70010000	imul eax, 00000170
+8988 286E6300	mov dword ptr [eax+00636E28], ecx
+8988 2C6E6300	mov dword ptr [eax+00636E2C], ecx
+8B4D 0C		mov ecx, dword ptr [ebp+0C]
+
+C780 246E6300 17000000	mov dword ptr [eax+00636E24], 17
+
+E9 [xxxxxxxx]	jmp 0042182B
+
+--------------------------------------------------------
+
+004326CE:	CALL SET EDX TO EDX * [(9/8)^EAX]
+
+	INIT	FINAL
+EAX	SLVL	ZERO (OR, IF NEGATIVE, SAME)
+EDX	VAR	EDX * [(9/8)^EAX]
+
+004326CE:	(00031ACE)
+56				push esi
+85C0				test eax, eax
+7E [0A]			jle EXIT
+				LOOP:
+8BF2				mov esi, edx
+C1FE03			sar esi, 03
+03D6				add edx, esi
+48				dec eax
+7F [F6]			jg LOOP
+
+EXIT:
+5E				pop esi
+C3				ret
+
+--------------------------------------------------------
+
+Fast Movement version #2
+
+		     (000508DA)
+00	00451438	0044F159	Do nothing....	* can block
+01	00451441	0044F15C	PM_DoWalk
+02	0045144A	0044F2D6	PM_DoWalk2
+03	00451453	0044F42A	PM_DoWalk3
+04	0045145C	0044FD0D	PM_DoAttack		* can block
+05	00451465	0044FF2D	PM_DoRangeAttack
+06	0045146E	004500CB	PM_DoBlock
+07	00451480	00450288	PM_DoGotHit
+08	00451489	004503FE	PM_DoDeath
+09	00451477	00450148	PM_DoSpell
+0A	00451492	0044F159	Do nothing....
+
+How bizzare.  I got the address wrong for action #0A (it's ok now).  The only time it seems to be used (and it caused a crash, so you could tell) was when one particular player in a three player game used other people's town portal, and not every time he used other people's town portals.
+
+Was:
+00451431:
+jmp dword ptr [4*eax+004514DA]
+........
+
+Now:
+00451431:	(00050831)
+50			push eax
+83F8 03		cmp eax, 00000003
+7F [25]		jg NORMAL ACTION
+
+QUICKLING MOVE:	(17 bytes)
+8BCD			mov ecx, ebp
+69C9 D8540000	imul ecx, 000054D8
+8B81 98786800	mov eax, dword ptr [ecx+00687898]
+A8 04			test al, 04
+74 [05]		je SKIP NEXT LINE
+E8 [16000000]	call ACTION
+
+TOWN MOVE:		(0E bytes)
+803D 00C55B00 00	cmp byte ptr [005BC500], 00
+75 [05]		jne SKIP NEXT LINE
+E8 [08000000]	call ACTION
+
+NORMAL ACTION:	(08 bytes)
+E8 [03000000]	call ACTION
+5F			pop edi	(clear stack)
+EB [xx]		jmp 00451499
+
+ACTION:		(0E bytes)
+8B4424 04		mov eax, dword ptr [esp+04]
+8BCD			mov ecx, ebp
+FF1485 DA144500	call dword ptr [4*eax+004514DA]
+C3			ret
+
+=======================================================
+
+Base item info revealed when item held in cursor.
+
+0040538F: (0000478F) (up to, but not including 004053B0)
+50			push eax						Store EAX to prevent re-calculation
+8D88 68CA6800	lea ecx, dword ptr [eax+0068CA68]		Note, item is at 0068CA30.
+8D41 05		lea eax, dword ptr [ecx+05]
+3919			cmp dword ptr [ecx], ebx
+74 [03]		je SKIP NEXT LINE
+83C0 40		add eax, 40
+50			push eax
+68 489C4B00		push 004B9C48
+E8 [xxxxxxxx]	call 0046B6B0
+59			pop ecx
+59			pop ecx
+58			pop eax
+50			push eax
+83B8 0CCB6800 18	cmp dword ptr [eax+0068CB0C], 18
+E8 [xxxxxxxx]	call ?
+58			pop eax
+90			nop
+
+
+004B370E: (000B150E at 00402200 offset)
+74 [33]		je BOOK
+8B80 98CB6800	mov eax, dword ptr [eax+0068CB98]		base item #
+B9 53374B00		mov ecx, 004B3753
+			LOOP:
+3A01			cmp al, byte ptr [ecx]
+7C [23]		jl EXIT
+74 [05]		je FOUND ENTRY
+83C1 05		add ecx, 05
+EB [F5]		jmp LOOP
+
+FOUND ENTRY:
+41			inc ecx
+FF31			push dword ptr [ecx]
+
+DESCRIPTION LINE:
+68 189B4B00		push 004B9B18	(X:68 489C4B00	push 004B9C48)
+E8 [0D7DFBFF]	call 0046B440	(X:E8 [7D7FFBFF]	call 0046B6B0)
+6A 01			push 00000001
+B9 189B4B00		mov ecx, 004B9B18
+5A			pop edx
+E8 [xxxxxxxx]	call 004041D9
+59			pop ecx
+59			pop ecx
+
+EXIT:
+C3			ret
+
+BOOK:
+80B8 91CB6800 00	cmp byte ptr [eax+0068CB91], 00
+75 [F6]		jne EXIT
+68 70364B00		push 004B3670				"No New Knowledge"
+EB [D6]		jmp DESCRIPTION LINE
+
+000B1553			Description
+1F,20,21	DA364B00	<All Circlets>	Increases Stat Modifiers
+*27		2E354B00	Shaman Staff	Reduces cost of magic spells
+29		F3364B00	Crossbow		Slow Attack, double Damage
+2A		D7434900	Iron Hatchet	Double Damage vs. Demons
+2F		EC424900	Wizard's Robe	Fast hit recovery (% mana added to armor)
+41		9A374B00	Iron Plate		Doubles all resists
+74		D7434900	Iron Sword		Double Damage vs. Demons
+*77		67354B00	Lightning Sword	Reduces cost of lightning spells (Lightning Damage / Spell Charges: Flamestrike)
+*7B		4B354B00	Fire Sword		Reduces cost of fire spells (Fire Damage / Spell Charges: Lightning Bolt)
+7C		2C434900	Katana		Quick Attack
+*93		2E354B00	Magi Staff		Reduces cost of magic spells
+*95		2E354B00	Magus Staff		Reduces cost of magic spells
+FF				TERMINATION
+
+--------------------------------------------------------
+
+Monster's Minimum chance to hit
+
+Was:
+dlvl 13-		10% chance to hit minimum
+(0002A0E8)	0A
+(0002A0EC)	0A
+dlvl 14		20% chance to hit minimum
+(0002A0F9)	14
+(0002A0FD)	14
+dlvl 15		25% chance to hit minimum
+(0002A105)	19
+(0002A109)	19
+dlvl 16		30% chance to hit minimum
+(0002A111)	1E
+(0002A115)	1E
+
+Now:
+0042ACE8: (0002A0E8)	dlvl 1-4	15% chance to hit minimum
+(0002A0E8)	0F
+(0002A0EC)	0F
+
+0042ACF3: (0002A0F3)	dlvl 5-8	20% chance to hit minimum
+3C 05		cmp al, 05
+7C [08]	jl SKIP
+
+0042ACFF: (0002A0FF)	dlvl 9-12	25% chance to hit minimum
+3C 09		cmp al, 09
+7C [08]	jl SKIP
+
+0042AD0B: (0002A10B)	dlvl 13-16	30% chance to hit minimum
+3C 0D		cmp al, 0D
+7C [08]	jl SKIP
+
+--------------------------------------------------------
+
+Iron plate doubles resists
+
+Was:
+0042009A: (0001F49A)
+6A 4B			push 0000004B
+5A			pop edx
+3BC2			cmp eax, edx
+
+Now:
+E9 [xxxxxxxx]	jmp ?
+
+?: (00046C3A)
+80BE FC846800 41	cmp byte ptr [esi+006884FC], 41	body armor base item & iron plate
+75 [1B]		jne EXIT
+80BE 9C836800 09	cmp byte ptr [esi+0068839C], 09	body armor item type & plate (i.e. not empty slot)
+75 [12]		jne EXIT
+80BE F8846800 00	cmp byte ptr [esi+006884F8], 00	body armor req. met & no
+74 [09]		je EXIT
+
+C1E0 01		shl eax, 01
+C1E3 01		shl ebx, 01
+C1E1 01		shl ecx, 01
+
+EXIT:
+6A 4B			push 0000004B
+5A			pop edx
+3BC2			cmp eax, edx
+E9 [xxxxxxxx]	jmp 0042009F
+
+--------------------------------------------------------
+
+Armor class added to life
+
+Was:
+00421E57..00421E8E
+This code checked for the character's armor class!  This was being done during 'item creation'.
+
+Now:
+00421E57: (00021257)
+This code will use the item's armor class for it's +life value.
+8BC6			mov eax, esi
+69C0 70010000	imul eax, 00000170
+8B88 1C6E6300	mov ecx, dword ptr [eax+00636E1C]
+50			push eax
+8B80 446E6300	mov eax, dword ptr [eax+00636E44]
+6A 64			push 00000064
+5F			pop edi
+03C7			add eax, edi
+0FAFC1		imul eax, ecx
+C1E0 06		shl eax, 06
+99			cdq
+F7FF			idiv edi
+8BC8			mov ecx, eax
+58			pop eax
+0188 686E6300	add dword ptr [eax+00636E68], ecx
+EB [xx]		jmp 00421EE9
+
+--------------------------------------------------------
+
+Casting cost modifiers after it is set to min:
+
+00458CF9: (000580F9)
+E9 [xxxxxxxx]	jmp ?
+
+004B3484: (000B1284 at a 402200 offset)
+			SORCERER'S CAP:	Free mana shield
+80B8 B47B6800 5D	cmp byte ptr [eax+00687BB4], 5D
+75 [xx]		jne PRIMARY HAND ITEMS
+83FF 0B		cmp edi, 0000000B
+75 [xx]		jne PRIMARY HAND ITEMS
+80B8 FC7A6800 FF	cmp byte ptr [eax+00687AFC], FF
+74 [xx]		je PRIMARY HAND ITEMS
+80B8 587C6800 00	cmp byte ptr [eax+00687C58], 00
+74 [xx]		je PRIMARY HAND ITEMS
+33C9			xor ecx, ecx
+
+			PRIMARY HAND ITEMS
+80B8 FC7A6800 FF	cmp byte ptr [eax+006880BC], FF
+74 [xx]		je EXIT
+80B8 587C6800 00	cmp byte ptr [eax+00688218], 00
+74 [xx]		je EXIT
+
+			LIGHTNING SWORD:
+80B8 B47B6800 77	cmp byte ptr [eax+0068821C], 77
+75 [xx]		jne FIRE SWORD
+80BD 52344A00 01	cmp byte ptr [ebp+004A3452], 01
+74 [xx]		je REDUCE SPELL COST
+
+			FIRE SWORD:
+80B8 B47B6800 7B	cmp byte ptr [eax+0068821C], 7B
+75 [xx]		jne MAGI/MAGUS/SHAMAN STAVES
+80BD 52344A00 00	cmp byte ptr [ebp+004A3452], 00
+74 [xx]		je REDUCE SPELL COST
+
+			MAGI/MAGUS/SHAMAN STAVES:
+80BD 52344A00 02	cmp byte ptr [ebp+004A3452], 02
+75 [xx]		jne EXIT
+80B8 B47B6800 27	cmp byte ptr [eax+0068821C], 27
+74 [xx]		je REDUCE SPELL COST
+80B8 B47B6800 93	cmp byte ptr [eax+0068821C], 93
+74 [xx]		je REDUCE SPELL COST
+80B8 B47B6800 95	cmp byte ptr [eax+0068821C], 95
+75 [xx]		jne EXIT
+
+			REDUCE SPELL COST:
+8BD1			mov edx, ecx
+C1FA 04		sar edx, 04		6.25%
+2BCA			sub ecx, edx
+
+EXIT:
+E9 [xxxxxxxx]	jmp 00458D09
+
+--------------------------------------------------------
+
+Change full mana potion:
+
+Was:	30h bytes
+0042487C:	Potion of Full Mana
+imul esi, 000054D8
+test byte ptr [esi+0068CBCB], 08
+jne 00424D4C
+mov eax, dword ptr [esi+00687928]
+mov dword ptr [esi+00687924], eax
+mov eax, dword ptr [esi+00687920]
+mov dword ptr [esi+0068791C], eax
+jmp 00424A28
+	available:	edi,esi,ebx
+
+Now:
+0042487C: (00023C7C)	Potion of Full Mana
+69F6 D8540000	imul esi, 000054D8
+F686 CBCB6800 08	test byte ptr [esi+0068CBCB], 08
+75 [EC]		jne 00424877 (0F85 BD040000	jne 00424D4C)
+81C6 1C796800	add esi, 0068791C
+8B46 08		mov eax, dword ptr [esi+08]
+85C0			test eax, eax
+7C [02]		jl SKIP NEXT LINE
+33C0			xor eax, eax
+50			push eax
+0346 0C		add eax, dword ptr [esi+0C]
+8946 08		mov dword ptr [esi+08], eax
+58			pop eax
+0346 04		add eax, dword ptr [esi+04]
+8906			mov dword ptr [esi], eax
+E9 [xxxxxxxx]	jmp 00424A28
+
+--------------------------------------------------------
+
+Change witch's recharge cost to charge more for 'max mana' spells
+
+Was:
+........
+0045ACD7:	5E bytes
+mov eax, dword ptr [eax+004A3484]
+	5 x spell multiplier (used to calc. staff cost)
+push esi
+push edi
+mov dword ptr [ebp-04], ecx
+push 0000005C				# of dword in item
+lea edi, dword ptr [ebx+006A1D20]	item list
+pop ecx
+lea esi, dword ptr [ebp+08]		item on stack
+repz
+movsd
+add dword ptr [ebx+006A1DE4], eax	Inc Unided cost by
+	5 x spell multiplier (used to calc. staff cost)
+mov ecx, dword ptr [ebx+006A1E08]	Max charges
+mov eax, ecx				Max charges
+mov esi, dword ptr [ebx+006A1DE4]	Unided cost
+sub eax, dword ptr [ebx+006A1E04]	Max-Current
+push 00000064
+imul eax, 00000064			100x Spent charges
+cdq
+idiv ecx					100x Spent/Max
+pop ecx					100
+pop edi
+imul eax, esi				
+				(100 x Spent) Div Max x Unided
+cdq
+idiv ecx
+		((100 x Spent) Div Max x 'Unided') Div 100
+mov ecx, dword ptr [006A043C]		item #
+pop esi
+sar eax, 1
+	((100 x Spent) Div Max x 'Unided') Div 100 Div 2
+inc dword ptr [006A043C]		Next item #
+mov dword ptr [ebx+006A1DE4], eax	Unided cost
+mov dword ptr [ebx+006A1DE8], eax	Ided cost
+........0045AD35:........
+
+Now:
+0045ACD7: (0005A0D7)
+
+81C3 941D6A00	add ebx, 006A1D94
+56			push esi
+57			push edi
+894D FC		mov dword ptr [ebp-04], ecx
+6A 5C			push 0000005C				# of dword in item
+8D7B 8C		lea edi, dword ptr [ebx-74]	item list
+59			pop ecx
+8D75 08		lea esi, dword ptr [ebp+08]		item on stack
+F3			repz
+A5			movsd
+0FB688 51344A00	movzx ecx, byte ptr [eax+004A3451]	- 'min cost' (heh)
+51			push ecx
+8B80 84344A00	mov eax, dword ptr [eax+004A3484]	5 x spell multiplier (used to calc. staff cost)
+0143 50		add dword ptr [ebx+50], eax		Inc Unided cost by 5 x spell multiplier (used to calc. staff cost)
+8B4B 74		mov ecx, dword ptr [ebx+74]		Max charges
+8BF1			mov esi, ecx				Max charges
+8B43 50		mov eax, dword ptr [ebx+50]		Unided cost
+2B73 70		sub esi, dword ptr [ebx+70]		Max-Current
+99			cdq
+F7F9			idiv ecx					Unided/Max
+D1F8			sar eax, 1					(Unided)/Max Div 2
+59			pop ecx					POP min cost per charge
+3BC1			cmp eax, ecx
+7F [02]		jg SKIP NEXT LINE
+8BC1			mov eax, ecx
+0FAFC6		imul eax, esi
+5F			pop edi
+8B0D 3C046A00	mov ecx, dword ptr [006A043C]		item #
+5E			pop esi
+FF05 3C046A00	inc dword ptr [006A043C]		Next item #
+8943 50		mov dword ptr [ebx+50], eax	Unided cost
+8943 54		mov dword ptr [ebx+54], eax	Ided cost
+........0045AD35:........
+</XMP></BODY></HTML>
+
+Change Apocalypse (Hellfire)
+
+00434F5B - 434F7E
+
+Was:
+6A06			push 00000006
+B143			mov cl, 43
+5A			pop edx
+E8F54FFEFF		call 00419F5A
+40			inc eax
+0186D47A6900	add dword ptr [esi+00697AD4], eax
+A114AE6E00		mov eax, dword ptr [006EAE14]
+43			inc ebx
+0FBE8438B8010000	movsx eax, byte ptr [eax+edi+000001B8]
+3BD8			cmp ebx, eax
+7CDD			jl 00434F5B
+
+Now:
+
+B143			mov cl, 43
+0FBE9C38B8010000	movsx ebx, byte ptr [eax+edi+000001B8]
+C1E302		shl ebx, 02
+8B8407AC010000	mov eax, dword ptr [edi+eax+000001AC]
+C1E906		sar eax, 06
+03D8			add ebx, eax
+019ED47A6900	add dword ptr [esi+00697AD4], ebx
+90			nop
+90			nop
+90			nop
+90			nop

@@ -1,0 +1,81 @@
+Nice idea more cows but it raises some unforseen problems.
+- A total of 7 is the maximum, 1 more and the game crashes in some windows module. Looks like some memory overflow.
+- With 7 cows the entries to the dungeon are no longer active. Looks like there is a maximum of active/highlightable spots in town (people or entrances)
+But luckily a total of 6 cows is possible
+
+Original code
+
+Location datatable
+:004761CE 8B83F8B14C00            mov eax, dword ptr [ebx+004CB1F8]
+:004761D4 8BBBE8B14C00            mov edi, dword ptr [ebx+004CB1E8]
+:004761DA 8BAB08B24C00            mov ebp, dword ptr [ebx+004CB208]
+----------------------------------------------------------------------
+Each cow has the same name
+:0046241D 8B148538C06A00          mov edx, dword ptr [4*eax+006AC038]
+:00462424 E8B7F8FFFF              call 00461CE0
+:00462429 8B3560BF6A00            mov esi, dword ptr [006ABF60]		Is made more efficient (see below)
+:0046242F 32C9                    xor cl, cl
+:00462431 6A0B                    push 0000000B
+:00462433 69F6E8000000            imul esi, 000000E8
+:00462439 5A                      pop edx
+:0046243A E83858FBFF              call 00417C77
+:0046243F 40                      inc eax
+:00462440 8986ACBF6A00            mov dword ptr [esi+006ABFAC], eax
+:00462446 8D8618C06A00            lea eax, dword ptr [esi+006AC018]
+
+* Possible StringData Ref from Data Obj ->"Cow"
+                                  |
+:0046244C 68DC414B00              push 004B41DC
+:00462451 50                      push eax
+---------------------------------------------------------------------
+number of iterations (3x)
+:004762F3 83FB0C                  cmp ebx, 0000000C
+---------------------------------------------------------------------
+
+Modified
+
+New location datatable (over old flipanimation table)
+:004761CE 8B83C0574A00            mov eax, dword ptr [ebx+004A57C0]
+:004761D4 8BBBA0574A00            mov edi, dword ptr [ebx+004A57A0]
+:004761DA 8BABE0574A00            mov ebp, dword ptr [ebx+004A57E0]
+---------------------------------------------------------------------
+Enabling names for the cows (mostly moving code for making room)
+:00476239 8B1485D8F26F00          mov edx, dword ptr [4*eax+006FF2D8]
+:00476240 8BF1                    mov esi, ecx				Now don more efficient
+:00476242 E8F9F8FFFF              call 00475B40
+:00476247 32C9                    xor cl, cl
+:00476249 6A0B                    push 0000000B
+:0047624B 5A                      pop edx
+:0047624C C1E608                  shl esi, 08
+:0047624F E8063DFAFF              call 00419F5A
+:00476254 40                      inc eax
+:00476255 898634F26F00            mov dword ptr [esi+006FF234], eax
+:0047625B 8D86B8F26F00            lea eax, dword ptr [esi+006FF2B8]
+:00476261 90                      nop
+:00476262 90                      nop
+:00476263 90                      nop
+:00476264 FFB300584A00            push dword ptr [ebx+004A5800]		Name pointer
+:0047626A 50                      push eax
+---------------------------------------------------------------------
+
+number of iterations (6x)
+:004762F3 83FB18                  cmp ebx, 00000018
+---------------------------------------------------------------------
+New table at A41A0
+3A000000380000003B0000003F000000	X coordinaat
+3B0000003E0000003F00000040000000
+100000000E0000001400000012000000	Y coordinaat
+0C000000150000000E00000018000000
+01000000030000000400000006000000	Image in cel
+00000000050000000700000002000000
+6054490068544900705449007C544900	Name pointers
+845449008D5449000000000000000000
+
+Names located over unused textstrings barbariantest etc.
+Some of them are good old dutch cownames :)
+
+42657274610000004461697379000000	Berta...Daisy...
+4275747465726375700000004572696B	Buttercup...Erik
+610000004265737369650000004B6C61	a...Bessie...Kla
+7A696E6100000000			zina....
+

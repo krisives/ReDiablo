@@ -1,0 +1,221 @@
+These modifications are applied after those from SpellMissileChanges.
+
+
+Name change ("Chain Lightning" -> "Lightning Blast"):
+
+000B6CE4 4C69 6768 746E 696E 6720 426C 6173 7400 Lightning Blast.
+
+
+Modifying LightningBlast Spelleffect to use update from HolyBolt:
+
+000A6E60 969E 4300                               ..C.
+
+
+Adjusting HolyBolt update to support new effect:
+
+File Offset 000392A8
+
+:00439EA8 80BE907A69001C          cmp byte ptr [esi+00697A90], 1C
+wordt
+:00439EA8 E89B0D0400              call 0047AC48
+:00439EAD 9090                    2*nop
+
+File Offset 0007A048
+
+:0047AC48 9090909090909090        8*nop
+wordt
+:0047AC48 E863E8F8FF              call 004094B0
+:0047AC4D EB1A                    jmp 0047AC69
+:0047AC4F 90                      nop
+
+File Offset 0003933B
+
+:00439F3B E8605BFFFF              call 0042FAA0
+wordt
+:00439F3B E8FE950100              call 0045353E
+:00439F40 
+
+Using space from Fountain of Tears:
+
+File Offset 0005293E
+
+:0045353E 11*90                   11*nop
+wordt
+:0045353E E86D5FFBFF              call 004094B0
+:00453543 E858C5FDFF              call 0042FAA0
+:00453548 C3                      ret
+
+Using space from disabled Command file:
+
+File Offset 000088B0
+
+:004094B0 90                      nop
+:004094B1 90                      nop
+:004094B2 90                      nop
+:004094B3 83C40C                  add esp, 0000000C
+:004094B6 85C0                    test eax, eax
+:004094B8 EB0F                    jmp 004094C9
+:004094BA C605D453570001          mov byte ptr [005753D4], 01
+:004094C1 8D45D4                  lea eax, dword ptr [ebp-2C]
+:004094C4 E90E010000              jmp 004095D7
+:004094C9 BE90544900              mov esi, 00495490
+wordt
+:004094B0 50                      push eax
+:004094B1 8B86587A6900            mov eax, dword ptr [esi+00697A58]
+:004094B7 83E835                  sub eax, 00000035		HolyBolt
+:004094BA 7405                    je 004094C1
+:004094BC 83E82F                  sub eax, 0000002F		LightningBlast
+:004094BF 7404                    je 004094C5
+:004094C1 6A1C                    push 0000001C			other Spelleffects
+:004094C3 EB02                    jmp 004094C7
+:004094C5 6A3A                    push 0000003A
+:004094C7 5A                      pop edx
+:004094C8 58                      pop eax
+:004094C9 C3                      ret
+:004094CA 90909090                4*nop
+
+
+Lightning Blast Initial routine
+
+Damage = (Rnd[10]+Rnd[2*CLVL]+2+CLVL)*(9/8)^SLVL
+
+Speed  = 6+2*SLVL, Max. 26
+
+
+Modifying LightningBlast Spelleffect to use new Initial routine:
+
+000A6E5C CA94 4000                               ..@.
+
+
+Using free space from disabled Command file:
+
+File Offset 000088CA
+
+:004094CA 90                      nop
+:004094CB 90                      nop
+:004094CC 90                      nop
+:004094CD 90                      nop
+:004094CE 8D7DE0                  lea edi, dword ptr [ebp-20]
+:........
+wordt
+:004094CA 55                      push ebp
+:004094CB 8BEC                    mov ebp, esp
+:004094CD 51                      push ecx
+:004094CE 53                      push ebx
+:004094CF 56                      push esi
+:004094D0 8B750C                  mov esi, dword ptr [ebp+0C]
+:004094D3 8BDA                    mov ebx, edx
+:004094D5 57                      push edi
+:004094D6 8B7D08                  mov edi, dword ptr [ebp+08]
+:004094D9 3BDE                    cmp ebx, esi
+:004094DB 894DFC                  mov dword ptr [ebp-04], ecx
+:004094DE 751F                    jne 004094FF
+:004094E0 8B5510                  mov edx, dword ptr [ebp+10]
+:004094E3 3BFA                    cmp edi, edx
+:004094E5 7518                    jne 004094FF
+:004094E7 8B4514                  mov eax, dword ptr [ebp+14]
+:004094EA C1E002                  shl eax, 02
+:004094ED 03B088BE4A00            add esi, dword ptr [eax+004ABE88]
+:004094F3 0390A8BE4A00            add edx, dword ptr [eax+004ABEA8]
+:004094F9 89750C                  mov dword ptr [ebp+0C], esi
+:004094FC 895510                  mov dword ptr [ebp+10], edx
+:004094FF 8BF9                    mov edi, ecx
+:00409501 69FFB0000000            imul edi, 000000B0
+:00409507 8B451C                  mov eax, dword ptr [ebp+1C]
+:0040950A 69C0C8550000            imul eax, 000055C8
+:00409510 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00409516 0FBE8408B8010000        movsx eax, byte ptr [eax+ecx+000001B8]
+:0040951E 50                      push eax
+:00409537 D1E0                    shl eax, 1
+:0040951F 8BD0                    mov edx, eax
+:00409521 B13C                    mov cl, 3C
+:00409523 E8300A0100              call 00419F5A
+:00409528 8BF0                    mov esi, eax
+:0040952A 6A0A                    push 0000000A
+:0040952C 5A                      pop edx
+:0040952D B13C                    mov cl, 3C
+:0040952F E8240A0100              call 00419F5A
+:00409534 03F0                    add esi, eax
+:00409536 58                      pop eax
+:00409539 8D440602                lea eax, dword ptr [esi+eax+02]
+:0040953D 8987D47A6900            mov dword ptr [edi+00697AD4], eax
+:00409543 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00409549 85C0                    test eax, eax
+:0040954B 7E1A                    jle 00409567
+:0040954D 8BB7D47A6900            mov esi, dword ptr [edi+00697AD4]
+:00409553 8BCE                    mov ecx, esi
+:00409555 8BD1                    mov edx, ecx
+:00409557 C1FA03                  sar edx, 03
+:0040955A 03D1                    add edx, ecx
+:0040955C 48                      dec eax
+:0040955D 8BF2                    mov esi, edx
+:0040955F 75F2                    jne 00409553
+:00409561 89B7D47A6900            mov dword ptr [edi+00697AD4], esi
+:00409567 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:0040956D 8D740006                lea esi, dword ptr [eax+eax+06]
+:00409571 83FE1A                  cmp esi, 0000001A
+:00409574 7E03                    jle 00409579
+:00409576 6A1A                    push 0000001A
+:00409578 5E                      pop esi
+:00409579 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:0040957C 6A0C                    push 0000000C
+:0040957E 5A                      pop edx
+:0040957F E904890200              jmp 00431E88		jmp to part of FireBall
+:00409584 90                      nop
+:00409585 90                      nop
+:00409586 90                      nop
+:00409587 90                      nop
+:00409588 90                      nop
+:00409589 90                      nop
+:0040958A 90                      nop
+:0040958B 90                      nop
+
+
+SpellBook Damage:
+
+Damage = (Rnd[10]+Rnd[2*CLVL]+2+CLVL)*(9/8)^SLVL
+
+File Offset 0002DF0E
+
+:0042EB0E C70204000000            mov dword ptr [edx], 00000004
+:0042EB14 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042EB19 69C0C8550000            imul eax, 000055C8
+:0042EB1F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042EB25 0FBE8408B8010000        movsx eax, byte ptr [eax+ecx+000001B8]
+:0042EB2D 8D440004                lea eax, dword ptr [eax+eax+04]
+:0042EB31 E919020000              jmp 0042ED4F
+wordt
+:0042EB0E 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:0042EB15 50                      push eax
+:0042EB16 40                      inc eax
+:0042EB17 40                      inc eax
+:0042EB18 8902                    mov dword ptr [edx], eax
+:0042EB1A 85F6                    test esi, esi
+:0042EB1C 7E10                    jle 0042EB2E
+:0042EB1E 8BCE                    mov ecx, esi
+:0042EB20 8B02                    mov eax, dword ptr [edx]
+:0042EB22 8BF8                    mov edi, eax
+:0042EB24 C1FF03                  sar edi, 03
+:0042EB27 03F8                    add edi, eax
+:0042EB29 49                      dec ecx
+:0042EB2A 893A                    mov dword ptr [edx], edi
+:0042EB2C 75F2                    jne 00??????
+:0042EB2E 58                      pop eax
+:0042EB2F 8BC8                    mov ecx, eax
+:0042EB31 E969740000              jmp 00435F9F
+:0042EB36 
+
+Using free space from FireArrow:
+
+File Offset 0003539F
+
+:00435F9F 90                      nop
+:00435FA0 E8B53FFEFF              call 00419F5A
+:00435FA5 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+wordt
+:00435F9F D1E1                    shl ecx, 1
+:00435FA1 8D4C080A                lea ecx, dword ptr [eax+ecx+0A]
+:00435FA5 85F6                    test esi, esi
+:00435FA7 E9E28AFFFF              jmp 0042EA8E
+:00435FAC 
+

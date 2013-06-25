@@ -1,0 +1,53 @@
+()View Diablo stats as if a boss
+
+:0040589E 80B844DD690000          cmp byte ptr [eax+0069DD44], 00
+wordt
+:0040589E E800A10200              call 0042F9A3			call CHECK_BOSS
+:004058A3 85C9                    test ecx, ecx
+
+Routine CHECK_BOSS op (nu) ongebruikte code voor 'auw' bij magic attack met resistance.
+Nog veel ruimte over daar in 2.4u.
+
+:0042F9A3 90                      nop
+:0042F9A4 84C0                    test al, al
+:0042F9A6 743B                    je 0042F9E3
+:0042F9A8 3C01                    cmp al, 01
+:0042F9AA 7426                    je 0042F9D2
+:0042F9AC 3C02                    cmp al, 02
+:0042F9AE 750D                    jne 0042F9BD
+:0042F9B0 FF763C                  push [esi+3C]
+:0042F9B3 8B5638                  mov edx, dword ptr [esi+38]
+:0042F9B6 B94A020000              mov ecx, 0000024A
+:0042F9BB EB31                    jmp 0042F9EE
+wordt -> werkt niet
+:0042F9A3 33C9                    xor ecx, ecx			start CHECK_BOSS
+:0042F9A5 80B844DD690000          cmp byte ptr [eax+0069DD44], 00
+:0042F9AC 750D                    jne 0042F9BB			jmp if boss
+:0042F9AE 81B864DD69006E000000    cmp dword ptr [eax+0069DD64], 0000006E
+:0042F9B8 7401                    je 0042F9BB			jmp if Diablo
+:0042F9BA C3                      ret
+:0042F9BB 41                      inc ecx
+:0042F9BC C3                      ret
+Alternatief: -> werkt
+* Referenced by a CALL at Address:
+|:0040589E   
+|
+:0042F9A3 8B8864DD6900            mov ecx, dword ptr [eax+0069DD64]
+:0042F9A9 83396E                  cmp dword ptr [ecx], 0000006E
+:0042F9AC 740C                    je 0042F9BA
+:0042F9AE 80B844DD690000          cmp byte ptr [eax+0069DD44], 00
+:0042F9B5 7503                    jne 0042F9BA
+:0042F9B7 33C9                    xor ecx, ecx
+:0042F9B9 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042F9AC(C), :0042F9B5(C)
+|
+:0042F9BA 6A01                    push 00000001
+:0042F9BC 59                      pop ecx
+:0042F9BD C3                      ret
+
+
+:0042F9BE 90                      nop

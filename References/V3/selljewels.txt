@@ -1,0 +1,9 @@
+Wirt uses the same base item selection routine that Gris do. So if you make Wirt sell jewlery in MP, so will Gris do. If so change
+
+424fcc 74 eb
+
+and they will sell jewlery in MP 
+
+For hellfire its hex address 029718 change it from 74 the EB
+
+

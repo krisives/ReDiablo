@@ -1,0 +1,208 @@
+()Spiritual shrine - Gives (more) gold
+
+:0045270E 0FB605D4B16000          movzx eax, byte ptr [0060B1D4]
+:00452715 B1A0                    mov cl, A0
+:00452717 8D1480                  lea edx, dword ptr [eax+4*eax]
+:0045271A D1E2                    shl edx, 1
+:0045271C E83978FCFF              call 00419F5A
+:00452721 0FB60DD4B16000          movzx ecx, byte ptr [0060B1D4]
+:00452728 6A5D                    push 0000005D
+:0045272A BEA0C66F00              mov esi, 006FC6A0
+:0045272F 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:00452732 03C1                    add eax, ecx
+:00452734 8945F0                  mov dword ptr [ebp-10], eax
+
+wordt
+:0045270E E8????????              call 00488BB4
+:00452713 52                      push edx
+:00452714 90                      nop
+en
+:00452717 8D1492                  lea edx, dword ptr [edx+4*edx]
+en
+:00452721 59		          pop ecx
+:00452722 909090909090		  6*nop
+
+
+
+()Enchanted shrine - Chance for spell increase : 100% -> 50% 
+
+:00451EDF 7D09                    jge 00451EEB
+:00451EE1 FEC0                    inc al
+:00451EE3 8801                    mov byte ptr [ecx], al
+:00451EE5 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+wordt
+:00451EDF 90                      nop
+:00451EE0 7D09                    jge 00451EEB
+:00451EE2 90                      nop
+:00451EE3 E8510F0000              call 00452E39			call CHANCE
+:00451EE8 90                      nop
+:00451EE9 90                      nop
+:00451EEA 90                      nop
+
+CHANCE
+
+Nog een gaatje tussen de shrines?
+
+Deze code had een crash tot gevolg:
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451EE1(U)
+|
+:00452E39 E803B5FEFF              call 0043E341			call RND100
+:00452E3E 83F832                  cmp eax, 00000032
+:00452E41 7C0A                    jl 00452E4D
+:00452E43 FEC0                    inc al
+:00452E45 8801                    mov byte ptr [ecx], al
+:00452E47 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452E41(C)
+|
+:00452E4D E994F0FFFF              jmp 00451EE6
+:00452E52 90                      nop
+
+Crash vrije code:
+
+* Referenced by a CALL at Address:
+|:00451EE3   
+|
+:00452E39 51                      push ecx
+:00452E3A E802B5FEFF              call 0043E341			call RND100
+:00452E3F 83F832                  cmp eax, 00000032
+:00452E42 7C13                    jl 00452E57
+:00452E44 8A843BC1000000          mov al, byte ptr [ebx+edi+000000C1]
+:00452E4B FEC0                    inc al
+:00452E4D 59                      pop ecx
+:00452E4E 8801                    mov byte ptr [ecx], al
+:00452E50 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00452E56 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452E42(C)
+|
+:00452E57 59                      pop ecx
+:00452E58 C3                      ret
+
+
+Enchanted shrine - Full code:
+
+:00451E2C 85C0                    test eax, eax
+:00451E2E 0F8538120000            jne 0045306C
+:00451E34 8B45FC                  mov eax, dword ptr [ebp-04]
+:00451E37 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00451E3D 0F8529120000            jne 0045306C
+:00451E43 83650800                and dword ptr [ebp+08], 00000000
+:00451E47 8365EC00                and dword ptr [ebp-14], 00000000
+:00451E4B 8BF0                    mov esi, eax
+:00451E4D 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00451E53 69F6C8550000            imul esi, 000055C8
+:00451E59 C745E801000000          mov [ebp-18], 00000001
+:00451E60 C745F834000000          mov [ebp-08], 00000034
+:00451E67 8BBC3308010000          mov edi, dword ptr [ebx+esi+00000108]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451E9B(C)
+|
+:00451E6E 8B45EC                  mov eax, dword ptr [ebp-14]
+:00451E71 8B4DE8                  mov ecx, dword ptr [ebp-18]
+:00451E74 2384330C010000          and eax, dword ptr [ebx+esi+0000010C]
+:00451E7B 23CF                    and ecx, edi
+:00451E7D 0BC8                    or ecx, eax
+:00451E7F 7403                    je 00451E84
+:00451E81 FF4508                  inc [ebp+08]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451E7F(C)
+|
+:00451E84 8B45E8                  mov eax, dword ptr [ebp-18]
+:00451E87 8B55EC                  mov edx, dword ptr [ebp-14]
+:00451E8A 6A01                    push 00000001
+:00451E8C 59                      pop ecx
+:00451E8D E84E860200              call 0047A4E0
+:00451E92 FF4DF8                  dec [ebp-08]
+:00451E95 8945E8                  mov dword ptr [ebp-18], eax
+:00451E98 8955EC                  mov dword ptr [ebp-14], edx
+:00451E9B 75D1                    jne 00451E6E
+:00451E9D 6A01                    push 00000001
+:00451E9F 58                      pop eax
+:00451EA0 394508                  cmp dword ptr [ebp+08], eax
+:00451EA3 0F8EA7000000            jle 00451F50
+:00451EA9 8945E8                  mov dword ptr [ebp-18], eax
+:00451EAC 33D2                    xor edx, edx
+:00451EAE 8D7E01                  lea edi, dword ptr [esi+01]
+:00451EB1 C7450834000000          mov [ebp+08], 00000034
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451EFD(C)
+|
+:00451EB8 8B8C3308010000          mov ecx, dword ptr [ebx+esi+00000108]
+:00451EBF 8B84330C010000          mov eax, dword ptr [ebx+esi+0000010C]
+:00451EC6 234DE8                  and ecx, dword ptr [ebp-18]
+:00451EC9 23C2                    and eax, edx
+:00451ECB 0BC8                    or ecx, eax
+:00451ECD 741C                    je 00451EEB
+:00451ECF 8A843BC1000000          mov al, byte ptr [ebx+edi+000000C1]
+:00451ED6 8D8C3BC1000000          lea ecx, dword ptr [ebx+edi+000000C1]
+:00451EDD 3C0F                    cmp al, 0F
+:00451EDF 7D0A                    jge 00451EEB
+:00451EE1 FEC0                    inc al
+:00451EE3 8801                    mov byte ptr [ecx], al
+:00451EE5 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00451ECD(C), :00451EDF(C)
+|
+:00451EEB 8B45E8                  mov eax, dword ptr [ebp-18]
+:00451EEE 6A01                    push 00000001
+:00451EF0 59                      pop ecx
+:00451EF1 E8EA850200              call 0047A4E0
+:00451EF6 47                      inc edi
+:00451EF7 FF4D08                  dec [ebp+08]
+:00451EFA 8945E8                  mov dword ptr [ebp-18], eax
+:00451EFD 75B9                    jne 00451EB8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451F31(C)
+|
+:00451EFF 6A34                    push 00000034
+:00451F01 32C9                    xor cl, cl
+:00451F03 5A                      pop edx
+:00451F04 E85180FCFF              call 00419F5A
+:00451F09 8BF8                    mov edi, eax
+:00451F0B 33D2                    xor edx, edx
+:00451F0D 6A01                    push 00000001
+:00451F0F 8BCF                    mov ecx, edi
+:00451F11 58                      pop eax
+:00451F12 E8C9850200              call 0047A4E0
+:00451F17 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00451F1D 8B8C3308010000          mov ecx, dword ptr [ebx+esi+00000108]
+:00451F24 23C8                    and ecx, eax
+:00451F26 8B84330C010000          mov eax, dword ptr [ebx+esi+0000010C]
+:00451F2D 23C2                    and eax, edx
+:00451F2F 0BC8                    or ecx, eax
+:00451F31 74CC                    je 00451EFF
+:00451F33 03FB                    add edi, ebx
+:00451F35 8A8437C2000000          mov al, byte ptr [edi+esi+000000C2]
+:00451F3C 8DB437C2000000          lea esi, dword ptr [edi+esi+000000C2]
+:00451F43 3C02                    cmp al, 02
+:00451F45 7C06                    jl 00451F4D
+:00451F47 2C02                    sub al, 02
+:00451F49 8806                    mov byte ptr [esi], al
+:00451F4B EB03                    jmp 00451F50
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00451F45(C)
+|
+:00451F4D 802600                  and byte ptr [esi], 00
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00451EA3(C), :00451F4B(U)
+|
+:00451F50 B113                    mov cl, 13
+:00451F52 E90A0C0000              jmp 00452B61
+
+
+
+
+

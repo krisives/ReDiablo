@@ -1,0 +1,175 @@
+Changes to Shops : Limited Full potions and new Vault Key
+
+
+Shopping:
+
+:0046C543 E803EEFBFF              call 0042B34B				Wirt
+:0046C548 8BCE                    mov ecx, esi			
+:0046C54A E8C2DCFBFF              call 0042A211				Grizwold
+:0046C54F 8BCE                    mov ecx, esi
+:0046C551 E848E4FBFF              call 0042A99E				Adria
+:0046C556 8BCE                    mov ecx, esi
+:0046C558 E8A3ECFBFF              call 0042B200				Pepin
+:0046C55D A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0046C562 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046C568 69C0C8550000            imul eax, 000055C8
+:0046C56E 0FBE8C08B8010000        movsx ecx, byte ptr [eax+ecx+000001B8]
+:0046C576 E819E7FBFF              call 0042AC94
+:0046C57B 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0046C581 E827DEFBFF              call 0042A3AD
+:0046C586 5E                      pop esi
+:0046C587 C3                      ret
+
+
+Adria:
+19	25-potion of mana
+1E	30-potion of full mana		-> Scroll of Townportal 1B
+1B	27-scroll of townportal		-> new 'Vault Key' 6C (unused base item)
+
+Pepin:
+18	24-potion of healing
+1D	29-potion of full healing	-> Scroll of townportal 1B
+22	34-scroll of resurrect	
+
+
+Changing Adria's fixed Full Mana into a fixed Scroll of Townportal:
+
+File Offset 00029DED
+
+:0042A9ED 6A1E                    push 0000001E
+wordt
+:0042A9ED 6A1B                    push 0000001B
+
+Changing Adria's fixed Full Mana into a fixed 'Vault Key':
+
+File Offset 00029E13
+
+:0042AA13 6A1B                    push 0000001B
+wordt
+:0042AA13 6A6C                    push 0000006C
+
+Allowing for Adria's random goods to also have limited Full Mana potions instead of any rejuvenations:
+
+File Offset 0002A8AF
+
+:0042B4AF 83FF1E                  cmp edi, 0000001E
+wordt
+:0042B4AF 83FF6C                  cmp edi, 0000006C
+
+File Offset 00029BDC
+
+:0042A7DC 83FA06                  cmp edx, 00000006
+wordt
+:0042A7DC 83FA12                  cmp edx, 00000012
+
+File Offset 00029BE1
+
+:0042A7E1 83FA07                  cmp edx, 00000007
+wordt
+:0042A7E1 83FA13                  cmp edx, 00000013
+
+File Offset 00029BF8
+
+:0042A7F8 7405                    je 0042A7FF
+:0042A7FA 83FA03                  cmp edx, 00000003
+:0042A7FD 7502                    jne 0042A801
+wordt
+:0042A7F8 7C07                    jl 0042A801
+:0042A7FA 83FA07                  cmp edx, 00000007
+:0042A7FD 7D02                    jge 0042A801
+
+
+Changing Pepin's fixed Full Healing into a fixed Scroll of Townportal:
+
+File Offset 0002A625
+
+:0042B225 6A1D                    push 0000001D
+wordt
+:0042B225 6A1B                    push 0000001B
+
+
+Less random goods at Pepin:
+
+File Offset 0002A693
+
+:0042B293 6A0A                    push 0000000A
+wordt
+:0042B293 6A06                    push 00000006
+
+File Offset 0002A69B
+
+:0042B29B 83C00A                  add eax, 0000000A
+wordt
+:0042B29B 83C006                  add eax, 00000006
+
+
+Allowing for Pepin's random goods to have limited Rejuvenation, Full Rejuvenation and Full Healing potions:
+
+File Offset 0002A993
+
+:0042B593 83FA1D                  cmp edx, 0000001D
+wordt
+:0042B593 83FA1B                  cmp edx, 0000001B
+
+
+Creating name 'Vault Key' (File Offset 0009F8C2):
+
+0009F8C1 6400 0000 0000 0000 0000                d.........
+wordt
+0009F8C1 0056 6175 6C74 204B 6579                .Vault Key
+
+
+Fixing Base item 6C (108):
+
+000A25D8 0000 0000 0307 0000 0300 0000 0000 0000 ................
+000A25E8 FB4F 4A00 0000 0000 0000 0000 0000 0000 .OJ.............
+000A25F8 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2608 000F 0000 0000 0000 1500 0000 2700 0000 ............'...
+000A2618 0100 0000 2800 0000 0000 0000           ....(.......
+wordt
+000A25D8 0000 0000 0307 0000 E600 0000 0000 0000 ................
+000A25E8 C20E 4A00 0000 0000 0000 0000 0000 0000 ..J.............
+000A25F8 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2608 0000 3500 0000 0000 0000 0000 0000 0000 ..5.............
+000A2618 0000 0000 400D 0300 0000 0000           ....@.......
+
+
+Adjusting display text, using 'Doubles gold capacity':
+
+000A517C 5661 6C75 6520 3230 3030 3030 2067 6F6C Value 200000 gol
+000A518C 6400 0000 0000 00                       d......
+
+
+Fixing 'return price', by using check on Auric Amulet, on free space from Itemview:
+
+File Offset 0006D318
+
+:0046DF18 E836B5F9FF              call 00409453
+wordt
+:0046DF18 E8A578F9FF              call 004057C2
+
+File Offset 0006D407
+
+:0046E007 E847B4F9FF              call 00409453
+wordt
+:0046E007 E8B677F9FF              call 004057C2
+
+File Offset 00004BC2
+
+:004057C2 90                      nop
+:004057C3 6A01                    push 00000001
+:004057C5 5A                      pop edx
+:004057C6 E87FEDFFFF              call 0040454A
+:004057CB C70594114D0001000000    mov dword ptr [004D1194], 00000001
+:004057D5 E9C5010000              jmp 0040599F
+:004057DA 39B8DC530000            cmp dword ptr [eax+000053DC], edi
+wordt
+:004057C2 83BA44406F0035          cmp dword ptr [edx+006F4044], 00000035
+:004057C9 0F85843C0000            jne 00409453
+:004057CF 50                      push eax
+:004057D0 B8400D0300              mov eax, 00030D40
+:004057D5 89822C406F00            mov dword ptr [edx+006F402C], eax
+:004057DB E97D3C0000              jmp 0040945D
+
+
+All items that are unlimited available are not checked for requirements. This 'bug' also exist in Diablo and Hellfire. Attempts at fixing failed.

@@ -1,0 +1,65 @@
+Adding the elemental arrow spell effects to the list of spells that won't hurt the caster, to prevent problems with shooting nearby monsters (Hiddens and Warpers become too hard).
+
+
+First, some code for setting active spell with Tome of Lore is relocated:
+
+file offset 0001F5B7
+
+:004201B7 0F854F8E0100            jne 0043900C
+changed into
+:004201B7 0F85568E0100            jne 00439013
+:004201BD 
+
+file offset 000383E3
+
+:00438FE3 83BEF07A690000          cmp dword ptr [esi+00697AF0], 00000000
+:00438FEA 7516                    jne 00439002
+:00438FEC 8B86587A6900            mov eax, dword ptr [esi+00697A58]
+:00438FF2 3C10                    cmp al, 10
+:00438FF4 7411                    je 00439007
+:00438FF6 3C3D                    cmp al, 3D
+:00438FF8 740D                    je 00439007
+:00438FFA 3C3F                    cmp al, 3F
+:00438FFC 7409                    je 00439007
+:00438FFE 3C10                    cmp al, 10
+:00439000 7405                    je 00439007
+:00439002 E9D991FFFF              jmp 004321E0
+:00439007 E9AE93FFFF              jmp 004323BA
+:0043900C 83B8380A000017          cmp dword ptr [eax+00000A38], 00000017
+:00439013 0F857F77FEFF            jne 00420798
+:00439019 E99F71FEFF              jmp 004201BD
+:0043901E 90                      nop
+:0043901F 90                      nop
+:00439020 90                      nop
+:00439021 90                      nop
+:00439022 90                      nop
+:00439023 90                      nop
+:00439024 90                      nop
+changed into
+:00438FE3 83BEF07A690000          cmp dword ptr [esi+00697AF0], 00000000
+:00438FEA 751A                    jne 00439006
+:00438FEC 8B86587A6900            mov eax, dword ptr [esi+00697A58]
+:00438FF2 3C10                    cmp al, 10
+:00438FF4 7415                    je 0043900B
+:00438FF6 3C3D                    cmp al, 3D
+:00438FF8 7411                    je 0043900B
+:00438FFA 3C3F                    cmp al, 3F
+:00438FFC 740D                    je 0043900B
+:00438FFE 3C1B                    cmp al, 1B			Fire Arrow
+:00439000 7409                    je 0043900B
+:00439002 3C38                    cmp al, 38			Lightning Arrow
+:00439004 7405                    je 0043900B
+:00439006 E9D591FFFF              jmp 004321E0
+:0043900B E9AA93FFFF              jmp 004323BA
+:00439010 909090                  3*nop
+:00439013 83B8380A000017          cmp dword ptr [eax+00000A38], 00000017
+:0043901A 0F857877FEFF            jne 00420798
+:00439020 E99871FEFF              jmp 004201BD
+:00439025
+
+
+
+
+
+
+

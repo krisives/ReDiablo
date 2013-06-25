@@ -1,0 +1,53 @@
+Restricting the termination sound from Seeing to the caster character:
+
+file offset 00033F10
+
+:00434B10 FF703C                  push [eax+3C]
+:00434B13 8B5038                  mov edx, dword ptr [eax+38]
+:00434B16 6A7B                    push 0000007B
+:00434B18 59                      pop ecx
+:00434B19 E8A63BFEFF              call 004186C4
+:00434B1E E905470000              jmp 00439228
+changed into
+:00434B10 8B16                    mov edx, dword ptr [esi]
+:00434B12 3B15E8AD6E00            cmp edx, dword ptr [006EADE8]
+:00434B18 752A                    jne 00434B44
+:00434B1A 8B5038                  mov edx, dword ptr [eax+38]
+:00434B1D E9BB7C0200              jmp 0045C7DD
+:00434B22 90                      nop
+
+file offset 00033F44
+
+:00434B44 90                      nop
+:00434B45 90                      nop
+:00434B46 90                      nop
+:00434B47 90                      nop
+:00434B48 90                      nop
+:00434B49 90                      nop
+:00434B4A 90                      nop
+changed into
+:00434B44 5F                      pop edi
+:00434B45 5E                      pop esi
+:00434B46 5B                      pop ebx
+:00434B47 C3                      ret
+:00434B48 90                      nop
+:00434B49 90                      nop
+:00434B4A 90                      nop
+
+Using free space from Durable Items:
+
+file offset 0005BBDD
+
+:0045C7DD 90                      nop
+:0045C7DE 90                      nop
+:0045C7DF 90                      nop
+:0045C7E0 90                      nop
+:0045C7E1 83BC30BC0B000000        cmp dword ptr [eax+esi+00000BBC], 00000000
+:0045C7E9 7521                    jne 0045C80C
+changed into
+:0045C7DD FF703C                  push [eax+3C]
+:0045C7E0 6A7B                    push 0000007B
+:0045C7E2 59                      pop ecx
+:0045C7E3 E8DCBEFBFF              call 004186C4
+:0045C7E8 EB22                    jmp 0045C80C
+:0045C7EA 90                      nop

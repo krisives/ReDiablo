@@ -1,0 +1,223 @@
+
+Here ya go.
+by Dr. Zed
+Each item's appearance is based on it's image. Each image is assigned a ground image/sound.
+
+An array of bytes found at (00091A78) for each item picture (Hellfire: A41A0).
+
+Values:
+00 Mail Armor (Medium) (also default for unused items!)
+01 Axe
+02 Potion of Healing
+03 Bow
+04 Gold Pile
+05 Helm
+06 Club
+07 Triangular Gray Shield (Heavy)
+08 Sword
+09 Magic Rock
+0A Cleaver
+0B Staff
+0C Ring
+0D Crown
+0E Leather Armor (Light)
+0F Round Wooden Shield (Light)
+10 Scroll
+11 Plate Armor (Heavy)
+12 Book
+13 Unused (Meat, picture offset, no drop animation or sound)
+14 Potion of Full Mana
+15 Spectral Elixer & "Rainbow Elixer" (Goldish)
+16 Elixer of Magic
+17 Potion of Full Healing
+18 Elixer of Dex & Oils
+19 Potion of Rejuv. & Golden Elixer
+1A Elixer of Vit.
+1B Elixer of Str
+1C Ear
+1D Brain
+1E Black Mushroom
+1F Tavern Sign
+20 Blood Stone
+21 Anvil of Fury
+22 Staff of Lazarus
+23 Rune bomb
+24 Thorn note
+25 Reconstructed Note
+26 rune
+27 Theodore
+28 bovine plate
+29 Grey Suit
+2A Brown Suit
+
+Array of Images Value
+00 Potion of Full Mana 14
+01 White Scroll 10
+02 Brown Scroll 10
+03 Blue Scroll 10
+04 Small Gold Pile 04
+05 Medium Gold Pile 04
+06 Large Gold Pile 04
+07 "Thick Gold Ring" 0C
+08 The Bleeder 0C
+09 Bramble 0C
+0A Ring of Truth 0C
+0B Ring of Regha 0C
+0C Ring 0C
+0D Ring of Engagement 0C
+0E Constricting Ring 0C
+0F Spectral Elixir 15
+10 "Rainbow Elixir" 15
+11 Golden Elixir 19
+12 Empyrean Band 0C
+13 Ear w/ steel earring 1C
+14 Ear 1C
+15 Ear w/ gold earring 1C
+16 "orange sphere" 00
+17 "Hellraiser Box" 00
+18 "gold pyramid" 00
+19 Blood Stone 20
+1A "red sphere" 00
+1B "blue cube" 00
+1C "orange pyramid" 00
+1D "thin black vial" 18
+1E "large black vial" 18
+1F Elixir of Vitality 1A
+20 Potion of Healing 02
+21 Potion of Full Rejuvenation 19
+22 Elixir of Magic 16
+23 Potion of Full Healing 17
+24 Elixir of Dexterity 18
+25 Potion of Rejuvenation 19
+26 Elixir of Strength 1B
+27 Potion of Mana, Potion of Mana 1B
+28 Brain 1D
+29 "Claw" 00
+2A "Tooth" 00
+2B "loaf of bread" 00
+2C Optic Amulet 0C
+2D Amulet 0C
+2E "black pendant" 0C
+2F "bug brooch" 0C
+30 "ankh necklace" 0C
+31 "pouch" 00
+32 Wizardspike 08
+33 Dagger 08
+34 "bottle of brew" 00
+35 Black Razor 08
+36 "thick dagger" 08
+37 "knuckle knife" 08
+38 Blade 08
+39 Bastard Sword 08
+3A The Executioner's Blade 08
+3B Mace 06
+3C Long Sword 08
+3D Broad Sword 08
+3E Falchion 08
+3F Morning Star 06
+40 Short Sword 08
+41 Claymore 08
+42 Club 06
+43 Sabre 08
+44 Gryphons Claw, The Falcon's Talon 08
+45 "bone club" 06
+46 Spiked Club 06
+47 "board w/ nail" 06
+48 Scimitar 08
+49 "angel sword" 08
+4A "rusted, grey sword" 08
+4B Full Helm 05
+4C Magic Rock 09
+4D Helm of Sprits 0D
+4E "skull crown" 0D
+4F Royal Circlet 0D
+50 Fool's Crest 05
+51 Harlequin Crest 05
+52 Helm 05
+53 Buckler 0F
+54 "horned helm" 05
+55 Veil of Steel, Gotterdamerung 05
+56 "black book" 12
+57 "red book" 12
+58 "blue book" 12
+59 Black Mushroom 1E
+5A Skull Cap 05
+5B Cap 05
+5C Torn Flesh of Souls 0E
+5D Thinking Cap 05
+5E "red tunic" 0E
+5F Crown 0D
+60 Map of the Stars 10
+61 Fungal Tome 12
+62 Great Helm 05
+63 OverLord's Helm 05
+64 "lightning shield" 07
+65 Battle Axe 01
+66 Hunter's Bow, Long Bow 03
+67 Plate Mail, Field Plate 11
+68 Stonecleaver 01
+69 Small Shield 0F
+6A Cleaver 0A
+6B Studded Leather Armor 0E
+6C Deadly Hunter, Eaglehorn 03
+6D Short Staff, Quarter Staff 0B
+6E Two-Handed Sword 08
+6F Chain Mail 00
+70 Small Axe 01
+71 Kite Shield 07
+72 Scale Mail 00
+73 "large, thick shield" 07
+74 Split Skull Shield 0F
+75 Dragon's Breach 07
+76 Short Bow, Short Bow 03
+77 Long Battle Bow, Long War Bow 03
+78 "fish bow" 03
+79 War Hammer 06
+7A Maul, The Cranium Basher 06
+7B Long Staff 0B
+7C War Staff 0B
+7D "shaman's staff" 0B
+7E Tavern Sign 1F
+7F Hard Leather Armor 0E
+80 Rags 0E
+81 Quilted Armor 0E
+82 "3 spiked balls 'n chain flail" 06
+83 Flail 06
+84 Tower Shield 07
+85 Composite Bow 03
+86 Great Sword 08
+87 Leather Armor 0E
+88 Splint Mail 00
+89 Robe 0E
+8A The Rainbow Cloak, Wisdom's Wrap, Nightscape 0E
+8B "leather shirt" 00
+8C Anvil of Fury 21
+8D Broad Axe 01
+8E Large Axe 01
+8F Great Axe 01
+90 Axe 01
+91 "grey cleaver" 01
+92 Blackoak Shield, Holy Defender 07
+93 Large Shield 07
+94 Gothic Shield 07
+95 Cloak 0E
+96 Cape 0E
+97 Full Plate Mail 11
+98 Gothic Plate 11
+99 Breast Plate 11
+9A Ring Mail 00
+9B Staff of Lazarus 22
+9C "ruby axe" 01
+9D Arkaine's Valor 00
+9E The Needler 03
+9F Naj's Light Plate 11
+100 The Grizzly 08
+101 The Grandfather 08
+102 The Protector 06
+103 Messerschmidt's Reaver 01
+104 Windforce 03
+105 Short War Bow 03
+106 Composite Staff 0B
+107 Short Battle Bow 03
+108 Gold 04
+

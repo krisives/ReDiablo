@@ -1,0 +1,274 @@
+Forced selection of Unseen for DLVL 5-8 instead of DLVL 6-8 (to ensure barrels on DLVL 5 can have a monster):
+
+File offset 00051792
+
+:00452392 3C06                    cmp al, 06
+changed into
+:00452392 3C05                    cmp al, 05
+
+
+Forced selection of Corpse Axe for DLVL 1-3 (to ensure all barrels in Church can have a monster), of Renegade Warriors for DLVL 13 (for Black Knight boss), and of Renegade Warrior and Fallen Rogue for DLVL 21 (for special bosses, see CornerstoneRoom52M.TXT).
+
+Note that nothing needs to be done here for Sir Gorash, since Renegade Warriors are already selected for DLVL 15 (because of placement by SOL file).
+
+
+File offset 000517B8
+
+:004523B8 E9C186FEFF              jmp 0043AA7E
+changed into
+:004523B8 E9C7DAFDFF              jmp 0042FE84
+:004523BD 
+
+
+Using free space from AttackRoutines52L:
+
+File offset 0002F27F
+
+:0042FE7F 69C0C8550000            imul eax, 000055C8
+:0042FE85 399C0898010000          cmp dword ptr [eax+ecx+00000198], ebx
+:0042FE8C 8D840898010000          lea eax, dword ptr [eax+ecx+00000198]
+:0042FE93 7D08                    jge 0042FE9D
+:0042FE95 8918                    mov dword ptr [eax], ebx
+:0042FE97 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:0042FE9D FF442414                inc [esp+14]
+:0042FEA1 8344241004              add dword ptr [esp+10], 00000004
+:0042FEA6 8B442414                mov eax, dword ptr [esp+14]
+:0042FEAA 3B0548D06900            cmp eax, dword ptr [0069D048]
+:0042FEB0 0F8C55FFFFFF            jl 0042FE0B
+changed into
+:0042FE7F 9090909090              5*nop
+:0042FE84 58                      pop eax
+:0042FE85 50                      push eax
+:0042FE86 3C01                    cmp al, 01				dlvl 1-3
+:0042FE88 7C27                    jl 0042FEB1
+:0042FE8A 3C03                    cmp al, 03
+:0042FE8C 7F0C                    jg 0042FE9A
+:0042FE8E 6A09                    push 00000009				Corpse Axe
+:0042FE90 59                      pop ecx
+:0042FE91 8BD7                    mov edx, edi				
+:0042FE93 E8C6AA0000              call 0043A95E		
+:0042FE98 EB17                    jmp 0042FEB1
+:0042FE9A 3C15                    cmp al, 15				dlvl 21
+:0042FE9C 7C0F                    jl 0042FEAD
+:0042FE9E 6A6B                    push 0000006B				Fallen Rogue
+:0042FEA0 59                      pop ecx
+:0042FEA1 8BD7                    mov edx, edi				
+:0042FEA3 E8B6AA0000              call 0043A95E		
+:0042FEA8 6A3A                    push 0000003A				Renegade Warrior
+:0042FEAA 59                      pop ecx
+:0042FEAB EBE4                    jmp 0042FE91
+:0042FEAD 3C0D                    cmp al, 0D				dlvl 13
+:0042FEAF 74F7                    je 0042FEA8
+:0042FEB1 E9C8AB0000              jmp 0043AA7E
+:0042FEB6
+
+File offset 0002F21E
+
+:0042FE1E 757D                    jne 0042FE9D
+changed into
+:0042FE1E 9090                    2*nop
+
+File offset 0002F226
+
+:0042FE26 7575                    jne 0042FE9D
+changed into
+:0042FE26 9090                    2*nop
+
+
+Forced selection of Trap-Golem for DLVL 13-15 (see Traps52M.TXT):
+
+File offset 00039E2E
+
+:0043AA2E 6A1B                    push 0000001B				Stalking Death
+:0043AA30 59                      pop ecx
+:0043AA31 E90E3A0000              jmp 0043E444
+changed into
+:0043AA2E 6A60                    push 00000060				Trap-Golem
+:0043AA30 59                      pop ecx
+:0043AA31 E93F54FFFF              jmp 0042FE75
+:0043AA36
+
+File offset 0002F271
+
+:0042FE71 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:0042FE77 8BC6                    mov eax, esi
+:0042FE79 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042FE7F 90                      nop
+:0042FE80 90                      nop
+:0042FE81 90                      nop
+:0042FE82 90                      nop
+:0042FE83 90                      nop
+changed into
+:0042FE71 90909090                4*nop
+:0042FE75 E8E4AA0000              call 0043A95E
+:0042FE7A 8BD7                    mov edx, edi
+:0042FE7C 6A1B                    push 0000001B				Stalking Death
+:0042FE7E 59                      pop ecx
+:0042FE7F E9C0E50000              jmp 0043E444
+:0042FE84
+
+
+Now 189 free bytes (left) from 0042FDB8 to 0042FE75
+
+
+Correcting minions for Red Vex:
+
+File offset 0003B66E
+
+:0043C26E 6A02                    push 00000002
+changed into
+:0043C26E 6A03                    push 00000003
+
+
+
+The following is information only.
+
+
+Previous monsterselection:
+
+:0043A9F4 A0D8B16000              mov al, byte ptr [0060B1D8]
+:0043A9F9 6A01                    push 00000001
+:0043A9FB 5B                      pop ebx
+:0043A9FC 6A04                    push 00000004
+:0043A9FE 5F                      pop edi
+:0043A9FF 50                      push eax
+:0043AA00 3C10                    cmp al, 10				dlvl 16
+:0043AA02 750C                    jne 0043AA10
+:0043AA04 8BD6                    mov edx, esi
+
+* Possible Reference to Dialog: DialogID_006E 
+                                  |
+:0043AA06 6A6E                    push 0000006E				Diablo
+:0043AA08 59                      pop ecx
+:0043AA09 E900390000              jmp 0043E30E				Fallen Rogues and Reality Weavers
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E4B4(U)
+|
+:0043AA0E 58                      pop eax
+:0043AA0F 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA02(C)
+|
+:0043AA10 3C09                    cmp al, 09				
+:0043AA12 7C10                    jl 0043AA24
+:0043AA14 3C0C                    cmp al, 0C
+:0043AA16 7F0C                    jg 0043AA24
+:0043AA18 8BD3                    mov edx, ebx				dlvl 9-12
+:0043AA1A 6A76                    push 00000076
+:0043AA1C 59                      pop ecx
+:0043AA1D E93F770100              jmp 00452161				Illusion Weaver, if 12 also Butcher, Cave Boar, Biclops
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00436211(U)
+|
+:0043AA22 58                      pop eax
+:0043AA23 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043AA12(C), :0043AA16(C)
+|
+:0043AA24 3C0D                    cmp al, 0D
+:0043AA26 7C10                    jl 0043AA38
+:0043AA28 3C0F                    cmp al, 0F
+:0043AA2A 7F0C                    jg 0043AA38
+:0043AA2C 8BD7                    mov edx, edi				dlvl 13-15
+:0043AA2E 6A1B                    push 0000001B
+:0043AA30 59                      pop ecx
+:0043AA31 E90E3A0000              jmp 0043E444				Stalking Death, if 14 also Rogues, 
+									if 15 also Hellspawn, Reaper, if 13 also Hellbats, Reaper
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042E8C8(U), :0043E459(U)
+|
+:0043AA36 58                      pop eax
+:0043AA37 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043AA26(C), :0043AA2A(C)
+|
+:0043AA38 3C14                    cmp al, 14				dlvl 20 (Nest 4)
+:0043AA3A 7516                    jne 0043AA52
+:0043AA3C 6A62                    push 00000062				Flesh Things
+:0043AA3E 8BD3                    mov edx, ebx
+:0043AA40 59                      pop ecx
+:0043AA41 E818FFFFFF              call 0043A95E
+:0043AA46 8BD7                    mov edx, edi
+:0043AA48 6A7C                    push 0000007C				Defiler
+:0043AA4A 59                      pop ecx
+:0043AA4B E80EFFFFFF              call 0043A95E
+:0043AA50 58                      pop eax
+:0043AA51 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA3A(C)
+|
+:0043AA52 3C12                    cmp al, 12				dlvl 18 (Nest 2)
+:0043AA54 750C                    jne 0043AA62
+:0043AA56 6A7B                    push 0000007B				Chimeras
+:0043AA58 8BD7                    mov edx, edi
+:0043AA5A 59                      pop ecx
+:0043AA5B E8FEFEFFFF              call 0043A95E
+:0043AA60 58                      pop eax
+:0043AA61 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA54(C)
+|
+:0043AA62 3C18                    cmp al, 18				dlvl 24 (Abyss 4)
+:0043AA64 7513                    jne 0043AA79
+:0043AA66 8BD3                    mov edx, ebx
+:0043AA68 B985000000              mov ecx, 00000085			Lich
+:0043AA6D E8ECFEFFFF              call 0043A95E
+:0043AA72 8BD6                    mov edx, esi
+:0043AA74 E90D790100              jmp 00452386
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA64(C)
+|
+:0043AA79 E914790100              jmp 00452392
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA74(U)
+|
+:00452386 B989000000              mov ecx, 00000089			Diablo2
+:0045238B E8CE85FEFF              call 0043A95E
+:00452390 58                      pop eax
+:00452391 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA79(U)
+|
+:00452392 3C06                    cmp al, 06
+:00452394 7C10                    jl 004523A6
+:00452396 3C08                    cmp al, 08
+:00452398 7F0C                    jg 004523A6
+:0045239A 8BD7                    mov edx, edi				dlvl 6-8
+:0045239C 6A1F                    push 0000001F
+:0045239E 59                      pop ecx
+:0045239F E9A49BFEFF              jmp 0043BF48				Unseen, Guardian Goat, if 8 also Illusion Weaver
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043BF67(U)
+|
+:004523A4 58                      pop eax
+:004523A5 50                      push eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00452394(C), :00452398(C)
+|
+:004523A6 3C15                    cmp al, 15
+:004523A8 7C0E                    jl 004523B8
+:004523AA 3C18                    cmp al, 18
+:004523AC 7F0A                    jg 004523B8
+:004523AE 8BD7                    mov edx, edi				dlvl 21-24 (Abyss)
+:004523B0 6A4A                    push 0000004A				Doomtail
+:004523B2 59                      pop ecx
+:004523B3 E8A685FEFF              call 0043A95E		
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004523A8(C), :004523AC(C)
+|
+:004523B8 E9C186FEFF              jmp 0043AA7E

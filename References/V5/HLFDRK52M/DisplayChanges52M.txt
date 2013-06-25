@@ -1,0 +1,113 @@
+Maximum resistances will show '75%' (in gold), instead of 'MAX', on character screens
+
+
+File offset 000052DB
+
+:00405EDB 884DFC                  mov byte ptr [ebp-04], cl
+:00405EDE 7D17                    jge 00405EF7
+:00405EE0 0FBEC0                  movsx eax, al
+:00405EE3 50                      push eax
+:00405EE4 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405EE7 6850514900              push 00495150					"%i%%"
+:00405EEC 50                      push eax
+:00405EED E8CE3B0700              call 00479AC0
+:00405EF2 83C40C                  add esp, 0000000C
+:00405EF5 EB14                    jmp 00405F0B
+:00405EF7 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405EFA 6844514900              push 00495144					"MAX"
+:00405EFF 50                      push eax
+:00405F00 C645FC03                mov [ebp-04], 03
+:00405F04 E8B73B0700              call 00479AC0
+:00405F09 59                      pop ecx
+:00405F0A 59                      pop ecx
+changed into
+:00405EDB 7C04                    jl 00405EE1
+:00405EDD B04B                    mov al, 4B
+:00405EDF B103                    mov cl, 03
+:00405EE1 884DFC                  mov byte ptr [ebp-04], cl
+:00405EE4 0FBEC0                  movsx eax, al
+:00405EE7 50                      push eax
+:00405EE8 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405EEB 6850514900              push 00495150					"%i%%"
+:00405EF0 50                      push eax
+:00405EF1 E8CA3B0700              call 00479AC0
+:00405EF6 83C40C                  add esp, 0000000C
+:00405EF9 EB10                    jmp 00405F0B
+:00405EFB 90909090                4*nop
+
+Now 16 bytes free from 00405EFB to 00405F0B.
+
+
+File offset 00005343
+
+:00405F43 884DFC                  mov byte ptr [ebp-04], cl
+:00405F46 7D17                    jge 00405F5F
+:00405F48 0FBEC0                  movsx eax, al
+:00405F4B 50                      push eax
+:00405F4C 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405F4F 6850514900              push 00495150					"%i%%"
+:00405F54 50                      push eax
+:00405F55 E8663B0700              call 00479AC0
+:00405F5A 83C40C                  add esp, 0000000C
+:00405F5D EB14                    jmp 00405F73
+:00405F5F 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405F62 6844514900              push 00495144					"MAX"
+:00405F67 50                      push eax
+:00405F68 C645FC03                mov [ebp-04], 03
+:00405F6C E84F3B0700              call 00479AC0
+:00405F71 59                      pop ecx
+:00405F72 59                      pop ecx
+changed into
+:00405F43 7C04                    jl 00405F49
+:00405F45 B04B                    mov al, 4B
+:00405F47 B103                    mov cl, 03
+:00405F49 884DFC                  mov byte ptr [ebp-04], cl
+:00405F4C 0FBEC0                  movsx eax, al
+:00405F4F 50                      push eax
+:00405F50 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405F53 6850514900              push 00495150					"%i%%"
+:00405F58 50                      push eax
+:00405F59 E8623B0700              call 00479AC0
+:00405F5E 83C40C                  add esp, 0000000C
+:00405F61 EB10                    jmp 00405F73
+:00405F63 90909090                4*nop
+
+Now 16 bytes free from 00405F63 to 00405F73.
+
+
+File offset 000053A6
+
+:00405FA6 884DFC                  mov byte ptr [ebp-04], cl
+:00405FA9 7D17                    jge 00405FC2
+:00405FAB 0FBEC0                  movsx eax, al
+:00405FAE 50                      push eax
+:00405FAF 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405FB2 6850514900              push 00495150					"%i%%"
+:00405FB7 50                      push eax
+:00405FB8 E8033B0700              call 00479AC0
+:00405FBD 83C40C                  add esp, 0000000C
+:00405FC0 EB14                    jmp 00405FD6
+:00405FC2 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405FC5 6844514900              push 00495144					"MAX"
+:00405FCA 50                      push eax
+:00405FCB C645FC03                mov [ebp-04], 03
+:00405FCF E8EC3A0700              call 00479AC0
+:00405FD4 59                      pop ecx
+:00405FD5 59                      pop ecx
+changed into
+:00405FA6 7C04                    jl 00405FAC
+:00405FA8 B04B                    mov al, 4B
+:00405FAA B103                    mov cl, 03
+:00405FAC 884DFC                  mov byte ptr [ebp-04], cl
+:00405FAF 0FBEC0                  movsx eax, al
+:00405FB2 50                      push eax
+:00405FB3 8D45B0                  lea eax, dword ptr [ebp-50]
+:00405FB6 6850514900              push 00495150					"%i%%"
+:00405FBB 50                      push eax
+:00405FBC E8FF3A0700              call 00479AC0
+:00405FC1 83C40C                  add esp, 0000000C
+:00405FC4 EB10                    jmp 00405FD6
+:00405FC6 90909090                4*nop
+
+Now 16 bytes free from 00405FC6 to 00405FD6.
+

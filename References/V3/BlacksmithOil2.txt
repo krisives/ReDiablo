@@ -1,0 +1,8 @@
+()Blacksmith Oil - Repairs 20% -> 25%
+
+Changed text:
+
+000A48C8 79000000 72657374 6F726573 20323025 206F6620 616E0000 y...restores 20% of an..
+wordt
+000A48C8 79000000 72657374 6F726573 20323525 206F6620 616E0000 y...restores 25% of an..
+

@@ -1,0 +1,395 @@
+Monsters, hiding in barrels (or urns and pods), forced to appear in selection routine (selection flag = 4)
+
+dlvl 1-6:   normal appearing skeletons, as usual (no changes needed)
+dlvl 6-8:   Unseen (also random appearing on 6-8)
+dlvl 9-12:  Illusion Weavers (also random appearing on 8-10)
+dlvl 13-15: Stalking Death (reduced chance to flee, also random appearing on 13-14)
+dlvl H1-H4: Hork Spawn #117 (needs 2nd animation, also random appearing on H1-H4, no need for forced selection)
+dlvl C1-C4: Doom Tail (needs 2nd animation, also random appearing on C1-C3)
+
+
+- Limit Skeleton Check routine to skeletons #8 to #11, and #20 to #27, then add Illusion Weavers #32. (*)
+
+This should produce Weavers from barrels on dlvl 8-10, when they appear normally.
+
+- Force selection of Illusion Weavers on dlvl 6-12.
+
+This should always produce Weavers from barrels on dlvl 6-12.
+
+- Force selection of Stalking Death on dlvl 13-15.
+- Limit random appearance to dlvl 13-14.
+
+This should always produce Stalking Death from barrels on dlvl 13-15. Check dlvl 15 for unexpected results on Lazarus group.
+
+- Add idle animations as 2nd animations for Hork Spawns.
+- Add Hork Spawn #117 to Skeleton Check routine.
+
+This should always produce yellow Hork Spawns from pods on dlvl H1-H4, because they have seeding size 1.
+
+- Add idle animations as 2nd animations for Doomtails.
+- Add Doom Tail to Skeleton Check routine.
+
+This should produce Tails from urns and sarcophages on dlvl C1-C3, when they appear normally.
+
+- Force selection of Doom Tail on dlvl C1-C4.
+
+This should always produce Tails from urns and sarcophages on dlvl C1-C4. Check dlvl C4 for unexpected results on the Dark Ghost.
+
+If all works, Leoric's mob should be limited to the proper skeletons, and the weakest skeletons should be restricted to Church. 
+
+(* Keep #20 to #27 at the end of routine, to be able to limit Leo's mob)
+
+This works. Actual implementation described below.
+
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      MFL/MFL
+
+  8 Skeleton              undead    2 Skeleton         0   1- 2     1     2-   4   --I/-RI
+  9 Corpse Axe            undead    2 Skeleton         1   2- 5     2     6-  10   --I/-RI
+ 10 Burning Dead          undead    2 Skeleton         2   2- 5     4     8-  12   -RI/-II
+ 11 Horror                undead    2 Skeleton         3   3- 5     6    12-  20   -RI/-II
+ 20 Horror                undead    7 Goat Archer      1   4- 6     9    15-  45   -RI/-II
+ 21 Corpse Bow            undead    7 Goat Archer      0   2- 5     5     8-  16   --I/-RI
+ 22 Burning Dead          undead    7 Goat Archer      1   3- 5     7    10-  24   -RI/-II
+ 23 Skeleton              undead    3 SkeletonArcher   0   1- 3     3     2-   4   --I/-RI
+ 24 Skeleton Captain      undead    2 Skeleton         1   1- 3     2     3-   6   --I/-RI
+ 25 Horror Captain        undead    2 Skeleton         3   4- 6     8    35-  50   -RI/-II
+ 26 Burning Dead Captain  undead    2 Skeleton         2   3- 5     6    16-  30   -RI/-II
+ 27 Stalking Death        undead   15 Hidden           2  12-14    21   100- 120   RRI/RII
+ 31 Unseen                demon    15 Hidden           2   6- 8    11    35-  50   -RR/-IR
+ 32 Illusion Weaver       demon    15 Hidden           3   8-10    13    40-  60   -IR/RIR
+ 74 Doomtail              animal   11 Winged Fiend     3  C1-C3    27    50-  72   I--/IR-
+117 Hork Spawn            animal   11 Winged Fiend     1  H1-H4*   22     5-  10   I--/I--
+
+
+
+Reorganizing original check on skeleton slots (used for Leoric's mob and monsters in barrels and such), adding Illusion Weavers, Unseen, HorkSpawn and Doomtails:
+
+file offset 00043FB8
+
+:00444BB8 83F908                  cmp ecx, 00000008			axe skeletons
+:00444BBB 7C05                    jl 00444BC2
+:00444BBD 83F90B                  cmp ecx, 0000000B
+:00444BC0 7E14                    jle 00444BD6
+:00444BC2 83F914                  cmp ecx, 00000014			archer skeletons
+:00444BC5 7C05                    jl 00444BCC
+:00444BC7 83F917                  cmp ecx, 00000017
+:00444BCA 7E0A                    jle 00444BD6
+:00444BCC 83F918                  cmp ecx, 00000018			skeleton captains
+:00444BCF 7C09                    jl 00444BDA				
+:00444BD1 83F91B                  cmp ecx, 0000001B			incl. Stalking Death
+:00444BD4 7F04                    jg 00444BDA
+:00444BD6 6A01                    push 00000001
+:00444BD8 58                      pop eax
+:00444BD9 C3                      ret
+:00444BDA 33C0                    xor eax, eax
+:00444BDC C3                      ret
+changed into
+:00444BB8 E94D0CFCFF              jmp 0040580A
+:00444BBD 83F91B                  cmp ecx, 0000001B			Stalking Death
+:00444BC0 7414                    je 00444BD6
+:00444BC2 83F908                  cmp ecx, 00000008			axe skeletons
+:00444BC5 7C05                    jl 00444BCC
+:00444BC7 83F90B                  cmp ecx, 0000000B
+:00444BCA 7E0A                    jle 00444BD6
+:00444BCC 83F914                  cmp ecx, 00000014			archers and captains
+:00444BCF 7C09                    jl 00444BDA
+:00444BD1 83F91A                  cmp ecx, 0000001A
+:00444BD4 ...
+
+Using free space from 0040580A to 00405839 from itemview in cursor (47 byte) for the rest:
+
+file offset 00004C0A
+
+:0040580A 90                      nop
+:0040580B 90                      nop
+:0040580C 80BC08E053000001        cmp byte ptr [eax+ecx+000053E0], 01
+:00405814 8D8408E0530000          lea eax, dword ptr [eax+ecx+000053E0]
+:0040581B 7507                    jne 00405824
+:0040581D C605AC114D0001          mov byte ptr [004D11AC], 01
+:00405824 803802                  cmp byte ptr [eax], 02
+:00405827 0F8572010000            jne 0040599F
+changed into
+:0040580A 83F91F                  cmp ecx, 0000001F			Unseen
+:0040580D 7414                    je 00??????
+:0040580F 83F920                  cmp ecx, 00000020			Illusion Weaver
+:00405812 740F                    je 00??????
+:00405814 83F94A                  cmp ecx, 0000004A			Doom Tail
+:00405817 740A                    je 00??????
+:00405819 83F975                  cmp ecx, 00000075			Hork Spawn
+:0040581C 7405                    je 00??????
+:0040581E E99AF30300              jmp 00444BBD
+:00405823 E9AEF30300              jmp 00444BD6
+:00405828 9090909090              5*nop
+
+Free space from 00405828 to 00405839 left (17 byte):
+
+
+Part of Monster selection routine:
+
+file offset 00039DF4
+
+:0043A9F4 A0D8B16000              mov al, byte ptr [0060B1D8]
+:0043A9F9 3C10                    cmp al, 10			16
+:0043A9FB 7518                    jne 0043AA15
+:0043A9FD 8BD6                    mov edx, esi			flag = 2
+:0043A9FF 6A6E                    push 0000006E			Diablo
+:0043AA01 59                      pop ecx
+:0043AA02 E857FFFFFF              call 0043A95E
+:0043AA07 EB0C                    jmp 0043AA15
+:0043AA09 90                      nop
+:0043AA0A 90                      nop
+:0043AA0B 90                      nop
+:0043AA0C 90                      nop
+:0043AA0D 6A33                    push 00000033
+:0043AA0F 59                      pop ecx
+:0043AA10 E849FFFFFF              call 0043A95E
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043A9FB(C), :0043AA07(U)
+:0043AA15 6A01                    push 00000001
+:0043AA17 803DD8B1600012          cmp byte ptr [0060B1D8], 12	H2
+:0043AA1E 5B                      pop ebx
+:0043AA1F 750A                    jne 0043AA2B
+:0043AA21 6A75                    push 00000075			Horkspawn #117 (seeding size = 1)
+:0043AA23 8BD3                    mov edx, ebx			flag = 1
+:0043AA25 59                      pop ecx
+:0043AA26 E833FFFFFF              call 0043A95E
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA1F(C)
+:0043AA2B 803DD8B1600014          cmp byte ptr [0060B1D8], 14	H4
+:0043AA32 6A04                    push 00000004
+:0043AA34 5F                      pop edi
+:0043AA35 7514                    jne 0043AA4B
+:0043AA37 6A62                    push 00000062			Flesh Thing
+:0043AA39 8BD3                    mov edx, ebx			flag = 1
+:0043AA3B 59                      pop ecx
+:0043AA3C E81DFFFFFF              call 0043A95E
+:0043AA41 8BD7                    mov edx, edi			flag = 4
+:0043AA43 6A7C                    push 0000007C			Defiler
+:0043AA45 59                      pop ecx
+:0043AA46 E813FFFFFF              call 0043A95E
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA35(C)
+:0043AA4B 803DD8B1600013          cmp byte ptr [0060B1D8], 13	H3
+:0043AA52 750A                    jne 0043AA5E
+:0043AA54 6A7B                    push 0000007B			Chimera
+:0043AA56 8BD7                    mov edx, edi			flag = 4
+:0043AA58 59                      pop ecx
+:0043AA59 E800FFFFFF              call 0043A95E
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA52(C)
+:0043AA5E 803DD8B1600018          cmp byte ptr [0060B1D8], 18	C4
+:0043AA65 7518                    jne 0043AA7F
+:0043AA67 8BD3                    mov edx, ebx			flag = 1
+:0043AA69 B985000000              mov ecx, 00000085		Lich
+:0043AA6E E8EBFEFFFF              call 0043A95E
+:0043AA73 8BD6                    mov edx, esi			flag = 2
+:0043AA75 B989000000              mov ecx, 00000089		DarkGhost
+:0043AA7A E8DFFEFFFF              call 0043A95E
+
+changed into
+
+:0043A9F4 A0D8B16000              mov al, byte ptr [0060B1D8]
+:0043A9F9 6A01                    push 00000001
+:0043A9FB 5B                      pop ebx
+:0043A9FC 6A04                    push 00000004
+:0043A9FE 5F                      pop edi
+:0043A9FF 50                      push eax
+:0043AA00 3C10                    cmp al, 10			16
+:0043AA02 750C                    jne 00??????
+:0043AA04 8BD6                    mov edx, esi			flag = 2
+:0043AA06 6A6E                    push 0000006E			Diablo
+:0043AA08 59                      pop ecx
+:0043AA09 E850FFFFFF              call 0043A95E
+:0043AA0E 58                      pop eax
+:0043AA0F 50                      push eax
+:0043AA10 3C09                    cmp al, 09			09
+:0043AA12 7C10                    jl 00??????
+:0043AA14 3C0C                    cmp al, 0C			12
+:0043AA16 7F0C                    jg 00??????
+:0043AA18 8BD7                    mov edx, edi			flag = 4
+:0043AA1A 6A20                    push 00000020			Illusion Weaver
+:0043AA1C 59                      pop ecx
+:0043AA1D E83CFFFFFF              call 0043A95E
+:0043AA22 58                      pop eax
+:0043AA23 50                      push eax
+:0043AA24 3C0D                    cmp al, 0D			13
+:0043AA26 7C10                    jl 00??????
+:0043AA28 3C0F                    cmp al, 0F			15
+:0043AA2A 7F0C                    jg 00??????
+:0043AA2C 8BD7                    mov edx, edi			flag = 4
+:0043AA2E 6A1B                    push 0000001B			Stalking Death
+:0043AA30 59                      pop ecx
+:0043AA31 E828FFFFFF              call 0043A95E
+:0043AA36 58                      pop eax
+:0043AA37 50                      push eax
+:0043AA38 3C14                    cmp al, 14			H4
+:0043AA3A 7516                    jne 00??????
+:0043AA3C 6A62                    push 00000062			Flesh Thing
+:0043AA3E 8BD3                    mov edx, ebx			flag = 1
+:0043AA40 59                      pop ecx
+:0043AA41 E818FFFFFF              call 0043A95E
+:0043AA46 8BD7                    mov edx, edi			flag = 4
+:0043AA48 6A7C                    push 0000007C			Defiler
+:0043AA4A 59                      pop ecx
+:0043AA4B E80EFFFFFF              call 0043A95E
+:0043AA50 58                      pop eax
+:0043AA51 50                      push eax
+:0043AA52 3C13                    cmp al, 13			H3
+:0043AA54 750C                    jne 00??????
+:0043AA56 6A7B                    push 0000007B			Chimera
+:0043AA58 8BD7                    mov edx, edi			flag = 4
+:0043AA5A 59                      pop ecx
+:0043AA5B E8FEFEFFFF              call 0043A95E
+:0043AA60 58                      pop eax
+:0043AA61 50                      push eax
+:0043AA62 3C18                    cmp al, 18			C4
+:0043AA64 7513                    jne 00??????  
+:0043AA66 8BD3                    mov edx, ebx			flag = 1
+:0043AA68 B985000000              mov ecx, 00000085		Lich
+:0043AA6D E8ECFEFFFF              call 0043A95E
+:0043AA72 8BD6                    mov edx, esi
+:0043AA74 E90D790100              jmp 00452386
+:0043AA79 E914790100              jmp 00452392
+:0043AA7E 58                      pop eax
+
+Free space from 00452386 to 004523D5 (79 byte, Eldritch shrine)
+
+file offset 00051786
+
+:00452386 90                      nop
+:00452387 90                      nop
+:00452388 90                      nop
+:00452389 E88D28FDFF              call 00424C1B
+:0045238E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452393 8B4D08                  mov ecx, dword ptr [ebp+08]
+:00452396 6A5D                    push 0000005D
+:00452398 C784180855000001000000  mov dword ptr [eax+ebx+00005508], 00000001
+:004523A3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004523A8 8DBC0804480000          lea edi, dword ptr [eax+ecx+00004804]
+:004523AF 8DB418A4530000          lea esi, dword ptr [eax+ebx+000053A4]
+:004523B6 59                      pop ecx
+:004523B7 F3                      repz
+:004523B8 A5                      movsd
+:004523B9 A114AE6E00              mov eax, dword ptr [006EAE14]
+changed into
+:00452386 B989000000              mov ecx, 00000089		DarkGhost
+:0045238B E8CE85FEFF              call 0043A95E
+:00452390 58                      pop eax
+:00452391 50                      push eax
+:00452392 3C06                    cmp al, 06			06
+:00452394 7C10                    jl 00??????
+:00452396 3C08                    cmp al, 08			08
+:00452398 7F0C                    jg 00??????
+:0045239A 8BD7                    mov edx, edi			flag = 4
+:0045239C 6A1F                    push 0000001F			Unseen
+:0045239E 59                      pop ecx
+:0045239F E8BA85FEFF              call 0043A95E
+:004523A4 58                      pop eax
+:004523A5 50                      push eax
+:004523A6 3C15                    cmp al, 15			C1
+:004523A8 7C0E                    jl 00??????
+:004523AA 3C18                    cmp al, 18			C4
+:004523AC 7F0A                    jg 00??????
+:004523AE 8BD7                    mov edx, edi			flag = 4
+:004523B0 6A4A                    push 0000004A			Doom Tails
+:004523B2 59                      pop ecx
+:004523B3 E8A685FEFF              call 0043A95E
+:004523B8 E9C186FEFF              jmp 0043AA7E
+:004523BD 90                      nop
+
+
+Adding support for Hork Spawn and Doom Tail in Monsteranimations routine (forces Idle when Second is demanded)
+
+Reserved free space is already available.
+
+file offset 000506F7
+
+:004512F7 83BBFCBE4A0000          cmp dword ptr [ebx+004ABEFC], 00000000
+:004512FE 7417                    je 00451317
+:00451300 837DFC48                cmp dword ptr [ebp-04], 00000048
+:00451304 740C                    je 00451312
+:00451306 837DFC47                cmp dword ptr [ebp-04], 00000047
+:0045130A 7406                    je 00451312
+:0045130C 837DFC35                cmp dword ptr [ebp-04], 00000035
+:00451310 7505                    jne 00451317
+:00451312 B16E                    mov cl, 6E
+:00451314 80F973                  cmp cl, 73
+:00451317 C3                      ret
+:00451318 90                      nop
+:00451319 53                      push ebx
+:0045131A 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:00451320 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+changed into
+:004512F7 83BBFCBE4A0000          cmp dword ptr [ebx+004ABEFC], 00000000
+:004512FE 741E                    je 004513??
+:00451300 837DFC48                cmp dword ptr [ebp-04], 00000048
+:00451304 7418                    je 004513??
+:00451306 837DFC47                cmp dword ptr [ebp-04], 00000047
+:0045130A 7412                    je 004513??
+:0045130C 837DFC35                cmp dword ptr [ebp-04], 00000035
+:00451310 740C                    je 004513??
+:00451312 837DFC4A                cmp dword ptr [ebp-04], 0000004A
+:00451316 7406                    je 004513??
+:00451318 837DFC75                cmp dword ptr [ebp-04], 00000075
+:0045131C 7505                    jne 004513??
+:0045131E B16E                    mov cl, 6E
+:00451320 80F973                  cmp cl, 73
+:00451323 C3                      ret
+:00451324 9090                    2*nop
+
+
+Needed Data changes:
+
+pos name        dlvl   size
+117 Hork Spawn  H1-H4   1
+
+000AE370 A400 0000 0100 0000 B020 4B00 0000 0000 ......... K.....
+000AE380 9020 4B00 0100 0000 0100 0000 9031 4B00 . K..........1K.
+000AE390 0F00 0000 0C00 0000 0E00 0000 0B00 0000 ................
+000AE3A0 0E00 0000 0000 0000 0000 0000 0000 0000 ................
+000AE3B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AE3C0 5417 4B00 2026 1600 0500 0000 0A00 0000 T.K. &..........
+000AE3D0 0B00 0000 0000 0000 013C 080A 1900 0000 .........<......
+000AE3E0 0019 0200 0800 0800 0040 0300 E803 0000 .........@......
+
+SecondAnimation Flag:
+000AE37C 0100 0000                               ....
+
+Second Animation Frameset:
+000AE3A4 0100 0000                               ....
+
+
+pos name        dlvl   size
+ 74 Doomtail    C1-C3  1300
+
+000ACDF0 4000 0000 1405 0000 B021 4B00 0000 0000 @........!K.....
+000ACE00 9021 4B00 0000 0000 0000 0000 0000 0000 .!K.............
+000ACE10 0A00 0000 0400 0000 0C00 0000 0600 0000 ................
+000ACE20 0F00 0000 0000 0000 0200 0000 0000 0000 ................
+000ACE30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000ACE40 4309 4A00 282C 1B00 3200 0000 4800 0000 C.J.(,..2...H...
+000ACE50 0B00 0000 0001 0000 0364 0805 2300 0000 .........d..#...
+000ACE60 0050 0200 0800 0A00 0040 0100 D007 0000 .P.......@......
+
+SecondAnimation Flag:
+000ACDFC 0100 0000                               ....
+
+Second Animation Frameset:
+000ACE24 0100 0000                               ....
+
+
+pos name        dlvl   size
+ 27 Stalking D  12-14   700
+
+000AB670 8000 0000 BC02 0000 4C31 4B00 0100 0000 ........L1K.....
+000AB680 2C31 4B00 0000 0000 0100 0000 9C30 4B00 ,1K..........0K.
+000AB690 0D00 0000 0700 0000 0C00 0000 0400 0000 ................
+000AB6A0 0F00 0000 1000 0000 0000 0000 0000 0000 ................
+000AB6B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AB6C0 D030 4B00 161A 1500 6400 0000 7800 0000 .0K.....d...x...
+000AB6D0 0F00 0000 0101 0000 025F 070F 1900 0000 ........._......
+000AB6E0 0050 0000 2300 3100 0000 0300 D007 0000 .P..#.1.........
+
+Less abundant appearance (size 1300):
+000AB674 1405 0000                               ....

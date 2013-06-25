@@ -1,0 +1,26 @@
+()View Resistances for Bosses
+
+Experiment, maar het is zeker aan de praat te krijgen als deze versie mislukt.
+
+:004445D3 740A                    je 004445DF
+wordt
+:004445D3 740F                    je 004445E4
+
+:004445DF EB34                    jmp 00444615
+:004445E1 90                      nop
+:004445E2 BEC0114D00              mov esi, 004D11C0
+wordt
+:004445DF E802000000              call 004445E6		call VIEWBOSSRESIST
+:004445E4 EB39                    jmp 0044461F
+:004445E6 53                      push ebx		start VIEWBOSSRESIST
+:004445E7 55                      push ebp
+:004445E8 56                      push esi
+:004445E9 57                      push edi
+:004445EA BEC0114D00              mov esi, 004D11C0
+:004445EF A12C164D00              mov eax, dword ptr [004D162C]
+:004445F4 69C0E4000000            imul eax, 000000E4
+:004445FA 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+:00444600 E9E5FEFFFF              jmp 004444EA		jmp to view normal monster resist
+:00444605 90909090                4*nop
+
+Now here free code and from 444622 to 00444654!

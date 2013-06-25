@@ -1,0 +1,19 @@
+Targetting from Monster
+
+Sets the player that hits the monster as its target. 
+
+
+Missile vs. Monster:
+
+File Offset 0002E9A8
+
+:0042F5A8 751C                    jne 0042F5C6
+wordt
+:0042F5A8 7500                    jne 0042F5AA
+
+
+For melee some extra coding must be done, after testing shows this works for missiles.
+
+
+
+No visible effect.

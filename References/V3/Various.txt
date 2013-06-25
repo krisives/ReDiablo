@@ -1,0 +1,48 @@
+(*)  = Nog niet uitgevoerd
+(3x) = Aanwezig in versie 3x
+
+--------------------------------------------------------------------------------------------
+
+(*)Duration of Spell Walls
+
+Duration Firewall      : 240 + 160·slvl frames (160 + 160·slvl in Diablo) 
+Duration Lightningwall : 255 + 255·slvl frames  
+
+Firewall      : 0043483F/00438BCD (effect 26h)
+Lightningwall : 0043483F/00439025 (effect 47h)
+
+Duration at [x+00697AC8] : 00000007 (? for both)
+
+Geen geluk, niets gevonden. 
+
+--------------------------------------------------------------------------------------------
+
+(3A)Rainbow/Spectral Elixer
+
+
+Referenced by a Conditional Jump at Address 00429F7C :
+
+:0042A03C 6A03                    push 00000003
+:0042A03E 8BCE                    mov ecx, esi
+:0042A040 5B                      pop ebx
+:0042A041 8BD3                    mov edx, ebx
+:0042A043 E844460300              call 0045E68C
+:0042A048 8BD3                    mov edx, ebx
+:0042A04A 8BCE                    mov ecx, esi
+:0042A04C E8D3460300              call 0045E724
+:0042A051 8BD3                    mov edx, ebx
+:0042A053 8BCE                    mov ecx, esi
+:0042A055 E8C8470300              call 0045E822
+:0042A05A 8BD3                    mov edx, ebx
+:0042A05C 8BCE                    mov ecx, esi
+:0042A05E E857480300              call 0045E8BA
+
+
+Add 2, not 3 to all stats:
+
+File offset = 2943C
+
+:0042A03C 6A03                    push 00000003
+wordt
+:0042A03C 6A02                    push 00000002
+

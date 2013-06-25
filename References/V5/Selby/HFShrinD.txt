@@ -1,0 +1,41 @@
+Shrine Data for Hellfire v1.01
+
+Mysterious
+Gloomy
+Magical
+Stone
+Religious
+Enchanted
+Thaumaturgic
+Fascinating
+Cryptic
+Eldritch
+Eerie
+Divine
+Sacred
+Spiritual
+Spooky
+Abandoned
+Creepy
+Quiet
+Secluded
+Ornate
+Glimmering
+Tainted
+Oily
+Glowing
+Mendicant's
+Sparkling
+Town
+Shimmering
+Solar
+Murphy's
+
+Name pointers begin: 8f170
+Every 3 bytes
+
+Beginning first level occurence: 8f1f8
+Every 1 byte
+
+Beginning last level occurence: 8f220
+Every 1 byte

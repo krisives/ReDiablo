@@ -1,0 +1,15 @@
+Anvil of Repair will now restore up to 50% of items durability, but with the same maximum of 30:
+
+file offset 00027906
+
+:00428506 C1E802                  shr eax, 02
+changed into
+:00428506 D1E8                    shr eax, 1
+:00428508 90                      nop
+
+Adjusting display:
+
+000A48CC 7265 7374 6F72 6573 2032 3525 206F 66   restores 25% of
+changed into
+000A48CC 7265 7374 6F72 6573 2035 3025 206F 66   restores 50% of
+

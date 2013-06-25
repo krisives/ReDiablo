@@ -1,0 +1,40 @@
+Charm will now only work on Animals that are idle or walking. Viper attacktype is also excluded (Drakes tend to become invincible when Charmed, because of some unknown bug).
+
+See also MonsterStates.TXT
+
+
+File offset 0002F84A
+
+:0043044A 80BF20DD690025          cmp byte ptr [edi+0069DD20], 25		no Charm on Psychorb attacktype
+:00430451 7440                    je 00430493
+:00430453 8B878CDC6900            mov eax, dword ptr [edi+0069DC8C]		monster state
+:00430459 83F805                  cmp eax, 00000005
+:0043045C 7E05                    jle 00430463
+:0043045E 83F809                  cmp eax, 00000009				
+:00430461 7E30                    jle 00430493
+:00430463 83F80E                  cmp eax, 0000000E
+:00430466 742B                    je 00430493
+:00430468 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:0043046E 80787202                cmp byte ptr [eax+72], 02			no Charm on Undead or Demons
+:00430472 751F                    jne 00430493
+:00430474 80BF20DD690020          cmp byte ptr [edi+0069DD20], 20		no Charm on Firebat attacktype
+:0043047B 7416                    je 00430493
+changed into
+:0043044A 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:00430450 80787202                cmp byte ptr [eax+72], 02			no Charm if not Animal
+:00430454 753D                    jne 00430493
+:00430456 8B878CDC6900            mov eax, dword ptr [edi+0069DC8C]		monster state
+:0043045C 83F803                  cmp eax, 00000003
+:0043045F 7E05                    jle 00430466					allow non-active and normal movement
+:00430461 83F80D                  cmp eax, 0000000D				
+:00430464 752D                    jne 00430493					allow delaying
+:00430466 8BC7                    mov eax, edi
+:00430468 0520DD6900              add eax, 0069DD20
+:0043046D 803818                  cmp byte ptr [eax], 18
+:00430470 7421                    je 00430493					no Charm on Viper attacktype
+:00430472 803820                  cmp byte ptr [eax], 20
+:00430475 741C                    je 00430493					no Charm on Firebat attacktype
+:00430477 803825                  cmp byte ptr [eax], 25
+:0043047A 7417                    je 00430493					no Charm on Psychorb attacktype
+:0043047C 90                      nop 
+

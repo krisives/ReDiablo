@@ -1,0 +1,27 @@
+Disabling hotkey 'Q' for Quest Log in MP, to prevent accidental use in the middle of combat:
+
+File Offset 0000A1D6
+
+:0040ADD6 380DC4EC6F00            cmp byte ptr [006FECC4], cl
+:0040ADDC 0F85CBFEFFFF            jne 0040ACAD
+wordt
+:0040ADD6 E949750400              jmp 00452324
+:0040ADDB 90909090909090          7*nop
+
+Using free space from Eldritch Shrine:
+
+File Offset 00051724
+
+:00452324 90                      nop
+:00452325 90                      nop
+:00452326 6A5D                    push 0000005D
+:00452328 C784180855000001000000  mov dword ptr [eax+ebx+00005508], 00000001
+:00452333 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452338 8DBC0804480000          lea edi, dword ptr [eax+ecx+00004804]
+wordt
+:00452324 380DC4EC6F00            cmp byte ptr [006FECC4], cl
+:0045232A 750D                    jne 00452339
+:0045232C 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:00452333 0F84A98AFBFF            je 0040ADE2
+:00452339 E96F89FBFF              jmp 0040ACAD
+:0045233E 90                      nop

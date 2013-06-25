@@ -1,0 +1,14 @@
+Rage
+
+
+Old lethargy phase (lower STR, VIT and DEX) is now completely disabled
+
+file offset 00022FA9
+
+:00423BA9 7520                    jne 00423BCB
+changed into
+:00423BA9 EB20                    jmp 00423BCB
+
+
+Much free space can also be gained from the Rage spell effect update routine (see older RageFix.txt).
+

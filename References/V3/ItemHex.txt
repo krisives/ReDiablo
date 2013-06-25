@@ -1,0 +1,497 @@
+The InComplete Diablo Hex Editing File for .ITM and .CHA 
+Arranged by moe SAINT EverGreen (03/31/99)
+http://come.to/diablosight
+
+Hex Editing Characters (.CHA Requires a Diablo Trainer)
+
+ 00 - 14  : Additional Header Added by Trainer
+ 16 - 39  : Spell Levels for Spells 01 to 24
+ 5C - 60  : Spell Bits Determine Spells in Book
+ 78, 7C, 80, 84 : HotKey Spell Settings, F5 - F8
+ 94 - B3  : Character's Name    
+      B4  : Class (00 Warrior, 01 Rogue, 02 Sorcerer)
+ B8 & BC  : Strength   (Now/Base)
+ C0 & C4  : Magic      (Now/Base)
+ C8 & CC  : Dexterity  (Now/Base)
+ D0 & D4  : Vitality   (Now/Base)
+ E4 & E8  : (Long/64) Original Life   (Now/Base)
+ EC & F0  : (Long/64) Modified Life   (Now/Base)
+ F8 & FC  : (Long/64) Original Mana   (Now/Base) 
+100 & 104 : (Long/64) Modified Mana   (Now/Base) 
+      10C : Character's Level 
+      110 : (Long) Character's Experience
+      118 : (Long) Experience to Next Level
+      120 : (Long) Current Count of Gold
+
+2D0 : 7 Equip Items (Helmet, Amulet, ...)
+  Each 0x170 in Length. 
+  FFFFFFFF starting at Offset 08 (28 for .ITM) indicates Empty/Deleted Item.
+CE0 : 40 Inventory Items
+
+4660 : Number of Items in Inventory
+
+4664 .. 468B : Item Numbers at Inventory Positions (0 = empty)
+4664 = Row 1, Col 1 = 01 for First Item in Inventory List
+4665 = Row 1, Col 2 = 03 for Third Item in Inventory List
+468B = Row 4, Col 5 = 0A for Tenth Item in Inventory List
+= -1 (or FF) = position blocked by the bulk of item 1
+= -3 (or FD) = position blocked by the bulk of item 3
+
+468C = 8 Belt Items
+
+Hex Editing Item File (.ITM Requires a Diablo Trainer)
+
+Bytes 00 - 1F : Additional Header Added By Trainer
+
+Bytes 20 - 24 : Unique Item Number (Cazasombras, 'Item Generator Seed') 
+XX XX XX XX XX
+Diablo Uses this Number to Send to a Pseudo Random Item Generator.
+The Same Code usually generates the same item and same stats,
+But some exceptions exist, depending on locations 25 and 188.
+If a non-unique item does not match codes with its originator,
+and then it will get re-generated when it re-enters the game world.
+Somebody could use this with a Non-Legit-Checking program 
+to search in other player's inventories for hacks, duplicates,
+and commonly duplicated items, such as the King's Sword of Haste.
+Ears use 25 to 20 as the First 6 characters of the Name.
+
+Byte 24 : Item Origin Level (CazaSombras 'Control Code, 2nd Byte')
+This byte appears to affect the Grade of Items Generated.
+01 - 1E Level 1 to Level 30 Item Drops/Offers
+1F - 32 Level 31 to Level 50 Item Offers from Wirt
+33 - 3F Most Hacked Unattainable Godly Items
+   
+Items found lying on the ground (except potions) have 2nd upper bit set,
+42 - 5E Level 2 to Level 30 Items lying on the ground, 2*(dungeon level)
+
+Some potions out of barrels and chests will have the upper most bit set,
+81 - 9E Some Potions and Scrolls
+
+Items dropped by Boss Monsters also have the upper two bits set,
+C1 - DE Level 1 to Level 30 Items dropped by Unique monsters
+
+
+Byte 25 : Item Origin Code (CazaSombras 'Control Code, 1st Byte')
+00 Boss Monster Treasure Items (Amulet, Ring, Gold).
+     Note : Potions have some exceptions
+01 Other Treasure Items (Amulet, Ring, Armor, Weapons).
+02 Unique Dropped by Boss (Grandfather, Royal Circlet)
+03 Unique Dropped by NonBoss or Quest (Optic Amulet, most Hacked Uniques)
+04 Smith Shop Normal Items (Non Magical Sabre)
+08 Smith Shop Item (Any Weapon/Armor, Not Amulets nor Rings)
+10 Wirt Shop Item (Powerful Flail, Godly Shields)
+20 Witch Shop Magic Item (Book, Staff, Scroll, Mana)
+40 Healer Shop Magic Item (Rejuvenation, Elixer)
+Ears have the First Letter of the Name here.
+
+Byte 28 : Encoded Weapon Type to Player (Caz, 'Dangerous Bit Fields'.. Heh)
+00 Elixer (Book, Scroll, Potion), 01 Sword, 02 Axe, 03 Bow (Arrows)
+04 Mace (Flail, Hammer), 05 Shield, 07 Helm, 0A Staff
+06 Leather Armor, 08 Mail Armor, 09 Plate Armor
+0B Gold, 0C Ring, 0D Amulet
+
+Byte 3C : BattleNet Item Code
+00 Single Player Items, 0A Gold, 0F Armor, 10 Potions (Elixers), 
+0D All Others (Sword, Axe, Helm, Ring, Amulet, Book, etc)
+
+Byte 58 : Identification Flag
+00 Unidentified, 01 Identified
+
+Byte 5C : Item Type (Must Match Byte 188)
+00 Normal, 01 Magical, 02 Unique 
+
+Bytes 5D - 9C : Item Type Name in ASCII, Null Terminated
+Bytes 9D - DC : Item Name in ASCII, Null Terminated
+
+Byte DD : Equipment Placement (Must Match Byte DE and 28)
+01 One-Handed, 02 Two-Handed, 03 Body Armor, 04 Head Gear 
+05 Ring, 06 Amulet, 07 Non-Equipment 
+
+Byte DE : Class (Must Match Byte DD And 28), (Caz, 'Show Status')
+01 Weapon, 02 Armor, 03 Anything Else, 04 Gold
+
+Byte E0 : Item Graphic 
+Amulets 
+2C Blue Ivory Amulet      2E Black Eye Amulet 
+2D Standard Amulet        2F Bug Brooch       
+
+Rings 
+07 Thick Ring             0A Sapphire Ring          0E Orange Gem Gold Ring   
+08 Ruby Ring              0D Ebony Gold Ring        12 Steel Blue Diamond Ring
+
+Weapons
+32 Bastard Dagger         42 Wooden Club            8D Dark Axe                 
+33 Red Handle Dagger      48 Pirate Sword           90 Hatchet                  
+36 Black Handle Dagger    49 Blood Angel Sword      9E Crossbow                 
+38 Long Sword             65 Double-Bladed Axe      A2 Spiked Baseball Bat      
+39 Great Sword            6A Butcher's Cleaver      A4 Bow of the Wind          
+3B Mace                   7C Hooked Spear           A6 Reaper Spear             
+3C Red Handle Sword       82 Three Ball Chain Whip  A3 Dwarves Double-Bladed Axe
+3D Emperor's Great Sword  85 Warrior's Bow         
+
+Armor 
+67 Black Dragon Plate     88 Samurai Armor          96 Lava Robes               
+6F Chain Mail Dress       89 White Robes            97 Knight's Armor           
+72 Chain Mail             8A Dark Mage Robes        98 Horned Black Dragon Armor
+80 Rags                   95 Magi Robes     
+
+Shields 
+69 Round Shield           75 Devil's Shield         93 Eagle Shield     
+73 Thick Shield           84 Tower Shield           94 Black Lion Shield
+74 Grinning Death Shield  92 Lion Shield    
+
+Helms 
+4D Spiked Crown           51 Jeweled Helm           5A Skull Cap 
+4E Thanatos' Crown        54 Horned Helm            5B Cap       
+4F Leorics Crown          55 Great War Helm
+
+Unusual Stuff
+15 Player's Ear           1B Blue Sapphire Cube     81 Pajamas 
+1A Christmas Ornament     28 Brain                  8C Anvil   
+
+Byte E4 : Unidentified Price 
+Byte E8 : Identified Price 
+Byte EC : Min Damage 
+Byte F0 : Max Damage 
+Byte F4 : Armor AC
+
+Byte F8 : Special Ability Flags (00 = None)
+01 Infravision (Always)                    10 Extra Fire Damage                
+02 Random Life Stealing                    20 Extra Lighning Damage            
+04 Random Speed Arrows                     40 Cursed Hit Points (Constricting) 
+08 Burning Damage (Does Fire Damage)
+
+Byte F9 : More Special Ability Flags (00 = None)           
+08 Knock target back (Bear)                40 Steal 5% Mana (Vampire)
+20 Steal 3% Mana (Bat)                     80 Steal 3% Life (Leech)  
+
+Byte FA : More Special Ability Flags (00 = None)
+01 Steal 5% life (Blood)                   10 Fastest Attack (Haste)         
+02 Quick Attack (Readyness)                20 Fast Hit Recovery (Balance)    
+04 Fast Attack (Swiftness)                 40 Faster Hit Recovery (Stability)
+08 Faster Attack (Speed)                   80 Fastest Hit Recovery (Harmony) 
+
+Byte FB : More Special Ability Flags (00 = None)
+01 Fast Block (Shields)
+02 1-6 additional lightning damage (Thunder)
+04 Attacker takes 1-3 thorn damage (engagement)
+08 Cursed Mana, 0 (Corruption)
+10 Absorb Half Trap Damage (Thieves)
+40 +200% Damage to Demons
+80 Cursed Resistance, All to 0%
+
+Byte FC : Magic Code (00 = None)
+02 Potion of Full Healing                  12 Potion of Rejuvination     
+03 Potion of Healing                       13 Potion of Full Rejuvination
+06 Potion of Mana                          17 Staff                      
+07 Potion of Full Mana                     18 Book                       
+0A Elixer of Strength                      19 Ring (1B)
+0B Elixer of Magic                         1A Amulet                     
+0C Elixer of Dexterity                     2C Spectral Elixer            
+15 Scrolls of Apocalypse, Healing, Identify, Infravision, Nova, Phasing, 
+              Teleport, Town Portal, Chain Lightning, 
+16 Scrolls of FireBall, Fire Wall, Flash, Golem, Guardian, Lightning, 
+              Resurrect, Stone Curse
+
+Byte 100 : Spell Code (Staffs/Scrolls/Books, 00 = None)
+01 FireBolt               0D Guardian               19 (Etheralize "Halo")
+02 Healing                0E ChainLightning         1A *Item Repair  
+03 Lightning              0F FlameWave              1B *StaffRecharge
+04 Flash                  10 (Doom Serpents)        1C *TrapDisarm   
+05 Identify               11 (BloodRitual)          1D Elemental    
+06 FireWall               12 Nova                   1E ChargedBolt  
+07 TownPortal             13 (Invisibility)         1F HolyBolt     
+08 StoneCurse             14 Inferno                20 Resurect     
+09 Infravision            15 Golem                  21 Telekinesis  
+0A Phasing                16 (BloodBoil)            22 HealOther    
+0B ManaShield             17 Teleport               23 BloodStar    
+0C FireBall               18 Apocalypse             24 BoneSpirit   
+
+Byte 104 & 105 : (Word) Current Staff Charges 
+Byte 108 & 109 : (Word) Max Staff Charges 
+Byte 10C : Current Item Durability (FF 00 = Indestructible) (00 00 = ring/amulet)
+Byte 110 : Max Item Durability     (FF 00 = Indestructible) (00 00 = ring/amulet)
+Byte 114 : Damage Bonus (%)
+Byte 118 : To Hit Bonus (%)
+Byte 11C : Armor Bonus (%) 
+Byte 120 : Str Bonus 
+Byte 124 : Magic Bonus 
+Byte 128 : Dexterity Bonus 
+Byte 12C : Vitality Bonus 
+Byte 130 : Fire Protection (%) 
+Byte 134 : Lightning Protection (%) 
+Byte 138 : Magic Protection (%) 
+Byte 13C : (Word/64) Mana Points (Snake)
+Byte 140 : (Word/64) Health Points (Whale)
+Byte 144 : Damage Bonus (Gore/Slaying) 
+Byte 148 : Modify Enemy Attack (+/-)
+Byte 14C : Light Radius (+/- *10%)
+Byte 150 : Modify Spell Level (Angel), (+/-)
+Byte 151 : ??? (CazaSombras Incorrectly Adds as Upper byte to Spell Modifier)
+Byte 154 : ??? (CazaSombras, "Show")
+Byte 158 : Min Additional Damage (Fire)
+Byte 15C : Max Additional Damage (Fire)
+Byte 160 : Min Additional Damage (Lightning)
+Byte 164 : Max Additional Damage (Lightning)
+
+Byte 16C : Item Prefix Display Code (FF = None)
+00 +x% to Hit (Bronze Iron Meteoric Mithril Platinum Steel)
+02 +x% Damage (Brutal Deadly Heavy Jagged Massive Savage)
+04 +x% to Hit, +y% Damage (Lord Knight Master Soldier Warrior)
+06 +x% to AC (Awesome Blessed Fine Glorious Grand Saintly Strong)
+08 Resist Fire +x% (Crimson Garnet Red Ruby)
+09 Resist Lightning +x% (Azure Blue Cobalt Lapis Sapphire)
+0A Resist Magic +x% (Crystal Diamond Ivory Pearl White)
+0B Resist All +x% (Amber Emerald Jade Obsidian Topaz)
+0E Increase Spells by x level(s) (Angel Arch-Angel)
+0F Extra Charges (Bountiful Plentiful)
+11 Extra Lightning Damage (Lightning)
+21 +x Mana (Drake Raven Snake Dragon)
+
+Byte 16D : Item Suffix Display Code
+13 +x Strength (Might Strength Giant Titan)
+15 +x Magic (Magic Mind Sorcery Wizardry)
+17 +x Agility (Agility Dexterity Perfection Precision Skill)
+19 +x Vitality (Life Vigor Vitality Zest)
+1B +x to all attributes (Heavens Moon Sky Stars)
+1E -x Damage (Absorption Deflection Protection Health)
+1F +x to HP (Eagle Fox Jaguar Lion Tiger Wolf)
+23 High Durability (Craftmanship Plenty(bow) Structure Sturdiness
+24 Decrease Durability by x% (Brittleness)
+25 Indestructible (Ages)
+26 Increase Light Radius by x% (Light Radiance)
+2A 1-3 Fire Damage (Flame)
+2B 1-6 Lightning Damage (Shock)
+35 Knocks Target Back (Bear)
+37 Steals x% Mana (Vampire)
+38 Steals x% Life (Blood, Leech)
+39 Damage Target's Armor (Bashing Piercing Puncturing)
+3A Fast[er/est] Attacks (Haste Speed Swiftness)
+3B Fastest Hit Recovery (Harmony)
+3C Fast Block (Blocking)
+3D +x Damage (Gore Quality Maiming Slaying)
+
+Byte 180 : Strength Requirment 
+Byte 181 : Magic Requirment 
+Byte 182 : Dexterity Requirment 
+
+Byte 188 : Equipment Name Type
+Hex Dec Description
+00   0 Gold
+
+17  23 Ear of player (Heart)
+
+18  24 Potion of Healing
+19  25 Potion of Mana
+
+1D  29 Potion of Full Healing
+1E  30 Potion of Full Mana
+
+4D  77 Potion of Healing
+4E  78 Potion of Full Healing
+4F  79 Potion of Mana
+50  80 Potion of Full Mana
+51  81 Potion of Rejuvenation
+52  82 Potion of Full Rejuvenation
+
+53  83 Elixir of Strength
+54  84 Elixir of Magic
+55  85 Elixir of Dexterity
+56  86 Elixir of Vitality
+
+1A  26 Scroll of (Identify?)
+1B  27 Scroll of (Town Portal?)
+
+22  34 Scroll of (Resurrect?)
+
+57  87 Scroll of (Healing?)
+58  88 Scroll of (Lightning?)
+59  89 Scroll of (Identify?)
+5A  90 Scroll of (Resurrect?)
+5B  91 Scroll of (Fire Wall?)
+5C  92 Scroll of (Inferno?)
+5D  93 Scroll of (Town Portal?)
+5E  94 Scroll of (Flash?)
+5F  95 Scroll of (Infravision?)
+60  96 Scroll of (Phasing?)
+61  97 Scroll of (Mana Shield?)
+62  98 Scroll of (Flame Wave?)
+63  99 Scroll of (Fireball?)
+64 100 Scroll of (Stone Curse?)
+65 101 Scroll of (Chain Lightning?)
+66 102 Scroll of (Guardian?)
+
+68 104 Scroll of (Nova?)
+69 105 Scroll of (Golem?)
+6A 106 Scroll of (?)
+6B 107 Scroll of (Teleport?)
+6C 108 Scroll of (Apocalypse?)
+
+6D 109 Magic Book
+6E 110 Magic Book
+6F 111 Magic Book
+70 112 Magic Book
+
+01   1 Beginner's Short Sword
+02   2 Beginner's Buckler
+03   3 Beginner's Club
+04   4 Beginner's Short Bow
+05   5 Beginner's Staff of Charged Bolt
+
+06   6 Cleaver
+07   7 The Undead Crown
+08   8 Empyrean Band
+0A  10 Optic Amulet
+0B  11 Ring of Truth
+0D  13 Harlequin Crest
+0E  14 Veil of Steel
+1C  28 Arkaine's Valor
+1F  31 Griswold's Edge
+
+30  48 Cap
+31  49 Skull Cap
+32  50 Helm
+33  51 Full Helm
+34  52 Crown
+35  53 Great Helm
+36  54 Cape
+37  55 Rags
+38  56 Cloak
+39  57 Robe
+3A  58 Quilted Armor
+3B  59 Leather Armor
+3C  60 Hard Leather Armor
+3D  61 Studded Leather Armor
+3E  62 Ring Mail
+3F  63 Chain Mail
+40  64 Scale Mail
+41  65 Breast Plate
+42  66 Splint Mail
+43  67 Plate Mail
+44  68 Field Plate
+45  69 Gothic Plate
+46  70 Full Plate Mail
+47  71 Buckler
+48  72 Small Shield
+49  73 Large Shield
+4A  74 Kite Shield
+4B  75 Tower Shield
+4C  76 Gothic Shield
+
+71 113 Dagger
+72 114 Short Sword
+73 115 Falchion
+74 116 Scimitar
+75 117 Claymore
+76 118 Blade
+77 119 Sabre
+78 120 Long Sword
+79 121 Broad Sword
+7A 122 Bastard Sword
+7B 123 Two-Handed Sword
+7C 124 Great Sword
+7D 125 Small Axe
+7E 126 Axe
+7F 127 Large Axe
+80 128 Broad Axe
+81 129 Battle Axe
+82 130 Great Axe
+83 131 Mace
+84 132 Morning Star
+85 133 War Hammer
+86 134 Spiked Club
+87 135 Club
+88 136 Flail
+89 137 Maul
+8A 138 Short Bow
+8B 139 Hunter's Bow
+8C 140 Long Bow
+8D 141 Composite Bow
+8E 142 Short Battle Bow
+8F 143 Long Battle Bow
+90 144 Short War Bow
+91 145 Long War Bow
+92 146 Short Staff
+93 147 Long Staff
+94 148 Composite Staff
+95 149 Quarter Staff
+96 150 War Staff
+
+97 151 Ring
+98 152 Ring
+99 153 Ring
+9A 154 Amulet
+9B 155 Amulet
+
+09   9 Magic Rock
+0C  12 Tavern Sign
+0F  15 Golden Elixir
+10  16 Anvil of Fury
+11  17 Black Mushroom
+12  18 Brain
+13  19 Fungal Tome
+14  20 Spectral Elixir
+15  21 Blood Stone
+21  33 Staff of Lazarus
+
+16  22 Map of the Stars
+20  32 Lightforge
+
+23  35 Invalid
+24  36 Invalid
+25  37 Invalid
+26  38 Invalid
+27  39 Invalid
+28  40 Invalid
+29  41 Invalid
+2A  42 Invalid
+2B  43 Invalid
+2C  44 Invalid
+2D  45 Invalid
+2E  46 Invalid
+2F  47 Invalid
+
+67 103 Invalid
+
+9C 156 The rest are Invalid
+
+
+Example : Testing the Random Item Generator
+
+Take your character into a new IPX game,
+and Buy some simple weapon from the smith.
+Export it to a test.itm file with a Diablo Trainer,
+and Export the Possible Hacked item.
+
+Edit the test.itm with a Hex Editor, 
+and change bytes 20-25 (Random 'Unique' Item Number)
+to match those bytes of some Item you have on File.
+(or place some Random Number here to see what you'll get)
+Import this new test.itm over the weapon you bought.
+Pickup and Release the item to stabilize Diablo.
+Choose New Game, and Create another game.
+Open your Inventory.
+Check out the weapon you have now and its stats.
+
+The weapon will now have the stats based on Unique Codes in 20-24,
+and possibly based as well on 25 and 188.
+
+Note : A few stats, such as Durability & Charges, may remain the same.
+
+
+Example : Check to See if You have a Hacked Item
+
+Indestructable Items, and Staffs with Too Many Charges.
+
+Does that King's Sword of Haste have an Indestructable nature?
+If so, you have a hack, non-legit, and probably duped.
+Only some Uniques and Items of the Ages have 255 in durability.
+
+Most Legit Staffs of Apocalypse have less than 12 Charges.
+No Staff has 255 charges, and Bountiful Staffs only have 3 times normal.
+
+Hacked Unique Items and Unique Items imported from Single Player
+often have a Pseudo Random Code of XX 00 00 00 XX in 20-24.
+
+
+

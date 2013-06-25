@@ -1,0 +1,96 @@
+Shared Xp over all characters
+
+Disable dividing monster-Xp by number of players, and award all players that are alive and on the same level at monster's death with the full Xp (which gets still modified according to mlvl and clvl, and capped at 250*clvl and 1/20 of Xp-needed-for-next-level).
+
+No effect on Shrines, Golem or Charmed monsters.
+
+
+File Offset 00057A10
+
+:00458610 5A                      pop edx
+:00458611 D3E2                    shl edx, cl
+:00458613 85D6                    test esi, edx
+:00458615 7401                    je 00458618
+:00458617 47                      inc edi
+:00458618 41                      inc ecx
+:00458619 83F904                  cmp ecx, 00000004
+wordt
+:00458610 5F                      pop edi
+:00458611 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00458617 EB1B                    jmp 00458634
+:00458619 909090		  3*nop
+
+Now free space from 00458619 to 00458634.
+
+
+
+Original code:
+
+:0043D14D 8A8647DD6900            mov al, byte ptr [esi+0069DD47]	Xp flag
+:0043D153 0FB7964ADD6900          movzx edx, word ptr [esi+0069DD4A]	Xp value
+:0043D15A 0FBE8E48DD6900          movsx ecx, byte ptr [esi+0069DD48]	mlvl
+:0043D161 50                      push eax
+:0043D162 E897B40100              call 004585FE				award Xp's
+
+:0043DE06 8D8647DD6900            lea eax, dword ptr [esi+0069DD47]
+:0043DE0C 0810                    or byte ptr [eax], dl
+:0043DE0E 8A00                    mov al, byte ptr [eax]
+:0043DE10 83F904                  cmp ecx, 00000004
+:0043DE13 7D14                    jge 0043DE29
+:0043DE15 0FB7964ADD6900          movzx edx, word ptr [esi+0069DD4A]
+:0043DE1C 0FBE8E48DD6900          movsx ecx, byte ptr [esi+0069DD48]
+:0043DE23 50                      push eax
+:0043DE24 E8D5A70100              call 004585FE				award Xp's
+
+
+Awarding Xp's to several characters:
+
+* Referenced by a CALL at Addresses:
+|:0043D162   , :0043DE24   
+|
+:004585FE 53                      push ebx
+:004585FF 56                      push esi
+:00458600 0FBE74240C              movsx esi, byte ptr [esp+0C]
+:00458605 57                      push edi
+:00458606 8BD9                    mov ebx, ecx
+:00458608 33FF                    xor edi, edi
+:0045860A 8BC2                    mov eax, edx
+:0045860C 33C9                    xor ecx, ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045861C(C)
+|
+:0045860E 6A01                    push 00000001
+:00458610 5A                      pop edx
+:00458611 D3E2                    shl edx, cl
+:00458613 85D6                    test esi, edx
+:00458615 7401                    je 00458618
+:00458617 47                      inc edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00458615(C)
+|
+:00458618 41                      inc ecx
+:00458619 83F904                  cmp ecx, 00000004
+:0045861C 7CF0                    jl 0045860E
+:0045861E 85FF                    test edi, edi
+:00458620 741A                    je 0045863C
+:00458622 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00458628 6A01                    push 00000001
+:0045862A 99                      cdq
+:0045862B F7FF                    idiv edi
+:0045862D 5A                      pop edx
+:0045862E D3E2                    shl edx, cl
+:00458630 85D6                    test esi, edx
+:00458632 7408                    je 0045863C
+:00458634 50                      push eax
+:00458635 8BD3                    mov edx, ebx
+:00458637 E856FEFFFF              call 00458492
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00458620(C), :00458632(C)
+|
+:0045863C 5F                      pop edi
+:0045863D 5E                      pop esi
+:0045863E 5B                      pop ebx
+:0045863F C20400                  ret 0004

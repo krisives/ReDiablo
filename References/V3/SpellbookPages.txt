@@ -1,0 +1,107 @@
+SpellBook pages
+
+
+00093768 0000 0000 1E00 0000 0300 0000 0E00 0000 ................
+00093778 2800 0000 0400 0000 1200 0000 0100 0000 (...............
+00093788 0C00 0000 0600 0000 0F00 0000 1D00 0000 ................
+00093798 0D00 0000 2900 0000 1F00 0000 2C00 0000 ....).......,...
+000937A8 1400 0000 2300 0000 2400 0000 2D00 0000 ....#...$...-...
+000937B8 1800 0000 0700 0000 0A00 0000 2A00 0000 ............*...
+000937C8 1700 0000 2100 0000 0800 0000 1500 0000 ....!...........
+000937D8 0200 0000 2200 0000 2000 0000 0B00 0000 ...."... .......
+000937E8 2B00 0000 2E00 0000 0500 0000           +...........
+
+
+Page 1 - Lightning attacks
+
+(Skill)(00)
+Charged Bolt(1E)
+Lightning(03)
+Lightning Blast (Chain Lightning)(0E)
+Lightning Wall(28)
+Flash(04)
+Nova(12)
+
+Page 2 - Fire attacks
+
+Fire Bolt(01)
+Fire Ball(0C)
+Fire Wall(06)
+Flame Wave(0F)
+Elemental(1D)
+Guardian(0D)
+Immolation(29)
+
+Page 3 - Magic attacks
+
+Holy Bolt(1F)
+Magic Missile(2C)
+Multi arrow(14)
+Blood Star(23)
+Bone Spirit(24)
+Doom Serpent(2D)
+Apocalypse(18)
+
+Page 4 - Movement
+
+Town Portal(07)
+Blink(0A)
+Warp(2A)
+Teleport(17)
+Telekinesis(21)
+Stone Curse(08)
+Golem(15)
+
+Page 5 - Support
+
+Healing(02)
+Heal Other(22)
+Resurrection(20)
+Mana Shield(0B)
+Barrier(2B)
+Search(2E)
+Identify(05)
+
+
+
+Original pages (File Offset 00093768)
+
+00000000
+01000000
+1E000000
+1F000000
+02000000
+22000000
+14000000
+
+20000000
+06000000
+21000000
+03000000
+07000000
+04000000
+08000000
+
+0A000000
+0B000000
+1D000000
+0C000000
+0F000000
+0E000000
+0D000000
+
+12000000
+15000000
+17000000
+18000000
+24000000
+23000000
+05000000
+
+28000000
+29000000
+2A000000
+2B000000
+2C000000
+2D000000
+2E000000

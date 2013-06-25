@@ -1,0 +1,48 @@
+Monster Resistances
+
+Version 5.1A did not have the modified monster resistances that it intended to have. This new change corrects this, and also puts the damage reduction before the critical hit calculation. This way, even resisted hits may cause the same maximum damage if luck is good enough.
+
+
+file offset 0002E8D2
+
+:0042F4D2 E8AEDF0000              call 0043D485
+:0042F4D7 90                      nop
+changed into
+:0042F4D2 E85DDF0000              call 0043D434
+:0042F4D7 90                      nop
+
+
+file offset 0003C838
+
+:0043D438 8BC7                    mov eax, edi
+:0043D43A 740B                    je 0043D447
+:0043D43C 90                      nop
+:0043D43D 51                      push ecx
+:0043D43E 6A06                    push 00000006
+:0043D440 99                      cdq
+:0043D441 59                      pop ecx
+:0043D442 F7F9                    idiv ecx
+:0043D444 8BF8                    mov edi, eax
+:0043D446 59                      pop ecx
+:0043D447 EB59                    jmp 0043D4A2
+changed into
+:0043D438 744B                    je 0043D485
+:0043D43A C1FF03                  sar edi, 03
+:0043D43D EB46                    jmp 0043D485
+:0043D43F 90909090909090909090    10*nop
+:0043D449 
+
+
+file offset 0003C889
+
+:0043D489 7411                    je 0043D49C
+changed into
+:0043D489 7417                    je 0043D4A2
+:0043D48B 
+
+
+file offset 0003C89C
+
+:0043D49C EB96                    jmp 0043D434
+changed into
+:0043D49C 9090                    2*nop

@@ -1,0 +1,92 @@
+Piercing Missiles
+
+Gives 40% chance for arrows or HolyBolt to continue after a succesfull hit. Secondary effects (such as from Lightning Arrow) will only trigger for the last impact.
+
+
+File Offset 0002E9C6
+
+:0042F5C6 6A01                    push 00000001
+:0042F5C8 58                      pop eax
+:0042F5C9 EB02                    jmp 0042F5CD
+wordt
+:0042F5C6 E94E900200              jmp 00458619
+
+
+Code placed on space from SharedXp (filled up now):
+
+File Offset 00057A19
+
+:00458619 90                      nop
+...
+:00458633 90                      nop
+wordt
+:00458619 807D1300                cmp byte ptr [ebp+13], 00
+:0045861D 7406                    je 00458625
+:0045861F 837D1435                cmp dword ptr [ebp+14], 00000035
+:00458623 7507                    jne 0045862C
+:00458625 E8A24EFEFF              call 0043D4CC		routine from KnockbackAvoid
+:0045862A EB03                    jmp 0045862F
+:0045862C 6A01                    push 00000001
+:0045862E 58                      pop eax
+:0045862F E9996FFDFF              jmp 0042F5CD
+
+
+
+Info:
+
+Do attack from spell update routine:
+:004360C4 E805C0FFFF              call 004320CE
+
+
+Missile hit vs monster:
+
+:0043219E E8DAD0FFFF              call 0042F27D
+:004321A3 85C0                    test eax, eax
+:004321A5 7417                    je 004321BE
+:004321A7 807D1800                cmp byte ptr [ebp+18], 00
+:004321AB 7507                    jne 004321B4		<- gives Piercing for all spells!!!
+:004321AD 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+
+
+Missile hit vs other player
+
+:004321F9 E862020000              call 00432460
+:004321FE E94F010000              jmp 00432352
+..
+:004323A3 807D1800                cmp byte ptr [ebp+18], 00
+:004323A7 7507                    jne 004323B0
+:004323A9 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+
+
+Monster missile vs other monster
+
+:0043224D E86DCEFFFF              call 0042F0BF
+:00432252 85C0                    test eax, eax
+:00432254 7417                    je 0043226D
+:00432256 807D1800                cmp byte ptr [ebp+18], 00
+:0043225A 7507                    jne 00432263
+:0043225C 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+
+
+Hit the wall ?
+
+:004323EE E8E1180200              call 00453CD4
+:004323F3 807D1800                cmp byte ptr [ebp+18], 00
+:004323F7 7507                    jne 00432400
+:004323F9 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+
+
+
+Monster/Player missile vs monster
+
+:004322DA E89ECFFFFF              call 0042F27D
+:004322DF EB0B                    jmp 004322EC
+:004322E1 8B55FC                  mov edx, dword ptr [ebp-04]
+:004322E4 8D48FF                  lea ecx, dword ptr [eax-01]
+:004322E7 E8D3CDFFFF              call 0042F0BF
+:004322EC 85C0                    test eax, eax
+:004322EE 7417                    je 00432307
+:004322F0 807D1800                cmp byte ptr [ebp+18], 00
+:004322F4 7507                    jne 004322FD
+:004322F6 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+

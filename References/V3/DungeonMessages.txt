@@ -1,0 +1,66 @@
+Play Dungeon messages for MP also
+
+
+File Offset 0005DFBF
+
+:0045EBBF 8A1DC8DF6D00            mov bl, byte ptr [006DDFC8]
+wordt
+:0045EBBF B301                    mov bl, 01
+:0045EBC1 90909090                4*nop
+
+
+Gives original SP messages upon entering dlvl 1, 5, 9, 13, H1(*), H3(*) and C1.
+(* Defiler voice, with screentext)
+
+
+Voor dlvl 16 is er ook iets, wat dus niet gehoord wordt.
+
+Disabling check that disables lvl16int.wav
+
+File Offset 0005E203
+
+:0045EE03 80BE0302000000          cmp byte ptr [esi+00000203], 00
+:0045EE0A 754B                    jne 0045EE57
+wordt
+:0045EE03 80BE0302000000          cmp byte ptr [esi+00000203], 00
+:0045EE0A 7500                    jne 0045EE0C
+
+This gives sfx\misc\lvl16int.wav (in use as Diablo 'death').
+
+Veranderen in sfx\monsters\wlock01.wav, en Pentagrams door Books.
+
+00098B30 0000 0000 5366 785C 4D69 7363 5C4C 766C ....Sfx\Misc\Lvl
+00098B40 3136 696E 742E 7761 7600 0000 5366 785C 16int.wav...Sfx\
+wordt
+00098B30 0000 5366 785C 4D6F 6E73 7465 7273 5C57 ..Sfx\Monsters\W
+00098B40 6C6F 636B 3031 2E77 6176 0000 5366 785C lock01.wav..Sfx\
+
+en 
+
+Pointer aangepast
+
+00098110 4900 0000 0000 0134 A149 0000 0000 0001 I......4.I......
+wordt
+00098110 4900 0000 0000 0132 A149 0000 0000 0001 I......2.I......
+
+en
+
+Vervang 'switch' (14) door 'mcirl' (34) en weer door 'book1' (0C).
+
+File Offset 000B2E58
+
+0114101000FFFF00000000000100000000000000600000000100000001000000010000000001000001000000 
+wordt
+010C101000FFFF00000000000400000000000000600000000100000001000000010000000001000001000000 
+
+mcirl = 
+0134000001FF0F00000000000100000000000000600000000000000001000000010000000000000000000000 
+Book1 =
+010C050502FF0900000000000400000000000000600000000100000001000000010000000003000000000000 
+
+en
+
+Tekst 'Skull lever' aangepast in 'Pentagram' en weer in 'Hell Book'.
+
+000B43B0 4865 6C6C 2042 6F6F 6B00 0000 426F 6F6B Hell Book...Book
+

@@ -1,0 +1,43 @@
+ 
+
+• Fixed Gossip (same gossip from each towner every time)
+
+• Fixed disappearing quests (upon re-entering the town level, quest statuses were incorrectly cleared through array bounds overstep).
+
+• Fixed generating spell books by Adria (would "morph" on new game).
+
+• Fixed the bug where picking up gold when your inventory is full duplicates the gold in your hand and fills your gold slot.
+
+• Fixed the Berserk spell to prevent crashes (large numbers of berserk monsters occasionally attacked dead monsters).
+
+• Fixed inactive monsters to prevent same kind of crash as above.
+
+• Fixed entering levels; had crashed on some systems (seemingly randomly).
+
+• Fixed doppelganger's items to not clone Diablo.
+
+• Fixed generating rings of fire behind a wall.
+
+• Sped up monk's open-hand attack (users complained he should be faster with feet than with the sweeping staff).
+
+• Various small internal fixes to prevent potential misbehavior.
+
+• Fixed monster hitpoint variable type for tough monsters (some monsters, especially in Nightmare/Hell difficulty, had way fewer hit points than specified).
+
+• Changed Search spell to show items on automap, too (users complained they couldn't find things behind solid walls in Caves, Nest, Crypt).
+
+• Fix to unique items changing between games (veil of steel, arkaine's valor, etc).
+
+• Fixed to dropping and picking back up oiled items (bonus was lost).
+
+• Fixed Cathedral Map activation crash bug
+
+• Added sounds to Mana Drain and Disenchant traps.
+
+• Monster hit points in Nightmare/Hell are +100/200 instead of +1.5/+3.
+
+• Fixed monster stats display in Nightmare/Hell to reflect the halving.
+
+• Balance/Stability/Harmony now does something
+
+Download Patch V1.01 here.

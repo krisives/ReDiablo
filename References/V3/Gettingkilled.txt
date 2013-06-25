@@ -1,0 +1,459 @@
+Getting killed
+
+
+2 calls when player dying (by melee):
+
+:0043E643 E88FC50100              call 0045ABD7
+:0043E648 8B97D0DC6900            mov edx, dword ptr [edi+0069DCD0]
+:0043E64E 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0043E651 E8A7E5FFFF              call 0043CBFD
+
+
+
+call 0045ABD7	Dying characters :
+
+* Referenced by a CALL at Addresses:
+|:0042F994   , :0042FA68   , :00433824   , :0043564D   , :00437C73   
+|:0043E643   , :004499E7   , :0044EE90   , :00458EAB   , :004591EA   
+|:00459404   , :00459688   , :00459939   , :004599E7   , :00459AB9   
+|:00459B83   , :00459E96   , :0045DBCD   , :0045DC28   
+|
+:0045ABD7 53                      push ebx
+:0045ABD8 55                      push ebp
+:0045ABD9 56                      push esi
+:0045ABDA 8BF1                    mov esi, ecx
+:0045ABDC 8BC6                    mov eax, esi
+:0045ABDE 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045ABE4 69C0C8550000            imul eax, 000055C8
+:0045ABEA 33ED                    xor ebp, ebp
+:0045ABEC 57                      push edi
+:0045ABED 39AC0898010000          cmp dword ptr [eax+ecx+00000198], ebp
+:0045ABF4 8BDA                    mov ebx, edx
+:0045ABF6 7F15                    jg 0045AC0D
+:0045ABF8 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045ABFF 750C                    jne 0045AC0D
+:0045AC01 6A40                    push 00000040
+:0045AC03 8BCE                    mov ecx, esi
+:0045AC05 5A                      pop edx
+:0045AC06 E8A13D0000              call 0045E9AC
+:0045AC0B EB4D                    jmp 0045AC5A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045ABF6(C), :0045ABFF(C)
+|
+:0045AC0D 8B3D48D06900            mov edi, dword ptr [0069D048]
+:0045AC13 3BFD                    cmp edi, ebp
+:0045AC15 7E31                    jle 0045AC48
+:0045AC17 BA68766900              mov edx, 00697668
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045AC46(C)
+|
+:0045AC1C 8B0A                    mov ecx, dword ptr [edx]
+:0045AC1E 8BC1                    mov eax, ecx
+:0045AC20 69C0B0000000            imul eax, 000000B0
+:0045AC26 83B8587A69000D          cmp dword ptr [eax+00697A58], 0000000D
+:0045AC2D 7511                    jne 0045AC40
+:0045AC2F 39B0CC7A6900            cmp dword ptr [eax+00697ACC], esi
+:0045AC35 7509                    jne 0045AC40
+:0045AC37 83B88C7A690000          cmp dword ptr [eax+00697A8C], 00000000
+:0045AC3E 741F                    je 0045AC5F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045AC2D(C), :0045AC35(C)
+|
+:0045AC40 45                      inc ebp
+:0045AC41 83C204                  add edx, 00000004
+:0045AC44 3BEF                    cmp ebp, edi
+:0045AC46 7CD4                    jl 0045AC1C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045AC15(C)
+|
+:0045AC48 33D2                    xor edx, edx
+:0045AC4A 8BCE                    mov ecx, esi
+:0045AC4C E85B3D0000              call 0045E9AC
+:0045AC51 8BD3                    mov edx, ebx
+:0045AC53 8BCE                    mov ecx, esi
+:0045AC55 E859F4FFFF              call 0045A0B3		Drop items (and more?)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045AC0B(U), :0045AC62(C), :0045AC70(U)
+|
+:0045AC5A 5F                      pop edi
+:0045AC5B 5E                      pop esi
+:0045AC5C 5D                      pop ebp
+:0045AC5D 5B                      pop ebx
+:0045AC5E C3                      ret
+
+
+
+
+Drop Item routine (doet waarschijnlijk meer):
+
+* Referenced by a CALL at Address:
+|:0045AC55   
+|
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045AC72(U)
+|
+:0045A0B3 55                      push ebp
+:0045A0B4 8BEC                    mov ebp, esp
+:0045A0B6 81EC7C010000            sub esp, 0000017C
+:0045A0BC 53                      push ebx
+:0045A0BD 56                      push esi
+:0045A0BE 8BD9                    mov ebx, ecx
+:0045A0C0 57                      push edi
+:0045A0C1 8BFB                    mov edi, ebx
+:0045A0C3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A0C8 69FFC8550000            imul edi, 000055C8
+:0045A0CE 83BC389801000000        cmp dword ptr [eax+edi+00000198], 00000000
+:0045A0D6 8955FC                  mov dword ptr [ebp-04], edx
+:0045A0D9 8D3438                  lea esi, dword ptr [eax+edi]
+:0045A0DC 7F09                    jg 0045A0E7
+:0045A0DE 833E08                  cmp dword ptr [esi], 00000008
+:0045A0E1 0F843B030000            je 0045A422
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A0DC(C)
+|
+:0045A0E7 391DE8AD6E00            cmp dword ptr [006EADE8], ebx
+:0045A0ED 750B                    jne 0045A0FA
+:0045A0EF 52                      push edx
+:0045A0F0 6A01                    push 00000001
+:0045A0F2 B226                    mov dl, 26
+:0045A0F4 59                      pop ecx
+:0045A0F5 E8BCCDFEFF              call 00446EB6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A0ED(C)
+|
+:0045A0FA 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0045A101 7615                    jbe 0045A118
+:0045A103 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A108 837C383410              cmp dword ptr [eax+edi+34], 00000010	
+:0045A10D 7509                    jne 0045A118			
+:0045A10F C745F801000000          mov [ebp-08], 00000001	if dying on level 16
+:0045A116 EB04                    jmp 0045A11C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045A101(C), :0045A10D(C)
+|
+:0045A118 8365F800                and dword ptr [ebp-08], 00000000
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A116(U)
+|
+:0045A11C 83FB04                  cmp ebx, 00000004
+:0045A11F 720D                    jb 0045A12E
+:0045A121 53                      push ebx
+
+* Possible StringData Ref from Data Obj ->"StartPlayerKill: illegal player "
+                                        ->"%d"
+                                  |
+:0045A122 682C634B00              push 004B632C
+:0045A127 E83978FAFF              call 00401965
+:0045A12C 59                      pop ecx
+:0045A12D 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A11F(C)
+|
+:0045A12E A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A133 8A843860010000          mov al, byte ptr [eax+edi+00000160]
+:0045A13A 84C0                    test al, al
+:0045A13C 750B                    jne 0045A149
+:0045A13E FF763C                  push [esi+3C]
+:0045A141 8B5638                  mov edx, dword ptr [esi+38]
+:0045A144 6A0B                    push 0000000B
+:0045A146 59                      pop ecx
+:0045A147 EB46                    jmp 0045A18F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A13C(C)
+|
+:0045A149 3C01                    cmp al, 01
+:0045A14B 7426                    je 0045A173
+:0045A14D 3C02                    cmp al, 02
+:0045A14F 750D                    jne 0045A15E
+:0045A151 FF763C                  push [esi+3C]
+:0045A154 8B5638                  mov edx, dword ptr [esi+38]
+:0045A157 B94D020000              mov ecx, 0000024D
+:0045A15C EB31                    jmp 0045A18F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A14F(C)
+|
+:0045A15E 3C03                    cmp al, 03
+:0045A160 750D                    jne 0045A16F
+:0045A162 FF763C                  push [esi+3C]
+:0045A165 8B5638                  mov edx, dword ptr [esi+38]
+:0045A168 B98D030000              mov ecx, 0000038D
+:0045A16D EB20                    jmp 0045A18F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A160(C)
+|
+:0045A16F 3C04                    cmp al, 04
+:0045A171 750D                    jne 0045A180
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A14B(C)
+|
+:0045A173 FF763C                  push [esi+3C]
+:0045A176 8B5638                  mov edx, dword ptr [esi+38]
+:0045A179 B9B4020000              mov ecx, 000002B4
+:0045A17E EB0F                    jmp 0045A18F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A171(C)
+|
+:0045A180 3C05                    cmp al, 05
+:0045A182 7510                    jne 0045A194
+:0045A184 FF763C                  push [esi+3C]
+:0045A187 8B5638                  mov edx, dword ptr [esi+38]
+:0045A18A B921030000              mov ecx, 00000321
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045A147(U), :0045A15C(U), :0045A16D(U), :0045A17E(U)
+|
+:0045A18F E830E5FBFF              call 004186C4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A182(C)
+|
+:0045A194 33C0                    xor eax, eax
+:0045A196 394678                  cmp dword ptr [esi+78], eax
+:0045A199 7410                    je 0045A1AB
+:0045A19B 8BCB                    mov ecx, ebx
+:0045A19D 894678                  mov dword ptr [esi+78], eax
+:0045A1A0 898628020000            mov dword ptr [esi+00000228], eax
+:0045A1A6 E816D6FFFF              call 004577C1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A199(C)
+|
+:0045A1AB F6862802000080          test byte ptr [esi+00000228], 80
+:0045A1B2 750C                    jne 0045A1C0
+:0045A1B4 BA80000000              mov edx, 00000080
+:0045A1B9 8BCB                    mov ecx, ebx
+:0045A1BB E83CCCFFFF              call 00456DFC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A1B2(C)
+|
+:0045A1C0 FFB660030000            push dword ptr [esi+00000360]
+:0045A1C6 8B4670                  mov eax, dword ptr [esi+70]
+:0045A1C9 8BCB                    mov ecx, ebx
+:0045A1CB 8B94863C030000          mov edx, dword ptr [esi+4*eax+0000033C]
+:0045A1D2 6A01                    push 00000001
+:0045A1D4 FFB65C030000            push dword ptr [esi+0000035C]
+:0045A1DA E8C6D4FFFF              call 004576A5
+:0045A1DF 80A63C01000000          and byte ptr [esi+0000013C], 00
+:0045A1E6 33D2                    xor edx, edx
+:0045A1E8 8BCB                    mov ecx, ebx
+:0045A1EA C70608000000            mov dword ptr [esi], 00000008
+:0045A1F0 C6863D01000001          mov byte ptr [esi+0000013D], 01
+:0045A1F7 E8B0470000              call 0045E9AC
+:0045A1FC C786F001000001000000    mov dword ptr [esi+000001F0], 00000001
+:0045A206 3B1DE8AD6E00            cmp ebx, dword ptr [006EADE8]
+:0045A20C 7429                    je 0045A237		jmp if current player dying
+:0045A20E 837DFC00                cmp dword ptr [ebp-04], 00000000
+:0045A212 7523                    jne 0045A237
+:0045A214 837DF800                cmp dword ptr [ebp-08], 00000000
+:0045A218 751D                    jne 0045A237		jmp if dying on 16
+:0045A21A 6A07                    push 00000007
+:0045A21C 8D8694030000            lea eax, dword ptr [esi+00000394]
+:0045A222 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A22C(C)
+|
+:0045A223 8308FF                  or dword ptr [eax], FFFFFFFF
+:0045A226 0574010000              add eax, 00000174
+:0045A22B 49                      dec ecx
+:0045A22C 75F5                    jne 0045A223
+:0045A22E 33D2                    xor edx, edx
+:0045A230 8BCB                    mov ecx, ebx
+:0045A232 E888A8FCFF              call 00424ABF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045A20C(C), :0045A212(C), :0045A218(C)
+|
+:0045A237 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:0045A23E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045A244 39443934                cmp dword ptr [ecx+edi+34], eax
+:0045A248 0F85D4010000            jne 0045A422		jmp if someone dies on other level
+:0045A24E 8B5670                  mov edx, dword ptr [esi+70]
+:0045A251 8BCB                    mov ecx, ebx
+:0045A253 E858EBFFFF              call 00458DB0
+:0045A258 8BCB                    mov ecx, ebx
+:0045A25A E86EFBFFFF              call 00459DCD
+:0045A25F 8B4638                  mov eax, dword ptr [esi+38]
+:0045A262 8B4E3C                  mov ecx, dword ptr [esi+3C]
+:0045A265 6BC070                  imul eax, 00000070
+:0045A268 808C010069610004        or byte ptr [ecx+eax+00616900], 04
+:0045A270 8D840100696100          lea eax, dword ptr [ecx+eax+00616900]
+:0045A277 8BCB                    mov ecx, ebx
+:0045A279 E8F6EAFFFF              call 00458D74
+:0045A27E 3B1DE8AD6E00            cmp ebx, dword ptr [006EADE8]
+:0045A284 0F8598010000            jne 0045A422
+:0045A28A 833D5C164D000C          cmp dword ptr [004D165C], 0000000C
+:0045A291 C705400E4D0001000000    mov dword ptr [004D0E40], 00000001
+:0045A29B C7050CAE6E001E000000    mov dword ptr [006EAE0C], 0000001E
+:0045A2A5 7C19                    jl 0045A2C0
+:0045A2A7 6A00                    push 00000000
+:0045A2A9 6A00                    push 00000000
+:0045A2AB 8D96A4530000            lea edx, dword ptr [esi+000053A4]
+:0045A2B1 8BCB                    mov ecx, ebx
+:0045A2B3 E86F010000              call 0045A427
+:0045A2B8 6A01                    push 00000001
+:0045A2BA 59                      pop ecx
+:0045A2BB E82DD8FAFF              call 00407AED
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A2A5(C)
+|
+:0045A2C0 837DF800                cmp dword ptr [ebp-08], 00000000
+:0045A2C4 0F8558010000            jne 0045A422			jmp ret if dlvl=16
+:0045A2CA 8BCB                    mov ecx, ebx
+:0045A2CC E873020000              call 0045A544
+:0045A2D1 837DFCFF                cmp dword ptr [ebp-04], FFFFFFFF
+:0045A2D5 0F8447010000            je 0045A422
+:0045A2DB 837DFC00                cmp dword ptr [ebp-04], 00000000
+:0045A2DF 0F84F9000000            je 0045A3DE
+:0045A2E5 6A17                    push 00000017
+:0045A2E7 8D8D84FEFFFF            lea ecx, dword ptr [ebp+FFFFFE84]
+:0045A2ED 5A                      pop edx
+:0045A2EE E824A8FCFF              call 00424B17
+:0045A2F3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A2F8 8D843840010000          lea eax, dword ptr [eax+edi+00000140]
+:0045A2FF 50                      push eax
+:0045A300 8D85C1FEFFFF            lea eax, dword ptr [ebp+FFFFFEC1]
+
+* Possible StringData Ref from Data Obj ->"Ear of %s"
+                                  |
+:0045A306 688C5C4A00              push 004A5C8C
+:0045A30B 50                      push eax
+:0045A30C E8AFF70100              call 00479AC0
+:0045A311 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A316 83C40C                  add esp, 0000000C
+:0045A319 03C7                    add eax, edi
+:0045A31B 8A8860010000            mov cl, byte ptr [eax+00000160]
+:0045A321 80F902                  cmp cl, 02
+:0045A324 750C                    jne 0045A332
+:0045A326 C78544FFFFFF13000000    mov dword ptr [ebp+FFFFFF44], 00000013
+:0045A330 EB2E                    jmp 0045A360
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A324(C)
+|
+:0045A332 84C9                    test cl, cl
+:0045A334 750C                    jne 0045A342
+:0045A336 C78544FFFFFF14000000    mov dword ptr [ebp+FFFFFF44], 00000014
+:0045A340 EB1E                    jmp 0045A360
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A334(C)
+|
+:0045A342 80F901                  cmp cl, 01
+:0045A345 740F                    je 0045A356
+:0045A347 80F903                  cmp cl, 03
+:0045A34A 740A                    je 0045A356
+:0045A34C 80F904                  cmp cl, 04
+:0045A34F 7405                    je 0045A356
+:0045A351 80F905                  cmp cl, 05
+:0045A354 750A                    jne 0045A360
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045A345(C), :0045A34A(C), :0045A34F(C)
+|
+:0045A356 C78544FFFFFF15000000    mov dword ptr [ebp+FFFFFF44], 00000015
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045A330(U), :0045A340(U), :0045A354(C)
+|
+:0045A360 660FBE9041010000        movsx dx, byte ptr [eax+00000141]
+:0045A368 33C9                    xor ecx, ecx
+:0045A36A 8AA840010000            mov ch, byte ptr [eax+00000140]
+:0045A370 0BCA                    or ecx, edx
+:0045A372 66898D88FEFFFF          mov word ptr [ebp+FFFFFE88], cx
+:0045A379 0FBE8842010000          movsx ecx, byte ptr [eax+00000142]
+:0045A380 0FBE9043010000          movsx edx, byte ptr [eax+00000143]
+:0045A387 C1E108                  shl ecx, 08
+:0045A38A 0BCA                    or ecx, edx
+:0045A38C 0FBE9044010000          movsx edx, byte ptr [eax+00000144]
+:0045A393 C1E108                  shl ecx, 08
+:0045A396 0BCA                    or ecx, edx
+:0045A398 0FBE9045010000          movsx edx, byte ptr [eax+00000145]
+:0045A39F C1E108                  shl ecx, 08
+:0045A3A2 0BCA                    or ecx, edx
+:0045A3A4 8B9588FEFFFF            mov edx, dword ptr [ebp+FFFFFE88]
+:0045A3AA 898D84FEFFFF            mov dword ptr [ebp+FFFFFE84], ecx
+:0045A3B0 51                      push ecx
+:0045A3B1 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:0045A3B8 6A17                    push 00000017
+:0045A3BA 898548FFFFFF            mov dword ptr [ebp+FFFFFF48], eax
+:0045A3C0 59                      pop ecx
+:0045A3C1 E8077BFCFF              call 00421ECD
+:0045A3C6 83F8FF                  cmp eax, FFFFFFFF
+:0045A3C9 7557                    jne 0045A422
+:0045A3CB 6A00                    push 00000000
+:0045A3CD 6A00                    push 00000000
+:0045A3CF 8D9584FEFFFF            lea edx, dword ptr [ebp+FFFFFE84]
+:0045A3D5 8BCB                    mov ecx, ebx
+:0045A3D7 E84B000000              call 0045A427
+:0045A3DC EB44                    jmp 0045A422
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A2DF(C)
+|
+:0045A3DE 8D868C030000            lea eax, dword ptr [esi+0000038C]
+:0045A3E4 6A06                    push 00000006
+:0045A3E6 8945FC                  mov dword ptr [ebp-04], eax
+:0045A3E9 5F                      pop edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045A417(C)
+|
+:0045A3EA 8BC7                    mov eax, edi
+:0045A3EC 8B55FC                  mov edx, dword ptr [ebp-04]
+:0045A3EF 034670                  add eax, dword ptr [esi+70]
+:0045A3F2 8BCB                    mov ecx, ebx
+:0045A3F4 83E007                  and eax, 00000007
+:0045A3F7 C1E002                  shl eax, 02
+:0045A3FA FFB060374B00            push dword ptr [eax+004B3760]
+:0045A400 FFB040374B00            push dword ptr [eax+004B3740]
+:0045A406 E81C000000              call 0045A427
+:0045A40B 8145FC74010000          add dword ptr [ebp-04], 00000174
+:0045A412 8BC7                    mov eax, edi
+:0045A414 4F                      dec edi
+:0045A415 85C0                    test eax, eax
+:0045A417 75D1                    jne 0045A3EA
+:0045A419 33D2                    xor edx, edx
+:0045A41B 8BCB                    mov ecx, ebx
+:0045A41D E89DA6FCFF              call 00424ABF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045A0E1(C), :0045A248(C), :0045A284(C), :0045A2C4(C), :0045A2D5(C)
+|:0045A3C9(C), :0045A3DC(U)
+|
+:0045A422 5F                      pop edi
+:0045A423 5E                      pop esi
+:0045A424 5B                      pop ebx
+:0045A425 C9                      leave
+:0045A426 C3                      ret
+
+
+
+
+Voorstel:
+
+()Drop items/gold also if dying on level 16
+
+:0045A10D 7509                    jne 0045A118
+wordt:
+:0045A10D EB09                    jmp 0045A118
+
+

@@ -1,0 +1,110 @@
+Flash appears to attack only 6 positions (including the caster's location). This is fixed by adding attacks to the 3 remaining positions (by optimizing the update code for spell effect 0B).
+
+File offset 00036ABA
+
+:004376BA 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]		damage
+:004376C0 53                      push ebx
+:004376C1 FFB6607A6900            push dword ptr [esi+00697A60]			x-coordinate of spell origin
+:004376C7 48                      dec eax
+:004376C8 8BCF                    mov ecx, edi
+:004376CA 50                      push eax
+:004376CB 53                      push ebx
+:004376CC 52                      push edx
+:004376CD E8FCA9FFFF              call 004320CE					do attack
+:004376D2 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]		damage
+:004376D8 8BCF                    mov ecx, edi
+:004376DA 53                      push ebx
+:004376DB FFB6607A6900            push dword ptr [esi+00697A60]			x-coordinate of spell origin
+:004376E1 FFB65C7A6900            push dword ptr [esi+00697A5C]			y-coordinate of spell origin
+:004376E7 53                      push ebx
+:004376E8 52                      push edx
+:004376E9 E8E0A9FFFF              call 004320CE					do attack
+:004376EE 8B865C7A6900            mov eax, dword ptr [esi+00697A5C]
+:004376F4 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]
+:004376FA 53                      push ebx
+:004376FB 40                      inc eax
+:004376FC FFB6607A6900            push dword ptr [esi+00697A60]
+:00437702 8BCF                    mov ecx, edi
+:00437704 50                      push eax
+:00437705 53                      push ebx
+:00437706 52                      push edx
+:00437707 E8C2A9FFFF              call 004320CE
+:0043770C 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:00437712 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]
+:00437718 40                      inc eax
+:00437719 53                      push ebx
+:0043771A 50                      push eax
+:0043771B 8B865C7A6900            mov eax, dword ptr [esi+00697A5C]
+:00437721 48                      dec eax
+:00437722 8BCF                    mov ecx, edi
+:00437724 50                      push eax
+:00437725 53                      push ebx
+:00437726 52                      push edx
+:00437727 E8A2A9FFFF              call 004320CE
+:0043772C 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:00437732 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]
+:00437738 40                      inc eax
+:00437739 53                      push ebx
+:0043773A 50                      push eax
+:0043773B 8BCF                    mov ecx, edi
+:0043773D FFB65C7A6900            push dword ptr [esi+00697A5C]
+:00437743 53                      push ebx
+:00437744 52                      push edx
+:00437745 E884A9FFFF              call 004320CE
+:0043774A 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:00437750 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]
+:00437756 40                      inc eax
+:00437757 53                      push ebx
+:00437758 50                      push eax
+:00437759 8B865C7A6900            mov eax, dword ptr [esi+00697A5C]
+:0043775F 40                      inc eax
+:00437760 8BCF                    mov ecx, edi
+:00437762 50                      push eax
+:00437763 53                      push ebx
+:00437764 52                      push edx
+:00437765 E864A9FFFF              call 004320CE
+changed into
+:004376BA 8B8E607A6900            mov ecx, dword ptr [esi+00697A60]
+:004376C0 51                      push ecx
+:004376C1 E816000000              call 004376DC
+:004376C6 59                      pop ecx
+:004376C7 51                      push ecx
+:004376C8 41                      inc ecx
+:004376C9 E80E000000              call 004376DC
+:004376CE 59                      pop ecx
+:004376CF 51                      push ecx
+:004376D0 49                      dec ecx
+:004376D1 E806000000              call 004376DC
+:004376D6 59                      pop ecx
+:004376D7 E98E000000              jmp 0043776A
+:004376DC 51                      push ecx
+:004376DD 50                      push eax
+:004376DE E817000000              call 004376FA
+:004376E3 58                      pop eax
+:004376E4 59                      pop ecx
+:004376E5 51                      push ecx
+:004376E6 50                      push eax
+:004376E7 40                      inc eax
+:004376E8 E80D000000              call 004376FA
+:004376ED 58                      pop eax
+:004376EE 59                      pop ecx
+:004376EF 51                      push ecx
+:004376F0 50                      push eax
+:004376F1 48                      dec eax
+:004376F2 E803000000              call 004376FA
+:004376F7 58                      pop eax
+:004376F8 59                      pop ecx
+:004376F9 C3                      ret
+:004376FA 8B96D47A6900            mov edx, dword ptr [esi+00697AD4]		damage
+:00437700 53                      push ebx
+:00437701 51                      push ecx					x-coordinate
+:00437702 8BCF                    mov ecx, edi
+:00437704 50                      push eax					y-coordinate
+:00437705 53                      push ebx
+:00437706 52                      push edx
+:00437707 E8C2A9FFFF              call 004320CE					do attack
+:0043770C C3                      ret
+:0043770D 9090909090              5*nop
+
+Now 93 bytes free space from 0043770D to 0043776A
+

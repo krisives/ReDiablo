@@ -1,0 +1,129 @@
+Oilchanges
+
+
+Improving Oil of Accuracy : ToHit Bonus  1-2%  ->  2-3%
+
+File Offset 0002798B
+
+:0042858B E8CA19FFFF              call 00419F5A
+wordt
+:0042858B E80F980200              call 00451D9F
+:00428590 
+
+Using some free space from Shrines:
+
+File Offset 0005119D
+
+:00451D9D 90                      nop
+:00451D9E 90                      nop
+:00451D9F 90                      nop
+:00451DA0 90                      nop
+:00451DA1 90                      nop
+:00451DA2 90                      nop
+:00451DA3 90                      nop
+:00451DA4 90                      nop
+:00451DA5 90                      nop
+wordt
+:00451D9D EB08                    jmp 00451DA7
+:00451D9F E8B681FCFF              call 00419F5A
+:00451DA4 40                      inc eax
+:00451DA5 C3                      ret
+
+
+Adjusting Prices (rounding sell amounts):
+
+Accuracy        500	->	 400
+
+000A1EF0 1F00 0000 0000 0000 0100 0000 9001 0000 ................
+000A1F00 9001 0000 0100 0000 0307 0000 1E00 0000 ................
+
+Sharpness       500	->	 400
+
+000A1F40 0000 0000 0100 0000 9001 0000 9001 0000 ................
+
+Imperviousness 2500	->	2000
+Mastery        2500	->	2000
+Sharpness       500	->	 400
+Death	       2500	->	2000
+Death          2500	->	2000
+Hardening       500	->	 400
+Fortitude      2500	->	4000
+Permanence    15000	->     20000
+Hardening       500	->	 400
+Imperviousness 2500	->	2000
+
+000A4050 D007 0000 D007 0000 9001 0000 D007 0000 ................
+000A4060 D007 0000 9001 0000 A00F 0000 204E 0000 ............ N..
+000A4070 9001 0000 D007 0000                     ........
+
+
+
+New "Oil of Repair"
+
+Completely repairs item, but lowers maximum durability by 1 (resembling Warrior's Repair Skill, but usually better).
+
+Replaces 2nd Oil of Death, uses Oil of Skill code.
+
+Adjusting Magic Code (22 -> 23) :
+
+000A4080 2100 0000 2200 0000 2300 0000 2700 0000 !..."...#...'...
+
+Name change (Death -> Repair)
+
+000A4100 0000 0000 4F69 6C20 6F66 2052 6570 6169 ....Oil of Repai
+000A4110 7200 0000 0000 0000 0000 0000 004F 696C r............Oil
+
+Adjusting the descriptive text:
+
+000A48E0 6C6F 7765 7273 2064 7572 6162 696C 6974 lowers durabilit
+000A48F0 7900 0000 0000 0000 7265 7061 6972 7320 y.......repairs 
+000A4900 6172 6D6F 7220 616E 6420 7765 6170 6F6E armor and weapon
+000A4910 7300 0000 6461 6D61 6765 2070 6F74 656E s...damage poten
+
+
+Modifying code for Oil of Skill:
+
+File Offset 0002788B
+
+:0042848B 6A06                    push 00000006
+:0042848D B144                    mov cl, 44
+:0042848F 5A                      pop edx
+:00428490 E8C51AFFFF              call 00419F5A
+:00428495 8A8E60010000            mov cl, byte ptr [esi+00000160]
+:0042849B 8D9660010000            lea edx, dword ptr [esi+00000160]
+:004284A1 0FBEF9                  movsx edi, cl
+:004284A4 83C005                  add eax, 00000005
+:004284A7 32DB                    xor bl, bl
+:004284A9 3BF8                    cmp edi, eax
+:004284AB 7E06                    jle 004284B3
+:004284AD 2AC8                    sub cl, al
+:004284AF 880A                    mov byte ptr [edx], cl
+:004284B1 EB02                    jmp 004284B5
+:004284B3 881A                    mov byte ptr [edx], bl
+:004284B5 8A8E61010000            mov cl, byte ptr [esi+00000161]
+:004284BB 8D9661010000            lea edx, dword ptr [esi+00000161]
+:004284C1 0FB6F9                  movzx edi, cl
+:004284C4 3BF8                    cmp edi, eax
+:004284C6 7E06                    jle 004284CE
+:004284C8 2AC8                    sub cl, al
+:004284CA 880A                    mov byte ptr [edx], cl
+:004284CC EB02                    jmp 004284D0
+:004284CE 881A                    mov byte ptr [edx], bl
+:004284D0 8A8E62010000            mov cl, byte ptr [esi+00000162]
+:004284D6 8D9662010000            lea edx, dword ptr [esi+00000162]
+:004284DC 0FBEF1                  movsx esi, cl
+:004284DF 3BF0                    cmp esi, eax
+:004284E1 7E09                    jle 004284EC
+:004284E3 2AC8                    sub cl, al
+:004284E5 880A                    mov byte ptr [edx], cl
+:004284E7 E9BF000000              jmp 004285AB
+:004284EC 881A                    mov byte ptr [edx], bl
+:004284EE E9B8000000              jmp 004285AB
+wordt
+:0042848B 8B86F0000000            mov eax, dword ptr [esi+000000F0]
+:00428491 3D01000000              cmp eax, 00000001
+:00428496 0F8E0F010000            jle 004285AB
+:0042849C 48                      dec eax
+:0042849D E98C000000              jmp 0042852E
+:004284A2 9090909090              5*nop
+:004284A7 

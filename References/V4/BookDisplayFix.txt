@@ -1,0 +1,35 @@
+Fixing spellbooks to show proper magic requirement always
+
+
+File Offset 0006C49B
+
+:0046D09B 8A8661010000            mov al, byte ptr [esi+00000161]
+wordt
+:0046D09B E80A87F9FF              call 004057AA
+:0046D0A0 90                      nop
+
+File Offset 00028A27
+
+:00429627 8A8561010000            mov al, byte ptr [ebp+00000161]
+wordt
+:00429627 E8D4C1FDFF              call 00405800
+:0042962C 90                      nop
+
+Using free space from itemview:
+
+File Offset 00004C00
+
+:00405800 90                      nop
+:00405801 90                      nop
+:00405802 90                      nop
+:00405803 90                      nop
+:00405804 90                      nop
+:00405805 59                      pop ecx
+:00405806 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+wordt
+:00405800 56                      push esi
+:00405801 8BF5                    mov esi, ebp
+:00405803 E8A2FFFFFF              call 004057AA
+:00405808 5E                      pop esi
+:00405809 C3                      ret
+:0040580A 9090                    2*nop

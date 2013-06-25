@@ -1,0 +1,19 @@
+by Jarulf
+
+This is all Diablo. The order and layout of the code in this area is more or less identical to the one in
+Hellfire.
+
+Adding monsters is actually not a small litle routine, it is a
+very large and complex shunk of code. Also, set areas are special in 
+that the monsters (at least some) are added in with the actual dungeon layout 
+code. It really get a bit messy for such set piece stuff and quest related 
+things, and this also includes level 16 (except for the extra random monsters).
+Adding monsters in general is done starting at 4335b3. This is however NOT where the
+game pick possible monster types on a level, this is done much earlier 
+in the dungeon generation routine and for random picking it is done at 43200d. 
+You will note that the game specifically check for level 16 here and for that 
+level add Advocates, Blood Knights and Diablo. Monster types CAN get added to the 
+list here by a few other parts of the code, especially ones related to quests 
+and such. I have no idea if the game requires those 3 types to be picked 
+here for level 16 to be able to generate correctly, or if they will be added 
+anyway in some way later on and so on. You may want to experiement though. 

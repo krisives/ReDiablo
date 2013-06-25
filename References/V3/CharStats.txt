@@ -1,0 +1,73 @@
+Creating Character Statistics, where ecx = 4*CharClass
+
+
+Strenght:
+
+:00457D35 8A81405D4B00            mov al, byte ptr [ecx+004B5D40]
+
+000B4740 1E00 0000 0F00 0000 0A00 0000 1400 0000 ................
+000B4750 1400 0000 2800 0000                     ....(...
+
+Magic:
+
+:00457D5E 8A81585D4B00            mov al, byte ptr [ecx+004B5D58]
+
+000B4758 0500 0000 0F00 0000 2300 0000 0F00 0000 ........#.......
+000B4768 1400 0000 0000 0000                     ........
+
+Dexterity:
+
+:00457D87 8A81705D4B00            mov al, byte ptr [ecx+004B5D70]
+
+000B4770 1400 0000 1E00 0000 0F00 0000 1900 0000 ................
+000B4780 1400 0000 0A00 0000                     ........
+
+Vitality:
+
+:00457DB0 8A81885D4B00            mov al, byte ptr [ecx+004B5D88]
+
+000B4788 1900 0000 1400 0000 1400 0000 1400 0000 ................
+000B4798 1400 0000 1E00 0000                     ........
+
+Blocking Bonus:
+
+:00457E9E 8B81A05D4B00            mov eax, dword ptr [ecx+004B5DA0]
+
+000B47A0 1E00 0000 1400 0000 0A00 0000 2800 0000 ............(...
+000B47B0 1900 0000 1E00 0000                     ........
+
+
+Character Framesets:
+
+Speeds in Hexvalues (TheDark/Hellfire)
+
+			Warrior Rogue   Sorc   Monk  Bard  Barbarian
+
+
+Idle frameset Dungeon	 0A	08	08     08    08	    0A
+Attack frameset		 10	12	10     10    12	    10
+Walk frameset Dungeon	 08	08	08     08    08	    08
+Block speed		 02	05/04	06     03    04	    02
+Death frameset		 14	14	14     14    14	    14
+Spellcasting frameset	 14	10	0D/0C  10/12 0E/10  14
+Hitrecover speed	 06	06/07	08     06    07	    06
+Idle frameset Town	 14	14	14     14    14	    14
+Walk frameset Town	 08	08	08     08    08	    08
+Attack speed		 09	0A	0C     0C    0A	    09
+Spellcasting speed 	 0E	0C	0A/08  0C/0D 0B/0C  13/0E
+
+
+TheDark
+000B4698 0A10 0802 1414 0614 0809 0E08 1208 0514 ................
+000B46A8 1006 1408 0A0C 0810 0806 140D 0814 080C ................
+000B46B8 0A08 1008 0314 1006 1408 0C0C 0812 0804 ................
+000B46C8 140E 0714 080A 0B0A 1008 0214 1406 1408 ................
+000B46D8 0913                                    ..
+
+Hellfire
+000B4698 0A10 0802 1414 0614 0809 0E08 1208 0414 ................
+000B46A8 1007 1408 0A0C 0810 0806 140C 0814 080C ................
+000B46B8 0808 1008 0314 1206 1408 0C0D 0812 0804 ................
+000B46C8 1410 0714 080A 0C0A 1008 0214 1406 1408 ................
+000B46D8 090E                                    ..
+

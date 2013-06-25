@@ -1,0 +1,26 @@
+Wirt X 7535D 35
+Wirt Y 7535F 0B
+Dead Townsmen X 75194 20
+Dead Townsmen Y 75196 18
+Ogden X 750FC 3E
+Ogden Y 750FE 37
+Pepin X 753F7 4F
+Pepin Y 753F9 37
+Farnham X 75526 54
+Farnham Y 75528 47
+Adria X 7522C 14
+Adira Y 7522E 50
+Griswold X 7505E 3F
+Griswold Y 75060 3E
+Cain X 7548F 47
+Cain Y 75491 3E
+Gillian X 752C3 42
+Gillian Y 752C5 2B
+Lester X 75715 10
+Lester Y 75717 3E
+Complete Nut X 757AB 3E
+Complete Nut Y 757AD 3D
+Celia X 75858 2B
+Celia Y 7585A 4D
+Cows X C9BF8 3A, 38, 3B
+Cows Y C9BE8 10, 0E, 14

@@ -1,0 +1,89 @@
+Restarting in Town makes characters loose half of all gold from inventory. A message will be shown to make players more aware of this.
+
+
+file offset 0005A400
+
+:0045B000 A114AE6E00              mov eax, dword ptr [006EAE14]
+changed into
+:0045B000 E9A297FFFF              jmp 004547A7
+:0045B005
+
+
+Using free codespace from obscured Shrine names:
+
+file offset 00053BA7
+
+:004547A7 90                      nop
+:004547A8 90                      nop
+:004547A9 90                      nop
+:004547AA 90                      nop
+:004547AB 90                      nop
+:004547AC 90                      nop
+:004547AD 6824594B00              push 004B5924
+:004547B2 53                      push ebx
+:004547B3 E808530200              call 00479AC0
+:004547B8 83C40C                  add esp, 0000000C
+:004547BB 53                      push ebx
+:004547BC E98E000000              jmp 0045484F
+changed into
+:004547A7 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004547AC 8B8C30CC010000          mov ecx, dword ptr [eax+esi+000001CC]		ECX = total gold
+:004547B3 85C9                    test ecx, ecx
+:004547B5 7405                    je 004547BC
+:004547B7 E806E1FFFF              call 004528C2
+:004547BC E944680000              jmp 0045B005
+:004547C1 
+
+Using free space from shrine modifications:
+
+File offset 00051CC0
+
+:004528C0 E99C020000              jmp 00452B61
+:004528C5 E8B4BC0000              call 0045E57E
+:004528CA 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004528D0 0F856A070000            jne 00453040
+:004528D6 B121                    mov cl, 21
+:004528D8 E984020000              jmp 00452B61
+changed into
+:004528C0 EB39                    jmp 004528FB
+:004528C2 50                      push eax
+:004528C3 53                      push ebx
+:004528C4 52                      push edx
+:004528C5 41                      inc ecx
+:004528C6 D1E9                    shr ecx, 1
+:004528C8 E860D00100              call 0046F92D					remove half of all goldpieces
+:004528CD B9560E4A00              mov ecx, 004A0E56
+:004528D2 E84AF9FCFF              call 00422221					show message
+:004528D7 5A                      pop edx
+:004528D8 5B                      pop ebx
+:004528D9 58                      pop eax
+:004528DA C3                      ret
+:004528DB 9090                    2*nop
+
+
+Supplying a message:
+
+0009F854 2000 6475 706C 6963 6174 6520 6974 656D  .duplicate item
+0009F864 2068 6173 2062 6565 6E20 6465 7465 6374  has been detect
+0009F874 6564 2061 6E64 2072 656D 6F76 6564 0000 ed and removed..
+0009F884 0000 0000 0000 0000 0000 0000 0000 0000 ................
+0009F894 2000 6475 706C 6963 6174 6520 6974 656D  .duplicate item
+0009F8A4 2068 6173 2062 6565 6E20 6465 7465 6374  has been detect
+0009F8B4 6564 2061 6E64 2072 656D 6F76 6500      ed and remove.
+changed into
+0009F854 2000 5065 7069 6E20 6861 7320 7461 6B65  .Pepin has take
+0009F864 6E20 6861 6C66 2079 6F75 7220 676F 6C64 n half your gold
+0009F874 2061 7320 6120 7265 7761 7264 2066 6F72  as a reward for
+0009F884 2072 6573 746F 7269 6E67 2079 6F75 7220  restoring your 
+0009F894 6865 616C 7468 2E20 4974 2077 696C 6C20 health. It will 
+0009F8A4 6265 2075 7365 6420 746F 2068 656C 7020 be used to help 
+0009F8B4 7468 6520 6E65 6564 792E 0000 0000      the needy.....
+
+
+Correction of original 'Duplicate detected' message:
+
+file offset 000219EB
+
+:004225EB B9940E4A00              mov ecx, 004A0E94
+changed into
+:004225EB B9540E4A00              mov ecx, 004A0E54

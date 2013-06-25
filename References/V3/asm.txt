@@ -1,0 +1,67 @@
+Hallo Peter,
+
+Het is me gelukt om een en ander uit te vogelen. Wat hieronder staat is niet geimplementeerd of getest. Ik stel de met --> gemerkte regels als verandering voor.
+
+
+- Monsterinfo na aantal kills
+De getallen 30 en 15 die hier van belang zijn, zijn te vinden op:
+
+0044443F     83 3B 1E      cmp dword ptr [ebx], 0000001E (30)
+  -->        83 3B 0A                           0000000A (10)
+004444C2     83 3B 0F      cmp dword ptr [ebx], 0000000F (15)
+  -->        83 3B 05                           00000005  (5)
+
+
+- Effect van extra spell-levels op duur van Etherealize
+Na berekening van bonus wordt duur als volgt berekend : duur = duur*bonus/128
+Liever minder toename (gehalveerd)
+
+00433CD3     C1 FF 07      sar edi, 7        (duur*bonus/128)
+  -->        C1 FF 08      sar edi, 8        (duur*bonus/256)
+
+
+- Lightning damage van monsters
+Na bepaling random waarde in monster's damage bereik, wordt deze met 2 vermenigvuldigd. Liever met 4?
+
+00437139     D1 E7         shl edi, 1         (damage:=damage*2)
+ -->         C1 E7 02      shl edi, 2         (damage:=damage*4)
+Byte te veel! Nog geen oplossing gevonden.
+
+
+- Manacost voor spells met cost = 255
+De volgende code maakt "manadraining" spells mogelijk.
+
+0046BF64 en verder
+  -->       0F B6 C8        movzx ecx, al
+  -->       75 09           jne 0046BF72
+  -->       8B 8E A8010000  mov ecx, dword ptr [esi+000001A8]
+  -->       C1 E9 06        shr ecx, 6
+
+Waarbij A8010000 voor base max mana staat, AC010000 waarschijnlijk voor current en B0010000 waarschijnlijk voor modified max mana.
+
+
+- Extra damage van MS verlies
+Na wat vergelijken tussen Diablo en The Dark, denk ik dat Moe's fix maar de helft van het werk was.
+
+00437BE2     2B D3         sub edx, ebx       (substract damage from mana)
+  -->        33 D2         xor edx, edx       (mana := 0)
+00437BF8     2B D3         sub edx, ebx       (substract damage from mana)
+  -->        33 D2         xor edx, edx       (mana := 0)
+
+
+- Damage reductie van MS
+Om deze reductie gelijk te laten zijn aan slevel%, moet tussen 00437B59 en 00437B69 het volgende gebeuren.
+dword ptr [ebp-8] := 100/eax     (eax = spelllevel)
+Hoe precies weet ik nog niet. Om de reductie gewoon 0 te maken, of zelfs zoiets als -10%, is makkelijker.
+
+00437B77     2B D8         sub ebx, eax       (damage:=damage-reductie)
+1 -->        90 90                            (geen reductie)
+2 -->        03 D8         add ebx, eax       (damage:=damage+10%)
+
+
+- Apocalypse
+Lastige spreuk. Ik heb wel het bepalen van een getal tussen 1 en 6 gevonden, maar geen spoor van damage. Ik hou vol.
+
+Voor het geval je dit nog niet wist:
+call 00419F5A   roept een randomizer routine aan, zodat eax := 0..(edx-1)
+

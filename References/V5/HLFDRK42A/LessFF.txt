@@ -1,0 +1,23 @@
+Melee Player vs. Player : Max chance to hit  75% -> 50%
+
+file offset 0005B344
+
+:0045BF44 6A4B                    push 0000004B
+changed into
+:0045BF44 6A32                    push 00000032
+
+
+Missile Player vs. Player : Max chance to hit  60% -> 50%
+
+file offset 0003198C
+
+:0043258C 83F83C                  cmp eax, 0000003C
+changed into
+:0043258C 83F832                  cmp eax, 00000032
+
+file offset 00031991
+
+:00432591 6A3C                    push 0000003C
+changed into
+:00432591 6A32                    push 00000032
+

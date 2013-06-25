@@ -1,0 +1,74 @@
+Check on monsterslot for Lifedrain in MonsterMeleeVsPlayer
+
+Allow for:
+
+ 44-BlackPrince		2Ch
+ 50-SkeletonKing	32h
+110-DarkLord		6Eh
+137-DarkGhost		89h
+
+Originele code:
+
+:0043E5E5 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]
+:0043E5EB 83382C                  cmp dword ptr [eax], 0000002C
+:0043E5EE 750F                    jne 0043E5FF
+:0043E5F0 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043E5F7 7406                    je 0043E5FF
+:0043E5F9 019F1CDD6900            add dword ptr [edi+0069DD1C], ebx
+:0043E5FF A114AE6E00              mov eax, dword ptr [006EAE14]
+
+
+
+()First free some code space at old Reflect:
+
+:0043E53B 90                      nop
+:0043E53C 90                      nop
+:0043E53D 90                      nop
+:0043E53E 90                      nop
+:0043E53F 90                      nop
+:0043E540 90                      nop
+:0043E541 8D8F1CDD6900            lea ecx, dword ptr [edi+0069DD1C]
+:0043E547 2BD8                    sub ebx, eax
+:0043E549 8B09                    mov ecx, dword ptr [ecx]
+:0043E54B 7902                    jns 0043E54F
+:0043E54D 33DB                    xor ebx, ebx
+:0043E54F F7C1C0FFFFFF            test ecx, FFFFFFC0
+:0043E555 EB19                    jmp 0043E570
+wordt
+:0043E53B 8D8F1CDD6900            lea ecx, dword ptr [edi+0069DD1C]
+:0043E542 2BD8                    sub ebx, eax
+:0043E544 8B09                    mov ecx, dword ptr [ecx]
+:0043E546 7902                    jns 0043E54A
+:0043E548 33DB                    xor ebx, ebx
+:0043E54A EB24                    jmp 0043E570
+:0043E54C 90		          nop
+
+Hiermee komt 0043E54C tot aan 0043E570 vrij voor onderstaande code.
+
+
+()Replace check on previous monster, swap some code:
+
+:0043E5EB 83382C                  cmp dword ptr [eax], 0000002C
+:0043E5EE 750F                    jne 0043E5FF
+:0043E5F0 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043E5F7 7406                    je 0043E5FF
+wordt
+:0043E5EB 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043E5F2 740D                    je 0043E5FF
+:0043E5F4 E953FFFFFF              jmp 0043E54C
+
+
+()Check several monsters at (now free) Reflect space:
+
+:0043E54C 83382C                  cmp dword ptr [eax], 0000002C
+:0043E54F 7417                    je 0043E568
+:0043E551 833832                  cmp dword ptr [eax], 00000032
+:0043E554 7412                    je 0043E568
+:0043E556 83386E                  cmp dword ptr [eax], 0000006E
+:0043E559 740D                    je 0043E568
+:0043E55B 813889000000            cmp dword ptr [eax], 00000089
+:0043E561 7405                    je 0043E568
+:0043E563 E99C000000              jmp 0043E5FF
+:0043E568 E991000000              jmp 0043E5F9
+:0043E56D 9090                    2*nop
+

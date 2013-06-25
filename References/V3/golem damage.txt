@@ -1,0 +1,88 @@
+:00444F5C 55                      push ebp
+:00444F5D 8BEC                    mov ebp, esp
+:00444F5F 53                      push ebx
+:00444F60 56                      push esi
+:00444F61 57                      push edi
+:00444F62 8BF9                    mov edi, ecx
+:00444F64 81FFC8000000            cmp edi, 000000C8
+:00444F6A 0F8315010000            jnb 00445085
+:00444F70 8BF2                    mov esi, edx
+:00444F72 8B4508                  mov eax, dword ptr [ebp+08]
+:00444F75 6BF670                  imul esi, 00000070
+:00444F78 03F0                    add esi, eax
+:00444F7A 8D4F01                  lea ecx, dword ptr [edi+01]
+:00444F7D 6A03                    push 00000003
+:00444F7F 890CB5E0D15700          mov dword ptr [4*esi+0057D1E0], ecx
+:00444F86 8BF7                    mov esi, edi
+:00444F88 69F6E4000000            imul esi, 000000E4
+:00444F8E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00444F94 8996A8DC6900            mov dword ptr [esi+0069DCA8], edx
+:00444F9A 8986ACDC6900            mov dword ptr [esi+0069DCAC], eax
+:00444FA0 8996B0DC6900            mov dword ptr [esi+0069DCB0], edx
+:00444FA6 8986B4DC6900            mov dword ptr [esi+0069DCB4], eax
+:00444FAC 8996B8DC6900            mov dword ptr [esi+0069DCB8], edx
+:00444FB2 8986BCDC6900            mov dword ptr [esi+0069DCBC], eax
+:00444FB8 8BC7                    mov eax, edi
+:00444FBA 80A6A4DC690000          and byte ptr [esi+0069DCA4], 00
+:00444FC1 69C0C8550000            imul eax, 000055C8
+:00444FC7 8D1C08                  lea ebx, dword ptr [eax+ecx]
+:00444FCA 8B450C                  mov eax, dword ptr [ebp+0C]
+:00444FCD 69C0B0000000            imul eax, 000000B0
+:00444FD3 59                      pop ecx				ecx = 3
+:00444FD4 8D80887A6900            lea eax, dword ptr [eax+00697A88]	Slvl
+:00444FDA 894508                  mov dword ptr [ebp+08], eax
+:00444FDD 8B83B0010000            mov eax, dword ptr [ebx+000001B0]	max current mana * 64
+:00444FE3 99                      cdq
+:00444FE4 F7F9                    idiv ecx				eax = (max current mana / 3)*64
+:00444FE6 8B5508                  mov edx, dword ptr [ebp+08]
+:00444FE9 8B0A                    mov ecx, dword ptr [edx]
+:00444FEB 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]	ecx = Slvl * 5
+:00444FEE C1E106                  shl ecx, 06				(5*slvl)*64 for extra precision
+:00444FF1 03C1                    add eax, ecx
+:00444FF3 8A0A                    mov cl, byte ptr [edx]		cl = Spell lvl
+:00444FF5 D1E0                    shl eax, 1				eax = (2/3*maxmana + 10 slvl)*64
+:00444FF7 898618DD6900            mov dword ptr [esi+0069DD18], eax	Initial life
+:00444FFD 89861CDD6900            mov dword ptr [esi+0069DD1C], eax	Current life
+:00445003 8AC1                    mov al, cl				al = slvl
+:00445005 C68652DD690019          mov byte ptr [esi+0069DD52], 19	AC = 25
+:0044500C 8A93B8010000            mov dl, byte ptr [ebx+000001B8]	dl = clvl
+:00445012 0408                    add al, 08				al = slvl + 8
+:00445014 B305                    mov bl, 05
+:00445016 88450B                  mov byte ptr [ebp+0B], al
+:00445019 F6EB                    imul bl				al = 5*slvl + 40
+:0044501B D0E2                    shl dl, 1				dl = 2*clvl
+:0044501D 02D0                    add dl, al				dl = 5*slvl + 2*clvl + 40
+:0044501F 8A450B                  mov al, byte ptr [ebp+0B]		al = slvl + 8
+:00445022 80C104                  add cl, 04				cl = slvl + 4
+:00445025 88964CDD6900            mov byte ptr [esi+0069DD4C], dl	To Hit
+:0044502B D0E1                    shl cl, 1				cl = 2*slvl + 8
+:0044502D D0E0                    shl al, 1				al = 2*slvl + 16
+:0044502F 888E4DDD6900            mov byte ptr [esi+0069DD4D], cl	Min Damage
+:00445035 88864EDD6900            mov byte ptr [esi+0069DD4E], al	Max damage
+:0044503B 838E24DD690020          or dword ptr [esi+0069DD24], 00000020
+:00445042 33D2                    xor edx, edx
+:00445044 8BCF                    mov ecx, edi
+:00445046 E80EC0FFFF              call 00441059
+:0044504B 8BCF                    mov ecx, edi
+:0044504D E87C78FFFF              call 0043C8CE
+:00445052 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00445058 752B                    jne 00445085
+:0044505A A0D8B16000              mov al, byte ptr [0060B1D8]
+:0044505F 8A96ACDC6900            mov dl, byte ptr [esi+0069DCAC]
+:00445065 50                      push eax
+:00445066 8A86D4DC6900            mov al, byte ptr [esi+0069DCD4]
+:0044506C FFB61CDD6900            push dword ptr [esi+0069DD1C]
+:00445072 8A8EA8DC6900            mov cl, byte ptr [esi+0069DCA8]
+:00445078 50                      push eax
+:00445079 8A86D0DC6900            mov al, byte ptr [esi+0069DCD0]
+:0044507F 50                      push eax
+:00445080 E8171D0000              call 00446D9C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00444F6A(C), :00445058(C)
+|
+:00445085 5F                      pop edi
+:00445086 5E                      pop esi
+:00445087 5B                      pop ebx
+:00445088 5D                      pop ebp
+:00445089 C20800                  ret 0008

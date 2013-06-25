@@ -1,0 +1,114 @@
+GhostWarriors (Knights) with Hidden attack, but without the usual cowardness
+
+
+Adjusting Hidden-AI for non-fleeing GhostWarriors and Mudman (for Baron Sludge):
+
+File Offset 0003FCE3
+
+:004408E3 83660C00                and dword ptr [esi+0C], 00000000
+:004408E7 C6460802                mov [esi+08], 02		Set to Running
+wordt
+:004408E3 E842980300              call 0047A12A
+:004408E8 7503                    jne 004408ED
+:004408EA 90                      nop
+
+
+Space used at unused routine from disabled Command.drk file:
+
+File Offset 0007952A
+
+:0047A12A 909090909090            6*nop
+:0047A130 833D54C34C0001          cmp dword ptr [004CC354], 00000001
+:0047A137 7E10                    jle 0047A149
+:0047A139 8B442404                mov eax, dword ptr [esp+04]
+:0047A13D 6A08                    push 00000008
+:0047A13F 50                      push eax
+:0047A140 E87B2E0000              call 0047CFC0
+:0047A145 83C408                  add esp, 00000008
+:0047A148 C3                      ret
+:0047A149 8B4C2404                mov ecx, dword ptr [esp+04]
+:0047A14D 8B1548C14C00            mov edx, dword ptr [004CC148]
+wordt
+:0047A12A 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:0047A130 8B00                    mov eax, dword ptr [eax]
+:0047A132 83F835                  cmp eax, 000000035		GhostWarrior
+:0047A135 740F                    je 0047A146
+:0047A137 83F834                  cmp eax, 000000034		Mudman
+:0047A13A 740A                    je 0047A146
+:0047A13C 83660C00                and dword ptr [esi+0C], 00000000
+:0047A140 C6460802                mov [esi+08], 02
+:0047A144 33C0                    xor eax, eax
+:0047A146 85C0                    test eax, eax
+:0047A148 C3                      ret
+
+
+Using 'MonsterAnimations' routine to use Idle animation when asked for Second animation:
+
+File Offset 0005070C
+
+:0045130C 837DFC48                cmp dword ptr [ebp-04], 00000048	Nest Rat
+wordt
+:0045130C 837DFC35                cmp dword ptr [ebp-04], 00000035	Ghost Warrior
+
+
+SecondAnimation Flag:
+
+000AC370 A000 0000 1405 0000 9025 4B00 0100 0000 .........%K.....
+wordt
+000AC370 A000 0000 1405 0000 9025 4B00 0000 0000 .........%K.....
+
+Attacktype and Subtype:
+
+000AC3D0 1800 0000 0001 0000 0487 060F 2300 0000 ............#...
+wordt
+000AC3D0 0F00 0000 0001 0000 0287 060F 2300 0000 ............#...
+
+Special Sound trigger (appears to be needed):
+
+000AC380 7025 4B00 0000 0000 0100 0000 7878 4A00 p%K.........xxJ.
+wordt
+000AC380 7025 4B00 0100 0000 0100 0000 7878 4A00 p%K.........xxJ.
+
+Second Animation Frameset:
+
+000AC3A0 1800 0000 0000 0000 0100 0000 0000 0000 ................
+wordt
+000AC3A0 1800 0000 0800 0000 0100 0000 0000 0000 ................
+
+Setting Attacktype for The Cursed Captain:
+
+000AF450 1805 193C 2300 0B00 0000 0000 0000 0000 ...<#...........
+wordt
+000AF450 0F03 193C 2300 0B00 0000 0000 0000 0000 ...<#...........
+
+
+Golem-bosses can now have the Drake attack.
+
+
+ 15 Titan  Mithril Golem  2-Skeleton-5
+
+Setting Attacktype for Titan to 24-Viper-5:
+
+000AF470 0205 213C 3000 0B00 0000 0000 0000 0000 ..!<0...........
+wordt
+000AF470 1805 213C 3000 0B00 0000 0000 0000 0000 ..!<0...........
+
+
+ 60 Anvil  Iron Golem     2-Skeleton-4
+
+Setting Attacktype for Anvil to 24-Viper-4:
+
+000AFA10 0204 2338 3000 0B00 0000 0000 0000 0000 ..#80...........
+wordt
+000AFA10 1804 2338 3000 0B00 0000 0000 0000 0000 ..#80...........
+
+
+ 63 Magnat Copper Golem   2-Skeleton-3
+
+Setting Attacktype for Magnat to 24-Viper-3:
+
+000AFA70 0203 2530 3000 0B00 0000 0000 0000 0000 ..%00...........
+wordt
+000AFA70 1803 2530 3000 0B00 0000 0000 0000 0000 ..%00...........
+
+

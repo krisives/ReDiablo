@@ -1,0 +1,101 @@
+Increasing Ring of Fire Trap Damage
+
+File Offset 00038191
+
+:00438D91 90                      nop
+:00438D92 90                      nop
+wordt
+:00438D91 0402                    add al, 02
+
+
+Increasing Firebolt Trap Damage
+
+File Offset 00035646
+
+:00436246 90                      nop
+:00436247 90                      nop
+wordt
+:00436246 42                      inc edx
+:00436247 42                      inc edx
+
+
+Increassing Lightning Trap Damage
+
+File Offset 00036542
+
+:00437142 90                      nop
+:00437143 90                      nop
+:00437144 52                      push edx
+wordt
+:00437142 D1E2                    shl edx, 1
+:00437143 52                      push edx
+
+File Offset 0003654F
+
+:0043714F D1E1                    shl ecx, 1
+:00437151 90                      nop
+wordt
+:0043714F C1E103                  shl ecx, 03
+
+
+Increasing Normal Arrow Trap Damage
+
+File Offset 00035494
+
+:00436094 90                      nop
+:00436095 90                      nop
+wordt
+:00436094 D1E2                    shl edx, 1
+
+
+Fire/Lightning Arrows
+
+Reducing the high damage done by Fire/Lightning Arrows from Traps, elemental part only:
+
+File Offset 00035311
+
+:00435F11 6A0A                    push 0000000A
+:00435F13 B144                    mov cl, 44
+:00435F15 5A                      pop edx
+:00435F16 E83F40FEFF              call 00419F5A
+:00435F1B 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:00435F22 6A0A                    push 0000000A
+:00435F24 8D5C0801                lea ebx, dword ptr [eax+ecx+01]
+:00435F28 5A                      pop edx
+:00435F29 B144                    mov cl, 44
+:00435F2B E82A40FEFF              call 00419F5A
+:00435F30 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+wordt
+:00435F11 E802000000              call 00435F18
+:00435F16 EB1F                    jmp 00435F37
+:00435F18 E8972C0500              call 00488BB4
+:00435F1D 52                      push edx
+:00435F1E B144                    mov cl, 44
+:00435F20 E83540FEFF              call 00419F5A
+:00435F25 5A                      pop edx
+:00435F26 8BCA                    mov ecx, edx
+:00435F28 C1E902                  shr ecx, 02
+:00435F2B 8D5C0801                lea ebx, dword ptr [eax+ecx+01]
+:00435F2F C3                      ret
+:00435F30 90909090909090          7*nop
+
+File Offset 00035386
+
+:00435F86 6A0A                    push 0000000A
+:00435F88 B144                    mov cl, 44
+:00435F8A 5A                      pop edx
+:00435F8B E8CA3FFEFF              call 00419F5A
+:00435F90 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:00435F97 6A0A                    push 0000000A
+:00435F99 8D5C0801                lea ebx, dword ptr [eax+ecx+01]
+:00435F9D 5A                      pop edx
+:00435F9E B144                    mov cl, 44
+:00435FA0 E8B53FFEFF              call 00419F5A
+:00435FA5 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+wordt
+:00435F86 E88DFFFFFF              call 00435F18
+:00435F8B EB1F                    jmp 00435FAC
+:00435F8D 909090                  3*nop
+
+Now 31 free bytes here.
+

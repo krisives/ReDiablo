@@ -1,0 +1,74 @@
+Increasing detection range within Monster Target Selection to find Golem and Charmed creatures, while activating the monsters when a target is visible and in range. This should prevent the crash bug that could appear when Golem hits a non-activated monster off screen. The 'Golem shooter' routine is now obsolete.
+
+file offset 0003BE9D
+
+:0043CA9D 90                      nop
+:0043CA9E 90                      nop
+:0043CA9F 90                      nop
+:0043CAA0 90                      nop
+:0043CAA1 90                      nop
+:0043CAA2 8B87A8DC6900            mov eax, dword ptr [edi+0069DCA8]
+:0043CAA8 2B4620                  sub eax, dword ptr [esi+20]
+:0043CAAB 50                      push eax
+:0043CAAC E81FE10300              call 0047ABD0
+:0043CAB1 83F802                  cmp eax, 00000002				
+:0043CAB4 59                      pop ecx
+:0043CAB5 7D15                    jge 0043CACC					try next if not adjacent
+:0043CAB7 8B87ACDC6900            mov eax, dword ptr [edi+0069DCAC]
+:0043CABD 2B4624                  sub eax, dword ptr [esi+24]
+:0043CAC0 50                      push eax
+:0043CAC1 E80AE10300              call 0047ABD0
+:0043CAC6 83F802                  cmp eax, 00000002
+:0043CAC9 59                      pop ecx
+:0043CACA 7C10                    jl 0043CADC
+:0043CACC 8B4DE4                  mov ecx, dword ptr [ebp-1C]
+:0043CACF E89DFDFFFF              call 0043C871					check for 'Golem shooter'
+:0043CAD4 85C0                    test eax, eax
+:0043CAD6 0F84DF000000            je 0043CBBB
+:0043CADC F68724DD690020          test byte ptr [edi+0069DD24], 20
+:0043CAE3 0F84D2000000            je 0043CBBB					try next if not Golem or Charmed
+:0043CAE9 EB0D                    jmp 0043CAF8					select current as target
+changed into
+:0043CA9D F68724DD690020          test byte ptr [edi+0069DD24], 20
+:0043CAA4 74E5                    je 0043CA8B					try next if not Golem or Charmed
+:0043CAA6 8B87A8DC6900            mov eax, dword ptr [edi+0069DCA8]
+:0043CAAC 8BC8                    mov ecx, eax
+:0043CAAE 2B4620                  sub eax, dword ptr [esi+20]
+:0043CAB1 85C0                    test eax, eax
+:0043CAB3 7D02                    jge 0043CAB7
+:0043CAB5 F7D8                    neg eax
+:0043CAB7 83F808                  cmp eax, 00000008
+:0043CABA 7DCF                    jge 0043CA8B					try next if too far
+:0043CABC 8B87ACDC6900            mov eax, dword ptr [edi+0069DCAC]
+:0043CAC2 8BD0                    mov edx, eax
+:0043CAC4 2B4624                  sub eax, dword ptr [esi+24]
+:0043CAC7 85C0                    test eax, eax
+:0043CAC9 7D02                    jge 0043CACD
+:0043CACB F7D8                    neg eax
+:0043CACD 83F808                  cmp eax, 00000008
+:0043CAD0 7DB9                    jge 0043CA8B					try next if too far
+:0043CAD2 E9709A0300              jmp 00476547					check for clear LOF
+:0043CAD7 E8EB740000              call 00443FC7					Check LOF 
+:0043CADC 85C0                    test eax, eax
+:0043CADE 74AB                    je 0043CA8B					try next if not visible
+:0043CAE0 808EA0000000FF          or byte ptr [esi+000000A0], FF		make active
+:0043CAE7 EB0F                    jmp 0043CAF8					select current as target
+:0043CAE9 9090                    2*nop
+
+Using codespace from some old obsolete routine:
+
+file offset 00075945
+
+:00476545 EB0C                    jmp 00476553
+:00476547 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0
+:00476551 C3                      ret
+:00476552 90                      nop
+:00476553 90                      nop
+changed into
+:00476545 EB0D                    jmp 00476554
+:00476547 52                      push edx					target coordinate
+:00476548 51                      push ecx					target coordinate
+:00476549 8B5624                  mov edx, dword ptr [esi+24]			monster coordinate
+:0047654C 8B4E20                  mov ecx, dword ptr [esi+20]			monster coordinate
+:0047654F E98365FCFF              jmp 0043CAD7
+:00476554

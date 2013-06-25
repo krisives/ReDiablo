@@ -1,0 +1,50 @@
+Automatic triggering of Runes:
+
+All runes will go off when thrown, without the need of something stepping on it. Perhaps this will give them some usefulness.
+
+
+File Offset 00034F0C
+
+:00435B0C 750C                    jne 00435B1A
+wordt
+:00435B0C EB0C                    jmp 00435B1A
+
+
+Adjusting Display (for all runes):
+
+000A4698 7365 7473 2070 6574 7269 6669 6361 7469 sets petrificati
+000A46A8 6F6E 2074 7261 7000                     on trap.
+wordt
+000A4698 676F 6573 206F 6666 2077 6865 6E20 7468 goes off when th
+000A46A8 726F 776E 0000 0000                     rown....
+
+File Offset 00027C55
+
+:00428855 C1874200                DWORD 004287C1
+:00428859 C8874200                DWORD 004287C8
+:0042885D C1874200                DWORD 004287C1
+wordt
+:00428855 CF874200                DWORD 004287CF
+:00428859 CF874200                DWORD 004287CF
+:0042885D CF874200                DWORD 004287CF
+
+Text strings "sets fire trap" and "sets lightning trap" are now free for use.
+
+
+
+Changing the Rage Spell staff into a (now more useful) Fire Trap staff:
+
+36  37 Rage   magic/other   255   5   255    1    3   17   1    15- 30  43: -: -  1000  400
+       Fire Trap                                                        89: -: -  
+
+000B6800 25FF 0200 9882 4B00 0000 0000 FFFF FFFF %.....K.........
+000B6810 0500 0000 0000 0000 0100 0000 1400 0000 ................
+000B6820 582B 0000 0301 0000 0F00 0000 1E00 0000 X+..............
+000B6830 E803 0000 D007                          ......
+wordt
+000B6804 B882 4B00                               ..K.
+000B6821 59                                      Y
+
+Adjusting Spell icon:
+
+00093635 31                                      1

@@ -1,0 +1,57 @@
+Because of the changed animations for warrior, bard and sorcerer, these classes often had their corpses disappear upon death. This is now fixed by skipping the alteration when the character is no longer alive.
+
+
+Using last free codespace from old Sparkling Shrine:
+
+file offset 00052200
+
+:00452E00 90                      nop
+:00452E01 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:00452E08 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:00452E0E 8D4C4902                lea ecx, dword ptr [ecx+2*ecx+02]
+:00452E12 51                      push ecx
+:00452E13 6A00                    push 00000000
+:00452E15 6A01                    push 00000001
+:00452E17 6A0B                    push 0000000B
+:00452E19 FF7070                  push [eax+70]
+:00452E1C 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:00452E22 FF703C                  push [eax+3C]
+:00452E25 FF7038                  push [eax+38]
+:00452E28 E80229FEFF              call 0043572F
+changed into
+:00452E00 C1F804                  sar eax, 04
+:00452E03 83E003                  and eax, 00000003
+:00452E06 83E20F                  and edx, 0000000F
+:00452E09 80F903                  cmp cl, 03
+:00452E0C 7415                    je 00452E23					skip if monk
+:00452E0E F78698010000C0FFFFFF    test dword ptr [esi+00000198], FFFFFFC0	
+:00452E18 7E09                    jle 00452E23					skip if not alive
+:00452E1A 80F902                  cmp cl, 02
+:00452E1D 7505                    jne 00452E24					jmp if not sorceror
+:00452E1F 3C02                    cmp al, 02
+:00452E21 7508                    jne 00452E2B					jmp if not Plate
+:00452E23 C3                      ret
+:00452E24 32C0                    xor al, al
+:00452E26 F6C101                  test cl, 01
+:00452E29 7501                    jne 00452E2C					jmp if rogue or barbarian
+:00452E2B 40                      inc eax
+:00452E2C C3                      ret
+
+Correcting jumps:
+
+file offset 00056252
+
+:00456E52 E889AAFFFF              call 004518E0
+changed into
+:00456E52 E8A9BFFFFF              call 00452E00
+:00456E57 
+
+file offset 00056299
+
+:00456E99 E842AAFFFF              call 004518E0
+changed into
+:00456E99 E862BFFFFF              call 00452E00
+:00456E9E 
+
+
+Now 30 bytes free space from 004518E0 to 004518FE, and 9 bytes free space from 0045128E to 00451297.

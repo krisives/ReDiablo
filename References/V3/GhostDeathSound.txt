@@ -1,0 +1,34 @@
+Ghost Death sound
+
+File Offset 0003C9B0
+
+:0043D5B0 90                      nop
+:0043D5B1 90                      nop
+:0043D5B2 90                      nop
+:0043D5B3 90                      nop
+:0043D5B4 90                      nop
+:0043D5B5 90                      nop
+:0043D5B6 90                      nop
+:0043D5B7 90                      nop
+:0043D5B8 8B0D6C735700            mov ecx, dword ptr [0057736C]
+:0043D5BE F7D9                    neg ecx
+:0043D5C0 1BC9                    sbb ecx, ecx
+:0043D5C2 33DB                    xor ebx, ebx
+wordt
+:0043D5B0 50                      push eax
+:0043D5B1 52                      push edx
+:0043D5B2 33DB                    xor ebx, ebx
+:0043D5B4 53                      push ebx
+:0043D5B5 B9BC030000              mov ecx, 000003BC	
+:0043D5BA E84EAFFDFF              call 0041850D
+:0043D5BF 5B                      pop ebx
+:0043D5C0 5A                      pop edx
+:0043D5C1 58                      pop eax
+:0043D5C2 EB21                    jmp 0043D5E5
+
+Now free space from 0043D5C4 to 0043D5E5.
+
+00098A90 4D6F 6E73 7465 7273 5C49 7A75 616C 3031 Monsters\Izual01
+wordt
+00098A90 4D6F 6E73 7465 7273 5C64 6961 626C 6F64 Monsters\diablod
+

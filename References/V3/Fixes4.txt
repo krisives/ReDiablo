@@ -1,0 +1,16 @@
+()View HP for Bosses, also the name.
+
+:004445D3 7405                    je 004445DA
+:004445D5 E8A5FEFFFF              call 0044447F
+:004445DA EB39                    jmp 00444615
+:004445DC 90                      nop
+:004445DD 83E33F                  and ebx, 0000003F
+:004445E0 7540                    jne 00444622
+wordt
+:004445D3 740A                    je 004445DF
+:004445D5 BEC0114D00              mov esi, 004D11C0
+:004445DA E8A0FEFFFF              call 0044447F
+:004445DF EB34                    jmp 00444615
+:004445E1 90                      nop
+
+Getest en werkt! Zonder IV alleen de naam.

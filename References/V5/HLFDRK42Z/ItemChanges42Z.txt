@@ -1,0 +1,224 @@
+Reduced chance for durability loss when character is stunned:
+
+file offset 0005BEBB
+
+:0045CABB 6A04                    push 00000004
+changed into
+:0045CABB 6A03                    push 00000003
+
+
+Reduced chance for durability loss when using bows:
+
+file offset 0005BAD9
+
+:0045C6D9 6A10                    push 00000010
+changed into
+:0045C6D9 6A17                    push 00000017
+
+
+Slightly increased chance for durability loss when hitting with a melee weapon:
+
+file offset 0005B8EE
+
+:0045C4EE 6A1E                    push 0000001E
+changed into
+:0045C4EE 6A1C                    push 0000001C
+
+
+AC bonus versus Undead or Demons is now 25 instead of 20:
+
+file offset 0003D5E9
+
+:0043E1E9 83C014                  add eax, 00000014
+changed into
+:0043E1E9 83C019                  add eax, 00000019
+
+file offset 0003D600
+
+:0043E200 83C014                  add eax, 00000014
+changed into
+:0043E200 83C019                  add eax, 00000019
+
+
+Bloodstones will be rarer, less valuable, and are no longer sold by Adria (they are swapped with Oil of Accuracy to limit item morphing):
+
+pos name             item type         item group          equip     qlvl  dur   str mag dex  price  pic  src  
+
+ 66 Blood Stone      3 pot/scr/jewl     0 other            7 not      15     0    0   0   0  100000   25    1
+    Oil of Accuracy  3 pot/scr/jewl     0 other            7 not      15     0    0   0   0    1000   30    1
+
+000A1960 0100 0000 0307 0000 1900 0000 0000 0000 ................
+000A1970 F454 4A00 0000 0000 0F00 0000 0000 0000 .TJ.............
+000A1980 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A1990 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A19A0 0000 0000 A086 0100 A086 0100           ............
+changed into
+000A1960 0100 0000 0307 0000 1E00 0000 0000 0000 ................
+000A1970 0457 4A00 0000 0000 0F00 0000 0000 0000 .WJ.............
+000A1980 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A1990 0000 0000 0000 0000 1F00 0000 0000 0000 ................
+000A19A0 0100 0000 E803 0000 E803 0000           ............
+
+112 Oil of Accuracy  3 pot/scr/jewl     0 other            7 not      17     0     0   0   0    1000   30    1
+    Blood Stone      3 pot/scr/jewl     0 other            7 not      17     0     0   0   0   60000   25    1
+
+000A2708 0100 0000 0307 0000 1E00 0000 0000 0000 ................
+000A2718 0457 4A00 0000 0000 1100 0000 0000 0000 .WJ.............
+000A2728 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2738 0000 0000 0000 0000 1F00 0000 0000 0000 ................
+000A2748 0100 0000 E803 0000 E803 0000           ............
+changed into
+000A2708 0100 0000 0307 0000 1900 0000 0000 0000 ................
+000A2718 F454 4A00 0000 0000 1100 0000 0000 0000 .TJ.............
+000A2728 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2738 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2748 0000 0000 60EA 0000 60EA 0000           ....`...`...
+
+
+Vault keys will be less valuable, and Adria will ask a small fee for them:
+
+108 Vault Key        3 pot/scr/jewl     0 other            7 not       0     0     0   0   0  200000  230    0
+                                                                                              100000
+000A261C 400D 0300                               @...
+changed into
+000A261C A086 0100                               ....
+
+000A517C 3230 3030 3030 2067 6F6C 6420 7374 6F72 200000 gold stor
+000A518C 6564                                    ed
+changed into
+000A517C 3130 3030 3030 2067 6F6C 6420 7374 6F72 100000 gold stor
+000A518C 6564                                    ed
+
+file offset 00004BD0
+
+:004057D0 B8400D0300              mov eax, 00030D40
+changed into
+:004057D0 B818730100              mov eax, 00017318
+
+
+Requirements on items are stored in a byte, and interpreted in such a way that values higher as 127 are negative. These corrections allow requirements up to 255 (for Strength and Dexterity).
+
+Requirement checks:
+
+file offset 00023C4C
+
+:0042484C 0FBE18                  movsx ebx, byte ptr [eax]
+changed into
+:0042484C 0FB618                  movzx ebx, byte ptr [eax]
+
+file offset 00023C73
+
+:00424873 0FBE5802                movsx ebx, byte ptr [eax+02]
+changed into
+:00424873 0FB65802                movzx ebx, byte ptr [eax+02]
+
+file offset 00029482
+
+:0042A082 0FBEB160010000          movsx esi, byte ptr [ecx+00000160]
+changed into
+:0042A082 0FB6B160010000          movzx esi, byte ptr [ecx+00000160]
+
+file offset 000294A0
+
+:0042A0A0 0FBE8962010000          movsx ecx, byte ptr [ecx+00000162]
+changed into
+:0042A0A0 0FB68962010000          movzx ecx, byte ptr [ecx+00000162]
+
+file offset 00023D3E
+
+:0042493E 0FBE8260010000          movsx eax, byte ptr [edx+00000160]
+changed into
+:0042493E 0FB68260010000          movzx eax, byte ptr [edx+00000160]
+
+file offset 00023D50
+
+:00424950 0FBE8262010000          movsx eax, byte ptr [edx+00000162]
+changed into
+:00424950 0FB68262010000          movzx eax, byte ptr [edx+00000162]
+
+file offset 000205EC
+
+:004211EC 0FBE8804550000          movsx ecx, byte ptr [eax+00005504]
+changed into
+:004211EC 0FB68804550000          movzx ecx, byte ptr [eax+00005504]
+
+file offset 00020611
+
+:00421211 0FBE8806550000          movsx ecx, byte ptr [eax+00005506]
+changed into
+:00421211 0FB68806550000          movzx ecx, byte ptr [eax+00005506]
+
+Displays:
+
+file offset 000289E9
+
+:004295E9 0FBE8D62010000          movsx ecx, byte ptr [ebp+00000162]
+changed into
+:004295E9 0FB68D62010000          movzx ecx, byte ptr [ebp+00000162]
+
+file offset 000289F2
+
+:004295F2 0FBE8D60010000          movsx ecx, byte ptr [ebp+00000160]
+changed into
+:004295F2 0FB68D60010000          movzx ecx, byte ptr [ebp+00000160]
+
+file offset 00028C10
+
+:00429810 0FBE8660010000          movsx eax, byte ptr [esi+00000160]
+changed into
+:00429810 0FB68660010000          movzx eax, byte ptr [esi+00000160]
+
+file offset 00028C20
+
+:00429820 0FBE8E62010000          movsx ecx, byte ptr [esi+00000162]
+changed into
+:00429820 0FB68E62010000          movzx ecx, byte ptr [esi+00000162]
+
+file offset 0006C44F
+
+:0046D04F 0FBE8662010000          movsx eax, byte ptr [esi+00000162]
+changed into
+:0046D04F 0FB68662010000          movzx eax, byte ptr [esi+00000162]
+
+file offset 0006C45F
+
+:0046D05F 0FBE8E60010000          movsx ecx, byte ptr [esi+00000160]
+changed into
+:0046D05F 0FB68E60010000          movzx ecx, byte ptr [esi+00000160]
+
+file offset 00028A14
+
+:00429614 0FBEC0                  movsx eax, al
+changed into
+:00429614 0FB6C0                  movzx eax, al
+
+file offset 00028A4E
+
+:0042964E 0FBEC0                  movsx eax, al
+changed into
+:0042964E 0FB6C0                  movzx eax, al
+
+file offset 00028C42
+
+:00429842 0FBEC0                  movsx eax, al
+changed into
+:00429842 0FB6C0                  movzx eax, al
+
+file offset 00028C7C
+
+:0042987C 0FBEC0                  movsx eax, al
+changed into
+:0042987C 0FB6C0                  movzx eax, al
+
+file offset 0006C488
+
+:0046D088 0FBEC0                  movsx eax, al
+changed into
+:0046D088 0FB6C0                  movzx eax, al
+
+file offset 0006C4C2
+
+:0046D0C2 0FBEC0                  movsx eax, al
+changed into
+:0046D0C2 0FB6C0                  movzx eax, al
+

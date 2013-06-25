@@ -1,0 +1,191 @@
+Demon Curse Spell
+
+
+The following seems simple, but gives crashes or frozen monsters. Not implemented!
+
+
+
+Similar to Charm, that confuses Animals, but affects Demons by removing AC, halving ToHit and setting Minimum Damage to 1.
+
+It will replace Inferno, that will still be available on staves, while Nova Trap won't.
+
+
+nbr name  type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges        price  mult
+
+20 Inferno      fire      3        2    11    4    1   25   0    20- 40  49:    2000    20
+   Demon Curse  other     3       14    60   30    2   35   0    10- 15  28:    8000   500
+
+000B6448 140B 0000 8813 4A00 0000 0000 0300 0000 ......J.........
+000B6458 0200 0000 0100 0000 0000 0000 1900 0000 ................
+000B6468 5231 0000 0104 0000 1400 0000 2800 0000 R1..........(...
+000B6478 D007 0000 6400 0000                     ....d...
+wordt
+000B6448 143C 0200 D481 4B00 0000 0000 0300 0000 .<....K.........
+000B6458 0E00 0000 0000 0000 0000 0000 2300 0000 ............#...
+000B6468 521C 0000 021E 0000 0A00 0000 0F00 0000 R...............
+000B6478 401F 0000 C409 0000                     @.......
+
+
+38 Nova Trap  lightning  255      14    80   40    3   60   0     5- 10  91:   25000   400
+   Inferno    fire                 2                   25        20- 40  49:            20
+
+000B6838 2650 0100 D481 4B00 0000 0000 FFFF FFFF &P....K.........
+000B6848 0E00 0000 0000 0000 0000 0000 3C00 0000 ............<...
+000B6858 525B 0000 0328 0000 0500 0000 0A00 0000 R[...(..........
+000B6868 A861 0000 D007 0000                     .a......
+wordt
+000B6838 2650 0000 8813 4A00 0000 0000 FFFF FFFF &P....J.........
+000B6848 0200 0000 0000 0000 0000 0000 1900 0000 ................
+000B6858 5231 0000 0328 0000 1400 0000 2800 0000 R1...(......(...
+000B6868 D007 0000 6400 0000                     ....d...
+
+
+Name change:
+
+000B6BD0 6572 0000 4E6F 7661 2054 7261 7000 0000 er..Nova Trap...
+wordt
+000B6BD0 6572 0000 4465 6D6F 6E20 4375 7273 6500 er..Demon Curse.
+
+
+Adjusting Spellbook info (0E-Inferno -> 06-NA, 23-NoDisplay -> 0E-Inferno):
+
+0002E31F 0001 0203 0405 0606 0606 0607 0809 0A0B ................
+0002E32F 0B0C 0D0E 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 2323 231A 1B1C 1C22 1D1E 1F20 ....###...."... 
+0002E34F 2121 06                                 !!.
+wordt
+0002E31F 0001 0203 0405 0606 0606 0607 0809 0A0B ................
+0002E32F 0B0C 0D06 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 230E 231A 1B1C 1C22 1D1E 1F20 ....#.#...."... 
+0002E34F 2121 06                                 !!.
+
+
+Setting the old V&K Bloodstar Spelleffect (1C) to Charm:
+
+000A6678 1C00 0000 4A37 4300 E860 4300 0100 0000 ....J7C..`C.....
+000A6688 0100 1600 FFFF FFFF FFFF FFFF           ............
+wordt
+000A6678 1C00 0000 A803 4300 B19F 4100 0000 0000 ......C...A.....
+000A6688 0100 FF00 FFFF FFFF FFFF FFFF           ............
+
+
+
+Using code from Charm spell, and removing the 1:3 resistance:
+
+File Offset 0002F863
+
+:00430463 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:00430469 80787202                cmp byte ptr [eax+72], 02
+:0043046D 7524                    jne 00430493
+:0043046F 90                      nop
+:00430470 90                      nop
+:00430471 90                      nop
+:00430472 90                      nop
+:00430473 90                      nop
+:00430474 90                      nop
+:00430475 90                      nop
+:00430476 90                      nop
+:00430477 90                      nop
+:00430478 90                      nop
+:00430479 90                      nop
+:0043047A 90                      nop
+:0043047B 90                      nop
+:0043047C 6A03                    push 00000003
+:0043047E B163                    mov cl, 63
+:00430480 5A                      pop edx
+:00430481 E8D49AFEFF              call 00419F5A
+:00430486 85C0                    test eax, eax
+:00430488 7409                    je 00430493
+:0043048A 83BF8CDC69000E          cmp dword ptr [edi+0069DC8C], 0000000E
+:00430491 7514                    jne 004304A7
+wordt
+:00430463 83F80E                  cmp eax, 0000000E
+:00430466 742B                    je 00430493
+:00430468 8B45F4                  mov eax, dword ptr [ebp-0C]
+:0043046B 69C0B0000000            imul eax, 000000B0
+:00430471 83B8587A690050          cmp dword ptr [eax+00697A58], 00000050
+:00430478 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:0043047E 7508                    jne 00430488
+:00430480 80787202                cmp byte ptr [eax+72], 02
+:00430484 750D                    jne 00430493
+:00430486 EB1F                    jmp 004304A7
+:00430488 80787201                cmp byte ptr [eax+72], 01
+:0043048C 0F8475000000            je 00430507
+:00430492 90			  nop
+
+
+DemonCurse effect:
+
+File Offset 0002F907
+
+:00430507 90                      nop
+:00430508 90                      nop
+:00430509 90                      nop
+:0043050A 90                      nop
+:0043050B 8BD3                    mov edx, ebx
+:0043050D B191                    mov cl, 91
+:0043050F 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+:00430515 E8409AFEFF              call 00419F5A
+:0043051A 03C7                    add eax, edi
+:0043051C 8945F8                  mov dword ptr [ebp-08], eax
+:0043051F DB45F8                  fild dword ptr [ebp-08]
+:00430522 0FB6864EDD6900          movzx eax, byte ptr [esi+0069DD4E]
+:00430529 DC0DB8004900            fmul qword ptr [004900B8]
+:0043052F 8945F8                  mov dword ptr [ebp-08], eax
+:00430532 DC25C0004900            fsub qword ptr [004900C0]
+:00430538 DB45F8                  fild dword ptr [ebp-08]
+:0043053B DEC9                    fmulp st(1), st(0)
+:0043053D DC45EC                  fadd qword ptr [ebp-14]
+:00430540 6A01                    push 00000001
+:00430542 58                      pop eax
+:00430543 90                      nop
+:00430544 90                      nop
+:00430545 8BD3                    mov edx, ebx
+wordt
+:00430507 6A01                    push 00000001
+:00430509 58                      pop eax
+:0043050A 88864DDD6900            mov byte ptr [esi+0069DD4D], al
+:00430510 888650DD6900            mov byte ptr [esi+0069DD50], al
+:00430516 80A652DD690000          and byte ptr [esi+0069DD52], 00
+:0043051D 0FB6864CDD6900          movzx eax, byte ptr [esi+0069DD4C]
+:00430524 D1F8                    sar eax, 1
+:00430526 88864CDD6900            mov byte ptr [esi+0069DD4C], al
+:0043052C 0FB6864FDD6900          movzx eax, byte ptr [esi+0069DD4F]
+:00430533 D1F8                    sar eax, 1
+:00430535 88864FDD6900            mov byte ptr [esi+0069DD4F], al
+:0043053B 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:00430542 E978000000              jmp 004305BF
+:00430547
+
+
+(*
+:0042F59B 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:0042F5A2 8D8628DD6900            lea eax, dword ptr [esi+0069DD28]
+:0042F5A8 751C                    jne 0042F5C6
+:0042F5AA 8008FF                  or byte ptr [eax], FF
+:0042F5AD A114AE6E00              mov eax, dword ptr [006EAE14]
+:0042F5B2 03C3                    add eax, ebx
+:0042F5B4 8B4838                  mov ecx, dword ptr [eax+38]
+:0042F5B7 898E30DD6900            mov dword ptr [esi+0069DD30], ecx
+:0042F5BD 8B403C                  mov eax, dword ptr [eax+3C]
+:0042F5C0 898634DD6900            mov dword ptr [esi+0069DD34], eax
+*)
+
+
+
+Setting Manacost to new Spellnumber for DemonCurse/Charm:
+
+File Offset 0002F9EE
+
+:004305EE 6A10                    push 00000010
+wordt
+:004305EE 6A14                    push 00000014
+
+
+Setting Manacost to new Spellnumber for Inferno:
+
+File Offset 000344F6
+
+:004350F6 6A14                    push 00000014
+wordt
+:004350F6 6A26                    push 00000026

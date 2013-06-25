@@ -1,0 +1,254 @@
+Restoration spell: adds mana and life to all characters, every game cycle, during a short period
+
+
+Adding support for Restoration in Mana spell:
+
+file offset 0003338C
+
+:00433F8C 90                      nop
+:00433F8D 90                      nop
+:00433F8E 90                      nop
+:00433F8F 90                      nop
+:00433F90 90                      nop
+:00433F91 90                      nop
+:00433F92 E967000000              jmp 00433FFE
+changed into
+:00433F8C 8BC7                    mov eax, edi
+:00433F8E C1E802                  shr eax, 02
+:00433F91 90                      nop
+:00433F92 E9B10A0000              jmp 00434A48
+:00433F97
+
+Using codespace from obsolete Search spell effect:
+
+file offset 00033DF0
+
+:004349F0 55                      push ebp
+:004349F1 8BEC                    mov ebp, esp
+:004349F3 51                      push ecx
+:004349F4 53                      push ebx
+:004349F5 56                      push esi
+:004349F6 8BF1                    mov esi, ecx
+:004349F8 57                      push edi
+:004349F9 8975FC                  mov dword ptr [ebp-04], esi
+:004349FC 69F6B0000000            imul esi, 000000B0
+:00434A02 8B7D1C                  mov edi, dword ptr [ebp+1C]
+:00434A05 33DB                    xor ebx, ebx
+:00434A07 899E8C7A6900            mov dword ptr [esi+00697A8C], ebx
+:00434A0D 89BEE87A6900            mov dword ptr [esi+00697AE8], edi
+:00434A13 899EEC7A6900            mov dword ptr [esi+00697AEC], ebx
+:00434A19 33C0                    xor eax, eax
+:00434A1B 899EF07A6900            mov dword ptr [esi+00697AF0], ebx
+:00434A21 3BFB                    cmp edi, ebx
+:00434A23 899EF47A6900            mov dword ptr [esi+00697AF4], ebx
+:00434A29 899EF87A6900            mov dword ptr [esi+00697AF8], ebx
+:00434A2F 0F9FC0                  setg al
+:00434A32 899EFC7A6900            mov dword ptr [esi+00697AFC], ebx
+:00434A38 899E007B6900            mov dword ptr [esi+00697B00], ebx
+:00434A3E D1E0                    shl eax, 1
+:00434A40 899E047B6900            mov dword ptr [esi+00697B04], ebx
+:00434A46 C60538E76E0001          mov byte ptr [006EE738], 01
+:00434A4D 7418                    je 00434A67
+:00434A4F 8BC7                    mov eax, edi
+:00434A51 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00434A57 69C0C8550000            imul eax, 000055C8
+:00434A5D 0FBE8C08B8010000        movsx ecx, byte ptr [eax+ecx+000001B8]
+:00434A65 EB03                    jmp 00434A6A
+:00434A67 6A01                    push 00000001
+:00434A69 59                      pop ecx
+:00434A6A 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00434A70 385D18                  cmp byte ptr [ebp+18], bl
+:00434A73 8D04C1                  lea eax, dword ptr [ecx+8*eax]
+:00434A76 8D84C100100000          lea eax, dword ptr [ecx+8*eax+00001000]
+:00434A7D 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+:00434A83 750A                    jne 00434A8F
+:00434A85 6A2E                    push 0000002E
+:00434A87 8BCF                    mov ecx, edi
+:00434A89 5A                      pop edx
+:00434A8A E86D750300              call 0046BFFC
+
+changed into
+
+Restoration, update code:
+
+:004349F0 69C9B0000000            imul ecx, 000000B0
+:004349F6 FF89C87A6900            dec dword ptr [ecx+00697AC8]
+:004349FC 750B                    jne 00434A09
+:004349FE C7818C7A690001000000    mov dword ptr [ecx+00697A8C], 00000001
+:00434A08 C3                      ret
+:00434A09 56                      push esi
+:00434A0A 57                      push edi
+:00434A0B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00434A10 69C0C8550000            imul eax, 000055C8
+:00434A16 8BF0                    mov esi, eax				esi = local character
+:00434A18 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434A1D 03C6                    add eax, esi
+:00434A1F 83B89801000000          cmp dword ptr [eax+00000198], 00000000
+:00434A26 741D                    je 00434A45				skip if dead
+:00434A28 8BB9D47A6900            mov edi, dword ptr [ecx+00697AD4]	retrieve stored amount
+:00434A2E E85AF4FFFF              call 00433E8D				add 'edi' to Life
+:00434A33 E85FF5FFFF              call 00433F97				add 'edi' to Mana
+:00434A38 6A01                    push 00000001
+:00434A3A 58                      pop eax
+:00434A3B A3400E4D00              mov dword ptr [004D0E40], eax		update Life globe
+:00434A40 A30C114D00              mov dword ptr [004D110C], eax		update Mana globe
+:00434A45 5F                      pop edi
+:00434A46 5E                      pop esi
+:00434A47 C3                      ret
+
+Restoration, part of initial code:
+
+:00434A48 83C040                  add eax, 00000040
+:00434A4B 8983D47A6900            mov dword ptr [ebx+00697AD4], eax		use damage offset for storage
+:00434A51 8B83887A6900            mov eax, dword ptr [ebx+00697A88]
+:00434A57 85C0                    test eax, eax
+:00434A59 7502                    jne 00434A5D
+:00434A5B 33C0                    xor eax, eax
+:00434A5D 40                      inc eax
+:00434A5E C1E002                  shl eax, 02
+:00434A61 8983C87A6900            mov dword ptr [ebx+00697AC8], eax		duration = 4*(slvl+1), min. = 4
+:00434A67 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00434A6A 6A26                    push 00000026					
+:00434A6C 5A                      pop edx
+:00434A6D E88A750300              call 0046BFFC					substract mana, scroll or charge
+:00434A72 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00434A75 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00434A7B 7508                    jne 00434A85					skip if not caster
+:00434A7D 83CAFF                  or edx, FFFFFFFF
+:00434A80 E8359E0200              call 0045E8BA					substract one from Vitality
+:00434A85 5F                      pop edi
+:00434A86 5E                      pop esi
+:00434A87 5B                      pop ebx
+:00434A88 C9                      leave
+:00434A89 C21C00                  ret 001C
+
+Resurrect animation: 
+
+:00434A8C FF751C                  push [ebp+1C]
+:00434A8F 8B550C                  mov edx, dword ptr [ebp+0C]
+:00434A92 8B4D08                  mov ecx, dword ptr [ebp+08]
+:00434A95 53                      push ebx
+:00434A96 FF75FC                  push [ebp-04]
+:00434A99 FF7518                  push [ebp+18]
+:00434A9C 6A3E                    push 0000003E
+:00434A9E FF75F8                  push [ebp-08]
+:00434AA1 FF750C                  push [ebp+0C]
+:00434AA4 FF7508                  push [ebp+08]
+:00434AA7 E8830C0000              call 0043572F
+:00434AAC E9F6760300              jmp 0046C1A7
+:00434AB1 9090909090              5*nop
+
+
+Adding Ressurect animation on caster within general spellcasting code:
+
+file offset 0006B566
+
+:0046C166 803E5A                  cmp byte ptr [esi], 5A
+:0046C169 753C                    jne 0046C1A7
+:0046C16B E9B389FCFF              jmp 00434B23
+:0046C170 90                      nop
+:0046C171 90                      nop
+:0046C172 90                      nop
+:0046C173 90                      nop
+:0046C174 90                      nop
+:0046C175 90                      nop
+:0046C176 8B451C                  mov eax, dword ptr [ebp+1C]
+changed into
+:0046C166 803E5A                  cmp byte ptr [esi], 5A
+:0046C169 0F84B489FCFF            je 00434B23
+:0046C16F 803E55                  cmp byte ptr [esi], 55
+:0046C172 7533                    jne 0046C1A7
+:0046C174 E91389FCFF              jmp 00434A8C
+:0046C179
+
+file offset 00033F3C
+
+:00434B3C E935760300              jmp 0046C176
+:00434B41 90                      nop
+:00434B42 90                      nop
+:00434B43 90                      nop
+:00434B44 90                      nop
+changed into
+:00434B3C 8B451C                  mov eax, dword ptr [ebp+1C]
+:00434B3F E935760300              jmp 0046C179
+:00434B44 90                      nop
+
+
+Adjusting former Search spell effect data:
+
+55	Search
+A6CB4	5500 0000 F049 4300 E38F
+	4300 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+changed into
+
+55	Restoration
+A6CB4	5500 0000 F93E 4300 F049
+	4300 0100 0000 0100 2400
+	5300 0000 FFFF FFFF
+
+
+Creating name text at 000A46AD (004A5CAD):
+
+000A46AC 0000 0000 7365 7473 206C 6967 6874 6E69 ....sets lightni
+000A46BC 6E67 2074 7261 7000                     ng trap.
+changed into
+000A46AC 0052 6573 746F 7261 7469 6F6E 0074 6E69 .Restoration.tni
+000A46BC 6E67 2074 7261 7000                     ng trap.
+
+Spell data:
+
+pos nbr name     type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+
+ 37  38 Inferno  fire          255       14    80   40    3   25   0    20- 40  49: -: -     25000         20
+        Res ...  other          13                        2   60        10- 20  85: -: -
+
+000B6838 2650 0000 8813 4A00 0000 0000 FFFF FFFF &P....J.........
+000B6848 0E00 0000 0000 0000 0000 0000 1900 0000 ................
+000B6858 5231 0000 0328 0000 1400 0000 2800 0000 R1...(......(...
+000B6868 A861 0000 6400 0000                     .a..d...
+changed into
+000B683A 0200                                    ..
+000B683C AD5C 4A00                               .\J.
+000B6844 0D00 0000                               ....
+000B6854 3C00 0000                               <...
+000B6859 5500 00                                 U..
+000B685C 02                                      .
+000B6860 0A00 0000 1400 0000                     ........
+
+
+Using old spellbook location for Search:
+
+00093768 0000 0000 1E00 0000 0300 0000 0E00 0000 ................
+00093778 2800 0000 0400 0000 1200 0000 0100 0000 (...............
+00093788 0C00 0000 0600 0000 0F00 0000 1D00 0000 ................
+00093798 0D00 0000 2900 0000 1F00 0000 2C00 0000 ....).......,...
+000937A8 1400 0000 2300 0000 2400 0000 2D00 0000 ....#...$...-...
+000937B8 1800 0000 0700 0000 0A00 0000 2A00 0000 ............*...
+000937C8 1700 0000 2100 0000 0800 0000 1500 0000 ....!...........
+000937D8 0200 0000 2200 0000 2000 0000 0B00 0000 ...."... .......
+000937E8 2B00 0000 2E00 0000 0500 0000           +...........
+changed into
+000937EC 2600 0000                               &...
+
+
+Adjusting spellbook display:
+
+0002E31F 0001 0203 0405 0606 0606 0607 0809 060B ................
+0002E32F 0B0C 0D0E 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 2323 231A 1B1C 1C22 1D1E 1F20 ....###...."... 
+0002E34F 2121 06                                 !!.
+changed into
+0002E344 06                                      .
+
+
+Adjusting spell icon:
+
+00093610 1B01 0203 0405 0607 0809 1C0D 0C11 1021 ...............!
+00093620 300F 0B16 1315 2218 1914 1A1D 2526 272A 0.....".....%&'*
+00093630 2928 0A24 1E31 0F32 2E2F 2B2D 2312 3323 )(.$.1.2./+-#.3#
+00093640 2323 2323                               ####
+changed into
+00093636 17                                      .
+

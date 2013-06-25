@@ -1,0 +1,38 @@
+(*)Monster resistances : 1/8 damage -> 1/6 damage
+
+Dit ook met de Bard in gedachten: als de Sorcerer al zoveel moeite heeft, zal de Bard het helemaal niet makkelijk hebben.
+
+:0042F4CF 837DF400                cmp dword ptr [ebp-0C], 00000000
+:0042F4D3 7403                    je 0042F4D8
+:0042F4D5 C1FF03                  sar edi, 03
+wordt
+:0042F4CF E85EDF0000              call 0043D432
+:0042F4D4 90909090                4*nop
+
+Onderstaande routine na de MagicArrow code, dus pas invoeren als de spell vastligt.
+
+:0043D432 90                      nop
+:0043D433 90                      nop
+:0043D434 2B87A8DC6900            sub eax, dword ptr [edi+0069DCA8]
+:0043D43A 59                      pop ecx
+:0043D43B 50                      push eax
+:0043D43C E88FD70300              call 0047ABD0
+:0043D441 3BC6                    cmp eax, esi
+:0043D443 59                      pop ecx
+:0043D444 7E0D                    jle 0043D453
+:0043D446 A134F36100              mov eax, dword ptr [0061F334]
+wordt
+:0043D432 837DF400                cmp dword ptr [ebp-0C], 00000000
+:0043D436 740E                    je 0043D446
+:0043D438 50                      push eax
+:0043D439 51                      push ecx
+:0043D43A 8BC7                    mov eax, edi
+:0043D43C 6A06                    push 00000006
+:0043D43E 99                      cdq
+:0043D43F 59                      pop ecx
+:0043D440 F7F9                    idiv ecx
+:0043D442 8BF8                    mov edi, eax
+:0043D444 59                      pop ecx
+:0043D445 58                      pop eax
+:0043D446 C3                      ret
+:0043D447 90909090                4*nop

@@ -1,0 +1,25 @@
+New Regeneration
+
+
+During testing it showed that the lowest Demons (Normal mode Goatmen) take less then 10 seconds to fully regenerate. This is even faster then a Teleporting Boss in D2! Also Diablo and his Ghost are NOT doable with missiles (arrows or spells), even in Nitemare mode.
+
+Regeneration gets halved, and maximum lowered (for Dark Ghost). To compensate, monsters get more Hp.
+
+
+File Offset 0003C857
+
+:0043D457 740A                    je 0043D463
+wordt
+:0043D457 7408                    je 0043D461
+
+
+File Offset 0003C85F
+
+:0043D45F C1E901                  shr ecx, 01
+:0043D462 90                      nop
+:0043D463 6A32                    push 00000032
+wordt
+:0043D45F D1E9                    shr ecx, 1
+:0043D461 D1E9                    shr ecx, 1
+:0043D463 6A28                    push 00000028
+

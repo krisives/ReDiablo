@@ -1,0 +1,356 @@
+Modifications to MvP Melee attack
+
+Implemented is Barbarians Berserk. This new feature allows Barbarians with an axe a chance to avoid half of the final damage of a melee attack. The chance is determined by their Strength (roughly STR/8 %). Life stealing monsters gain less life when avoiding is succesful.
+
+Knockback avoiding, for Warriors and Barbarians, will now use Strength to determine its chance for succes (roughly STR/4 %), instead of the fixed 60%.
+
+Dark Servants will now drain Vitality at a chance of 37.5% per hit, and all Shredded types will drain Strength (12.5% per hit) and steal Life.
+
+To enhance synchronization between MP clients, a 'shared' RNG call is used to set up a 'luck' factor. This factor is then repeatedly used instead of the various unsynchronized RNG calls, for Dark Servants' Vitality drain, the Shredded's Strength drain, Barrier's damage reduction, knockback avoiding, and the new Barbarians Berserk.
+
+
+Using codespace from obsolete support for Reflect, to reuse the old RNG call from Thorns for other effects:
+
+file offset 0003D6C2
+
+:0043E2C2 90                      nop
+:0043E2C3 90                      nop
+:0043E2C4 90                      nop
+:0043E2C5 395DEC                  cmp dword ptr [ebp-14], ebx
+:0043E2C8 0F8D30040000            jnl 0043E6FE
+:0043E2CE 395508                  cmp dword ptr [ebp+08], edx
+:0043E2D1 0F8DDD000000            jnl 0043E3B4
+:0043E2D7 FFB7ACDC6900            push dword ptr [edi+0069DCAC]
+:0043E2DD 8B513C                  mov edx, dword ptr [ecx+3C]
+:0043E2E0 8B4938                  mov ecx, dword ptr [ecx+38]
+:0043E2E3 FFB7A8DC6900            push dword ptr [edi+0069DCA8]
+:0043E2E9 E8CCBBFDFF              call 00419EBA
+:0043E2EE 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0043E2F1 8BD0                    mov edx, eax
+:0043E2F3 8BCB                    mov ecx, ebx
+:0043E2F5 E878B70100              call 00459A72
+:0043E2FA 3B1DE8AD6E00            cmp ebx, dword ptr [006EADE8]
+:0043E300 0F8561030000            jne 0043E667
+:0043E306 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E30B 668B8C3070550000        mov cx, word ptr [eax+esi+00005570]
+:0043E313 8D843070550000          lea eax, dword ptr [eax+esi+00005570]
+:0043E31A 6685C9                  test cx, cx
+:0043E31D E945030000              jmp 0043E667
+changed into
+:0043E2C2 395DEC                  cmp dword ptr [ebp-14], ebx
+:0043E2C5 0F8D33040000            jnl 0043E6FE					jmp exit if missed
+:0043E2CB 51                      push ecx
+:0043E2CC 52                      push edx
+:0043E2CD 6A40                    push 00000040
+:0043E2CF 5A                      pop edx
+:0043E2D0 B163                    mov cl, 63
+:0043E2D2 E883BCFDFF              call 00419F5A					shared RNG call
+:0043E2D7 40                      inc eax
+:0043E2D8 5A                      pop edx
+:0043E2D9 59                      pop ecx
+:0043E2DA 8945EC                  mov dword ptr [ebp-14], eax			store RND[64]
+:0043E2DD 395508                  cmp dword ptr [ebp+08], edx
+:0043E2E0 0F8DCE000000            jnl 0043E3B4					jmp if block failed
+:0043E2E6 FFB7ACDC6900            push dword ptr [edi+0069DCAC]
+:0043E2EC 8B513C                  mov edx, dword ptr [ecx+3C]
+:0043E2EF 8B4938                  mov ecx, dword ptr [ecx+38]
+:0043E2F2 FFB7A8DC6900            push dword ptr [edi+0069DCA8]
+:0043E2F8 E8BDBBFDFF              call 00419EBA
+:0043E2FD 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0043E300 8BD0                    mov edx, eax
+:0043E302 8BCB                    mov ecx, ebx
+:0043E304 E869B70100              call 00459A72
+:0043E309 E959030000              jmp 0043E667
+:0043E30E 9090909090              5*nop
+
+Now 20 bytes free space from 0043E30E to 0043E322
+
+
+Now also 18 bytes free space from 0043E364 to 0043E376 :
+
+:0043E364 0FBE9430B8010000        movsx edx, byte ptr [eax+esi+000001B8]
+:0043E36C D1EA                    shr edx, 1
+:0043E36E B16A                    mov cl, 6A
+:0043E370 E8E5BBFDFF              call 00419F5A
+:0043E375 C3                      ret
+
+
+Rewriting Dark Servants' Vitality drain, removing the obsolete support for Manashield, and using the stored RNG result instead of the common RND[100] routine:
+
+file offset 0003D7B4
+
+:0043E3B4 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]
+:0043E3BA 833847                  cmp dword ptr [eax], 00000047
+:0043E3BD 0F85F8000000            jne 0043E4BB
+:0043E3C3 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043E3C6 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:0043E3CC 0F85E9000000            jne 0043E4BB
+:0043E3D2 A148D06900              mov eax, dword ptr [0069D048]
+:0043E3D7 83CBFF                  or ebx, FFFFFFFF
+:0043E3DA 85C0                    test eax, eax
+:0043E3DC 895DF4                  mov dword ptr [ebp-0C], ebx
+:0043E3DF 7E3E                    jle 0043E41F
+:0043E3E1 C7450868766900          mov [ebp+08], 00697668
+:0043E3E8 8945F0                  mov dword ptr [ebp-10], eax
+:0043E3EB 8B4508                  mov eax, dword ptr [ebp+08]
+:0043E3EE 8B10                    mov edx, dword ptr [eax]
+:0043E3F0 8BC2                    mov eax, edx
+:0043E3F2 69C0B0000000            imul eax, 000000B0
+:0043E3F8 83B8587A69000D          cmp dword ptr [eax+00697A58], 0000000D
+:0043E3FF 7515                    jne 0043E416
+:0043E401 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0043E404 3998CC7A6900            cmp dword ptr [eax+00697ACC], ebx
+:0043E40A 7507                    jne 0043E413
+:0043E40C 8BDA                    mov ebx, edx
+:0043E40E 895DF4                  mov dword ptr [ebp-0C], ebx
+:0043E411 EB03                    jmp 0043E416
+:0043E413 8B5DF4                  mov ebx, dword ptr [ebp-0C]
+:0043E416 83450804                add dword ptr [ebp+08], 00000004
+:0043E41A FF4DF0                  dec [ebp-10]
+:0043E41D 75CC                    jne 0043E3EB
+:0043E41F E81DFFFFFF              call 0043E341				
+:0043E424 83F832                  cmp eax, 00000032
+:0043E427 0F8E8E000000            jle 0043E4BB
+:0043E42D 83CAFF                  or edx, FFFFFFFF
+:0043E430 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043E433 E882040200              call 0045E8BA					adjust Vitality
+:0043E438 E97E000000              jmp 0043E4BB
+:0043E43D 90                      nop
+:0043E43E 90                      nop
+:0043E43F 51                      push ecx
+:0043E440 E805000000              call 0043E44A
+:0043E445 8BC1                    mov eax, ecx
+:0043E447 59                      pop ecx
+:0043E448 C3                      ret
+:0043E449 90                      nop
+
+changed into
+
+:0043E3B4 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043E3B7 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:0043E3BD 0F85F8000000            jne 0043E4BB
+:0043E3C3 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]
+:0043E3C9 833847                  cmp dword ptr [eax], 00000047			Dark Servant
+:0043E3CC 7557                    jne 0043E425
+:0043E3CE 837DEC18                cmp dword ptr [ebp-14], 00000018		24:64
+:0043E3D2 7F0B                    jg 0043E3DF
+:0043E3D4 83CAFF                  or edx, FFFFFFFF
+:0043E3D7 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043E3DA E8DB040200              call 0045E8BA					adjust Vitality
+:0043E3DF E9D7000000              jmp 0043E4BB
+
+Relocating the check for Lifedraining monsters to here:
+
+:0043E3E4 E910020000              jmp 0043E5F9
+:0043E3E9 83382C                  cmp dword ptr [eax], 0000002C			Black Prince
+:0043E3EC 74F6                    je 0043E3E4
+:0043E3EE 833832                  cmp dword ptr [eax], 00000032			Skeleton King
+:0043E3F1 74F1                    je 0043E3E4
+:0043E3F3 83386E                  cmp dword ptr [eax], 0000006E			Dark Lord
+:0043E3F6 74EC                    je 0043E3E4
+:0043E3F8 813889000000            cmp dword ptr [eax], 00000089			Dark Ghost
+:0043E3FE 74E4                    je 0043E3E4
+:0043E400 E809000000              call 0043E40E					any Shredded
+:0043E405 84C0                    test al, al
+:0043E407 75DB                    jne 0043E3E4
+:0043E409 E9F1010000              jmp 0043E5FF
+
+Check for Shredded:
+
+:0043E40E 833806                  cmp dword ptr [eax], 00000006			Pain Master
+:0043E411 740E                    je 0043E421
+:0043E413 813884000000            cmp dword ptr [eax], 00000084			Unraveler
+:0043E419 7406                    je 0043E421
+:0043E41B 813887000000            cmp dword ptr [eax], 00000087			Hollow One
+:0043E421 0F94C0                  sete al
+:0043E424 C3                      ret
+
+Continuing with Strength drain from Shredded:
+
+:0043E425 E8E4FFFFFF              call 0043E40E					check for Shredded
+:0043E42A 84C0                    test al, al
+:0043E42C 7411                    je 0043E43F
+:0043E42E 837DEC08                cmp dword ptr [ebp-14], 00000008  		8:64
+:0043E432 7F0B                    jg 0043E43F
+:0043E434 83CAFF                  or edx, FFFFFFFF
+:0043E437 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043E43A E84D020200              call 0045E68C					adjust Strength
+:0043E43F E977000000              jmp 0043E4BB
+:0043E444 909090909090            6*nop
+
+Now 44 bytes free space from 0043E444 to 0043E470.
+
+
+Correcting jump for new Barbarian Berserk:
+
+file offset 0003D8FF
+
+:0043E4FF 0F8591000000            jne 0043E596
+changed into
+:0043E4FF 51                      push ecx
+:0043E500 50                      push eax
+:0043E501 7547                    jne 0043E54A
+:0043E503 9090                    2*nop
+
+
+Rewriting damage reduction for Barrier, using the stored RNG result:
+
+file offset 0003D914
+
+:0043E514 765A                    jbe 0043E570
+changed into
+:0043E514 7634                    jbe 0043E54A
+:0043E516 
+
+file offset 0003D91A
+
+:0043E51A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E51F E840FEFFFF              call 0043E364
+:0043E524 83C00F                  add eax, 0000000F
+:0043E527 894510                  mov dword ptr [ebp+10], eax
+:0043E52A DB4510                  fild dword ptr [ebp+10]
+:0043E52D DC0D18014900            fmul qword ptr [00490118]
+:0043E533 DA4D0C                  fimul dword ptr [ebp+0C]
+:0043E536 E835C00300              call 0047A570
+:0043E53B 8D8F1CDD6900            lea ecx, dword ptr [edi+0069DD1C]
+:0043E541 2BD8                    sub ebx, eax
+:0043E543 8B09                    mov ecx, dword ptr [ecx]
+:0043E545 7902                    jns 0043E549
+:0043E547 33DB                    xor ebx, ebx
+:0043E549 EB25                    jmp 0043E570
+:0043E54B 90                      nop
+:0043E54C 83382C                  cmp dword ptr [eax], 0000002C
+:0043E54F 7417                    je 0043E568
+:0043E551 833832                  cmp dword ptr [eax], 00000032
+:0043E554 7412                    je 0043E568
+:0043E556 83386E                  cmp dword ptr [eax], 0000006E
+:0043E559 740D                    je 0043E568
+:0043E55B 813889000000            cmp dword ptr [eax], 00000089
+:0043E561 7405                    je 0043E568
+:0043E563 E997000000              jmp 0043E5FF
+:0043E568 E98C000000              jmp 0043E5F9
+:0043E56D 90                      nop
+:0043E56E 90                      nop
+:0043E56F 90                      nop
+:0043E570 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E575 299C3098010000          sub dword ptr [eax+esi+00000198], ebx
+:0043E57C 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:0043E583 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E588 299C3090010000          sub dword ptr [eax+esi+00000190], ebx
+:0043E58F 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:0043E596 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E59B F684304355000004        test byte ptr [eax+esi+00005543], 04
+:0043E5A3 7437                    je 0043E5DC
+:0043E5A5 90                      nop
+:0043E5A6 90                      nop
+:0043E5A7 90                      nop
+:0043E5A8 90                      nop
+:0043E5A9 90                      nop
+:0043E5AA 90                      nop
+:0043E5AB 90                      nop
+
+changed into
+
+:0043E51A 2D70550000              sub eax, 00005570
+:0043E51F 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]		CLvl
+:0043E526 0FAF45EC                imul eax, dword ptr [ebp-14]			
+:0043E52A C1F807                  sar eax, 07
+:0043E52D 83C00F                  add eax, 0000000F				Clvl*RND[64]/128 + 15
+:0043E530 894510                  mov dword ptr [ebp+10], eax
+:0043E533 DB4510                  fild dword ptr [ebp+10]
+:0043E536 DC0D18014900            fmul qword ptr [00490118]
+:0043E53C DA4D0C                  fimul dword ptr [ebp+0C]
+:0043E53F E82CC00300              call 0047A570
+:0043E544 2BD8                    sub ebx, eax
+:0043E546 7902                    jns 0043E54A
+:0043E548 33DB                    xor ebx, ebx
+
+Support for Barbarian Berserk:
+
+:0043E54A 58                      pop eax
+:0043E54B 80B86001000005          cmp byte ptr [eax+00000160], 05		Barbarian
+:0043E552 751F                    jne 0043E573
+:0043E554 83B86409000002          cmp dword ptr [eax+00000964], 00000002	Axe in right hand
+:0043E55B 7409                    je 0043E566
+:0043E55D 83B8D80A000002          cmp dword ptr [eax+00000AD8], 00000002	Axe in left hand
+:0043E564 750D                    jne 043E573
+:0043E566 E826000000              call 0043E591					Strength and 'luck' factor
+:0043E56B D1E9                    shr ecx, 1
+:0043E56D 3BC1                    cmp eax, ecx
+:0043E56F 7D02                    jge 0043E573
+:0043E571 D1FB                    sar ebx, 1					half damage
+:0043E573 59                      pop ecx
+:0043E574 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E579 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:0043E57F 750E                    jne 0043E58F					skip if not local player
+
+Rewriting and relocating character's Life decrease to here:
+
+:0043E581 299C3098010000          sub dword ptr [eax+esi+00000198], ebx
+:0043E588 299C3090010000          sub dword ptr [eax+esi+00000190], ebx
+
+Relocating check for Revenge:
+
+:0043E58F EB11                    jmp 0043E5A2
+
+Routine for comparison of Strength and 'luck' factor:
+
+:0043E591 8B8864010000            mov ecx, dword ptr [eax+00000164]		Strength
+:0043E597 C1F903                  sar ecx, 03
+:0043E59A 6A30                    push 00000030
+:0043E59C 58                      pop eax
+:0043E59D 2B45EC                  sub eax, dword ptr [ebp-14]
+:0043E5A0 C3                      ret
+
+Relocated check for Revenge:
+
+:0043E5A1 90                      nop
+:0043E5A2 F684304355000004        test byte ptr [eax+esi+00005543], 04
+:0043E5AA 7430                    je 0043E5DC
+:0043E5AC
+
+
+Correcting jump to Lifedrain check, disabling check on obsolete Vileness, and allowing Lifedraining monsters in SP:
+
+file offset 0003D9DC
+
+:0043E5DC F68725DD690010          test byte ptr [edi+0069DD25], 10		Vileness
+:0043E5E3 751A                    jne 0043E5FF
+:0043E5E5 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]		Monstertype
+:0043E5EB 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01			SP/MP
+:0043E5F2 740B                    je 0043E5FF
+:0043E5F4 E953FFFFFF              jmp 0043E54C
+changed into
+:0043E5DC F7871CDD6900C0FFFFFF    test dword ptr [edi+0069DD1C], FFFFFFC0	no Lifestealing for dead monsters
+:0043E5E6 7E17                    jle 0043E5FF
+:0043E5E8 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]		Monstertype
+:0043E5EE E9F6FDFFFF              jmp 0043E3E9
+:0043E5F3 909090909090            6*nop
+
+Now 6 bytes free space from 0043E5F3 to 0043E5F9
+
+
+Adjusting knockback-avoid chances:
+
+file offset 0003C8BD
+
+:0043D4BD 8A843060010000          mov al, byte ptr [eax+esi+00000160]
+:0043D4C4 84C0                    test al, al
+:0043D4C6 7404                    je 0043D4CC
+:0043D4C8 3C05                    cmp al, 05
+:0043D4CA 750C                    jne 0043D4D8
+:0043D4CC 51                      push ecx
+:0043D4CD E86F0E0000              call 0043E341
+:0043D4D2 59                      pop ecx
+:0043D4D3 83F83C                  cmp eax, 0000003C
+changed into
+:0043D4BD 03C6                    add eax, esi
+:0043D4BF 8A8860010000            mov cl, byte ptr [eax+00000160]
+:0043D4C5 84C9                    test cl, cl
+:0043D4C7 7405                    je 0043D4CE
+:0043D4C9 80F905                  cmp cl, 05
+:0043D4CC 750A                    jne 0043D4D8
+:0043D4CE E8BE100000              call 0043E591
+:0043D4D3 90                      nop
+:0043D4D4 3BC1                    cmp eax, ecx
+

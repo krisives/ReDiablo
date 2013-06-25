@@ -1,0 +1,25 @@
+
+It was a quick look, so I might have missed something, but I think you can do it at a single byte.
+
+Change the byte at (0001F49B), which should be 4B (75). This should be the character's max resists value. This byte does not affect the resistance of monsters.
+
+Note that, for a game with any reason of balance, I wouldn't go much higher than 75%. If you allow a maxed resist of, for example, 90%, either monsters which use a magic attack will do no damage to characters with maxed resist or, if they have any effect on such characters, their effect on non-resistance characters would be ten-fold (literally).
+
+Droping the max might be nice. Maybe set it to whatever the max single-type resist you can get on an item (IIRC, 60?).
+
+Either way, have fun.
+
+Dr. Zed 
+
+
+
+
+
+This should only change the actual resistance value stored for the character. You also need to change the place where the game display the value as it would still show MAX above 75 I think. It is done at (substract 400c00 for file offsets):
+
+405a26 4b
+405a87 4b
+405ae3 4b
+
+The actual damage reduction seem to be OK though. 
+

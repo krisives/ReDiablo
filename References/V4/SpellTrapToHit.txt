@@ -1,0 +1,8 @@
+To Hit for Spell Traps (60% -> 80%):
+
+File Offset 0002EB20
+
+:0042F720 6A3C                    push 0000003C
+wordt
+:0042F720 6A50                    push 00000050
+

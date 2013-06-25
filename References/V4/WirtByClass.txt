@@ -1,0 +1,36 @@
+The following is implemented, but has no effect because all class restrictions at Wirt are already disabled. Can be used for free space, with some adjustments.
+
+
+Class Items never sold at Wirt in Hellfire (by JG)
+
+Warrior 	bows and staves                 ->   		staves
+Rogue 		axes, clubs, swords, staves and shields
+Sorcerer 	axes, clubs, bows and staves	->		axes, clubs, bows and chains
+Monk 		clubs, bows, shields and medium armor
+Bard 		axes, clubs and staves
+Barbarian 	bows and staves
+
+bows   = 03
+staves = 0A
+axes   = 02
+clubs  = 04
+swords = 01
+shield = 05
+m.armr = 08
+
+Warrior:
+
+File Offset 0002A296
+
+:0042AE96 741F                    je 0042AEB7
+wordt
+:0042AE96 7424                    je 0042AEBC
+:0042AE98 
+
+Sorcerer:
+
+File Offset 0002A36C
+
+:0042AF6C 83FE0A                  cmp esi, 0000000A
+wordt
+:0042AF6C 83FE08                  cmp esi, 00000008

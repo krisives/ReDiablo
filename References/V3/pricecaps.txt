@@ -1,0 +1,10 @@
+This should do
+by Jarulf 
+
+Griswold non magic: 424f31 e0220200
+Griswold magic: 4250d1 e0220200
+Adria: 4254d0 e0220200
+Wirt: 425617 905f0100
+
+e0220200 is of course the value 140000 backwards as that is how it is stored and 905f0100is 135000 as his cap is applied before multipling by 1.5. (just in case I gave an address that is off by a byte or so)
+

@@ -1,0 +1,10 @@
+Adjusting some fixed hotkeys
+
+Bard F3        Medusa Gaze -> Divine Help
+Barbarian F4   Stone Curse -> Rage
+
+000A52EA 0217 2B08 0217 2108 0B17 0A08 0B17 2B08 ..+...!.......+.
+000A52FA 0B17 0A08 0217 2B08                     ......+.
+changed into
+000A52EA 0217 2B08 0217 2108 0B17 0A08 0B17 2B08 ..+...!.......+.
+000A52FA 0B17 2608 0217 2B16                     ..&...+.

@@ -1,0 +1,137 @@
+()Witches - Different Bloodstar colors for Witches on same level
+
+Helaas is onderstaande niet goed. Zie Witches3.txt
+
+Nu:
+
+		dlvl	Slot	Spell	LoadGFX
+				
+101 Succubus	13-14	65h	16	-
+102 Snow Witch	13-15	66h	28  	28,29
+103 Hell Spawn 	14-15	67h	2C	2C,2D
+104 Soul Burner C1-C2	68h	2A	2A,2B
+ 75 Devil Spawn	C1-C3	4Bh	-	-
+105 Hell Burner	C3-C4	69h	-	-
+111 Dark Spawn	H2-H4	6Fh	-	-
+
+Moet worden:
+
+		dlvl	Slot	Spell	LoadGFX
+				
+ 99 Dark Spawn	H2-H4	63h	-	-
+100 Hell Burner	C3-C4	64h	-	-
+101 Soul Burner C1-C2	65h	-	-
+102 Succubus	13-14	66h	16	-
+103 Hell Spawn 	14-15	67h	2C	2C,2D
+104 Snow Witch	13-15	68h	28  	28,29
+105 Devil Spawn	C1-C3	69h	2A	2A,2B
+
+(*)Dus:
+
+Dark Spawn	111(6Fh) ->  99(63h) unused		(slot 111 komt nu vrij)
+Hell Burner	105(69h) -> 100(64h) unused
+Soul Burner	104(68h) -> 101(65h) Succubus
+Succubus	101(65h) -> 102(66h) Snow Witch
+Snow Witch	102(66h) -> 104(68h) Soul Burner
+Devil Spawn	 75(4Bh) -> 105(69h) Hell Burner	(slot 75 komt nu vrij)
+
+Hell Spawn ongewijzigd, ook ivm. Lazarus' witches.
+
+(*)Spell code Changes:
+
+:00433844 833965                  cmp dword ptr [ecx], 00000065		Succubus
+wordt
+:00433844 833969                  cmp dword ptr [ecx], 00000069		DevilSpawn
+
+:0043384F 6A16                    push 00000016
+wordt
+:0043384F 6A2A                    push 0000002A
+
+:0043385C 833966                  cmp dword ptr [ecx], 00000066		SnowWitch
+wordt
+:0043385C 833968                  cmp dword ptr [ecx], 00000068		SnowWitch
+
+:00433886 833868                  cmp dword ptr [eax], 00000068		SoulBurner
+wordt
+:00433886 833866                  cmp dword ptr [eax], 00000066		Succubus
+
+:00433889 750B                    jne 00433896
+wordt
+:00433889 7F0B                    jg 00433896			
+
+:0043388E 6A2A                    push 0000002A
+wordt
+:0043388E 6A16                    push 00000016
+
+(*)LoadGFX Changes:
+
+:0043AEF9 837DFC65                cmp dword ptr [ebp-04], 00000065	Succubus
+wordt
+:0043AEF9 837DFC66                cmp dword ptr [ebp-04], 00000066	Succubus
+
+:0043AF69 837DFC66                cmp dword ptr [ebp-04], 00000066	Snow Witch
+wordt
+:0043AF69 837DFC68                cmp dword ptr [ebp-04], 00000068	Snow Witch
+
+:0043AFB1 837DFC68                cmp dword ptr [ebp-04], 00000068	Soul Burner
+wordt
+:0043AFB1 837DFC69                cmp dword ptr [ebp-04], 00000069	Devil Spawn
+
+
+
+
+
+
+
+Original Spell code:
+
+:0043382B 8B451C                  mov eax, dword ptr [ebp+1C]
+:0043382E 85C0                    test eax, eax
+:00433830 7E64                    jle 00433896
+:00433832 69C0E4000000            imul eax, 000000E4
+:00433838 8B8864DD6900            mov ecx, dword ptr [eax+0069DD64]
+:0043383E 8D8064DD6900            lea eax, dword ptr [eax+0069DD64]
+:00433844 833965                  cmp dword ptr [ecx], 00000065
+:00433847 894518                  mov dword ptr [ebp+18], eax
+:0043384A 750E                    jne 0043385A			jmp if not monster 65h
+:0043384C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043384F 6A16                    push 00000016
+:00433851 5A                      pop edx
+:00433852 E849C2FFFF              call 0042FAA0
+:00433857 8B4518                  mov eax, dword ptr [ebp+18]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043384A(C)
+|
+:0043385A 8B08                    mov ecx, dword ptr [eax]
+:0043385C 833966                  cmp dword ptr [ecx], 00000066
+:0043385F 750E                    jne 0043386F			jmp if not monster 66h
+:00433861 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00433864 6A28                    push 00000028
+:00433866 5A                      pop edx
+:00433867 E834C2FFFF              call 0042FAA0
+:0043386C 8B4518                  mov eax, dword ptr [ebp+18]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043385F(C)
+|
+:0043386F 8B08                    mov ecx, dword ptr [eax]
+:00433871 833967                  cmp dword ptr [ecx], 00000067
+:00433874 750E                    jne 00433884			jmp if not monster 67h
+:00433876 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00433879 6A2C                    push 0000002C
+:0043387B 5A                      pop edx
+:0043387C E81FC2FFFF              call 0042FAA0
+:00433881 8B4518                  mov eax, dword ptr [ebp+18]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433874(C)
+|
+:00433884 8B00                    mov eax, dword ptr [eax]
+:00433886 833868                  cmp dword ptr [eax], 00000068
+:00433889 750B                    jne 00433896			jmp if not monster 68h
+:0043388B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043388E 6A2A                    push 0000002A
+:00433890 5A                      pop edx
+:00433891 E80AC2FFFF              call 0042FAA0
+

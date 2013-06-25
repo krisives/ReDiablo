@@ -1,0 +1,15 @@
+Oil of Death is now also usable on bows:
+
+file offset 000277DD
+
+:004283DD 83F921                  cmp ecx, 00000021
+changed into
+:004283DD 83F922                  cmp ecx, 00000022
+
+
+
+000A4914 6461 6D61 6765 2070 6F74 656E 7469 616C damage potential
+000A4924 202D 206E 6F74 2062 6F77 7300            - not bows.
+changed into
+000A4914 6461 6D61 6765 2070 6F74 656E 7469 616C damage potential
+000A4924 0000 0000 0000 0000 0000 0000           ............

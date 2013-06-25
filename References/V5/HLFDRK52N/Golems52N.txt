@@ -1,0 +1,104 @@
+Golems are already made immune to Stun from player attacks (see MonsterStun52M). 
+
+However, attacks from other monsters, or Knockback, could still put them into HitRecovery animation (causing problems for the Trap Golems, or any other monsters with the number of HR frames set to 0).
+
+
+Check for Golems (note that summoned Golem is checked separately because it doesn't have the data address set):
+
+File offset 000758CF
+
+:004764CF 90                      nop
+:004764D0 6BD270                  imul edx, 00000070
+:004764D3 0390ACDC6900            add edx, dword ptr [eax+0069DCAC]
+:004764D9 80BA0069610002          cmp byte ptr [edx+00616900], 02
+:004764E0 7405                    je 004764E7
+:004764E2 E965460000              jmp 0047AB4C
+changed into
+:004764CF 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004764D5 83386D                  cmp dword ptr [eax], 0000006D			check for summoned Golem
+:004764D8 740C                    je 004764E6
+:004764DA 50                      push eax
+:004764DB 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]		data address
+:004764E1 80782C00                cmp byte ptr [eax+2C], 00			check number of frames for HitRecovery animation
+:004764E5 58                      pop eax
+:004764E6 C3                      ret
+
+
+Preventing Knockback on Golems:
+
+File offset 0003C1DC
+
+:0043CDDC E8216E0000              call 00443C02
+changed into
+:0043CDDC E8FE61FEFF              call 00422FDF
+:0043CDE1 
+
+File offset 000223DF
+
+:00422FDF 83EA1B                  sub edx, 0000001B
+:00422FE2 0F849E100100            je 00434086
+:00422FE8 33C0                    xor eax, eax
+:00422FEA E99CB10400              jmp 0046E18B
+changed into
+:00422FDF E8EB340500              call 004764CF					check for Golems
+:00422FE4 0F85180C0200            jne 00443C02
+:00422FEA 33C0                    xor eax, eax
+:00422FEC C3                      ret
+:00422FED 9090                    2*nop
+
+
+Preventing Stun on Golems for MvM:
+
+File offset 0003D053
+
+:0043DC53 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043DC59 8B00                    mov eax, dword ptr [eax]
+:0043DC5B E87AF6FFFF              call 0043D2DA
+changed into
+:0043DC53 E877880300              call 004764CF					check for Golems
+:0043DC58 7455                    je 0043DCAF
+:0043DC5A 90                      nop
+:0043DC5B E878F6FFFF              call 0043D2D8
+:0043DC60 
+
+
+Preventing Stun on Golems for PvM (replacing code from MonsterStun52M):
+
+File offset 0003C314
+
+:0043CF14 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:0043CF1A E96622FFFF              jmp 0042F185
+changed into
+:0043CF14 E8B6950300              call 004764CF					check for Golems
+:0043CF19 E9DD8FFCFF              jmp 00405EFB
+:0043CF1E 90                      nop
+
+Using free space from DisplayChanges52M:
+
+File offset 000052FB
+
+:00405EFB 90                      nop
+:00405EFC 90                      nop
+:00405EFD 90                      nop
+:00405EFE 90                      nop
+:00405EFF 50                      push eax
+:00405F00 C645FC03                mov [ebp-04], 03
+:00405F04 E8B73B0700              call 00479AC0
+:00405F09 59                      pop ecx
+:00405F0A 59                      pop ecx
+changed into
+:00405EFB 0F845C710300            je 0043D05D					
+:00405F01 E8D2730300              call 0043D2D8					check for Hiddens, Blinks and Warpers
+:00405F06 E914700300              jmp 0043CF1F
+:00405F0B 
+
+Now 26 bytes free space again (from Spells52H):
+
+File offset 0002E585
+
+:0042F185 80782C00                cmp byte ptr [eax+2C], 00			check number of frames for HitRecovery animation
+:0042F189 0F84CEDE0000            je 0043D05D					
+:0042F18F 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0042F195 E83EE10000              call 0043D2D8					check for Hiddens, Blinks and Warpers
+:0042F19A E980DD0000              jmp 0043CF1F
+:0042F19F

@@ -1,0 +1,24 @@
+Info
+--------------------------------------------------------------------------------
+Caorn is correct. Books spawn only on dlvls 4 ,8, and 12.
+
+There are three sets of books, one set of which randomly spawns in each game. That is, you'll either get Laz, Horadrim, or Narrator books in one game. You won't get a book by Laz on 4, a book by the Horadrim on 8, etc. Book color does not change; Laz's books are always blue, e.g. Book titles do not change dlvls; The Realms Beyond is always on 4, e.g. And book contents do not change; Realms Beyond always reads "All praises...", e.g.
+
+Offsets before book name are the offsets for the book's name. Offsets before the text are the offsets for the text. Not really useful, I guess, since you can find the text on a quick search. But I scribbled it into my notes for some reason, so I may as well paste the whole thing.
+
+Laz Books -- Blue; dlvl 4, 8, 12 respectively
+b403c The Realms Beyond <-> c6100 "All praises to Diablo..."
+b4028 Tale of the Three <-> c62c0 "Glory and approbation to Diablo..."
+b4018 The Black King <-> c6468 "Hail and sacrifice to Diablo..."
+
+Horadrim -- White; dlvl 4, 8, 12 respectively
+b40c0 The Great Conflict <-> c5230 "Take heed... Great Conflict"
+b40a4 The Wages of Sin are War <-> c5428 "Take heed... Sin War"
+b4088 The Tale of the Horadrim <-> c5600 "Take heed... the Three"
+
+Narrator -- Red; dlvl 4, 8, 12 respectively
+b4078 The Dark Exile <-> c5a51 "So it came to be that there was a great revolution..."
+b406c The Sin War <-> c5c48 "Many demons traveled to the moral realm..." 
+b4050 The Binding of the Three <-> c5dc0 "So it came to be that the Three Prime Evils were banished..."
+
+[o: *LEMMING* :o]

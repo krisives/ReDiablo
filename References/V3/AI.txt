@@ -1,0 +1,64 @@
+
+
+
+
+
+
+by Jarulf 
+
+Butcher is very simple in his "AI". If he is not adjacent to you, he walk towards you. If he is adjacent, he attacks. Nothing more 
+
+I am researching the AI of the monsters right now (slowly) and if I finnish it, I might report it. I might look at the spitters next (they use the same AI as Magma Demons, Lightning Demons and Diablo by they way with the exception of a few parametsr that modify the random number slightly). 
+
+That AI is plagued by either a strange design (VERRY strange) or a bug. The random numbers generated is not evenly distributed and favor low numbers. Most other uses Rnd[100] but that one uses Rnd[10000] and multiply all values it compare with by 100. Now, as the pRNG only uses 31 of the 32 bits (it takes the absolute value) and then shift right 16 times in effect only leaving 15 bits for the actual calculation of the random number (which is 0 to 32000+). This of course mean that values in the 0-2000+ range is quite more common than other numbers. I can't tell what behaviour that favor though.
+
+When (if) I look at it, I will post more about it here.
+
+
+
+Overlord:
+
+1. if note active, exit
+2. R = Rnd[100]
+3. if D > 1, goto 7
+4. if R < 4텶ntf + 15, do attack, exit
+5. if R < 4텶ntf + 20, do second attack, exit
+6. exit
+7. if last action was walking and standtime is 0 and R < Intf + 70, walk towards target, exit
+8. if stand time is greater than 1 second and R < Intf + 20, start walking
+
+Magma Demons, Lighting Demons, Spitters (not fast spit, they work like Archers and Succbi) and Diablo:
+
+(Note, this is for when they are adjacent ONLY)
+
+1. if not active, exit
+2. Magma and lighting demons seem to do some pathing/direction stuff, at least of the have no "facing direction. Have not researched this, may be something else)
+3. R=Rnd[10000]
+4. if R < 500텶ntf + 500 (for spitter 250텶ntf + 250) then do spell attack (there is an additional check with the XY position, have not looked at yet, if it fails it works on according to below. I think it has to do with if there is LOS as this part can be done at greater ranges too, so for adjacent it should always work), exit
+5. if R < 1000텶ntf + 6000 do attack
+6. do delay for (Rnd[10]+5)/20 seconds
+
+So, as we can see, there is roughly the following probabilities (IF we asume even distribution):
+Spell Melee Delay
+Acid Beast 2.5% 58.5% 39%
+Posion Spitter 5% 66.5% 28.5%
+Pit Beast 7.5% 74% 18.5%
+Lava Maw 10% 81% 9%
+Magma/Light (Intf=0) 5% 57% 38%
+Magma/Light (Intf=1) 10% 63% 27%
+Magma/Light (Intf=2) 15% 68% 17%
+Magma/Light (Intf=3), Diablo 20% 72% 8%
+
+In reality, the Spell attack will be more common.
+
+2nd melee Melee Nothing
+Overlord 5% 15% 80%
+Mud Man 5% 19% 76%
+Toad Demon 5% 23% 72%
+Flayed One 5% 31% 68%
+
+2nd melee attack is the other arm, an attack that has next to nil ToHit and Damage. Note that Overlords do not delay, they just wait another frame. Or you could say they delay 0.05 seconds. So they are really a bot nastier than they seem. One would have to compare the swing times and the delay times, to really compare them.
+
+Does the above seem reasonably?
+
+

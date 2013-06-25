@@ -1,0 +1,25 @@
+Sweep Tohit penalty
+
+This penalty was always 30 for characters above clvl 20, and much higher for younger ones. Changed to take Mlvl into account, to make sweep easier for lower characters, and to increase the influence of Tohit.
+
+Old penalty = 70 - 2*Clvl, minimum = 30
+New penalty = 30 + 2*(Mlvl-Clvl), minimum = 30
+
+file offset 0005ACD2
+
+:0045B8D2 8A8408B8010000          mov al, byte ptr [eax+ecx+000001B8]
+:0045B8D9 3C14                    cmp al, 14
+:0045B8DB 7E09                    jle 0045B8E6
+:0045B8DD C745F0E2FFFFFF          mov [ebp-10], FFFFFFE2		Tohit correction = -30
+:0045B8E4 EB0A                    jmp 0045B8F0
+:0045B8E6 0FBEC0                  movsx eax, al
+:0045B8E9 8D4400BA                lea eax, dword ptr [eax+eax-46]	Tohit correction = -70+2*clvl
+changed into
+:0045B4D2 0FBE8408B8010000        movsx eax, byte ptr [eax+ecx+000001B8]
+:0045B8DA 0FBE8E48DD6900          movsx ecx, byte ptr [esi+0069DD48]
+:0045B8E1 2BC8                    sub ecx, eax
+:0045B8E3 7D02                    jge 0045B8E7
+:0045B8E5 33C9                    xor ecx, ecx
+:0045B8E7 8D44091E                lea eax, dword ptr [ecx+ecx+1E]
+:0045B8EB F7D8                    neg eax				Tohit correction = -30+2*(clvl-mlvl)
+

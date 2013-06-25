@@ -1,0 +1,78 @@
+MaxBlock routine
+
+
+All blockers max. 75%, Monk +10%.
+
+
+Voorstel:
+
+Bard/Warrior max. 70%
+Monk +10% max. 80%
+Rogue/Sorcerer/Barbarian -20% max. 50%
+
+
+File Offset 0003D6BD
+
+:0043E2BD E88D000000              call 0043E34F
+wordt
+:0043E2BD E88C000000              call 0043E34E
+
+
+File Offset 0003D74E
+
+:0043E34E 90                      nop
+:0043E34F 83FA4B                  cmp edx, 0000004B
+:0043E352 7E03                    jle 0043E357
+:0043E354 6A4B                    push 0000004B
+:0043E356 5A                      pop edx
+:0043E357 80B96001000003          cmp byte ptr [ecx+00000160], 03
+:0043E35E 7503                    jne 0043E363
+:0043E360 83C20A                  add edx, 0000000A
+wordt
+:0043E34E 83FA46                  cmp edx, 00000046
+:0043E351 7E03                    jle 0043E356
+:0043E353 6A46                    push 00000046
+:0043E355 5A                      pop edx
+:0043E356 50                      push eax
+:0043E357 E8A1F2FFFF              call 0043D5FD
+:0043E35C 03D0                    add edx, eax
+:0043E35E 7902                    jns 0043E362
+:0043E360 33D2                    xor edx, edx
+:0043E362 58                      pop eax
+
+
+Nieuwe routine op oude Nakrul-rewards:
+
+File Offset 0003C9FD
+
+:0043D5FD 90                      nop
+:0043D5FE 57                      push edi
+:0043D5FF 53                      push ebx
+:0043D600 6886000000              push 00000086
+:0043D605 57                      push edi
+:0043D606 E898E3FEFF              call 0042B9A3
+:0043D60B 8B5624                  mov edx, dword ptr [esi+24]
+:0043D60E 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D611 57                      push edi
+:0043D612 53                      push ebx
+:0043D613 6A7C                    push 0000007C
+:0043D615 6A0A                    push 0000000A
+:0043D617 E887E3FEFF              call 0042B9A3
+:0043D61C 8B5624                  mov edx, dword ptr [esi+24]
+wordt
+:0043D5FD 8A8160010000            mov al, byte ptr [ecx+00000160]
+:0043D603 84C0                    test al, al
+:0043D605 7414                    je 0043D61B
+:0043D607 3C04                    cmp al, 04
+:0043D609 7410                    je 0043D61B
+:0043D60B 3C03                    cmp al, 03
+:0043D60D 7406                    je 0043D615
+:0043D60F B8ECFFFFFF              mov eax, FFFFFFEC
+:0043D614 C3			  ret
+:0043D615 B80A000000              mov eax, 0000000A
+:0043D61A C3			  ret
+:0043D61B 33C0                    xor eax, eax
+:0043D61D C3			  ret
+:0043D61E 90			  nop
+
+Nog wat vrije ruimte over.

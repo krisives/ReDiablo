@@ -1,0 +1,334 @@
+Requirements on items are stored in a byte, and interpreted in such a way that values higher as 127 are negative. These corrections allow requirements up to 255 (for Strength and Dexterity).
+
+
+Requirement checks:
+
+file offset 00023C4C
+
+:0042484C 0FBE18                  movsx ebx, byte ptr [eax]
+changed into
+:0042484C 0FB618                  movzx ebx, byte ptr [eax]
+
+file offset 00023C73
+
+:00424873 0FBE5802                movsx ebx, byte ptr [eax+02]
+changed into
+:00424873 0FB65802                movzx ebx, byte ptr [eax+02]
+
+file offset 00029482
+
+:0042A082 0FBEB160010000          movsx esi, byte ptr [ecx+00000160]
+changed into
+:0042A082 0FB6B160010000          movzx esi, byte ptr [ecx+00000160]
+
+file offset 000294A0
+
+:0042A0A0 0FBE8962010000          movsx ecx, byte ptr [ecx+00000162]
+changed into
+:0042A0A0 0FB68962010000          movzx ecx, byte ptr [ecx+00000162]
+
+file offset 00023D3E
+
+:0042493E 0FBE8260010000          movsx eax, byte ptr [edx+00000160]
+changed into
+:0042493E 0FB68260010000          movzx eax, byte ptr [edx+00000160]
+
+file offset 00023D50
+
+:00424950 0FBE8262010000          movsx eax, byte ptr [edx+00000162]
+changed into
+:00424950 0FB68262010000          movzx eax, byte ptr [edx+00000162]
+
+file offset 000205EC
+
+:004211EC 0FBE8804550000          movsx ecx, byte ptr [eax+00005504]
+changed into
+:004211EC 0FB68804550000          movzx ecx, byte ptr [eax+00005504]
+
+file offset 00020611
+
+:00421211 0FBE8806550000          movsx ecx, byte ptr [eax+00005506]
+changed into
+:00421211 0FB68806550000          movzx ecx, byte ptr [eax+00005506]
+
+
+Displays:
+
+file offset 000289E9
+
+:004295E9 0FBE8D62010000          movsx ecx, byte ptr [ebp+00000162]
+changed into
+:004295E9 0FB68D62010000          movzx ecx, byte ptr [ebp+00000162]
+
+file offset 000289F2
+
+:004295F2 0FBE8D60010000          movsx ecx, byte ptr [ebp+00000160]
+changed into
+:004295F2 0FB68D60010000          movzx ecx, byte ptr [ebp+00000160]
+
+file offset 00028C10
+
+:00429810 0FBE8660010000          movsx eax, byte ptr [esi+00000160]
+changed into
+:00429810 0FB68660010000          movzx eax, byte ptr [esi+00000160]
+
+file offset 00028C20
+
+:00429820 0FBE8E62010000          movsx ecx, byte ptr [esi+00000162]
+changed into
+:00429820 0FB68E62010000          movzx ecx, byte ptr [esi+00000162]
+
+file offset 0006C44F
+
+:0046D04F 0FBE8662010000          movsx eax, byte ptr [esi+00000162]
+changed into
+:0046D04F 0FB68662010000          movzx eax, byte ptr [esi+00000162]
+
+file offset 0006C45F
+
+:0046D05F 0FBE8E60010000          movsx ecx, byte ptr [esi+00000160]
+changed into
+:0046D05F 0FB68E60010000          movzx ecx, byte ptr [esi+00000160]
+
+file offset 00028A14
+
+:00429614 0FBEC0                  movsx eax, al
+changed into
+:00429614 0FB6C0                  movzx eax, al
+
+file offset 00028A4E
+
+:0042964E 0FBEC0                  movsx eax, al
+changed into
+:0042964E 0FB6C0                  movzx eax, al
+
+file offset 00028C42
+
+:00429842 0FBEC0                  movsx eax, al
+changed into
+:00429842 0FB6C0                  movzx eax, al
+
+file offset 00028C7C
+
+:0042987C 0FBEC0                  movsx eax, al
+changed into
+:0042987C 0FB6C0                  movzx eax, al
+
+file offset 0006C488
+
+:0046D088 0FBEC0                  movsx eax, al
+changed into
+:0046D088 0FB6C0                  movzx eax, al
+
+file offset 0006C4C2
+
+:0046D0C2 0FBEC0                  movsx eax, al
+changed into
+:0046D0C2 0FB6C0                  movzx eax, al
+
+The above is implemented in HLFDRKReqTest (based on HLFDRKZTEST12). The following is information only.
+
+Item setup:
+
+:00424BB4 8B86E4000000            mov eax, dword ptr [esi+000000E4]
+:00424BBA 8986E8000000            mov dword ptr [esi+000000E8], eax
+:00424BC0 8B471C                  mov eax, dword ptr [edi+1C]
+:00424BC3 8986EC000000            mov dword ptr [esi+000000EC], eax
+:00424BC9 8B471C                  mov eax, dword ptr [edi+1C]
+:00424BCC 8986F0000000            mov dword ptr [esi+000000F0], eax
+:00424BD2 8A4730                  mov al, byte ptr [edi+30]
+:00424BD5 888660010000            mov byte ptr [esi+00000160], al
+:00424BDB 8A4731                  mov al, byte ptr [edi+31]
+:00424BDE 888661010000            mov byte ptr [esi+00000161], al
+:00424BE4 8A4732                  mov al, byte ptr [edi+32]
+:00424BE7 888662010000            mov byte ptr [esi+00000162], al
+:00424BED 8B4744                  mov eax, dword ptr [edi+44]
+:00424BF0 8986C4000000            mov dword ptr [esi+000000C4], eax
+:00424BF6 8B4744                  mov eax, dword ptr [edi+44]
+:00424BF9 808E4C010000FF          or byte ptr [esi+0000014C], FF
+:00424C00 808E4D010000FF          or byte ptr [esi+0000014D], FF
+:00424C07 80663C00                and byte ptr [esi+3C], 00
+:00424C0B 8986C8000000            mov dword ptr [esi+000000C8], eax
+:00424C11 899E68010000            mov dword ptr [esi+00000168], ebx
+
+
+Requirement checks:
+
+:00424831 83B8A8FEFFFFFF          cmp dword ptr [eax+FFFFFEA8], FFFFFFFF
+:00424838 7470                    je 004248AA
+:0042483A 397804                  cmp dword ptr [eax+04], edi
+:0042483D 746B                    je 004248AA
+:0042483F 8BB968010000            mov edi, dword ptr [ecx+00000168]
+:00424845 C745FC01000000          mov [ebp-04], 00000001
+:0042484C 0FBE18                  movsx ebx, byte ptr [eax]
+:0042484F 03FA                    add edi, edx
+:00424851 3BFB                    cmp edi, ebx
+:00424853 7D04                    jge 00424859
+:00424855 8365FC00                and dword ptr [ebp-04], 00000000
+:00424859 8BB970010000            mov edi, dword ptr [ecx+00000170]
+:0042485F 0FB65801                movzx ebx, byte ptr [eax+01]
+:00424863 03FE                    add edi, esi
+:00424865 3BFB                    cmp edi, ebx
+:00424867 7D04                    jge 0042486D
+:00424869 8365FC00                and dword ptr [ebp-04], 00000000
+:0042486D 8BB978010000            mov edi, dword ptr [ecx+00000178]
+:00424873 0FBE5802                movsx ebx, byte ptr [eax+02]
+:00424877 037DF8                  add edi, dword ptr [ebp-08]
+:0042487A 3BFB                    cmp edi, ebx
+:0042487C 7D07                    jge 00424885
+:0042487E 33FF                    xor edi, edi
+:00424880 897DFC                  mov dword ptr [ebp-04], edi
+:00424883 EB02                    jmp 00424887
+
+
+* Referenced by a CALL at Addresses:
+|:0042A29D   , :0042A769   , :0042AADE   , :0042ABCB   , :0042AF2D   
+|:0042B304   , :0042B667   , :0042B689   , :0042B6AB   , :0042B6CD   
+|:0042B6E7   
+|
+:0042A06A 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0042A070 56                      push esi
+:0042A071 69D2C8550000            imul edx, 000055C8
+:0042A077 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042A07D 6A01                    push 00000001
+:0042A07F 03D6                    add edx, esi
+:0042A081 58                      pop eax
+:0042A082 0FBEB160010000          movsx esi, byte ptr [ecx+00000160]
+:0042A089 39B264010000            cmp dword ptr [edx+00000164], esi
+:0042A08F 7C1E                    jl 0042A0AF
+:0042A091 90                      nop
+:0042A092 E8C3720200              call 0045135A
+:0042A097 90                      nop
+:0042A098 39B26C010000            cmp dword ptr [edx+0000016C], esi
+:0042A09E 7C0F                    jl 0042A0AF
+:0042A0A0 0FBE8962010000          movsx ecx, byte ptr [ecx+00000162]
+:0042A0A7 398A74010000            cmp dword ptr [edx+00000174], ecx
+:0042A0AD 7D02                    jge 0042A0B1
+:0042A0AF 33C0                    xor eax, eax
+:0042A0B1 5E                      pop esi
+:0042A0B2 C3                      ret
+
+
+* Referenced by a CALL at Addresses:
+|:004248F7   , :0042491A   , :00424A80   
+|
+:0042492F 51                      push ecx
+:00424930 E819CA0200              call 0045134E
+:00424935 59                      pop ecx
+:00424936 39816C010000            cmp dword ptr [ecx+0000016C], eax
+:0042493C 7C0F                    jl 0042494D
+:0042493E 0FBE8260010000          movsx eax, byte ptr [edx+00000160]
+:00424945 398164010000            cmp dword ptr [ecx+00000164], eax
+:0042494B 7D03                    jge 00424950
+:0042494D 33C0                    xor eax, eax
+:0042494F C3                      ret
+:00424950 0FBE8262010000          movsx eax, byte ptr [edx+00000162]
+:00424957 33D2                    xor edx, edx
+:00424959 398174010000            cmp dword ptr [ecx+00000174], eax
+:0042495F 0F9DC2                  setnl dl
+:00424962 8BC2                    mov eax, edx
+:00424964 C3                      ret
+
+
+* Referenced by a CALL at Addresses:
+|:00420DDE   , :0042189E   , :00421A19   
+|
+:004211DE 8BC1                    mov eax, ecx
+:004211E0 69C0C8550000            imul eax, 000055C8
+:004211E6 030514AE6E00            add eax, dword ptr [006EAE14]
+:004211EC 0FBE8804550000          movsx ecx, byte ptr [eax+00005504]
+:004211F3 83A00855000000          and dword ptr [eax+00005508], 00000000
+:004211FA 398864010000            cmp dword ptr [eax+00000164], ecx
+:00421200 7C28                    jl 0042122A
+:00421202 56                      push esi
+:00421203 E89245FEFF              call 0040579A
+:00421208 5E                      pop esi
+:00421209 39886C010000            cmp dword ptr [eax+0000016C], ecx
+:0042120F 7C19                    jl 0042122A
+:00421211 0FBE8806550000          movsx ecx, byte ptr [eax+00005506]
+:00421218 398874010000            cmp dword ptr [eax+00000174], ecx
+:0042121E 7C0A                    jl 0042122A
+:00421220 C7800855000001000000    mov dword ptr [ebx+00005508], 00000001
+:0042122A C3                      ret
+
+
+Displays:
+
+:004295E2 0FB68561010000          movzx eax, byte ptr [ebp+00000161]
+:004295E9 0FBE8D62010000          movsx ecx, byte ptr [ebp+00000162]
+:004295F0 03C1                    add eax, ecx
+:004295F2 0FBE8D60010000          movsx ecx, byte ptr [ebp+00000160]
+:004295F9 03C1                    add eax, ecx
+:004295FB 746D                    je 0042966A
+* Possible StringData Ref from Data Obj ->"Required:"
+
+:00429644 8A8562010000            mov al, byte ptr [ebp+00000162]
+:0042964A 84C0                    test al, al
+:0042964C 7413                    je 00429661
+:0042964E 0FBEC0                  movsx eax, al
+:00429651 50                      push eax
+:00429652 53                      push ebx
+* Possible StringData Ref from Data Obj ->"%s %i Dex"
+
+:00429608 8A8560010000            mov al, byte ptr [ebp+00000160]
+:0042960E 59                      pop ecx
+:0042960F 84C0                    test al, al
+:00429611 59                      pop ecx
+:00429612 7413                    je 00429627
+:00429614 0FBEC0                  movsx eax, al
+:00429617 50                      push eax
+:00429618 53                      push ebx
+* Possible StringData Ref from Data Obj ->"%s %i Str"
+
+:00429810 0FBE8660010000          movsx eax, byte ptr [esi+00000160]
+:00429817 0FB68E61010000          movzx ecx, byte ptr [esi+00000161]
+:0042981E 03C1                    add eax, ecx
+:00429820 0FBE8E62010000          movsx ecx, byte ptr [esi+00000162]
+:00429827 03C1                    add eax, ecx
+:00429829 746D                    je 00429898
+* Possible StringData Ref from Data Obj ->"Required:"
+
+:00429836 8A8660010000            mov al, byte ptr [esi+00000160]
+:0042983C 59                      pop ecx
+:0042983D 84C0                    test al, al
+:0042983F 59                      pop ecx
+:00429840 7413                    je 00429855
+:00429842 0FBEC0                  movsx eax, al
+:00429845 50                      push eax
+:00429846 57                      push edi
+* Possible StringData Ref from Data Obj ->"%s %i Str"
+
+:00429872 8A8662010000            mov al, byte ptr [esi+00000162]
+:00429878 84C0                    test al, al
+:0042987A 7413                    je 0042988F
+:0042987C 0FBEC0                  movsx eax, al
+:0042987F 50                      push eax
+:00429880 57                      push edi
+* Possible StringData Ref from Data Obj ->"%s %i Dex"
+
+:0046D04F 0FBE8662010000          movsx eax, byte ptr [esi+00000162]
+:0046D056 0FB68E61010000          movzx ecx, byte ptr [esi+00000161]
+:0046D05D 03C1                    add eax, ecx
+:0046D05F 0FBE8E60010000          movsx ecx, byte ptr [esi+00000160]
+:0046D066 03C1                    add eax, ecx
+:0046D068 7507                    jne 0046D071
+* Possible StringData Ref from Data Obj ->"No required attributes"
+
+:0046D07C 8A8660010000            mov al, byte ptr [esi+00000160]
+:0046D082 59                      pop ecx
+:0046D083 84C0                    test al, al
+:0046D085 59                      pop ecx
+:0046D086 7413                    je 0046D09B
+:0046D088 0FBEC0                  movsx eax, al
+:0046D08B 50                      push eax
+:0046D08C 57                      push edi
+* Possible StringData Ref from Data Obj ->"%s %i Str"
+
+:0046D0B8 8A8662010000            mov al, byte ptr [esi+00000162]
+:0046D0BE 84C0                    test al, al
+:0046D0C0 7413                    je 0046D0D5
+:0046D0C2 0FBEC0                  movsx eax, al
+:0046D0C5 50                      push eax
+:0046D0C6 57                      push edi
+* Possible StringData Ref from Data Obj ->"%s %i Dex"
+

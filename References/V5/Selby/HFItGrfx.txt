@@ -1,0 +1,206 @@
+Item codes for graphics in Hellfire.
+
+
+00 - Potion of Full Mana
+01 - White Scroll
+02 - Brown Scroll
+03 - Blue Scroll
+04 - Small Gold Pile
+05 - Medium Gold Pile
+06 - Large Gold Pile
+07 - Gold Ring
+08 - The Bleeder
+09 - Bramble
+0A - Ring of Truth
+0B - Ring of Regha
+0C - Ring
+0D - Ring of Engagement
+0E - Constricting Ring
+0F - Spectral Elixir
+10 - Multi-colored Elixir
+11 - Golden Elixir
+12 - Empyrean Band
+13 - Ear with steel earring
+14 - Ear
+15 - Ear with gold earring
+16 - orange sphere
+17 - wierd box
+18 - gold pyramid
+19 - Blood Stone
+1A - red sphere
+1B - blue cube
+1C - orange pyramid
+1D - thin black vial
+1E - blacksmith oil
+1F - Elixir of Vitality
+20 - Potion of Healing
+21 - Potion of Full Rejuvenation
+22 - Elixir of Magic
+23 - Potion of Full Healing
+24 - Elixir of Dexterity
+25 - Potion of Rejuvenation
+26 - Elixir of Strength
+27 - Potion of Mana, Potion of Mana
+28 - Brain
+29 - Claw
+2A - Tooth
+2B - scrub brush
+2C - Optic Amulet
+2D - Amulet
+2E - black pendant
+2F - scarab
+30 - ankh
+31 - pouch
+32 - Wizardspike
+33 - Dagger
+34 - bottle
+35 - Black Razor
+36 - thicker dagger
+37 - brass knuckles with blade
+38 - Blade
+39 - Bastard Sword
+3A - The Executioner's Blade
+3B - Mace
+3C - Long Sword
+3D - Broad Sword
+3E - Falchion
+3F - Morning Star
+40 - Short Sword
+41 - Claymore
+42 - Club
+43 - Sabre
+44 - Gryphons Claw, The Falcon's Talon
+45 - bone club
+46 - Spiked Club
+47 - board & nail
+48 - Scimitar
+49 - bigger bastard sword
+4A - big grey sword
+4B - Full Helm
+4C - Magic Rock
+4D - Helm of Sprits
+4E - crown with skull
+4F - Royal Circlet
+50 - Fool's Crest
+51 - Harlequin Crest
+52 - Helm
+53 - Buckler
+54 - helm with spikes
+55 - Veil of Steel, Gotterdamerung
+56 - black book
+57 - red book
+58 - blue book
+59 - Black Mushroom
+5A - Skull Cap
+5B - Cap
+5C - Torn Flesh of Souls
+5D - Thinking Cap
+5E - red shirt
+5F - Crown
+60 - cathedral map
+61 - Fungal Tome
+62 - Great Helm
+63 - OverLord's Helm
+64 - lightning shield
+65 - Battle Axe
+66 - Hunter's Bow, Long Bow
+67 - Plate Mail, Field Plate
+68 - Stonecleaver
+69 - Small Shield
+6A - Cleaver
+6B - Studded Leather Armor
+6C - Deadly Hunter, Eaglehorn
+6D - Short Staff of Holy Bolt, Short Staff, Quarter Staff
+6E - Two-Handed Sword
+6F - Chain Mail
+70 - Small Axe
+71 - Kite Shield
+72 - Scale Mail
+73 - big shield
+74 - Split Skull Shield
+75 - Dragon's Breach
+76 - Short Bow, Short Bow
+77 - Long Battle Bow, Long War Bow
+78 - fish bow
+79 - War Hammer
+7A - Maul, The Cranium Basher
+7B - Long Staff
+7C - War Staff
+7D - shaman's staff
+7E - Tavern Sign
+7F - Hard Leather Armor
+80 - Rags
+81 - Quilted Armor
+82 - big flail
+83 - Flail
+84 - Tower Shield
+85 - Composite Bow
+86 - Great Sword
+87 - Leather Armor
+88 - Splint Mail
+89 - Robe
+8A - The Rainbow Cloak, Wisdom's Wrap, Nightscape
+8B - heavy mail
+8C - Anvil of Fury
+8D - Broad Axe
+8E - Large Axe
+8F - Great Axe
+90 - Axe
+91 - grey axe
+92 - Blackoak Shield, Holy Defender
+93 - Large Shield
+94 - Gothic Shield
+95 - Cloak
+96 - Cape
+97 - Full Plate Mail
+98 - Gothic Plate
+99 - Breast Plate
+9A - Ring Mail
+9B - Staff of Lazarus
+9C - ruby axe
+9D - Arkaine's Valor
+9E - The Needler
+9F - Naj's Light Plate
+A8 - Xorine's Ring
+AA - Amulet of Warding
+AD - Karik's Ring
+B0 - Mercurial Ring
+B1 - Ring Thunder
+B5 - Ring of the Mystics
+B7 - Acolyte's Amulet
+B8 - Ring of Magma
+B3 - Giant's Knuckle
+B4 - Auric amulet
+BA - Gladiator's Ring
+BB - Rune Bomb
+BC - Theodore
+BD - Torn Note 1
+BE - Torn Note 2
+BF - Torn Note 3
+C0 - Reconstructed note
+C1 - Rune of Fire
+C2 - Greater Rune of Fire
+C3 - Rune of Lightning
+C4 - Greater Rune of Lightning
+C5 - Rune of Stone
+C6 - Grey Suit
+C7 - Brown Suit
+C8 - Eater of Souls
+CB - Armor of Gloom
+CC - Bone Chain Armor
+CD - Thunderclap
+CE - Diamond Edge
+D1 - Flambeau
+D2 - Gnat Sting
+DB - Blitzen
+E1 - Demon Plate
+E2 - Bovine Plate
+100 - The Grizzly
+101 - The Grandfather
+102 - The Protector
+103 - Messerschmidt's Reaver
+104 - Windforce
+105 - Short War Bow
+106 - Composite Staff
+107 - Short Battle Bow
+108 - Gold

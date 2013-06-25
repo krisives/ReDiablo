@@ -1,0 +1,13 @@
+Restoring HitRecovery for Monk Frameset to avoid graphic glitch:
+
+000B46BF 06                                      .
+
+
+Setting Blocking Bonus to 00000000, because it is already hardcoded:
+
+000B47A0 1E00 0000 1400 0000 0A00 0000 2800 0000 ............(...
+000B47B0 1900 0000 1E00 0000                     ........
+wordt
+000B47A0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000B47B0 0000 0000 0000 0000                     ........
+

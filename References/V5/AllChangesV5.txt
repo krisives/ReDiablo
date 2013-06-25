@@ -1,0 +1,791 @@
+Changes The Dark 5.2 revision Q
+
+Version change (this version is identical to 5.3)
+Squire prefix is renamed to Monk's.
+Higher AC bonus for Black Mail and Ethereal Crown.
+Modified base AC for most armors.
+
+
+Changes The Dark 5.2 revision P
+
+Version change
+Restored Vile Crawlers to their original colour.
+New colours for mercenary bosses in the Cornerstone Room.
+Fixed old issue with (summoned) Golems getting killed by other monsters.
+Modifications to objects appearing in Hell and Church levels.
+Fixed Flash spell to really attack all positions around the caster.
+Increased chances for Barbarians with axes to receive half melee damage.
+Penalty to AC for plated Monks is now applied for all plates.
+Lower AC for Splint and Heavy Mail.
+More Fire damage for Fire Song
+Higher price for Wyrm Blood.
+
+
+Changes The Dark 5.2 revision N
+
+Version change
+Improved Butcher
+Corrected special minion-type for Blacktongue
+Black Knights appear slightly more often, Doom Guards slightly less
+Golems of any type can no longer be stunned or knocked back.
+Modifications to objects appearing in Hell and Butcher's room
+Weapons will only be auto-equipped if characters are unable to pick them up otherwise.
+Automap will display locations for all characters.
+Warriors using a bow will automatically have Knockback.
+Triple-shot and adjusted description for Flamethrower crossbow
+Crystalline suffix is replaced by (a second) Fine suffix
+Wider range of possible locations for Escape spell.
+
+
+Changes The Dark 5.2 revision M
+
+Version change
+Changed trap distribution
+New trap type (summons Golem) in Hell
+Maximum resistances will show '75%' (in gold) on character screens
+Modified several tiles in Caves to not allow walking and/or shooting over.
+Modified Ethereal Crown
+Higher price for Wyrm Blood
+New colours for several monsters
+Doom Guards no longer appear on 13
+More HP for Titan (Golem boss in Abyss)
+Rustweaver (Doom Guard boss in Hell), Magnat and Anvil (Golem bosses in Abyss) no longer exist
+Two new bosses (Fallen Rogue and Renegade Warrior) in Cornerstone Room
+Renegade Warrior boss for Black Knights in Hell 
+Renegade Warriors appear together with Fallen Rogues in Abyss
+No stun, and slower walking speed for Golems (in Abyss)
+Lower MLVL for Diablo (in Hell) to limit his item drops
+All barrels in Church may now contain Corpse Axe skeletons
+All barrels in Catacombs may now contain Unseen
+Charm will only work on Animals that are idle or walking
+Charm will no longer work on Viper types
+
+
+Changes The Dark 5.2 revision L
+
+Version change
+Piles with 10000 Gold now have a distinct image
+Wyrm Blood will now also restore some Mana and Life
+Earlier Accuracy Oils, and later Sharpness Oils
+Slightly improved Ring of Engagement
+Characters have a slightly smaller standard light radius
+Characters now have a built-in Evasion, which lowers a monster's maximum chance to hit with arrows or spells by DEX/8%
+Evasion from items will lower a monster's maximum chance to hit with arrows or spells by 32% (and absorb 25% damage, as before)
+Spiked Balls are not stopped when a monster is hit
+Activated monsters will alert all other monsters nearby
+Monsters can be stunned by traps, even if the damage is resisted
+Escape spell has improved range, but will not cause jumps over walls
+Fixed Phasing immunity for Zhar the Mad (in SP)
+Modified melee monster against monster, to better avoid attacks on already dying monsters
+No actual hits for Fire and Lightning Wall spells, to prevent sounds of pain
+Corrected walkable state for several Cave tiles
+The bloody walls in Butcher's room can no longer become transparent
+Changed monsters that appear in special locations on level 15 and 16
+Placed the Executioner before the Dark Lord's Abyss room
+Removed old Drake-charge related modifications
+Improved chances for Warcries
+Devil Kin Brutes have slightly lower AC but can do Warcries now
+Gargoyles appear earlier
+Removed Bone Lords (they only appeared on 16)
+Removed one type of Hork Spawn
+Acid Puddles for dying Hork Spawns
+Small changes to some Knight types
+Small changes to Fallen Rogues
+New monster: Renegade Warrior (temporary appearing in Abys)
+Sir Gorash is now a Renegade Warrior
+
+
+Changes The Dark 5.2 revision K (there is no revision I or J)
+
+Version change
+Fixed bug that disrupted the trap viewing from 52H
+Hit recovery duration for Fallen Rogues is now 4 frames
+Durability warning icons will now appear for values lower as 5 (yellow), and for 1 point (red).
+Light-reducing suffixes no longer exist
+Revenge and Harmony are more common
+Minor modifications to some unique items
+Increassed damage from traps
+
+
+Changes The Dark 5.2 revision H
+
+Version change
+New Idle animation for Defiler
+New Stun animation for Fallen Rogues
+Devil Kin Brutes can now also appear on 11
+Bottle of Fury is replaced by Wyrm Blood (temporary increases Mana)
+Added hotkey indications to spell hotkeys in the speed book
+Fixed various issues with Rage
+Modified Mana cost for Blood Wave, Telekinesis, Bone Spirit and Barrier
+Sanctuary now affects all Undead and Demons, but never Animals (nor Humans)
+Retreating Stalking Death are no longer immune to Holy Bolt
+Tohit for traps against Monsters is now always 90%
+The Defiler, summoned Golems and Fallen Rogues will ignore Fire and Lightning Walls, as if immune
+Some traps will be easier, and some will be harder to detect
+Minor modifications to some unique items
+
+
+Changes The Dark 5.2 revision G
+
+Version change
+Fixed Walls that blocked missiles in Hell Levels (Irrelevant to Invisible Walls)
+Added more hotkeys
+Replaced Ressurect suffix by Mana suffix, and Identify by Inferno:
+Non-varying manacost for Nova, Immolation and Arcane Destruction
+
+
+Changes The Dark 5.2 revision F 
+
+Version change
+Higher price for Rage scrolls
+Fire Damage instead of Increased Mana Regeneration for Swan Song, now renamed to Fire Song
+Ring of Truth with Increased Mana Regeneration instead of Mana charges
+
+
+Changes The Dark 5.2 revision E
+
+Version change
+Rage will give Multi-Arrow ability to bows while active 
+
+
+Changes The Dark 5.2 revision D
+
+Version change
+Test Version for testing experimental gfx (NSanct)
+
+
+Changes The Dark 5.2 revisions A, B and C
+
+Version change
+New MPQ file
+Lower speed for BloodWave Spell
+New Spell Icon for Blood Wave (both SpeedBook and SpellBook)
+New animation for BloodWave
+New Mainmenu Background graphics
+New Portrait for Bard in Hero Selection Screen
+New flip animation for jewels (with shadow)
+
+
+Changes The Dark 5.1 revision R (also 5.2)
+
+Version change
+New image for Rage scroll
+
+
+Changes The Dark 5.1 revision Q
+
+Version change
+Several changes to statistics of boss monsters
+Fully removed all bad (temporary) effects from Rage ending
+
+
+Changes The Dark 5.1 revision P
+
+Version change
+Several changes to unique items
+New description for Corruption
+New description for Constantly loose life
+Removed (temporary) life loss from Rage ending
+Extra AC vs. Demons or Undead now adds CLVL, instead of 25, to AC
+
+
+There is no revision O, to prevent mistakes.
+
+
+Changes The Dark 5.1 revision N
+
+Version change
+New resource file (TD52.MPQ)
+More new images for unique items
+Adjusted some unique item properties
+Lower speed for Blood Wave spell
+Slightly faster flying speed for Spiked Ball trap
+Improved Mana regeneration as item property (for Unique items)
+
+
+Changes The Dark 5.1 revision M
+
+Version change
+Relocated the Dark Signpost
+Improvements for Gharbad and the Butcher
+Slower speed and new sounds for the spiked ball trap
+Spiked Ball cannot be stopped by characters
+Lower chances for Warcries
+
+
+There is no revision L, to prevent mistakes.
+
+
+Changes The Dark 5.1 revision K
+
+Version change
+New resource file (TD52.MPQ)
+Added 'The Dark' logo above ingame menu
+Replaced Wounded Townsman by 'The Dark' Signpost
+Added overlay text to the speedbook for items with spells
+Fixed walking animation for Bard (and Rogue) with a sword
+Fixed 'mindmace' animation, and used it as Spiked Ball trap in Abyss
+Replaced many images and several drop-animations for items
+
+
+There is no revision J, to prevent mistakes.
+There is no revision I, to prevent mistakes.
+
+
+Changes The Dark 5.1 revision H
+
+Version change
+Barbarians are stunned with CLVL or higher damage, instead of 3/2 CLVL damage
+Barbarians no longer have innate resistance
+Modified Karik's Ring and Armor of Gloom
+
+
+Changes The Dark 5.1 revision G
+
+Version change
+Negating is fixed to no longer reduce damage for arrows
+Hork Demons now have Fallen One attacktype (with warcries)
+
+
+Changes The Dark 5.1 revision F
+
+Version change
+Fixed bug in Murphies Shrine
+Restored correct seeding sizes for Knights
+
+
+Changes The Dark 5.1 revision E
+
+Version change
+New resource file (TD52.MPQ)
+Knights in Hell have Fallen One attacktype
+Restored damage for Guardian/Inferno from 51B
+Several changes to monster data
+
+
+Changes The Dark 5.1 revision D
+
+Version change
+Viper Charge fix
+Less pausing for Scorpion and Hork Spawn type monsters
+New sound for Magic Missile spell
+Less Mana Shield drain with higher spell levels
+Changed Mana cost for Mana Shield damage absorbtion
+Minor fixing and optimizing for the Corruption fix from 51B
+Increased life gain for entering Fallen Ones' warcry mode
+
+
+Changes The Dark 5.1 revision C
+
+Version change
+Improved behaviour for Fallen Ones
+Guardian Princes now have Fallen One attacktype
+
+
+Changes The Dark 5.1 revision B
+
+Version change
+All spell damage will be 1/8, instead of 1/6, against resisting monsters (change in 51A didn't work)
+Resisted damage can now, through critical hits, reach the same maximum as non-resisted damage
+Corruption effect gives a severe Mana drain, instead of attempting to remove all Mana at once (which failed)
+Higher damage for Holy Bolt (now also increases with SLVL)
+Slightly lower damage for Guardian/Inferno
+All Scavenger Rats now resist Fire in Nightmare and Hell mode
+Increased damage for Spark Worms and Hork Spawns
+Lava Maw dogs are now called Bile Hound
+Rage Scrolls are more expensive
+Oils of Death can now also be used on bows
+Improved Warrior Repair skill
+
+
+Changes The Dark 5.1 revision A
+
+Version change
+All spell damage will be 1/8, instead of 1/6, against resisting monsters
+Guardian and Inferno are fixed to have the intended 90% Tohit chances (regardless of Magic) 
+Spells and skills can no longer be used while any character attribute is zero
+
+
+Changes The Dark 5.1
+
+Version change
+Fixed bug in monster activation that attributed to monster desynchronisation
+Fixed bug where Anvil of Repair affected the Item Repair skill
+Fixed bug that distorted item drops in the first levels of Normal Mode SP
+Fixed bug that made Sanctuary and Heal All Spells less available in SP (as book or staff)
+Ears can be used to cast the Mana spell instead of Resurrect spell
+Modifications to prevent problems with Charmed animals
+Slightly lower damage for Inferno and Guardian
+Adjusted prices for several spells
+Adjusted values for prefixes in Merciless and Godly series
+Added Strength bonus to Amulet of Wrath
+Disabled Ogden's Sign quest
+Slain Hero (level 9 in SP) gives Lightning Wall book instead of Lightning book
+Replaced the Fire and Night Clan goats from the Poisoned Water Supply quest by Stone Clan goats
+Replaced the monsters from the Anvil of Fury quest
+Adjusted data for several monsters
+Hiddens will remain invisible while their target is out of view
+Slightly lower maximum chances to block missiles from monsters
+Warrior starts with a shortbow instead of club (in inventory)
+Barbarian starts with 2 bone clubs
+
+
+Changes The Dark 4.2 revision Z (also 5.0)
+
+Version change
+Cosmetic changes to menus
+Small colour changes for Caves
+End Game message for killing The Dark Lord in Abyss
+Various modifications to attack routines and chain activation to improve synchronisation
+Warriors and Barbarians now have 75% chance to avoid knockback from monsters
+Monk's Demonslaying bonus now also applies when not using Demonslaying weapons
+Auto-equip for staves on Monk
+Penetrating bonus is now for Axes, not for being a Barbarian
+All swords and bludgeoning weapons are one-handed
+Some items have very high Strength requirements
+Younger characters have more chance for Critical Damage as before
+Devastation now adds to Critical Damage, and can also appear on bows
+All monsters can avoid stun and knockback from weapons (42% chance)
+Monsters no longer deactivate while in view of their target
+AC bonus versus Undead or Demons is now 25 instead of 20
+Reduced chance for durability loss when character is stunned or shooting with a bow
+Slightly increased chance for durability loss when hitting with a melee weapon
+Fix to unstable character appearances after restarting in town
+Minimum ToHit in PvP is now 25% instead of 5%
+Bloodstones will be rarer, less valuable, and are no longer sold by Adria
+Vault keys will be less valuable, and Adria will ask a small fee for them
+Several corrections in data for spells, monsters and items
+New type of opponents: Fallen Rogues 
+Death Clan now appears as Hell Clan, with a Fallen Rogue as boss
+New Spider and Warper boss in Nest, and new bosses for several other monsters
+Relocated most SP quests to their original level
+King Leoric will now always appear in Church (again)
+Gharbad the Weak will now always appear in Catacombs
+Butcher will now always appear in Caves, while his old room is occupied by The Killing Brute
+Satyr Lords no longer appear as normal monster, but as Goat bosses
+Izual will lead a pack of Reapers, not Fallen Angels
+Lonely Black Prince in Diablo's room is now a Reaper
+Now also Diablo, the Butcher, Gharbad and King Leoric will drop a second magic item
+Slightly larger boss mobs
+Small improvement to generic shooter AI
+Increased chance for Horned Runners to do a charge
+Increased damage for Flash from Mages, and for Lightning from Lightning Demons
+Increased damage for Lightning, Fire Bolt and Doom Serpent from traps
+Less piercing for Bone Spirit
+Guardian spell will use Inferno instead of Firebolt
+Guardian and Sanctuary can only exist one at a time
+Improved ToHit, and damage only depending on CLVL, for Inferno and Guardian
+Modified damage for Magic Missile
+Increased damage for Flash from characters
+Increased duration for Guardian, Divine Help and Sanctuary
+Increased effectiveness for Mana, Blood Wave, Fire and Lightning Wall spells
+Fire Wall and Lightning Wall spells can only be used one at a time, for each caster
+Tomes in Abyss may cast Seeing, recharge items, or upgrade Healing and Mana potions, for all present characters
+Fascinating Shrine may add spell level for Sanctuary instead of Mana Shield
+Divine and Spooky Shrines no longer appear
+Stone Shrines are more common in Hell levels
+Increased gain from Blood Fountains and Cauldrons
+
+
+Changes The Dark 4.2 revision Y
+
+Version change
+Splash damage from spells will now always occur, even if it is out of sight
+Fixed duration for Invincibility (now shorter for high level characters, longer for younger ones)
+Shorter, and less determined by characterlevel, duration for Rage
+Improved durations for Guardian, Sanctuary and illusionary Walls
+Increased damage for Firebolt and Guardian
+Runes will use CLVL/4 as replacement for SLVL in damage calculations
+Adjusted damage and life for Golem (to prevent overflow and negative values)
+Increased artificial lightradius for Golem and Charmed animals
+Small adjustments to the general behaviour of minions and bosses
+Charmed animals are less penalized as before
+Increased all monsters life for Nightmare and Hellmode
+Dark Servant boss now has Doomtail minions 
+New Byclops boss, always appears in Caves and leads a pack of Cave Boars
+Altered locations for Lazarus, Red Vex and Blackjade (in MP)
+Replaced the lonely Reality Weaver in Diablo's room by a Black Prince
+Dark Servants will now drain Vitality at 37.5% instead of 50% chance per hit
+All Shredded types will drain Strength at 12.5% chance, and steal Life
+All Lifestealing monsters will now also do so in SP
+Small changes to the behaviour of charging creatures
+Fixes to AI for some shooting monsters to improve behaviour
+Disabled the faster retreat of all mage types
+The Dark Ghost and the Defiler will drop 2 random magic items upon death
+Replaced Glimmering Shrine with another Enchanted Shrine for Hell and late Catacomb levels
+Lower requirements for several scrolls
+Restored Sharp and Fine prefixes to original values
+Many small corrections in item, monster and spell data
+Evasion now absorbs only 25% of damage, but gives characters a chance to avoid ranged attacks completely
+Class Items, give a bonus to attributes when kept in inventory, but only for the matching character class
+Orb of Revival is removed
+Accuracy Oil is strongly improved and more common
+Hardening and Imperviousness Oils are improved
+Grizwold sometimes sells Blacksmith Oils
+Restarting in town makes a character loose half of all gold in inventory
+Fixed the problem with disappearing corpses of warriors, bards and sometimes sorcerers
+Sorcerers have +1, Barbarians have -1 (was -2 before) to spell levels
+Improved spell casting speed and sword attack speed for Bards
+Lower attack speed for Barbarians with axes (now same speed as one-handed weapons)
+Lower barehanded attack speed for Monk (now same speed as staff, and still the fastest class)
+The chance to avoid knockback, for Barbarians and Warriors, is now determined by Strength (STR/4 %)
+Improved Vitality bonus to damage for Barbarian, but this bonus now only applies to axes
+Barbarians with axes have a chance (STR/8 %) to avoid half of final melee damage inflicted upon them
+Increased ToHit penalty for all Sweep attacks
+Bard hotkey F3 is now Divine Help
+Barbarian hotkey F4 is now Rage
+
+
+Changes The Dark 4.2 revision X
+
+Version change
+Fixed severe bugs with Mysterious, Fascinating, Ornate, Sacred, Town, Eerie, Creepy, Abandoned and Quiet Shrines
+Hotkeys take lowered Slvls and insufficient mana into account when choosing between spell, item or scroll
+Sweep ToHit penalty is now 30+2*(Mlvl-Clvl), with a minimum of 30%
+Restored Death Animation playback speeds to original values, for some monsters
+Changed Follow and Dooropening abilities for several monstertypes
+
+
+Changes The Dark 4.2 revision W
+
+Version change
+Changes to several unique items
+Replaced Peril suffix by another (higher Qlvl) Zodiac suffix
+Replaced Oil of Mastery by another (higher Qlvl) Blacksmith Oil
+Bottle of Fury now gives double Healing instead of Healing and Barrier (in addition to the Rage)
+Rune of Shielding is now Arcane Rune, which creates a triple Arcane Destruction spell
+New item Orb of Revival, which acts as a staff of Resurrect
+Mysterious Shrine is shared, but will not affect characters with maximum attributes
+Eerie, Abandoned, Creepy amd Quiet Shrines are shared, but have a lesser effect
+Ornate, Sacred, Fascinating and Town Shrines add a varying spell, depending on Difficulty
+Oily Shrine gives 2 free spendable attribute points
+Holy Shrine adds 1 to each attribute, and is not shared
+Spooky Shrine no longer takes gold away, and restores Life and Mana for everyone
+Tainted Shrine only affects the character touching it
+Cryptic, Sparkling and Shimmering Shrines no longer exist
+Hidden, Religious and Holy Shrines appear more often
+Enchanted Shrine appears later
+Bard has improved damage and AC only when not using other weapons as swords
+Monk has -clvl to AC when wearing plate armor
+Barbarian has -2 to spell levels
+
+
+Changes The Dark 4.2 revision V
+
+Version change
+Changed spell icon for Sanctuary
+Improved Elemental and Doom Serpent spells
+Changes to some unique items
+Rune of Recharging will now work on all items, and not lower durability
+Anvil of Repair will now restore up to 50% of items durability, but with the same maximum
+Replaced the Decay suffix by a Healing spell suffix
+Lower barehanded damage for Monks (now 1..1+clvl/2)
+Characters are stunned at clvl*3/4 damage (Barbarians at clvl*3/2, as before)
+Monsters no longer always target the 'first' of equally close characters
+Monsters no longer always target the closest character, if it is out of sight
+
+
+Changes The Dark 4.2 revision U
+
+Version change
+Flash from Mages has its damage increased
+Lower repair prices at Grizwold
+Skeleton Tomes can drop all possible scroll types
+Potion Bags can be found, to store up to 60 potions
+Increased duration of Seeing, from about 10 minutes to 13 minutes
+Removed effect of DFE on damage from Peril suffix (large values negated it, and produced a crash)
+
+
+Changes The Dark 4.2 revision T
+
+Version change
+Fixed the Bard skill, which was incorrect after the replacement of Identify
+
+
+Changes The Dark 4.2 revision S
+
+Version change
+Fixed Rune Bomb
+New images for some runes, and for the Rainbow Elixir ingredients
+Restored old image for Blacksmith Oil
+Small fixes to some unique items
+Adjusted some Spell charge prices
+Replaced the Sparkling suffix by Evasion (so it is now also available on staves)
+Fixed Elemental Arrows to not hurt the shooter (was a problem in certain situations)
+Divine Cure spell is renamed to Divine Help, and more useful for all character classes
+Arcane Destruction is a new spell, based on Immolation but doing Magic damage
+Cryptic Shrine now casts Arcane Destruction
+Arcane Flames is renamed to Sanctuary
+Identify is no longer available as learnable spell
+Spell Book pages are reorganized
+Tome of Lore is now used by right-clicking
+Rune of Recharging can be used in town
+Changed character starting positions
+Changed the positions of some townspeople and cows, and added a 4th cow
+Disabled the Butcher movie and Sierra's intro screen at startup
+Fixed the appearance of warriors (and barbarians) with a shield and 2-handed weapon
+Disabled Cain's speeches about Lazarus in MP mode
+
+
+Changes The Dark 4.2 revision R
+
+Version change
+New activation speech for Champion boss Fleshdoom
+Termination sound from Seeing will only be heard by the caster
+Items with Mana spell will now correctly use charges
+Ears can now be used to Resurrect characters
+Tome of Lore can now be 'recharged' with scrolls
+Current number of scrolls in Tome of Lore are shown
+Current number of charges on non-staff items with spells are shown
+Adria's recharge option will set all items at 10 maximum charges if they have none but were supposed to have
+Changed images, Qlvl and other data for several base items
+Many changes to Unique Items (existing items may transform, but will not become invalid)
+Added base items for future use (please ignore and discard when found)
+Several changes to Pre- and Suffixes
+
+
+Changes The Dark 4.2 revision Q
+
+Version change
+Fixed Nova traps to not appear too early
+Fixed reduced effect for Murphy Shrine
+Increased prices for potions
+Several oils have a slightly lesser effect
+Graphics changes for jewelry and some bows
+Bands are rings again, and lost the AC bonus
+Redesigned exclusion factors for Pre- and Suffixes
+Small changes to existing (mostly low-end) Pre- and Suffixes
+New prefixes in the Shielding and Absorbing series, and new Spell suffixes replace most cursed ones
+Mana spell is available as suffix on items only
+All skills are now fully supported by the Speedbook
+Less Damage from Enemies has a maximum effect of (clvl+1)/2 points reduction
+More Life from Vitality added by items for Warrior and Barbarian
+Lower base damage for Rogues (removed Strength contribution)
+Less Vitality bonus to damage for Barbarian (4/5 of the previous amount)
+Barbarian has lost his small (Clvl/4) AC bonus
+Monks (with staff or barehanded) and Bards (with at least one sword in hand) now have a (Clvl/2) AC bonus
+New monster-activation-speech method (former did not always work correctly)
+Slightly reduced Chain Activation effect (for evaluation purposes)
+Improved behaviour for many ranged attackers
+Small (random) packs for Red Vex and Blackjade (in MP)
+Re-enabled 'walking' sound for Flesh Things
+New fixed spell hotkeys added for A, Q, W, E, R, T, Y and U keys
+Adjustments to the F1-F4 class hotkeys (with regard to the newly added hotkeys)
+All fixed hotkeys now support Skill, Spell, Item and Scroll for availability
+Tomes of Lore can be found, but are not yet functional in this revision
+
+
+Changes The Dark 4.2 revision P
+
+Version change
+Disabled 'staff' and 'scroll' overlay icons in the speedbook
+Speeches for entering Nest levels have lost their annoying text window
+Improved Rainbow Elixir to give 4 points instead of 3
+Scroll of the Elemental is removed
+All runes have no requirements, except they cannot be used in town, and a new image
+Scrolls of Fury and Shielding, and Orb of Recharging are now runes
+Adjusted durability, requirements and other qualities of most armor and weapons
+Adjusted manacost and other data modifications for several spells
+Lower duration for Fire Wall, Lightning Wall and Arcane Flames
+Arcane Flames is now centered at the caster's position
+Nova trap fixed to originate from the trapped chests again
+Nova, Fire and Lightning Arrow traps are more abundant
+Normal Arrow traps no longer appear in deeper levels
+Fixed the appearance of Resurrect, and unavailability of Arcane Flames in SP
+Heal All can now be found in SP (to prevent a 'mysterious' empty space in the spellbook)
+Medusa Gaze will affect all but Gargoyles and Diablo-type monsters, regardless of Stone Curse immunity
+Oil of Permanence is now Oil of the Ages, increases maximum durability to 200 and does no longer repair when used
+Blacksmith Oil is changed into Anvil of Repair, will just repair items (for 25%) and not increase durability
+Oil of Repair is now called Blacksmith Oil will add 1 to maximum durability as long as it is below 200
+Hidden Shrine can no longer lower item durability, unless it is higher as 240
+Cryptic Shrine casts Immolation with damage depending on dungeonlevel and difficulty
+Gloomy shrine adds 2, 3 or 4 to AC of all items, depending on difficulty, but does not lower any damage
+Weird shrine adds 1, 2 or 3 to maximum damage of all weapons, depending on difficulty
+Oily Shrine casts Arcane Flames at Slvl 15 for a longer duration
+Divine Shrine gives Elixirs of Magic and Vitality instead of Full Rejuvenation potions, if found in Hell
+Some Shrines appear on different dungeonlevels as before
+Shrines can not be identified by their names
+
+
+There is no revision O, to prevent mistakes.
+
+
+Changes The Dark 4.2 revision N
+
+Version change
+Faster durability loss for bows
+New Orb of Recharging acts as the Sorcerer's skill when right-clicked (experiment)
+Nova and Immolation Runes give improved versions of the corresponding spell
+Fire and Lightning Trap Runes are replaced by Nova and Immolation Runes
+Corrected the price and scrolltype of various scrolls
+New Scroll of the Elemental gives an improved Elemental
+New Scroll of Fury gives combined Rage, Barrier and Healing
+Scroll of Shielding now gives combined Mana Shield, Barrier and Mana
+Changed some spell names: Petrify is now Medusa Gaze, Restoration is now Divine Cure
+Spell charges are supported on any item, and can be recharged at Adria and Stone Shrines
+Spell recharge cost and staff prices at Adria are revised
+Spell recharge skill will not work on items without durability (like jewelry)
+Adjusted Inferno, Deflector, Defender and Naj's Puzzler to add some spells (more to follow)
+Small increase in Barrier duration
+Fixed crash with Blood Wave hitting characters
+Fire and Lightning Wall have their durations increased, but will no longer harm monsters or characters
+New spell Arcane Flames creates a Magic based, non-hurting circle that can keep monsters out or in
+The Ring of Fire trap is replaced by a Lightning Arrow trap
+Spells will no longer automatically miss their caster
+Cryptic Shrine does Arcane Flames instead of Immolation
+Lower chance for Murphy Shrine to break an item
+
+
+Changes The Dark 4.2 revision M
+
+Version change
+Burning crosses are more common, and their damage is no longer neglectible
+Rainbow Elixir gives 3 free spendable points instead of 2 to each attribute
+New Petrify spell does Stone Curse on all monsters in sight, and costs one Magic to cast
+Adjusted duration of Stone Curse to reward higher Slvls (now useful up to Slvl 11 instead of 6)
+Escape scrolls and staves now give Blink/Phasing effect, instead of combined Teleport and Townportal
+New Scroll of Shielding gives combined Mana Shield, Barrier and Healing
+Replaced the obsolete Scroll of Search by a (second) Scroll of Warp
+Monk skill is now Escape instead of Mana
+
+
+Changes The Dark 4.2 revision L
+
+Version change
+Corrected wrong charge- and manacost for casting Charged Bolt spell
+Lower speed and new icon for Blood Wave spell
+Monsters treat Golem and Charmed creatures as normal characters, with a 'light radius' of 7 spaces
+Golem walks slightly slower
+Acid puddles for all dying dogs and spiders
+New spell Restoration adds life and mana to all, during a short period, at the cost of Vitality
+Hit Recovery and Blocking speeds for Rogue are lowered to the original values
+
+
+Changes The Dark 4.2 revision K
+
+Version change
+Firebats and Hellbats are immune to Charm
+Fixed bug from 42J that prevented Charm from working properly
+Restored old modification regarding monsters being killed by Golem
+Monk skill is Mana
+Rage has a new spell icon
+Search is now a functionality of the Map
+Reduced effect of Healing and Heal All
+Flame Wave is replaced by Blood Wave
+Character Class related F1-F4 hotkeys 
+Small improvements in boss pack behaviour
+More random selected types of monsters per level 
+Tomes and Books can give Mysterious or Eldritch Shrine effect
+The spellbooks in front of the Dark Ghosts room give Invincibility and full mana to the reader
+
+
+Changes The Dark 4.2 revision J
+
+Version change
+Barbarian skill is Healing
+Adjusted Healing and Heal Other (now Heal All) spells
+Lower damage for Nova and Immolation spells
+Improved boss pack behaviour for all bosses
+All dogs and spiders are immune to Charm
+Missile spells from monsters now terminate when they succesfully hit Golems or Charmed monsters
+Decreased duration of Golems
+
+
+There is no revision I, to prevent mistakes.
+
+
+Changes The Dark 4.2 revision H
+
+Version change
+Improved boss pack behaviour 
+Bosses can deactivate again
+Nova and Immolation spells no longer originate from the caster, but from a target location
+
+
+Changes The Dark 4.2 revision G
+
+Version change
+Changed character appearances
+Better fix for stuck boss packs
+Bosses remain active
+Scowlers can no longer be Charmed
+Replaced Jester Spell by Charm Spell on The Joker
+Lowered target detection for monsters against Golem and Charmed monsters again
+Fixed leftovers from earlier releases
+
+
+Changes The Dark 4.2 revision F
+
+Version change
+Corrected behaviour of closely packed boss mobs
+Corrected behaviour of Gargoyle types
+Charm can no longer be resisted for 33% of the time
+Golem has improved statistics
+Melee monsters will attack Golems and Charmed monsters when those come within 3 spaces distance 
+
+
+Changes The Dark 4.2 revision E
+
+Version change
+Fixed crashbug in the Charm spell
+
+
+Changes The Dark 4.2 revision D
+
+Version change
+Fixed a small error for Accuracy and Hardening Oils
+Fixed crash with Chainactivation and Golem
+Redesigned Chainactivation for better performance
+Golems and Charmed monsters will be attacked on sight by nearly all shooting creatures
+Golems and Charmed monsters will no longer attack eachother or StoneCursed creatures
+Charmed monsters will no longer attack characters
+Golem has better resistances
+
+
+Changes The Dark 4.2 revision C
+
+Version change
+Minor monsterdata changes
+Some text fixes
+CB remote fix (only with LOF)
+Corrected Flash damage (characters and monsters)
+Improved Oils
+Durable items
+Slightly lower ToHit for spells
+Chain activation (monsters alert others)
+Maximum character statistics
+Base item data (high end base items will no longer drop in Normal mode)
+Weird Shrine fix
+Stalking Death will only flee when halfway damaged
+Seeing spell has a longer fixed duration and ending sound
+Scavengers heal faster
+Flash damage now as in spellbook
+Better Flash damage for Mages
+Fix to quick fleeing Darkmages
+
+
+Changes The Dark 4.2 revision B
+
+Version change
+Fixed bug with Slvl 0 Elemental in Spellbook
+Fixed bug that made fewer different monsters appearing
+Monsters in Single Player mode are no longer weaker
+Increased Qlvls for Base Items
+Adjusted 'pack data' for bosses to decrease mob-freezing
+
+
+Changes The Dark 4.2 revision A
+
+Version change
+Defiler Horde
+Larger mobs (12 guards)
+Cain animation fix
+Consistent mob for Leoric
+Barrelmonsters
+CB remote
+No splash for Doomserpents and Elemental
+Murphy shrine not shared
+Various monster data changes
+Lower Autohit for monsters
+Lower max chances tohit in PvP (less FF)
+Knockback for Flamewave, Doomserpents and Arcane Star

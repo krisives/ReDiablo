@@ -1,0 +1,56 @@
+Barbarian skill: Blink -> Healing
+
+
+file offset 000040B7
+
+:00404CB7 C705684D49000A000000    mov dword ptr [00494D68], 0000000A			Blink Spellnumber
+changed into
+:00404CB7 C705684D490002000000    mov dword ptr [00494D68], 00000002			Healing Spellnumber
+
+file offset 0005753C
+
+:0045813C C784301001000000020000  mov dword ptr [eax+esi+00000110], 00000200		Blink Skillflag
+changed into
+:0045813C C784301001000002000000  mov dword ptr [eax+esi+00000110], 00000002		Healing Skillflag
+
+file offset 00057DDF
+
+:004589DF C7801001000000020000    mov dword ptr [ebx+00000110], 00000200		Blink Skillflag
+changed into
+:004589DF C7801001000002000000    mov dword ptr [ebx+00000110], 00000002		Healing Skillflag
+
+
+Supplying name for Skill in Speedbook:
+
+000B605C 4C83 4B00 0000 0000                     L.K.....
+changed into
+000B605C 4C83 4B00 4C83 4B00                     L.K.L.K.
+
+
+
+Information from Charlies Modworkshop:
+
+Firebolt.......0100 0000      Infravision...........0001 0000
+Healing........0200 0000      Phasing...............0002 0000
+Lightning......0400 0000      Mana Shield...........0004 0000
+Flash..........0800 0000      Fireball..............0008 0000
+Identify.......1000 0000      Guardian..............0010 0000
+FireWall.......2000 0000      Chain Lightning.......0020 0000
+Town Portal....4000 0000      Flame Wave............0040 0000
+Stone Curse....8000 0000      Doom Serpents.........0080 0000
+
+Blood Ritual...0000 0100      Etherealize...........0000 0001
+Nova...........0000 0200      Item Repair...........0000 0002
+Invisibility...0000 0400      Staff Recharge........0000 0004
+Inferno........0000 0800      Trap Disarm...........0000 0008
+Golem..........0000 1000      Elemental.............0000 0010
+Rage(HF).......0000 2000      Charged Bolt..........0000 0020
+Teleport.......0000 4000      Holy Bolt.............0000 0040
+Apocalypse.....0000 8000      Resurrect.............0000 0080
+
+These can only be used if you increase the live memory offset pointer by 4. For example, the live memory offset for the skills is at 687888. If you wish to use the 4 spells below, you must change the memory pointer just before the spell value to 68788C. Hellfire uses +00000110 and +00000114 as adders for the live offsets
+
+Telekinesis.....0100 0000      Search..........0020 0000
+Heal Other......0200 0000
+Blood Star......0400 0000
+Bone Spirit.....0800 0000

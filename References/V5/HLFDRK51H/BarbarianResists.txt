@@ -1,0 +1,7 @@
+Removing innate Resistance for Barbarians
+
+file offset 00023456
+
+:00424056 7516                    jne 0042406E
+changed into
+:00424056 EB16                    jmp 0042406E

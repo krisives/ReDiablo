@@ -1,0 +1,35 @@
+Duration of Barrier
+
+(slvl+clvl+1)/2, min=10  -> (slvl+clvl+3)/2, min=15, with slvl>1
+
+file offset 0002F758
+
+:00430358 85C0                    test eax, eax
+:0043035A 7404                    je 00430360
+:0043035C 8BD0                    mov edx, eax
+:0043035E EB03                    jmp 00430363
+:00430360 6A04                    push 00000004
+:00430362 5A                      pop edx
+changed into
+:00430358 6A02                    push 00000002
+:0043035A 5A                      pop edx
+:0043035B 3BC2                    cmp eax, edx
+:0043035D 7E02                    jle 00430361
+:0043035F 8BD0                    mov edx, eax
+:00430361 42                      inc edx
+:00430362 42                      inc edx
+
+file offset 00040B8F
+
+:0044178F 83F90A                  cmp ecx, 0000000A
+:00441792 7D03                    jge 00441797
+:00441794 6A0A                    push 0000000A
+changed into
+:0044178F 83F90F                  cmp ecx, 0000000F
+:00441792 7D03                    jge 00441797
+:00441794 6A0F                    push 0000000F
+
+
+
+
+

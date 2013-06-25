@@ -1,0 +1,37 @@
+Providing a small (4 minions) random mob for Red Vex and Black Jade. They will stand guard outside Lazarus' room. 
+
+
+file offset 0003B65C
+
+:0043C25C 33FF                    xor edi, edi
+:0043C25E 33D2                    xor edx, edx
+changed into
+:0043C25C 8BD6                    mov edx, esi		edx = 4		monster type = nr. 4 on selection list
+:0043C25E 8BFE                    mov edi, esi		edi = 4		number of minions
+
+file offset 0003B668
+
+:0043C268 33D2                    xor edx, edx
+changed into
+:0043C268 8BD7                    mov edx, edi
+
+file offset 0003B673
+
+:0043C273 33D2                    xor edx, edx
+changed into
+:0043C273 8BD7                    mov edx, edi
+
+
+Setting pack trigger to 01 for both Witches to prevent non-matching attacktypes:
+
+000AF320 6700 0000 581B 4B00 501B 4B00 0000 E803 g...X.K.P.K.....
+000AF330 1D03 1E32 0E00 0300 0000 0000 2300 0000 ...2........#...
+changed into
+000AF336 0100                                    ..
+
+000AF340 6700 0000 441B 4B00 3C1B 4B00 0000 4C04 g...D.K.<.K...L.
+000AF350 1D03 1E32 4700 0300 0000 0000 2300 0000 ...2G.......#...
+changed into
+000AF356 0100                                    ..
+
+

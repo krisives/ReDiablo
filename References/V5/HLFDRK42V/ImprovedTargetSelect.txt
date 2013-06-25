@@ -1,0 +1,180 @@
+Target Selection
+
+
+Preventing monsters from always attacking the 'first' of equally close characters:
+
+file offset 0003BDDC
+
+:0043C9DC 3B45F4                  cmp eax, dword ptr [ebp-0C]
+:0043C9DF 7C06                    jl 0043C9E7						select if closer
+changed into
+:0043C9DC E976180300              jmp 0046E257						see below
+:0043C9E1 
+
+
+Having monsters prefer visible characters above those out of sight, if within reasonable distance:
+
+file offset 0003BDC1
+
+:0043C9C1 50                      push eax
+:0043C9C2 E809E20300              call 0047ABD0						eax = smallest distance
+:0043C9C7 84DB                    test bl, bl
+:0043C9C9 59                      pop ecx
+changed into
+:0043C9C1 53                      push ebx
+:0043C9C2 E8A9180300              call 0046E270						see below
+:0043C9C7 5B                      pop ebx
+:0043C9C8 84DB                    test bl, bl
+
+
+Using free space from Itemspells:
+
+file offset 0006D657
+
+:0046E257 90                      nop
+:0046E258 90                      nop
+:0046E259 90                      nop
+:0046E25A 90                      nop
+:0046E25B 90                      nop
+:0046E25C 90                      nop
+:0046E25D 90                      nop
+:0046E25E 7409                    je 0046E269
+:0046E260 83BA380A00001B          cmp dword ptr [edx+00000A38], 0000001B
+:0046E267 753B                    jne 0046E2A4
+:0046E269 8BB2400A0000            mov esi, dword ptr [edx+00000A40]
+:0046E26F 3BB2440A0000            cmp esi, dword ptr [edx+00000A44]
+:0046E275 742D                    je 0046E2A4
+:0046E277 81EC74010000            sub esp, 00000174
+:0046E27D 8DB25C090000            lea esi, dword ptr [edx+0000095C]
+:0046E283 899C2488010000          mov dword ptr [esp+00000188], ebx
+:0046E28A 6A5D                    push 0000005D
+:0046E28C 59                      pop ecx
+:0046E28D 8BFC                    mov edi, esp
+:0046E28F F3                      repz
+:0046E290 A5                      movsd
+:0046E291 83C9FF                  or ecx, FFFFFFFF
+:0046E294 E8F4FEFFFF              call 0046E18D
+:0046E299 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046E29F A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0046E2A4 8BD0                    mov edx, eax
+:0046E2A6 33FF                    xor edi, edi
+:0046E2A8 69D2C8550000            imul edx, 000055C8
+:0046E2AE 39BC0AD8470000          cmp dword ptr [edx+ecx+000047D8], edi
+
+changed into
+
+:0046E257 3B45F4                  cmp eax, dword ptr [ebp-0C]
+:0046E25A 7C0F                    jl 0046E26B						select if closer
+:0046E25C 7508                    jne 0046E266						dont select if further
+:0046E25E 8B4DE4                  mov ecx, dword ptr [ebp-1C]
+:0046E261 F6C101                  test cl, 01
+:0046E264 7505                    jne 0046E26B						select if 'even' monster
+:0046E266 E976E7FCFF              jmp 0043C9E1						don't select
+:0046E26B E977E7FCFF              jmp 0043C9E7						select
+
+:0046E270 85C0                    test eax, eax
+:0046E272 7D02                    jge 0046E276
+:0046E274 F7D8                    neg eax
+:0046E276 83F80A                  cmp eax, 0000000A
+:0046E279 7C01                    jl 0046E27C
+:0046E27B C3                      ret
+:0046E27C 8BD8                    mov ebx, eax						smallest distance
+:0046E27E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0046E284 8B54393C                mov edx, dword ptr [ecx+edi+3C]			character coordinate
+:0046E288 52                      push edx
+:0046E289 8B543938                mov edx, dword ptr [ecx+edi+38]			character coordinate
+:0046E28D 52                      push edx
+:0046E28E 8B5624                  mov edx, dword ptr [esi+24]				monster coordinate
+:0046E291 8B4E20                  mov ecx, dword ptr [esi+20]				monster coordinate
+:0046E294 E82E5DFDFF              call 00443FC7
+:0046E299 85C0                    test eax, eax
+:0046E29B 7503                    jne 0046E2A0						jmp if clear LOS
+:0046E29D 83C306                  add ebx, 00000006					increase distance 
+:0046E2A0 8BC3                    mov eax, ebx
+:0046E2A2 C3                      ret
+:0046E2A3 90                      nop
+
+Now 18 bytes free space from 0046E2A3 to 0046E2B5.
+
+
+
+Original code from TargetSelect routine that finds nearest character:
+
+:0043C907 33FF                    xor edi, edi
+:0043C909 897DF0                  mov dword ptr [ebp-10], edi
+:0043C90C 897DEC                  mov dword ptr [ebp-14], edi
+...
+:0043C94D 8B5620                  mov edx, dword ptr [esi+20]				monster coordinate
+:0043C950 8B4838                  mov ecx, dword ptr [eax+38]				char coordinate
+:0043C953 8955E8                  mov dword ptr [ebp-18], edx				monster coordinate
+:0043C956 6BD270                  imul edx, 00000070
+:0043C959 894DE0                  mov dword ptr [ebp-20], ecx
+:0043C95C 8B5E24                  mov ebx, dword ptr [esi+24]				monster coordinate
+:0043C95F 6BC970                  imul ecx, 00000070
+:0043C962 8B403C                  mov eax, dword ptr [eax+3C]				char coordinate
+:0043C965 8A9C1AD0786000          mov bl, byte ptr [edx+ebx+006078D0]
+:0043C96C 2A9C01D0786000          sub bl, byte ptr [ecx+eax+006078D0]
+:0043C973 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C979 8B4624                  mov eax, dword ptr [esi+24]				monster coordinate
+:0043C97C F6DB                    neg bl
+:0043C97E 1BDB                    sbb ebx, ebx
+:0043C980 2B44393C                sub eax, dword ptr [ecx+edi+3C]			char coordinate
+:0043C984 43                      inc ebx
+:0043C985 50                      push eax
+:0043C986 E845E20300              call 0047ABD0
+:0043C98B 8BF8                    mov edi, eax						edi = distance(1)
+:0043C98D 8B45E8                  mov eax, dword ptr [ebp-18]				monster coordinate
+:0043C990 2B45E0                  sub eax, dword ptr [ebp-20]				char coordinate
+:0043C993 59                      pop ecx
+:0043C994 50                      push eax
+:0043C995 E836E20300              call 0047ABD0
+:0043C99A 3BC7                    cmp eax, edi
+:0043C99C 59                      pop ecx
+:0043C99D 7E12                    jle 0043C9B1						jmp if dist(2) < dist(1)
+:0043C99F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C9A5 8B7DEC                  mov edi, dword ptr [ebp-14]
+:0043C9A8 8B4620                  mov eax, dword ptr [esi+20]				monster coordinate
+:0043C9AB 2B443938                sub eax, dword ptr [ecx+edi+38]			char coordinate
+:0043C9AF EB10                    jmp 0043C9C1
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0043C99D(C)
+:0043C9B1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C9B7 8B7DEC                  mov edi, dword ptr [ebp-14]
+:0043C9BA 8B4624                  mov eax, dword ptr [esi+24]				monster coordinate
+:0043C9BD 2B44393C                sub eax, dword ptr [ecx+edi+3C]			char coordinate
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0043C9AF(U)
+:0043C9C1 50                      push eax
+:0043C9C2 E809E20300              call 0047ABD0						eax = smallest distance
+:0043C9C7 84DB                    test bl, bl
+:0043C9C9 59                      pop ecx
+:0043C9CA 740A                    je 0043C9D6
+:0043C9CC 807DFF00                cmp byte ptr [ebp-01], 00
+:0043C9D0 7415                    je 0043C9E7
+:0043C9D2 84DB                    test bl, bl
+:0043C9D4 7506                    jne 0043C9DC
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0043C9CA(C)
+:0043C9D6 807DFF00                cmp byte ptr [ebp-01], 00
+:0043C9DA 7505                    jne 0043C9E1
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0043C9D4(C)
+:0043C9DC 3B45F4                  cmp eax, dword ptr [ebp-0C]
+:0043C9DF 7C06                    jl 0043C9E7						select if closer
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0043C9DA(C)
+:0043C9E1 837DF8FF                cmp dword ptr [ebp-08], FFFFFFFF
+:0043C9E5 7527                    jne 0043CA0E
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:0043C9D0(C), :0043C9DF(C)
+:0043C9E7 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:0043C9EA 83A69C000000EF          and dword ptr [esi+0000009C], FFFFFFEF
+:0043C9F1 894DF8                  mov dword ptr [ebp-08], ecx
+:0043C9F4 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C9FA 03CF                    add ecx, edi
+:0043C9FC 8945F4                  mov dword ptr [ebp-0C], eax				store smallest distance
+:0043C9FF 885DFF                  mov byte ptr [ebp-01], bl
+:0043CA02 8A5140                  mov dl, byte ptr [ecx+40]
+:0043CA05 8A4944                  mov cl, byte ptr [ecx+44]
+:0043CA08 8855FE                  mov byte ptr [ebp-02], dl
+:0043CA0B 884DFD                  mov byte ptr [ebp-03], cl
+...
+:0043CA0E FF45F0                  inc [ebp-10]						increase loop
+:0043CA11 81C7C8550000            add edi, 000055C8
+:0043CA17 81FF20570100            cmp edi, 00015720
+:0043CA1D 897DEC                  mov dword ptr [ebp-14], edi				character pointer
+:0043CA20 0F8CE9FEFFFF            jl 0043C90F

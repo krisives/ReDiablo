@@ -1,0 +1,21 @@
+Here's a hack i made that checks the resistance values in the static table. If the value is 40 or above, the monster will be stone curse immune. I doubt this will affect the unique monsters. If you take the lazy way out and use a mod making program, you must go back and reassign the +40 hex modifier each time you edit a monster, since my program uses the low value.
+
+file offset
+2C582 change F0E6 to 00E7
+2C586 change 1B74 to 407D
+
+ps..this also disables Diablo's attack type from being stone curse immune, so you must give him the +40 resistance modifier for him to be immune.
+
+Charlie 
+
+hellfire:
+
+Well, finally got around to doing it......just had to wait for Zakarun to speak up and ask for it..hehehe.
+
+32E9A change 20 to 54
+32E9E change 1B74 to 407D (or 807D)
+
+The 40 can be changed to 80 in case you use a hex editor.
+
+Charlie 
+

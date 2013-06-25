@@ -1,0 +1,53 @@
+Spell locations for Hellfire v1.01, 56 bytes between
+
+b6020 - Firebolt
+b6058 - Healing
+b6090 - Lightning
+b60c8 - Flash
+b6100 - Identify
+b6138 - Fire Wall
+b6170 - Town Portal
+b61a8 - Stone Curse
+b61e0 - Infravision
+b6218 - Phasing
+b6250 - Mana Shield
+b6288 - Fireball
+b62c0 - Guardian
+b62f8 - Chain Lightning
+b6330 - Flame Wave
+b6368 - Doom Serpents
+b63a0 - Blood Ritual
+b63d8 - Nova
+b6410 - Invisibility
+b6448 - Inferno
+b6480 - Golem
+b64b8 - Rage
+b64f0 - Teleport
+b6528 - Apocalypse
+b6560 - Etherealize
+b6598 - Item Repair
+b65d0 - Staff Recharge
+b6608 - Trap Disarm
+b6640 - Elemental
+b6678 - Charged Bolt
+b66b0 - Holy Bolt
+b66e8 - Resurrect
+b6720 - Telekinesis
+b6758 - Heal Other
+b6790 - Blood Star
+b67c8 - Bone Spirit
+b6800 - Mana
+b6838 - the Magi
+b6870 - the Jester
+b68a8 - Lightning Wall
+b68e0 - Immolation
+b6918 - Warp
+b6950 - Reflect
+b6988 - Berserk
+b69c0 - Ring of Fire
+b69f8 - Search
+b6a30 - Rune of Fire
+b6a68 - Rune of Light
+b6aa0 - Rune of Nova
+b6ad8 - Rune of Immolation
+b6b10 - Rune of Stone

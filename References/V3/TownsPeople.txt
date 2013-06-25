@@ -1,0 +1,59 @@
+Town locations changed for cosmetic reasons
+
+Ogden:
+
+:00475CFB 6A3E                    push 0000003E
+:00475CFD 6A37                    push 00000037
+
+Cain:
+
+File Offset 0007548E
+
+:0047608E 6A47                    push 00000047
+:00476090 6A3E                    push 0000003E
+
+
+
+Moving Lester near Wirt
+
+File Offset 00075714
+
+:00476314 6A10                    push 00000010
+:00476316 6A3E                    push 0000003E
+wordt
+:00476314 6A25                    push 00000025
+:00476316 6A44                    push 00000044
+
+
+Relocating Wirt
+
+File Offset 0007535C
+
+:00475F5C 6A26                    push 00000026
+:00475F5E 6A44                    push 00000044
+wordt
+:00475F5C 6A26                    push 00000026
+:00475F5E 6A43                    push 00000043
+
+
+Moving Gillian near Ogden
+
+File Offset 000752C2
+
+:00475EC2 6A42                    push 00000042
+:00475EC4 6A2B                    push 0000002B
+wordt
+:00475EC2 6A3F                    push 0000003F
+:00475EC4 6A36                    push 00000036
+
+
+Relocating Farnham
+
+File Offset 00075525
+
+:00476125 6A54                    push 00000054
+:00476127 6A47                    push 00000047
+wordt
+:00476125 6A40                    push 00000040
+:00476127 6A4D                    push 0000004D
+

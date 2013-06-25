@@ -1,0 +1,40 @@
+Enable Apocalypse for FallenAngel,DarkLord,DarkGhost 
+
+Onderstaande werkt vreemd genoeg niet voor DarkGhost, maar wel voor Izual's Wraith.
+Misschien iets speciaals met het monsterslot?
+
+:0043AF0F 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043AF12 83F86E                  cmp eax, 0000006E			
+:0043AF15 7407                    je 0043AF1E			jmp if Diablo
+:0043AF17 3D88000000              cmp eax, 00000088			
+:0043AF1C 7C14                    jl 0043AF32			jmp if not Ghost or Angel
+:0043AF1E F60538D6690008          test byte ptr [0069D638], 08
+:0043AF25 750B                    jne 0043AF32
+:0043AF27 830D38D6690008          or dword ptr [0069D638], 00000008
+:0043AF2E B127                    mov cl, 27
+:0043AF30 EB32                    jmp 0043AF64
+
+
+()Testvoorstel 1 : -> geen effect
+
+Hiermee wordt vastgesteld of de slot-herkenning niet werkt. Als deze test wel werkt, is het probleem oplosbaar door de monsters apart af te checken. Als deze ook niet werkt, omdat er bijvoorbeeld geen 'gewone' DarkGhost aanwezig zijn, kan het volgende testvoorstel helpen.
+
+:0043AF17 3D88000000              cmp eax, 00000088			
+:0043AF1C 7C14                    jl 0043AF32			jmp if not Ghost or Angel
+wordt
+:0043AF17 3D89000000              cmp eax, 00000089			
+:0043AF1C 7514                    jne 0043AF32			jmp if not Ghost
+
+
+(*)Testvoorstel 2 :
+
+Load Apo-GFX als er Liches aanwezig zijn. Als dit ook niet werkt, lijkt het onmogelijk.
+
+:0043AF17 3D88000000              cmp eax, 00000088			
+:0043AF1C 7C14                    jl 0043AF32			jmp if not Ghost or Angel
+wordt
+:0043AF17 3D85000000              cmp eax, 00000085			
+:0043AF1C 7514                    jne 0043AF32			jmp if no Liches present
+
+
+

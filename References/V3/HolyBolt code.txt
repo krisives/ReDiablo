@@ -1,0 +1,101 @@
+Initial procedure:
+
+:004352FF 55                      push ebp
+:00435300 8BEC                    mov ebp, esp
+:00435302 51                      push ecx
+:00435303 53                      push ebx
+:00435304 8B5D08                  mov ebx, dword ptr [ebp+08]
+:00435307 56                      push esi
+:00435308 8B7510                  mov esi, dword ptr [ebp+10]
+:0043530B 894DFC                  mov dword ptr [ebp-04], ecx
+:0043530E 57                      push edi
+:0043530F 8B4D0C                  mov ecx, dword ptr [ebp+0C]
+:00435312 8BFA                    mov edi, edx
+:00435314 3BF9                    cmp edi, ecx
+:00435316 7519                    jne 00435331
+:00435318 3BDE                    cmp ebx, esi
+:0043531A 7515                    jne 00435331
+:0043531C 8B4514                  mov eax, dword ptr [ebp+14]
+:0043531F C1E002                  shl eax, 02
+:00435322 038888BE4A00            add ecx, dword ptr [eax+004ABE88]
+:00435328 03B0A8BE4A00            add esi, dword ptr [eax+004ABEA8]
+:0043532E 894D0C                  mov dword ptr [ebp+0C], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00435316(C), :0043531A(C)
+|
+:00435331 837D1CFF                cmp dword ptr [ebp+1C], FFFFFFFF
+:00435335 741C                    je 00435353
+:00435337 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043533A 69C0B0000000            imul eax, 000000B0
+:00435340 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:00435346 8D440010                lea eax, dword ptr [eax+eax+10]
+:0043534A 83F83F                  cmp eax, 0000003F
+:0043534D 7C07                    jl 00435356
+:0043534F 6A3F                    push 0000003F
+:00435351 EB02                    jmp 00435355
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00435335(C)
+|
+:00435353 6A10                    push 00000010
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00435351(U)
+|
+:00435355 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043534D(C)
+|
+:00435356 50                      push eax
+:00435357 56                      push esi
+:00435358 51                      push ecx
+:00435359 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043535C 53                      push ebx
+:0043535D 8BD7                    mov edx, edi
+:0043535F E8FDB2FFFF              call 00430661
+:00435364 8BD3                    mov edx, ebx
+:00435366 8BCF                    mov ecx, edi
+:00435368 56                      push esi
+:00435369 FF750C                  push [ebp+0C]
+:0043536C E822B9FFFF              call 00430C93
+:00435371 8B75FC                  mov esi, dword ptr [ebp-04]
+:00435374 8BD0                    mov edx, eax
+:00435376 8BCE                    mov ecx, esi
+:00435378 E809A7FFFF              call 0042FA86
+:0043537D 69F6B0000000            imul esi, 000000B0
+:00435383 6A08                    push 00000008
+:00435385 8BD3                    mov edx, ebx
+:00435387 C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:00435391 89BEE87A6900            mov dword ptr [esi+00697AE8], edi
+:00435397 8BCF                    mov ecx, edi
+:00435399 899EEC7A6900            mov dword ptr [esi+00697AEC], ebx
+:0043539F E8D074FFFF              call 0042C874
+:004353A4 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:004353AA 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353AD E8D5370500              call 00488B87
+:004353B2 B145                    mov cl, 45
+:004353B4 E8A14BFEFF              call 00419F5A
+:004353B9 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004353BC E8DD370500              call 00488B9E
+:004353C1 C1FA03                  sar edx, 03
+:004353C4 8D441005                lea eax, dword ptr [eax+edx+05]
+:004353C8 6A1F                    push 0000001F
+:004353CA 90                      nop
+:004353CB 90                      nop
+:004353CC 90                      nop
+:004353CD 90                      nop
+:004353CE 90                      nop
+:004353CF 90                      nop
+:004353D0 90                      nop
+:004353D1 90                      nop
+:004353D2 90                      nop
+:004353D3 5A                      pop edx
+:004353D4 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:004353DA E81D6C0300              call 0046BFFC
+:004353DF 5F                      pop edi
+:004353E0 5E                      pop esi
+:004353E1 5B                      pop ebx
+:004353E2 C9                      leave
+:004353E3 C21C00                  ret 001C

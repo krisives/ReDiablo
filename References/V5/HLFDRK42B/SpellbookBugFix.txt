@@ -1,0 +1,21 @@
+When Elemental is in the spellbook, but unusable because its level is 0 or less, the game will hang itself when page 2 of the spellbook is opened.
+
+This bug was introduced when the listed damage was halved to match the real damage (INC sets 0F).
+
+file offset 0002E0A8
+
+:0042ECA8 85F6                    test esi, esi
+:0042ECAA 40                      inc eax
+:0042ECAB 40                      inc eax
+:0042ECAC 90                      nop
+:0042ECAD 90                      nop
+:0042ECAE 8902                    mov dword ptr [edx], eax
+:0042ECB0 7E10                    jle 0042ECC2
+changed into
+:0042ECA8 40                      inc eax
+:0042ECA9 40                      inc eax
+:0042ECAA 85F6                    test esi, esi
+:0042ECAC ...
+
+
+

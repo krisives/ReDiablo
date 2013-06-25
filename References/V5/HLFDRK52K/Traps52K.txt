@@ -1,0 +1,67 @@
+Fixed bug that was introduced by TrapView52H
+
+File offset 00038E67
+
+:00439A67 80B8D001000000          cmp byte ptr [eax+000001D0], 00
+changed into
+:00439A67 83B8D001000000          cmp dword ptr [eax+000001D0], 00000000
+
+
+Increassed damage for Firebolt and Spikeball traps:
+
+File Offset 00035647
+
+:00436247 42                      inc edx
+:00436248 D1E2                    shl edx, 1
+changed into
+:00436247 C1E202                  shl edx, 02
+
+File Offset 00035652
+
+:00436252 D1E0                    shl eax, 1
+:00436254 59                      pop ecx
+:00436255 41                      inc ecx
+:00436256 D1E1                    shl ecx, 1
+changed into
+:00436252 59                      pop ecx
+:00436253 D1E1                    shl ecx, 1
+:00436255 40                      inc eax
+:00436256 40                      inc eax
+:00436257 40                      inc eax
+
+
+Increassed damage for Lightning traps:
+
+File Offset 0003654F
+
+:0043714F C1E104                  shl ecx, 04
+changed into
+:0043714F C1E105                  shl ecx, 05
+
+
+Increassed maximum damage for (normal) Arrow traps:
+
+File Offset 00035496
+
+:00436096 8D0412                  lea eax, dword ptr [edx+edx]
+changed into
+:00436096 8D0452                  lea eax, dword ptr [edx+2*edx]
+
+
+Slightly increased damage for Nova traps:
+
+File Offset 00034091
+
+:00434C91 03F8                    add edi, eax
+:00434C93 52                      push edx
+:00434C94 E81B3F0500              call 00488BB4
+:00434C99 8BC2                    mov eax, edx
+:00434C9B 5A                      pop edx
+:00434C9C 03F8                    add edi, eax
+changed into
+:00434C91 40                      inc eax
+:00434C92 03F8                    add edi, eax
+:00434C94 E81B3F0500              call 00488BB4
+:00434C99 03FA                    add edi, edx
+:00434C9B 83C708                  add edi, 00000008
+

@@ -1,0 +1,110 @@
+Negative Attributes
+
+Zoals ook uit Bolty's lijst blijkt, controleren de standaard routine voor veranderen van player attributes niet of negatieve waardes bereikt worden. Dit resulteert in corrupte characters. Hierbij een fix. Je mag het eerst controleren voor je de fix toepast natuurlijk, maar ik kan de check op negatief niet vinden in de originele code.
+
+CharPointers:
+
+Cur. Strength		+00000164]	Update by call 0045E68C
+Base Strength		+00000168]	Max Base Str. at [16*class+004B5DD0]
+
+Cur. Magic		+0000016C]	Update by call 0045E724
+Base Magic		+00000170]	Max Base Mag. at [16*class+004B5DD4]
+
+Cur. Dexterity		+00000174]	Update by call 0045E822
+Base Dexterity		+00000178]	Max Base Dex. at [16*class+004B5DD8]
+
+Cur. Vitality		+0000017C]	Update by call 0045E8BA
+Base Vitality		+00000180]	Max Base Vit. at [16*class+004B5DDC]
+
+
+Voorbeeld : Updating magic - Check for max. Magic:
+
+:0045E744 69F6C8550000            imul esi, 000055C8
+:0045E74A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045E74F 03C6                    add eax, esi
+:0045E751 0FBE8860010000          movsx ecx, byte ptr [eax+00000160]
+:0045E758 8B9070010000            mov edx, dword ptr [eax+00000170]
+:0045E75E C1E104                  shl ecx, 04
+:0045E761 8D1C17                  lea ebx, dword ptr [edi+edx]
+:0045E764 8B89D45D4B00            mov ecx, dword ptr [ecx+004B5DD4]
+:0045E76A 3BD9                    cmp ebx, ecx
+:0045E76C 7E04                    jle 0045E772
+:0045E76E 2BCA                    sub ecx, edx
+:0045E770 8BF9                    mov edi, ecx
+
+Dus:
+
+()Fix
+
+Onderstaande code zet betreffende attribuut op 0 als het minder zou worden.
+
+:0045E6C0 8B9068010000            mov edx, dword ptr [eax+00000168]
+wordt
+:0045E6C0 E8F912FDFF              call 0042F9BE			call CHKSTR
+:0045E6C5 90			  nop
+
+:0045E758 8B9070010000            mov edx, dword ptr [eax+00000170]
+wordt
+:0045E758 E86912FDFF              call 0042F9C6			call CHKMAG
+:0045E75D 90			  nop
+
+:0045E856 8B9078010000            mov edx, dword ptr [eax+00000178]
+wordt
+:0045E856 E87311FDFF              call 0042F9CE			call CHKDEX
+:0045E85B 90			  nop
+
+:0045E8EE 8B9080010000            mov edx, dword ptr [eax+00000180]
+wordt
+:0045E8EE E8E310FDFF              call 0042F9D6			call CHKVIT
+:0045E8F3 90			  nop
+
+
+Onderstaande code na nieuwe routine CHECK_BOSS voor DiabloView, op (nu) ongebruikte code voor 'auw' bij magic attack met resistance. Hiermee alweer bijna volgeschreven.
+
+Oud:
+
+:0042F9BD 3C03                    cmp al, 03
+:0042F9BF 750D                    jne 0042F9CE
+:0042F9C1 FF763C                  push [esi+3C]
+:0042F9C4 8B5638                  mov edx, dword ptr [esi+38]
+:0042F9C7 B98A030000              mov ecx, 0000038A
+:0042F9CC EB20                    jmp 0042F9EE
+:0042F9CE 3C04                    cmp al, 04
+:0042F9D0 750D                    jne 0042F9DF
+:0042F9D2 FF763C                  push [esi+3C]
+:0042F9D5 8B5638                  mov edx, dword ptr [esi+38]
+:0042F9D8 B9B1020000              mov ecx, 000002B1
+:0042F9DD EB0F                    jmp 0042F9EE
+:0042F9DF 3C05                    cmp al, 05
+:0042F9E1 7510                    jne 0042F9F3
+:0042F9E3 FF763C                  push [esi+3C]
+
+Nieuw:
+
+CHKSTR:
+
+:0042F9BE 8B9068010000            mov edx, dword ptr [eax+00000168]
+:0042F9C4 EB16                    jmp 0042F9DC			jmp CHKNEG
+
+CHKMAG:
+
+:0042F9C6 8B9070010000            mov edx, dword ptr [eax+00000170]
+:0042F9CC EB0E                    jmp 0042F9DC			jmp  CHKNEG
+
+CHKDEX:
+
+:0042F9CE 8B9078010000            mov edx, dword ptr [eax+00000178]
+:0042F9D4 EB06                    jmp 0042F9DC			jmp  CHKNEG
+
+CHKVIT:
+
+:0042F9D6 8B9080010000            mov edx, dword ptr [eax+00000180]
+
+CHKNEG:
+
+:0042F9DC 8D1C17                  lea ebx, dword ptr [edi+edx]	
+:0042F9DF 85DB                    test ebx, ebx
+:0042F9E1 7D02                    jge 0042F9F7
+:0042F9E3 2BFB                    sub edi, ebx
+:0042F9E5 C3			  ret
+

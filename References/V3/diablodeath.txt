@@ -1,0 +1,12 @@
+As a quick fix to prevent the game from ending when Diablo dies (note that players won't get dots if you use this fix).
+
+Change (004369EE) from 75 to EB
+
+Change (000341B6) from 75 to EB
+
+Change (000343C3) from 75 to EB
+
+The third change is what is necessary to allow a golem to kill Diablo without players freezing.
+
+Dr. Zed 
+

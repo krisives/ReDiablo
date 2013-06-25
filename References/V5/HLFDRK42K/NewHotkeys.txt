@@ -1,0 +1,124 @@
+Class related Spell/Skill F1-F4 hotkeys
+
+Old hotkeys:
+
+F1=Healing
+F2=Teleport
+F3=Manashield
+F4=Stonecurse
+
+
+New hotkeys:
+
+Warrior 
+F1:Healing			0102
+F2:Teleport 			0117
+F3:Barrier			012B
+F4:Stone Curse			0108
+Rogue
+F1:Healing			0102
+F2:Teleport			0117
+F3:Telekinesis SKILL		0021
+F4:Stone Curse 			0108
+Sorcerer
+F1:Golem			0115
+F2:Teleport			0117
+F3:Mana Shield			010B
+F4:Stone Curse			0108
+Monk
+F1:Search/Mana SKILL		002E
+F2:Teleport			0117
+F3:Mana Shield			010B
+F4:Stone Curse			0108
+Bard
+F1:Golem			0115
+F2:Teleport			0117
+F3:Mana Shield			010B
+F4:Stone Curse			0108
+Barbarian
+F1:Healing SKILL 		0002
+F2:Teleport (?)			0117
+F3:Barrier 			012B
+F4:Stone Curse (?)		0108
+
+
+Modified handling of F1-F4:
+
+file offset 000099F2
+
+:0040A5F2 E83D000000              call 0040A634					get spellnumber
+:0040A5F7 90                      nop
+:0040A5F8 90                      nop
+:0040A5F9 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0040A5FE 69C0C8550000            imul eax, 000055C8
+:0040A604 030514AE6E00            add eax, dword ptr [006EAE14]
+:0040A60A 80BC08C100000001        cmp byte ptr [eax+ecx+000000C1], 01
+:0040A612 7C19                    jl 0040A62D
+:0040A614 8988B4000000            mov dword ptr [eax+000000B4], ecx
+:0040A61A 6A01                    push 00000001	
+:0040A61C 59                      pop ecx					only spells
+:0040A61D 8988B8000000            mov dword ptr [eax+000000B8], ecx
+:0040A623 C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:0040A62D 59                      pop ecx
+:0040A62E 58                      pop eax
+:0040A62F E9C3020000              jmp 0040A8F7
+* Referenced by a CALL at Address:0040A5F2   
+:0040A634 740A                    je 0040A640
+:0040A636 49                      dec ecx
+:0040A637 740B                    je 0040A644
+:0040A639 49                      dec ecx
+:0040A63A 740C                    je 0040A648
+:0040A63C 6A08                    push 00000008					Stone Curse
+:0040A63E 59                      pop ecx
+:0040A63F C3                      ret
+:0040A640 6A02                    push 00000002					Healing
+:0040A642 59                      pop ecx
+:0040A643 C3                      ret
+:0040A644 6A17                    push 00000017					Teleport
+:0040A646 59                      pop ecx
+:0040A647 C3                      ret
+:0040A648 6A0B                    push 0000000B					Manashield
+:0040A64A 59                      pop ecx
+:0040A64B C3                      ret
+changed into
+:0040A5F2 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0040A5F7 69C0C8550000            imul eax, 000055C8
+:0040A5FD 030514AE6E00            add eax, dword ptr [006EAE14]
+:0040A603 50                      push eax
+:0040A604 0FBE8060010000          movsx eax, byte ptr [eax+00000160]		character class
+:0040A60B C1E002                  shl eax, 02
+:0040A60E 03C8                    add ecx, eax
+:0040A610 0FB68123694A00          movzx eax, byte ptr [ecx+004A6923]		skill indicator
+:0040A617 0FB689EA684A00          movzx ecx, byte ptr [ecx+004A68EA]		spell number
+:0040A61E 8BD8                    mov ebx, eax
+:0040A620 58                      pop eax
+:0040A621 85DB                    test ebx, ebx					
+:0040A623 740A                    je 0040A62F					jmp if skill
+:0040A625 80BC08C100000001        cmp byte ptr [eax+ecx+000000C1], 01
+:0040A62D 7C16                    jl 0040A645					exit if spell and slvl<1
+:0040A62F 8988B4000000            mov dword ptr [eax+000000B4], ecx
+:0040A635 8998B8000000            mov dword ptr [eax+000000B8], ebx
+:0040A63B C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:0040A645 59                      pop ecx
+:0040A646 58                      pop eax
+:0040A647 E9AB020000              jmp 0040A8F7
+:0040A64C
+
+
+Spell numbers:
+
+000A52EA 0000 6461 6D61 6765 3A20 2569 2D25 6920 ..damage: %i-%i 
+000A52FA 2049 6E64 6573 7472 7563 7469 626C 6500  Indestructible.
+000A530A 00                                      .
+changed into
+000A52EA 0217 2B08 0217 2108 1517 0B08 2E17 0B08 ..+...!.........
+000A52FA 1517 0B08 0217 2B08 0000 0000 0000 0000 ......+.........
+000A530A 00                                      .
+
+Skill indicators:
+
+000A5323 0064 616D 6167 653A 2025 6920 2049 6E64 .damage: %i  Ind
+000A5333 6573 7472 7563 7469 626C 6500           estructible.
+changed into
+000A5323 0101 0101 0101 0001 0101 0101 0001 0101 ................
+000A5333 0101 0101 0001 0101 0000 0000           ............

@@ -1,0 +1,2 @@
+You'd need to call a Win32 function for that, GetAsyncKeyState(WM_CONTROL). The return value is a WORD and the upper bit is set if the key has been pressed. The lower bit is set if it's held down.I don't know the value of WM_CONTROL offhand... if you can't find it I'll look it up for you.
+

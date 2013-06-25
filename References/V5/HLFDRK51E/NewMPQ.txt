@@ -1,0 +1,16 @@
+New MPQ file for 5.2
+
+
+0009F4AC 5C54 4435 312E 6D70 71                  \TD51.mpq
+changed into
+0009F4AC 5C54 4435 322E 6D70 71                  \TD52.mpq
+
+
+Added:
+
+BlackH.CL2 	as Monsters\Black\BlackS.CL2
+BlackH1.WAV	as Monsters\Black\BlackS1.WAV
+BlackH2.WAV	as Monsters\Black\BlackS2.WAV
+
+This provides a 'second attack' animation for Knights.
+

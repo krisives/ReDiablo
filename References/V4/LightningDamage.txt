@@ -1,0 +1,36 @@
+Normal Lightning
+
+damage/frame = Rnd[clvl] + Rnd[2] + 2	->	(Rnd[{clvl-8}]+1)*2
+
+Voor meer damage bij higher level characters.
+
+duration = [slvl/2]+6 frames 
+
+
+:004370DD 69C0C8550000            imul eax, 000055C8
+:004370E3 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004370E9 0FBE9408B8010000        movsx edx, byte ptr [eax+ecx+000001B8]
+:004370F1 B14F                    mov cl, 4F
+:004370F3 E8622EFEFF              call 00419F5A				eax := 0..clvl
+:004370F8 B14F                    mov cl, 4F
+:004370FA 8BF8                    mov edi, eax				edi := eax
+:004370FC 6A02                    push 00000002
+:004370FE 5A                      pop edx
+:004370FF E8562EFEFF              call 00419F5A				eax := 0..1
+:00437104 8D7C0702                lea edi, dword ptr [edi+eax+02]	
+:00437108 C1E706                  shl edi, 06				
+:0043710B EB48                    jmp 00437155
+
+
+In book: 2 - 2+clvl	-> clvl - 3*clvl
+
+:0042E9BA 6A02                    push 00000002
+:0042E9BC 58                      pop eax
+:0042E9BD 8902                    mov dword ptr [edx], eax
+:0042E9BF 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0042E9C5 69C9C8550000            imul ecx, 000055C8
+:0042E9CB 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0042E9D1 0FBE8C11B8010000        movsx ecx, byte ptr [ecx+edx+000001B8]
+:0042E9D9 E91B020000              jmp 0042EBF9
+:0042EBF9 03C8                    add ecx, eax
+:0042EBFB E983020000              jmp 0042EE83

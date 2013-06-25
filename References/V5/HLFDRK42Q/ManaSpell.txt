@@ -1,0 +1,72 @@
+Mana spell modifications to support the new Mana spell suffix
+ 
+
+Adjusting Monk's special support for old Search spell, to prevent interference and to have it support all skills:
+
+file offset 0000330B
+
+:00403F0B 80BC086001000003        cmp byte ptr [eax+ecx+00000160], 03
+:00403F13 750C                    jne 00403F21
+:00403F15 83FB2E                  cmp ebx, 0000002E
+changed into
+:00403F0B E818190000              call 00405828
+:00403F10 909090909090            6*nop
+:00403F16 3BDA                    cmp ebx, edx
+
+file offset 00005F5E
+
+:00406B5E 80BC086001000003        cmp byte ptr [eax+ecx+00000160], 03
+:00406B66 8D3408                  lea esi, dword ptr [eax+ecx]
+:00406B69 750C                    jne 00406B77
+:00406B6B 83FD2E                  cmp ebp, 0000002E
+changed into
+:00406B5E 8D3408                  lea esi, dword ptr [eax+ecx]
+:00406B61 E8C2ECFFFF              call 00405828
+:00406B66 909090909090            6*nop
+:00406B6C 3BEA                    cmp ebp, edx
+
+Using free space from Itemview on cursor:
+
+file offset 00004C28
+
+:00405828 9090909090              5*nop
+:0040582D C605AC114D0003          mov byte ptr [004D11AC], 03
+:00405834 E966010000              jmp 0040599F
+changed into
+:00405828 0FBE940860010000        movsx edx, byte ptr [eax+ecx+00000160]	edx = character class
+:00405830 0FB69223694A00          movzx edx, byte ptr [edx+004A6923]		edx = skill number
+:00405837 C3                      ret
+:00405838 90                      nop
+
+
+Increasing effect of Clvl on the amount of mana gained (this will also benefit Divine Cure):
+
+file offset 0003332D
+
+:00433F2D 6A04                    push 00000004
+changed into
+:00433F2D 6A06                    push 00000006
+
+
+Increasing charge cost for Mana spell:
+
+000B69F8 2E0F 0200 E081 4B00 E081 4B00 FFFF FFFF ......K...K.....
+000B6A08 FFFF FFFF 0000 0000 0100 0000 0A00 0000 ................
+000B6A18 5644 0000 0101 0000 2800 0000 5000 0000 VD......(...P...
+000B6A28 B80B 0000 C800 0000                     ........
+changed into
+000B6A2C 4006 0000                               @...
+
+
+Setting Spell icon for Mana, all rune spells and unused Shielding spell:
+
+00093610 1B01 0203 0405 0607 082C 090D 0C11 1021 .........,.....!
+00093620 300F 0B16 1C15 2218 1914 1A1D 3326 272A 0.....".....3&'*
+00093630 2028 0A24 1E29 1732 2E2F 2B2D 2312 1326  (.$.).2./+-#..&
+00093640 1323 2323                               .###
+changed into
+00093610 1B01 0203 0405 0607 082C 090D 0C11 1021 .........,.....!
+00093620 300F 0B16 1C15 2218 1914 1A1D 1326 272A 0....."......&'*
+00093630 2028 0A24 1E29 1732 2E2F 2B2D 2312 3333  (.$.).2./+-#.33
+00093640 3333 3333                               3333
+

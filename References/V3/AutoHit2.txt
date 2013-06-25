@@ -1,0 +1,82 @@
+()Autohit - 2e Variant, wat simpeler, geen extra ruimte nodig
+
+Voorstel:
+
+Min.ToHit = 8 + 8*diff + dlvl/2  (min=dlvl)
+(dus Norm 8 - 24, Nite 16 - 28, Hell 24 - 36)
+
+Max.ToHit = 95 - clvl/4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042F6EF(U), :0042F71E(U)
+|
+:0042F723 51                      push ecx
+:0042F724 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0042F727 E803000000              call 0042F72F
+:0042F72C 59                      pop ecx
+:0042F72D EB25                    jmp 0042F754
+
+* Referenced by a CALL at Addresses:
+|:0042F727   , :0043E235   
+|
+:0042F72F 50                      push eax
+:0042F730 52                      push edx
+:0042F731 0FB681B8010000          movzx eax, byte ptr [ecx+000001B8]
+:0042F738 C1E802                  shr eax, 02
+:0042F73B 6A64                    push 00000064
+:0042F73D 5A                      pop edx
+:0042F73E 2BD0                    sub edx, eax
+:0042F740 3BD3                    cmp edx, ebx
+:0042F742 7D02                    jge 0042F746
+:0042F744 8BDA                    mov ebx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F742(C)
+|
+:0042F746 6A08                    push 00000008
+:0042F748 58                      pop eax
+:0042F749 8B0DC0706000            mov ecx, dword ptr [006070C0]
+:0042F74F E9E9EA0000              jmp 0043E23D
+
+
+:0043E234 51                      push ecx
+:0043E235 E8F514FFFF              call 0042F72F
+:0043E23A 59                      pop ecx
+:0043E23B EB28                    jmp 0043E265
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F74F(U)
+|
+:0043E23D C1E103                  shl ecx, 03
+:0043E240 03C1                    add eax, ecx
+:0043E242 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:0043E249 52                      push edx
+:0043E24A D1EA                    shr edx, 1
+:0043E24C 03C2                    add eax, edx
+:0043E24E 5A                      pop edx
+:0043E24F 3BC2                    cmp eax, edx
+:0043E251 7D02                    jge 0043E255
+:0043E253 8BC2                    mov eax, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E251(C)
+|
+:0043E255 3BD8                    cmp ebx, eax
+:0043E257 7D02                    jge 0043E25B
+:0043E259 8BD8                    mov ebx, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E257(C)
+|
+:0043E25B 5A                      pop edx
+:0043E25C 58                      pop eax
+:0043E25D C3                      ret
+
+
+:0043E25E 90                      nop
+:0043E25F 90                      nop
+:0043E260 90                      nop
+:0043E261 90                      nop
+:0043E262 90                      nop
+:0043E263 90                      nop
+:0043E264 90                      nop

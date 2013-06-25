@@ -1,0 +1,37 @@
+Piercing
+
+Met range penalty:
+
+* Referenced by a CALL at Address:
+|:0042F3C1   
+|
+:004529C3 50                      push eax
+:004529C4 8B8050550000            mov eax, dword ptr [eax+00005550]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529D1(U)
+|
+:004529CA 85C0                    test eax, eax
+:004529CC 7E06                    jle 004529D4
+:004529CE D1F9                    sar ecx, 1
+:004529D0 48                      dec eax
+:004529D1 EBF7                    jmp 004529CA
+:004529D3 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004529CC(C)
+|
+:004529D4 C3                      ret
+:004529D5 90                      nop
+
+Klein foutje, geeft crash nu. 
+
+()Fix:
+
+:004529CC 7E06                    jle 004529D4
+wordt
+:004529CC 7E05                    jle 004529D3
+
+Dit is getest, en het werkt.
+
+

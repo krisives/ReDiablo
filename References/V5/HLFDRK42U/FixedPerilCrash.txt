@@ -1,0 +1,13 @@
+Peril items give a crash when total DFE on the character is greater as the bare weapon damage. This bug was introduced with the Maximum Damage code. With the larger DFE, Peril has become much more powerful, so the bug is crashed by removing the DFE effect here.
+
+
+file offset 0005AFC1
+
+:0045BBC1 8B8144550000            mov eax, dword ptr [ecx+00005544]
+:0045BBC7 C1E006                  shl eax, 06
+:0045BBCA 0145F0                  add dword ptr [ebp-10], eax
+changed into
+:0045BBC1 EB0C                    jmp 0045BBCF
+:0045BBC3 12*90                   12*nop
+
+Now 12 bytes free, from 0045BBC3 to 0045BBCF.

@@ -1,0 +1,135 @@
+Dark Servants - Vitality drain : Each hit gives 50% for -1 Vitality
+
+
+()Enable check for 71-DarkServants 47h
+
+:0043E3BA 8338F0                  cmp dword ptr [eax], FFFFFFF0		
+wordt
+:0043E3BA 833847                  cmp dword ptr [eax], 00000047		
+
+
+()Vitality drain 
+
+:0043E41F 8D819C010000            lea eax, dword ptr [ecx+0000019C]
+:0043E425 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:0043E42B 83F940                  cmp ecx, 00000040
+:0043E42E 0F8E87000000            jle 0043E4BB
+:0043E434 83C1C0                  add ecx, FFFFFFC0
+:0043E437 8908                    mov dword ptr [eax], ecx
+:0043E439 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E43E etc.
+wordt
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E3DF(C)
+|
+:0043E41F E81DFFFFFF              call 0043E341				call RND100
+:0043E424 83F832                  cmp eax, 00000032
+:0043E427 0F8E8E000000            jle 0043E4BB
+:0043E42D 83CAFF                  or edx, FFFFFFFF			edx := -1
+:0043E430 8B4DFC                  mov ecx, dword ptr [ebp-04]		fetch char #
+:0043E433 E882040200              call 0045E8BA				update Vitality
+:0043E438 E97E000000              jmp 0043E4BB
+:0043E43D 90                      nop
+
+Als dit afdoende is, hebben we hier weer vele bytes vrij om weer vol te stoppen.
+
+
+
+
+Original code in MonsterMeleeVsPlayer:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E2D1(C)
+|
+:0043E3B4 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]
+:0043E3BA 8338F0                  cmp dword ptr [eax], FFFFFFF0		
+:0043E3BD 0F85F8000000            jne 0043E4BB			jmp if wrong monster
+:0043E3C3 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043E3C6 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:0043E3CC 0F85E9000000            jne 0043E4BB			jmp if wrong player
+:0043E3D2 A148D06900              mov eax, dword ptr [0069D048]
+:0043E3D7 83CBFF                  or ebx, FFFFFFFF
+:0043E3DA 85C0                    test eax, eax
+:0043E3DC 895DF4                  mov dword ptr [ebp-0C], ebx
+:0043E3DF 7E3E                    jle 0043E41F
+:0043E3E1 C7450868766900          mov [ebp+08], 00697668
+:0043E3E8 8945F0                  mov dword ptr [ebp-10], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E41D(C)
+|
+:0043E3EB 8B4508                  mov eax, dword ptr [ebp+08]
+:0043E3EE 8B10                    mov edx, dword ptr [eax]
+:0043E3F0 8BC2                    mov eax, edx
+:0043E3F2 69C0B0000000            imul eax, 000000B0
+:0043E3F8 83B8587A69000D          cmp dword ptr [eax+00697A58], 0000000D
+:0043E3FF 7515                    jne 0043E416
+:0043E401 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0043E404 3998CC7A6900            cmp dword ptr [eax+00697ACC], ebx
+:0043E40A 7507                    jne 0043E413
+:0043E40C 8BDA                    mov ebx, edx
+:0043E40E 895DF4                  mov dword ptr [ebp-0C], ebx
+:0043E411 EB03                    jmp 0043E416
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E40A(C)
+|
+:0043E413 8B5DF4                  mov ebx, dword ptr [ebp-0C]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E3FF(C), :0043E411(U)
+|
+:0043E416 83450804                add dword ptr [ebp+08], 00000004
+:0043E41A FF4DF0                  dec [ebp-10]
+:0043E41D 75CC                    jne 0043E3EB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E3DF(C)
+|							Start life substract
+:0043E41F 8D819C010000            lea eax, dword ptr [ecx+0000019C]
+:0043E425 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:0043E42B 83F940                  cmp ecx, 00000040
+:0043E42E 0F8E87000000            jle 0043E4BB		jmp if 1 life left
+:0043E434 83C1C0                  add ecx, FFFFFFC0	substract life
+:0043E437 8908                    mov dword ptr [eax], ecx
+:0043E439 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E43E 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0043E441 8D8198010000            lea eax, dword ptr [ecx+00000198]
+:0043E447 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:0043E44D 3908                    cmp dword ptr [eax], ecx
+:0043E44F 7E21                    jle 0043E472
+:0043E451 85DB                    test ebx, ebx
+:0043E453 8908                    mov dword ptr [eax], ecx
+:0043E455 7C1B                    jl 0043E472
+:0043E457 8BC3                    mov eax, ebx
+:0043E459 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043E45F 69C0B0000000            imul eax, 000000B0
+:0043E465 8B8C3198010000          mov ecx, dword ptr [ecx+esi+00000198]
+:0043E46C 8988E87A6900            mov dword ptr [eax+00697AE8], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E44F(C), :0043E455(C)
+|
+:0043E472 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E477 83843094010000C0        add dword ptr [eax+esi+00000194], FFFFFFC0
+:0043E47F 8D843094010000          lea eax, dword ptr [eax+esi+00000194]
+:0043E486 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E48B 03C6                    add eax, esi
+:0043E48D 8D8890010000            lea ecx, dword ptr [eax+00000190]
+:0043E493 8B8094010000            mov eax, dword ptr [eax+00000194]
+:0043E499 3901                    cmp dword ptr [ecx], eax
+:0043E49B 7E1E                    jle 0043E4BB
+:0043E49D 85DB                    test ebx, ebx
+:0043E49F 8901                    mov dword ptr [ecx], eax
+:0043E4A1 7C18                    jl 0043E4BB
+:0043E4A3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E4A8 69DBB0000000            imul ebx, 000000B0
+:0043E4AE 8B843090010000          mov eax, dword ptr [eax+esi+00000190]
+:0043E4B5 8983EC7A6900            mov dword ptr [ebx+00697AEC], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E3BD(C), :0043E3CC(C), :0043E42E(C), :0043E49B(C), :0043E4A1(C)
+|
+:0043E4BB 8B5510                  mov edx, dword ptr [ebp+10]
+

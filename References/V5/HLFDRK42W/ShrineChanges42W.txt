@@ -1,0 +1,699 @@
+Hidden Shrine, using RNG seed for Holy Shrine:
+
+file offset 00050DDB
+
+:004519DB 32C9                    xor cl, cl
+changed into
+:004519DB B19F                    mov cl, 9F
+
+
+Enchanted Shrine, using RNG seed for Holy Shrine instead of RND[100] routine:
+
+file offset 00052239
+
+:00452E39 51                      push ecx
+:00452E3A E802B5FEFF              call 0043E341					RND[100] routine
+:00452E3F 83F832                  cmp eax, 00000032
+:00452E42 7C13                    jl 00452E57
+:00452E44 8A843BC1000000          mov al, byte ptr [ebx+edi+000000C1]
+:00452E4B FEC0                    inc al
+:00452E4D 59                      pop ecx
+:00452E4E 8801                    mov byte ptr [ecx], al
+:00452E50 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00452E56 C3                      ret
+:00452E57 59                      pop ecx
+:00452E58 C3                      ret
+changed into
+:00452E39 51                      push ecx
+:00452E3A 52                      push edx
+:00452E3B 6A02                    push 00000002
+:00452E3D B19F                    mov cl, 9F
+:00452E3F 5A                      pop edx
+:00452E40 E81571FCFF              call 00419F5A
+:00452E45 5A                      pop edx
+:00452E46 59                      pop ecx
+:00452E47 85C0                    test eax, eax
+:00452E49 740B                    je 00452E56
+:00452E4B 8A843BC1000000          mov al, byte ptr [ebx+edi+000000C1]
+:00452E52 FEC0                    inc al
+:00452E54 8801                    mov byte ptr [ecx], al
+:00452E56 C3                      ret
+:00452E57 9090                    2*nop
+
+file offset 00051301
+
+:00451F01 32C9                    xor cl, cl
+changed into
+:00451F01 B19F                    mov cl, 9F
+
+
+Fascinating Shrine, adds one of 3 spells, depending on Difficulty:
+
+file offset 000513E3
+
+:00451FE3 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00451FE6 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00451FEC 0F857A100000            jne 0045306C
+:00451FF2 69C9C8550000            imul ecx, 000055C8
+:00451FF8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451FFD 838C080B01000040        or dword ptr [eax+ecx+0000010B], 00000040
+:00452005 8D840808010000          lea eax, dword ptr [eax+ecx+00000108]
+:0045200C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452011 8A9408E0000000          mov dl, byte ptr [eax+ecx+000000E0]
+:00452018 8D8408E0000000          lea eax, dword ptr [eax+ecx+000000E0]
+:0045201F 80FA0F                  cmp dl, 0F
+:00452022 7D15                    jge 00452039
+:00452024 FEC2                    inc dl
+:00452026 8810                    mov byte ptr [eax], dl
+:00452028 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0045202B 83CAFF                  or edx, FFFFFFFF
+:0045202E 80380A                  cmp byte ptr [eax], 0A
+:00452031 7E01                    jle 00452034
+:00452033 4A                      dec edx
+:00452034 E8EBC60000              call 0045E724
+:00452039 E9CA000000              jmp 00452108
+changed into
+:00451FE3 8B75FC                  mov esi, dword ptr [ebp-04]
+:00451FE6 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00451FEC 75EF                    jne 00451FDD
+:00451FEE E8640C0000              call 00452C57					get character offset
+:00451FF3 E8350C0000              call 00452C2D					choose spell
+:00451FF8 85D2                    test edx, edx
+:00451FFA 750F                    jne 0045200B
+:00451FFC 808E0C01000001          or byte ptr [esi+0000010C], 01		Telekinesis
+:00452003 8D86E2000000            lea eax, dword ptr [esi+000000E2]		
+:00452009 EB1F                    jmp 0045202A
+:0045200B 4A                      dec edx
+:0045200C 750F                    jne 0045201D
+:0045200E 808E0D01000004          or byte ptr [esi+0000010D], 04		Barrier
+:00452015 8D86EC000000            lea eax, dword ptr [esi+000000EC]		
+:0045201B EB0D                    jmp 0045202A
+:0045201D 808E0901000004          or byte ptr [esi+00000109], 04		Mana Shield
+:00452024 8D86CC000000            lea eax, dword ptr [esi+000000CC]		
+:0045202A E8130C0000              call 00452C42					increase Slvl
+:0045202F 7408                    je 00452039
+:00452031 8B75FC                  mov esi, dword ptr [ebp-04]			***********
+:00452034 ...
+
+
+Sacred Shrine, adds one of 3 spells, depending on Difficulty:
+
+file offset 000519A5
+
+:004525A5 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004525A8 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004525AE 0F85B80A0000            jne 0045306C
+:004525B4 69C9C8550000            imul ecx, 000055C8
+:004525BA A114AE6E00              mov eax, dword ptr [006EAE14]
+:004525BF 808C080801000002        or byte ptr [eax+ecx+00000108], 02
+:004525C7 8D840808010000          lea eax, dword ptr [eax+ecx+00000108]
+:004525CE A114AE6E00              mov eax, dword ptr [006EAE14]
+:004525D3 8A9408C3000000          mov dl, byte ptr [eax+ecx+000000C3]
+:004525DA 8D8408C3000000          lea eax, dword ptr [eax+ecx+000000C3]
+:004525E1 80FA0F                  cmp dl, 0F
+:004525E4 7D15                    jge 004525FB
+:004525E6 FEC2                    inc dl
+:004525E8 8810                    mov byte ptr [eax], dl
+:004525EA 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004525ED 83CAFF                  or edx, FFFFFFFF
+:004525F0 80380A                  cmp byte ptr [eax], 0A
+:004525F3 7E01                    jle 004525F6
+:004525F5 4A                      dec edx
+:004525F6 E8BFC20000              call 0045E8BA
+:004525FB E9CA000000              jmp 004526CA
+changed into
+:004525A5 8B75FC                  mov esi, dword ptr [ebp-04]
+:004525A8 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004525AE 75EF                    jne 0045259F
+:004525B0 E8A2060000              call 00452C57					get character offset
+:004525B5 E873060000              call 00452C2D					choose spell
+:004525BA 85D2                    test edx, edx
+:004525BC 750F                    jne 004525CD
+:004525BE 808E0801000002          or byte ptr [esi+00000108], 02		Healing
+:004525C5 8D86C3000000            lea eax, dword ptr [esi+000000C3]		
+:004525CB EB1F                    jmp 004525EC
+:004525CD 4A                      dec edx
+:004525CE 750F                    jne 004525DF
+:004525D0 808E0C01000002          or byte ptr [esi+0000010C], 02		Heal All
+:004525D7 8D86E3000000            lea eax, dword ptr [esi+000000E3]		
+:004525DD EB0D                    jmp 004525EC
+:004525DF 808E0C01000020          or byte ptr [esi+0000010C], 20		Divine Help
+:004525E6 8D86E7000000            lea eax, dword ptr [esi+000000E7]		
+:004525EC E851060000              call 00452C42					increase Slvl
+:004525F1 7408                    je 004525FB
+:004525F3 8B75FC                  mov esi, dword ptr [ebp-04]			*********
+:004525F6 ...
+
+
+Ornate Shrine, adds one of 3 spells, depending on Difficulty:
+
+file offset 00051D58
+
+:00452958 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0045295B 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00452961 0F8505070000            jne 0045306C
+:00452967 69C9C8550000            imul ecx, 000055C8
+:0045296D A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452972 808C080801000080        or byte ptr [eax+ecx+00000108], 80
+:0045297A 8D840808010000          lea eax, dword ptr [eax+ecx+00000108]
+:00452981 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452986 8A9408C9000000          mov dl, byte ptr [eax+ecx+000000C9]
+:0045298D 8D8408C9000000          lea eax, dword ptr [eax+ecx+000000C9]
+:00452994 80FA0F                  cmp dl, 0F
+:00452997 7D15                    jge 004529AE
+:00452999 FEC2                    inc dl
+:0045299B 8810                    mov byte ptr [eax], dl
+:0045299D 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004529A0 83CAFF                  or edx, FFFFFFFF
+:004529A3 80380A                  cmp byte ptr [eax], 0A
+:004529A6 7E01                    jle 004529A9
+:004529A8 4A                      dec edx
+:004529A9 E874BE0000              call 0045E822
+:004529AE E9CA000000              jmp 00452A7D
+changed into
+:00452958 8B75FC                  mov esi, dword ptr [ebp-04]
+:0045295B 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00452961 75EF                    jne 00452952
+:00452963 E8EF020000              call 00452C57					get character offset
+:00452968 E8C0020000              call 00452C2D					choose spell
+:0045296D 85D2                    test edx, edx
+:0045296F 750F                    jne 00452980
+:00452971 808E0801000080          or byte ptr [esi+00000108], 80		Stone Curse
+:00452978 8D86C9000000            lea eax, dword ptr [esi+000000C9]		
+:0045297E EB1F                    jmp 0045299F
+:00452980 4A                      dec edx
+:00452981 750F                    jne 00452992
+:00452983 808E0A01000010          or byte ptr [esi+0000010A], 10		Golem
+:0045298A 8D86D6000000            lea eax, dword ptr [esi+000000D6]		
+:00452990 EB0D                    jmp 0045299F
+:00452992 808E0901000002          or byte ptr [esi+00000109], 02		Medusa Gaze
+:00452999 8D86CB000000            lea eax, dword ptr [esi+000000CB]		
+:0045299F E89E020000              call 00452C42					increase Slvl
+:004529A4 7408                    je 004529AE
+:004529A6 8B75FC                  mov esi, dword ptr [ebp-04]			****
+:004529A9 ...
+
+
+Town Shrine, adds one of 3 spells, depending on Difficulty:
+
+file offset 00051DF5
+
+:004529F5 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004529F8 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004529FE 0F8568060000            jne 0045306C
+:00452A04 69C9C8550000            imul ecx, 000055C8
+:00452A0A A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A0F 808C080801000040        or byte ptr [eax+ecx+00000108], 40
+:00452A17 8D840808010000          lea eax, dword ptr [eax+ecx+00000108]
+:00452A1E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452A23 8A9408C8000000          mov dl, byte ptr [eax+ecx+000000C8]
+:00452A2A 8D8408C8000000          lea eax, dword ptr [eax+ecx+000000C8]
+:00452A31 80FA0F                  cmp dl, 0F
+:00452A34 7D15                    jge 00452A4B
+:00452A36 FEC2                    inc dl
+:00452A38 8810                    mov byte ptr [eax], dl
+:00452A3A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00452A3D 83CAFF                  or edx, FFFFFFFF
+:00452A40 80380A                  cmp byte ptr [eax], 0A
+:00452A43 7E01                    jle 00452A46
+:00452A45 4A                      dec edx
+:00452A46 E841BC0000              call 0045E68C
+:00452A4B B130                    mov cl, 30
+:00452A4D E90F010000              jmp 00452B61
+changed into
+:004529F5 8B75FC                  mov esi, dword ptr [ebp-04]
+:004529F8 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004529FE 75EF                    jne 004529EF
+:00452A00 E852020000              call 00452C57					get character offset
+:00452A05 E823020000              call 00452C2D					choose spell
+:00452A0A 85D2                    test edx, edx
+:00452A0C 750F                    jne 00452A1D
+:00452A0E 808E0801000040          or byte ptr [esi+00000108], 40		Townportal
+:00452A15 8D86C8000000            lea eax, dword ptr [esi+000000C8]		
+:00452A1B EB1F                    jmp 00452A3C
+:00452A1D 4A                      dec edx
+:00452A1E 750F                    jne 00452A2F
+:00452A20 808E0D01000002          or byte ptr [esi+0000010D], 02		Warp
+:00452A27 8D86EB000000            lea eax, dword ptr [esi+000000EB]		
+:00452A2D EB0D                    jmp 00452A3C
+:00452A2F 808E0A01000040          or byte ptr [esi+0000010A], 40		Teleport
+:00452A36 8D86D8000000            lea eax, dword ptr [esi+000000D8]		
+:00452A3C E801020000              call 00452C42					increase Slvl
+:00452A41 7408                    je 00452A4B
+:00452A43 8B75FC                  mov esi, dword ptr [ebp-04]
+:00452A46 ...
+
+
+Eerie Shrine is shared:
+
+file offset 000517E0
+
+:004523E0 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004523E6 0F85800C0000            jne 0045306C
+:004523EC 6A02                    push 00000002
+changed into
+:004523E0 EB0A                    jmp 004523EC
+:004523E2 10*90                   10*nop		
+:004523EC 6A01                    push 00000001
+
+
+Abandoned Shrine is shared:
+
+file offset 00051C72
+
+:00452872 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00452878 0F85EE070000            jne 0045306C
+:0045287E 6A02                    push 00000002
+:00452880 8BCE                    mov ecx, esi
+:00452882 5A                      pop edx
+:00452883 E89ABF0000              call 0045E822
+:00452888 8BCE                    mov ecx, esi
+:0045288A E8EFBC0000              call 0045E57E
+:0045288F 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00452895 0F85A5070000            jne 00453040
+:0045289B B120                    mov cl, 20
+:0045289D E9BF020000              jmp 00452B61
+changed into
+:00452872 6A01                    push 00000001
+:00452874 8BCE                    mov ecx, esi
+:00452876 5A                      pop edx
+:00452877 E8A6BF0000              call 0045E822
+:0045287C 8BCE                    mov ecx, esi
+:0045287E E8FBBC0000              call 0045E57E
+:00452883 B120                    mov cl, 20
+:00452885 E9D7020000              jmp 00452B61
+:0045288A
+
+Now 24 bytes free space from 0045288A to 004528A2
+
+
+Creepy Shrine is shared:
+
+file offset 00051CAD
+
+:004528AD 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004528B3 0F85B3070000            jne 0045306C
+:004528B9 6A02                    push 00000002
+:004528BB 8BCE                    mov ecx, esi
+:004528BD 5A                      pop edx
+:004528BE E8C9BD0000              call 0045E68C
+:004528C3 8BCE                    mov ecx, esi
+:004528C5 E8B4BC0000              call 0045E57E
+:004528CA 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004528D0 0F856A070000            jne 00453040
+:004528D6 B121                    mov cl, 21
+:004528D8 E984020000              jmp 00452B61
+changed into
+:004528AD 6A01                    push 00000001
+:004528AF 8BCE                    mov ecx, esi
+:004528B1 5A                      pop edx
+:004528B2 E8D5BD0000              call 0045E68C
+:004528B7 8BCE                    mov ecx, esi
+:004528B9 E8C0BC0000              call 0045E57E
+:004528BE B121                    mov cl, 21
+:004528C0 E99C020000              jmp 00452B61
+:004528C5
+
+Now 24 bytes free space from 004528C5 to 004528DD
+
+
+Quiet Shrine shared:
+
+file offset 00051CE8
+
+:004528E8 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004528EE 0F8578070000            jne 0045306C
+:004528F4 6A02                    push 00000002
+:004528F6 8BCE                    mov ecx, esi
+:004528F8 5A                      pop edx
+:004528F9 E8BCBF0000              call 0045E8BA
+:004528FE 8BCE                    mov ecx, esi
+:00452900 E879BC0000              call 0045E57E
+:00452905 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:0045290B 0F852F070000            jne 00453040
+:00452911 B122                    mov cl, 22
+:00452913 E949020000              jmp 00452B61
+changed into
+:004528E8 6A01                    push 00000001
+:004528EA 8BCE                    mov ecx, esi
+:004528EC 5A                      pop edx
+:004528ED E8C8BF0000              call 0045E8BA
+:004528F2 8BCE                    mov ecx, esi
+:004528F4 E885BC0000              call 0045E57E
+:004528F9 B122                    mov cl, 22
+:004528FB E961020000              jmp 00452B61
+:00452900 
+
+Now 24 bytes free space from 00452900 to 00452918
+
+
+Mysterious Shrine shared, with check on maximum attributes:
+
+file offset 00050C85
+
+:00451885 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:0045188B 0F85DB170000            jne 0045306C
+changed into
+:00451885 E899130000              call 00452C23
+:0045188A 7E79                    jle 00451905
+:0045188C 9090909090              5*nop
+
+
+Spooky Shrine restores Life and Mana for all, and no longer takes gold from the user:
+
+file offset 00051BE1
+
+:004527E1 8B45FC                  mov eax, dword ptr [ebp-04]
+:004527E4 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:004527EA 7507                    jne 004527F3
+:004527EC B11E                    mov cl, 1E
+:004527EE E958050000              jmp 00452D4B
+:004527F3 B11F                    mov cl, 1F
+changed into
+:004527E1 EB10                    jmp 004527F3
+:004527E3 16*90                   16*nop	
+:004527F3 B131                    mov cl, 31				text from Shimmering Shrine
+
+
+Tainted Shrine lowers attributes for user instead of others:
+
+file offset 00051F5D
+
+:00452B5D 750C                    jne 00452B6B
+:00452B5F B126                    mov cl, 26
+changed into
+:00452B5D 740C                    je 00452B6B
+:00452B5F EBED                    jmp 00452B4E
+:00452B61 
+
+file offset 00051F6B
+
+:00452B6B B127                    mov cl, 27
+changed into
+:00452B6B B126                    mov cl, 26
+
+
+Cryptic Shrine gives Immolation again (Arcane Destruction would give a crash), although it is replaced:
+
+file offset 00051540
+
+:00452140 6A60                    push 00000060
+changed into
+:00452140 6A48                    push 00000048
+
+
+Oily Shrine gives 2 free attribute points instead of fixed increases, to be more use for high level characters:
+
+file offset 0005200A
+
+:00452C0A 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452C10 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00452C16 8BC1                    mov eax, ecx
+:00452C18 69C0C8550000            imul eax, 000055C8
+:00452C1E 0FBE841060010000        movsx eax, byte ptr [eax+edx+00000160]
+:00452C26 2BC7                    sub eax, edi
+:00452C28 7453                    je 00452C7D
+:00452C2A 48                      dec eax
+:00452C2B 7446                    je 00452C73
+:00452C2D 48                      dec eax
+:00452C2E 7439                    je 00452C69
+:00452C30 48                      dec eax
+:00452C31 7423                    je 00452C56
+:00452C33 48                      dec eax
+:00452C34 740D                    je 00452C43
+:00452C36 48                      dec eax
+:00452C37 754C                    jne 00452C85
+:00452C39 6A02                    push 00000002
+:00452C3B 5A                      pop edx
+:00452C3C E879BC0000              call 0045E8BA
+:00452C41 EB42                    jmp 00452C85
+:00452C43 6A01                    push 00000001
+:00452C45 5A                      pop edx
+:00452C46 E8D7BB0000              call 0045E822
+:00452C4B 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452C51 6A01                    push 00000001
+:00452C53 5A                      pop edx
+:00452C54 EB16                    jmp 00452C6C
+:00452C56 6A01                    push 00000001
+:00452C58 5A                      pop edx
+:00452C59 E82EBA0000              call 0045E68C
+:00452C5E 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452C64 6A01                    push 00000001
+:00452C66 5A                      pop edx
+:00452C67 EB0D                    jmp 00452C76
+:00452C69 6A02                    push 00000002
+:00452C6B 5A                      pop edx
+:00452C6C E8B3BA0000              call 0045E724
+:00452C71 EB12                    jmp 00452C85
+:00452C73 6A02                    push 00000002
+:00452C75 5A                      pop edx
+:00452C76 E8A7BB0000              call 0045E822
+:00452C7B EB08                    jmp 00452C85
+:00452C7D 6A02                    push 00000002
+:00452C7F 5A                      pop edx
+:00452C80 E807BA0000              call 0045E68C
+:00452C85 8BCB                    mov ecx, ebx
+:00452C87 E8F2B80000              call 0045E57E
+
+changed into
+
+:00452C0A 8BCB                    mov ecx, ebx
+:00452C0C E814000000              call 00452C25
+:00452C11 7E79                    jle 00452C8C
+:00452C13 83F802                  cmp eax, 00000002
+:00452C16 7E03                    jle 00452C1B
+:00452C18 6A02                    push 00000002
+:00452C1A 58                      pop eax
+:00452C1B 018184010000            add dword ptr [ecx+00000184], eax
+:00452C21 EB69                    jmp 00452C8C
+
+:00452C23 8BCE                    mov ecx, esi
+:00452C25 E875560000              call 0045829F
+:00452C2A 85C0                    test eax, eax
+:00452C2C C3                      ret
+
+:00452C2D 8B15C0706000            mov edx, dword ptr [006070C0]			Difficulty (0..2)
+:00452C33 85D2                    test edx, edx
+:00452C35 740A                    je 00452C41
+:00452C37 42                      inc edx
+:00452C38 B19F                    mov cl, 9F					Using RNG seed as Holy Shrine 
+:00452C3A E81B73FCFF              call 00419F5A
+:00452C3F 8BD0                    mov edx, eax
+:00452C41 C3                      ret
+
+:00452C42 8A10                    mov dl, byte ptr [eax]
+:00452C44 80FA0F                  cmp dl, 0F
+:00452C47 7D09                    jge 00452C52
+:00452C49 FEC2                    inc dl					increase slvl
+:00452C4B 8810                    mov byte ptr [eax], dl
+:00452C4D 83CAFF                  or edx, FFFFFFFF
+:00452C50 EB02                    jmp 00452C54
+:00452C52 33D2                    xor edx, edx
+:00452C54 85D2                    test edx, edx
+:00452C56 C3                      ret
+
+:00452C57 69F6C8550000            imul esi, 000055C8
+:00452C5D 033514AE6E00            add esi, dword ptr [006EAE14]
+:00452C63 C3                      ret
+
+Now 40 bytes free space from 00452C64 to 00452C8C.
+
+
+Holy Shrine adds 1 to each attribure, for user only, instead of casting a Warp spell:
+
+file offset 000518D7
+
+:004524D7 85C0                    test eax, eax
+:004524D9 0F858D0B0000            jne 0045306C
+:004524DF 6A70                    push 00000070
+:004524E1 B19F                    mov cl, 9F
+:004524E3 5A                      pop edx
+:004524E4 E8717AFCFF              call 00419F5A
+:004524E9 B19F                    mov cl, 9F
+:004524EB 8BD8                    mov ebx, eax
+:004524ED 6A70                    push 00000070
+:004524EF 5A                      pop edx
+:004524F0 E8657AFCFF              call 00419F5A
+:004524F5 8BCB                    mov ecx, ebx
+:004524F7 6BC970                  imul ecx, 00000070
+:004524FA 03C8                    add ecx, eax
+:004524FC 6A01                    push 00000001
+:004524FE 8BD1                    mov edx, ecx
+:00452500 5F                      pop edi
+:00452501 C1E202                  shl edx, 02
+:00452504 8BB2B05B5F00            mov esi, dword ptr [edx+005F5BB0]
+:0045250A 80BEE0B2600000          cmp byte ptr [esi+0060B2E0], 00
+:00452511 7512                    jne 00452525
+:00452513 80B9209C580000          cmp byte ptr [ecx+00589C20], 00
+:0045251A 7509                    jne 00452525
+:0045251C 83BAE0D1570000          cmp dword ptr [edx+0057D1E0], 00000000
+:00452523 7431                    je 00452556
+:00452525 6A70                    push 00000070
+:00452527 B19F                    mov cl, 9F
+:00452529 5A                      pop edx
+:0045252A E82B7AFCFF              call 00419F5A
+:0045252F B19F                    mov cl, 9F
+:00452531 8BD8                    mov ebx, eax
+:00452533 6A70                    push 00000070
+:00452535 5A                      pop edx
+:00452536 E81F7AFCFF              call 00419F5A
+:0045253B 8BCB                    mov ecx, ebx
+:0045253D 6BC970                  imul ecx, 00000070
+:00452540 03C8                    add ecx, eax
+:00452542 8BD1                    mov edx, ecx
+:00452544 C1E202                  shl edx, 02
+:00452547 47                      inc edi
+:00452548 8BB2B05B5F00            mov esi, dword ptr [edx+005F5BB0]
+:0045254E 81FF00310000            cmp edi, 00003100
+:00452554 7EB4                    jle 0045250A
+:00452556 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0045255C E83B090000              call 00452E9C
+:00452561 69C9C8550000            imul ecx, 000055C8
+:00452567 03CA                    add ecx, edx
+:00452569 0FB615D4B16000          movzx edx, byte ptr [0060B1D4]
+:00452570 D1E2                    shl edx, 1
+:00452572 52                      push edx
+:00452573 6A00                    push 00000000
+:00452575 8B513C                  mov edx, dword ptr [ecx+3C]
+:00452578 56                      push esi
+:00452579 6AFF                    push FFFFFFFF
+:0045257B 6A4E                    push 0000004E
+:0045257D FF7170                  push [ecx+70]
+:00452580 8B4938                  mov ecx, dword ptr [ecx+38]
+:00452583 50                      push eax
+:00452584 53                      push ebx
+:00452585 E8A531FEFF              call 0043572F
+:0045258A EB0A                    jmp 00452596
+:0045258C 90                      nop
+:0045258D 90                      nop
+:0045258E 90                      nop
+:0045258F 90                      nop
+:00452590 90                      nop
+:00452591 90                      nop
+:00452592 90                      nop
+:00452593 90                      nop
+:00452594 90                      nop
+:00452595 90                      nop
+:00452596 B11B                    mov cl, 1B
+:00452598 E9C4050000              jmp 00452B61
+
+changed into
+
+:004524D7 85C0                    test eax, eax
+:004524D9 750B                    jne 004524E6
+:004524DB 8B75FC                  mov esi, dword ptr [ebp-04]
+:004524DE 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004524E4 7405                    je 004524EB
+:004524E6 E9810B0000              jmp 0045306C
+:004524EB 6A01                    push 00000001
+:004524ED 5A                      pop edx
+:004524EE 8BCE                    mov ecx, esi
+:004524F0 E82DC30000              call 0045E822
+:004524F5 6A01                    push 00000001
+:004524F7 5A                      pop edx
+:004524F8 8BCE                    mov ecx, esi
+:004524FA E88DC10000              call 0045E68C
+:004524FF 6A01                    push 00000001
+:00452501 5A                      pop edx
+:00452502 8BCE                    mov ecx, esi
+:00452504 E81BC20000              call 0045E724
+:00452509 6A01                    push 00000001
+:0045250B 5A                      pop edx
+:0045250C 8BCE                    mov ecx, esi
+:0045250E E8A7C30000              call 0045E8BA
+:00452513 8BCE                    mov ecx, esi
+:00452515 E864C00000              call 0045E57E
+:0045251A B11B                    mov cl, 1B					
+:0045251C E940060000              jmp 00452B61
+:00452521 90909090                4*nop
+
+Now 124 bytes free space from 00452521 to 0045259D.
+
+
+Changing SP/MP and dungeonlevels to appear:
+
+0008F1F8 010B 0101 1001 0105 0101 0B0B 0101 0501 ................
+0008F208 0101 0101 0101 0101 010B 0B01 0101 0101 ................
+0008F218 010B 0000 0000 0000 1818 1818 1818 1818 ................
+0008F228 1818 1818 1818 1818 1818 1818 1818 1818 ................
+0008F238 1818 1818 1818 1804 1818 0000 0000 0000 ................
+0008F248 0000 0000 0000 0000 0100 0001 0000 0000 ................
+0008F258 0000 0200 0000 0100 0002 0001 0101 0000 ................
+0008F268 0100 0000 0000 0000                     ........
+changed into
+0008F1F8 040B 0101 1001 010B 0101 0B0B 0101 0501 ................
+0008F208 0101 0101 0101 0101 010B 0B01 0105 0105 ................
+0008F218 010B 0000 0000 0000 1818 1818 1818 1818 ................
+0008F228 1818 1818 1818 1818 1818 0418 1818 1818 ................
+0008F238 1818 1818 1818 1818 1818 0000 0000 0000 ................
+0008F248 0000 0000 0000 0000 0100 0001 0000 0000 ................
+0008F258 0000 0200 0000 0100 0002 0001 0100 0000 ................
+0008F268 0102 0000 0000 0000                     ........
+
+
+Replaced Shimmering by Hidden:
+
+000524EF 8D2E 4500                               ..E.
+changed into
+000524EF 0C19 4500                               ..E.
+
+
+Replaced Sparkling by Holy:
+
+000524E7 9F2D 4500                               .-E.
+changed into
+000524E7 D724 4500                               .$E.
+
+
+Replaced Cryptic by Religious:
+
+0005249B 0F21 4500                               .!E.
+changed into
+0005249B 901D 4500                               ..E.
+
+
+Adjusted texts:
+
+0009E828 5768 6572 6576 6572 2079 6F75 2067 6F2C Wherever you go,
+0009E838 2074 6865 7265 2079 6F75 2061 7265 00    there you are.
+changed into
+0009E828 4120 736D 616C 6C20 7265 7761 7264 2066 A small reward f
+0009E838 6F72 2068 6572 6F69 6320 6465 6564 73   or heroic deeds
+
+0009E8FC 486F 6C79 2070 6F77 6572 2C20 6275 7420 Holy power, but 
+0009E90C 6174 2061 2063 6F73 74                  at a cost
+changed into
+0009E8FC 5468 6520 706F 7765 7220 6F66 2074 6865 The power of the
+0009E90C 204D 696E 6400 0000 00                   Mind....
+
+0009E518 5472 6176 656C 6C69 6E67 2C20 6275 7420 Travelling, but 
+0009E528 6174 2061 2063 6F73 74                  at a cost
+changed into
+0009E518 5468 6520 706F 7765 7220 746F 2054 7261 The power to Tra
+0009E528 7665 6C00 0000 0000 00                  vel......
+
+0009E6C0 5374 6F6E 6520 706F 7765 722C 2062 7574 Stone power, but
+0009E6D0 2061 7420 6120 636F 7374                 at a cost
+changed into
+0009E6C0 5468 6520 706F 7765 7220 6F66 2053 746F The power of Sto
+0009E6D0 6E65 0000 0000 0000 0000                ne........
+
+0009E804 4865 616C 696E 672C 2062 7574 2061 7420 Healing, but at 
+0009E814 6120 636F 7374                          a cost
+changed into
+0009E804 5468 6520 706F 7765 7220 6F66 2048 6561 The power of Hea
+0009E814 6C69 6E67 0000                          ling..
+
+0009EA34 4E65 7720 7374 7265 6E67 7468 2069 7320 New strength is 
+0009EA44 666F 7267 6564 2074 6872 6F75 6768 2064 forged through d
+0009EA54 6573 7472 7563 7469 6F6E 00             estruction.
+changed into
+0009EA34 4E65 7720 7374 7265 6E67 7468 2069 7320 New strength is 
+0009EA44 666F 7267 6564 0000 0000 0000 0000 0000 forged..........
+0009EA54 0000 0000 0000 0000 0000 00             ...........
+
+0009E8DC 4172 6361 6E65 2070 6F77 6572 2062 7269 Arcane power bri
+0009E8EC 6E67 7320 6465 7374 7275 6374 696F 6E00 ngs destruction.
+changed into
+0009E8DC 4265 7761 7265 2066 6972 6520 616E 6420 Beware fire and 
+0009E8EC 6465 7374 7275 6374 696F 6E00 0000 0000 destruction.....

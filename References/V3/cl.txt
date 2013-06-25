@@ -1,0 +1,34 @@
+Chainlightning
+
+JG:
+
+Number of Lightnings = 1 + aantal monsters in range
+Range                = 2+slvl (max.range = 18)
+Duration	     = slvl/2 + 6 frames
+
+
+Range:
+
+:004381D0 8B86887A6900            mov eax, dword ptr [esi+00697A88]	eax := slvl
+:004381D6 83C003                  add eax, 00000003			eax := slvl + 3
+:004381D9 83F813                  cmp eax, 00000013			check op 19
+:004381DC 7E03                    jle 004381E1
+:004381DE 6A13                    push 00000013
+:004381E0 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004381DC(C)
+|
+:004381E1 83F801                  cmp eax, 00000001
+:004381E4 0F8E9D000000            jle 00438287
+:004381EA 48                      dec eax				eax := slvl + 2
+:004381EB C745F46C004900          mov [ebp-0C], 0049006C
+:004381F2 8945E8                  mov dword ptr [ebp-18], eax		store range
+
+Voorstel : max.range := 12
+
+:004381D9 83F813                  cmp eax, 0000000D			check op 13
+
+:004381DE 6A13                    push 0000000D
+
+

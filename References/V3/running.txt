@@ -1,0 +1,105 @@
+Check if running -> then run
+
+
+|:004590FE   , :0045B0D5   , :0045B2AC   , :0045B454   
+|
+:0043D5C4 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0043D5CB 7449                    je 0043D616
+:0043D5CD B868766900              mov eax, 00697668
+:0043D5D2 90                      nop
+:0043D5D3 90                      nop
+:0043D5D4 90                      nop
+:0043D5D5 90                      nop
+:0043D5D6 90                      nop
+:0043D5D7 90                      nop
+:0043D5D8 E8888E0300              call 00476465
+:0043D5DD 85C0                    test eax, eax
+:0043D5DF 90                      nop
+:0043D5E0 90                      nop
+:0043D5E1 90                      nop
+:0043D5E2 7432                    je 0043D616
+:0043D5E4 EB36                    jmp 0043D61C
+
+
+Procedure which checks for each character
+
+* Referenced by a CALL at Address:
+|:0043D5D8   
+|
+:00476465 85DB                    test ebx, ebx
+:00476467 7413                    je 0047647C
+:00476469 83C004                  add eax, 00000004
+:0047646C 4B                      dec ebx
+:0047646D 85DB                    test ebx, ebx
+:0047646F 740B                    je 0047647C
+:00476471 83C004                  add eax, 00000004
+:00476474 4B                      dec ebx
+:00476475 85DB                    test ebx, ebx
+:00476477 7403                    je 0047647C
+:00476479 83C004                  add eax, 00000004
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00476467(C), :0047646F(C), :00476477(C)
+|
+:0047647C 8B00                    mov eax, dword ptr [eax]
+:0047647E 69C0B0000000            imul eax, 000000B0
+:00476484 8B80587A6900            mov eax, dword ptr [eax+00697A58]
+:0047648A A900010000              test eax, 00000100
+:0047648F 7404                    je 00476495
+:00476491 33C0                    xor eax, eax
+:00476493 EB03                    jmp 00476498
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0047648F(C)
+|
+:00476495 6A01                    push 00000001
+:00476497 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00476493(U)
+|
+:00476498 C3                      ret
+
+
+Set running on after pressing ctrl
+
+|:0040A5E6(U)
+|
+:0040A64C 83FE11                  cmp esi, 00000011
+:0040A64F 7527                    jne 0040A678
+:0040A651 50                      push eax
+:0040A652 E80F9E0300              call 00444466
+:0040A657 80882001000008          or byte ptr [eax+00000120], 08		Local toggle
+:0040A65E A168766900              mov eax, dword ptr [00697668]
+:0040A663 69C0B0000000            imul eax, 000000B0
+:0040A669 8188587A690000010000    or dword ptr [eax+00697A58], 00000100		global toggle
+:0040A673 90                      nop
+:0040A674 90                      nop
+:0040A675 58                      pop eax
+:0040A676 EB18                    jmp 0040A690
+
+
+Reset toggle
+
+* Referenced by a CALL at Address:
+|:0045DCEB   
+|
+:0047642A 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00476430 EB2D                    jmp 0047645F					temporary disabled
+:00476432 51                      push ecx
+:00476433 50                      push eax
+:00476434 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00476439 69C9C8550000            imul ecx, 000055C8
+:0047643F 03C1                    add eax, ecx
+:00476441 80A020010000F7          and byte ptr [eax+00000120], F7
+:00476448 A168766900              mov eax, dword ptr [00697668]
+:0047644D 69C0B0000000            imul eax, 000000B0
+:00476453 81A0587A6900FFFEFFFF    and dword ptr [eax+00697A58], FFFFFEFF
+:0047645D 58                      pop eax
+:0047645E 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00476430(U)
+|
+:0047645F E80368FEFF              call 0045CC67
+:00476464 C3                      ret

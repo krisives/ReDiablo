@@ -1,0 +1,7 @@
+Using correct name for second intro movie, so downloading DARK.SMK is no longer needed
+
+00093E34 6765 6E64 6174 615C 6461 726B 2E73 6D6B gendata\dark.smk
+00093E44 0000 0000                               ....
+wordt
+00093E34 6765 6E64 6174 615C 4642 7574 6368 332E gendata\FButch3.
+00093E44 736D 6B00                               smk.

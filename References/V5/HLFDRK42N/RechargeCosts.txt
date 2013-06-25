@@ -1,0 +1,38 @@
+Better recharge cost at Adria
+
+Recharge cost by JG:
+
+The cost to recharge a staff can be calculated using the formula below:
+RcC = FRcC · (1 - CurCha/MaxCha)
+where:
+RcC = Recharge Cost
+FRcC = Full Recharge Cost (see below)
+MaxDur = Maximum charges on item
+CurDur = Current charges on item
+The Full Recharge Cost in the formula above can be calculated with:
+FRcC = 0.50 · (I + 5·P) if unique or starting staff of the Sorcerer
+FRcC = 0.50 · (I + H·P + 5·P) if not unique and not starting staff of the Sorcerer
+where:
+FRcC = Full Recharge Cost
+I = Cost of base item (always a staff).
+H = Number of charges on staff.
+P = The spell multiplier.
+
+Modified to FRcC = H·5·P/2 in all cases. This will set the price per charge to 2.5*SpellMultiplier, regardless of item type or maximum number of charges.
+
+file offset 0006D5C0
+
+:0046E1C0 01832C406F00            add dword ptr [ebx+006F402C], eax
+:0046E1C6 8B8B50406F00            mov ecx, dword ptr [ebx+006F4050]
+:0046E1CC 8BC1                    mov eax, ecx
+:0046E1CE 8BB32C406F00            mov esi, dword ptr [ebx+006F402C]
+changed into
+:0046E1C0 8BF0                    mov esi, eax
+:0046E1C2 90909090                4*nop
+:0046E1C6 8B8B50406F00            mov ecx, dword ptr [ebx+006F4050]
+:0046E1CC 8BC1                    mov eax, ecx
+:0046E1CE 0FAFF0                  imul esi, eax
+:0046E1D1 909090                  3*nop
+
+Spell multipliers need to be revised now. 
+

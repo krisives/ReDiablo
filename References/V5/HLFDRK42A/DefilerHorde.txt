@@ -1,0 +1,91 @@
+Defiler Horde
+
+Creating a mob of Flesh Things to guard the Defiler
+
+pos name         type              attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL   AC   TH
+
+ 97 The Defiler  The Defiler       6 Goat Man         5   0Y    H4#     32       32  3600   60- 62  RRR    -    0
+changed into
+ 97 The Defiler  The Defiler       6 Goat Man         5   1Y    H4#     32       32  3600   60- 62  RRR    -    0
+
+000AFEA0 7C00 0000 6009 4A00 841B 4B00 1400 100E |...`.J...K.....
+000AFEB0 0605 3C3E 4700 0000 0000 0000 0000 0000 ..<>G...........
+changed:
+000AFEB6 01                                      .
+
+This gives a mob of normal double-HP Defilers.
+
+Forcing selection of Flesh Things on Nest 4 as first monster on the list, at the cost of a Horkspawn for Nest 3:
+
+file offset 00039E2B
+
+:0043AA2B 803DD8B1600013          cmp byte ptr [0060B1D8], 13
+:0043AA32 6A04                    push 00000004
+:0043AA34 5F                      pop edi
+:0043AA35 7514                    jne 0043AA4B
+:0043AA37 6A75                    push 00000075
+:0043AA39 8BD3                    mov edx, ebx
+:0043AA3B 59                      pop ecx
+:0043AA3C E81DFFFFFF              call 0043A95E
+:0043AA41 8BD7                    mov edx, edi
+:0043AA43 6A7B                    push 0000007B
+:0043AA45 59                      pop ecx
+:0043AA46 E813FFFFFF              call 0043A95E
+:0043AA4B 803DD8B1600014          cmp byte ptr [0060B1D8], 14
+:0043AA52 750A                    jne 0043AA5E
+:0043AA54 6A7C                    push 0000007C
+:0043AA56 8BD7                    mov edx, edi
+:0043AA58 59                      pop ecx
+:0043AA59 E800FFFFFF              call 0043A95E
+changed into
+:0043AA2B 803DD8B1600014          cmp byte ptr [0060B1D8], 14
+:0043AA32 6A04                    push 00000004
+:0043AA34 5F                      pop edi
+:0043AA35 7514                    jne 0043AA4B
+:0043AA37 6A62                    push 00000062
+:0043AA39 8BD3                    mov edx, ebx
+:0043AA3B 59                      pop ecx
+:0043AA3C E81DFFFFFF              call 0043A95E
+:0043AA41 8BD7                    mov edx, edi
+:0043AA43 6A7C                    push 0000007C
+:0043AA45 59                      pop ecx
+:0043AA46 E813FFFFFF              call 0043A95E
+:0043AA4B 803DD8B1600013          cmp byte ptr [0060B1D8], 13
+:0043AA52 750A                    jne 0043AA5E
+:0043AA54 6A7B                    push 0000007B
+:0043AA56 8BD7                    mov edx, edi
+:0043AA58 59                      pop ecx
+:0043AA59 E800FFFFFF              call 0043A95E
+
+
+Force Flesh Things (#98, 62h) as guards instead of Defilers (#124, 7Ch), at general boss creation:
+
+file offset 0003AE5B
+
+:0043BA5B E818000000              call 0043BA78
+changed into
+:0043BA5B E9FC4AFFFF              jmp 0043055C
+:0043BA60
+
+Free space from Charm spell:
+
+file offset 0002F95C
+
+:0043055C 0FB68650DD6900          movzx eax, byte ptr [esi+0069DD50]
+:00430563 DC0DB8004900            fmul qword ptr [004900B8]
+:00430569 8945F8                  mov dword ptr [ebp-08], eax
+:0043056C DC25C0004900            fsub qword ptr [004900C0]
+changed into
+:0043055C 83F961                  cmp ecx, 00000061
+:0043055F 7503                    jne 00430564			jmp if not Defiler boss
+:00430561 6A01                    push 00000001
+:00430563 5A                      pop edx			set mob to first monster on the selection list
+:00430564 E80FB50000              call 0043BA78			create boss and mob
+:00430569 E9F2B40000              jmp 0043BA60
+:0043056E 90909090                4*nop
+
+Following space to be reserved for similar changes.
+
+
+
+

@@ -1,0 +1,99 @@
+Modifications to spell multipliers and other spell data (use maximize for best view)
+
+With the new recharge cost calculation, the price per charge is always 2.5*multiplier, regardless of item type or maximum number of charges.
+The 'cursor' column (byte 20-23 in the data) determines 'direct right-click' behaviour for scrolls (00 = no cursor, 01 = crosshair cursor).
+
+
+Spells
+pos nbr name          type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo) multiplier	cursor
+
+  0   1 Firebolt      fire            1        1     6    2    1   20   0    40- 80   1: -: -      1000         10	01
+  1   2 Healing       magic/other     1        1    30   20    1   20   1    20- 40  37: -: -      1000         10	00
+                                                                                                   2000         40	
+  2   3 Lightning     lightning       4        3    12    6    1   25   0    20- 60   7: -: -      3000         30	01
+                                                                                                   4000         40	
+  3   4 Flash         magic/other     5        4    32   16    1   40   0    20- 40  11:12: -      7500        500	00
+                                                                                                  16000        160	
+  4   5 Identify      magic/other    16       16   150   50    5  100   1    15- 30  40: -: -     30000       1000	01
+                                                                                                               200	00
+  5   6 Fire Wall     fire            3        2    24   12    1   30   0    15- 30  38: -: -      6000         80	01
+  6   7 Town Portal   magic/other     3        3    32   18    1   20   0    15- 30  10: -: -      3000         40	01
+                                                                                                   4000			
+  7   8 Stone Curse   magic/other     6        5    45   30    1   55   0    15- 30  30: -: -     12000        400	01
+                                                                                                   8000         60	
+  8   9 Seeing        magic/other   255      255    40   20    5   36   0     0-  0  39: -: -         0        120	00
+                                               6                   40        10- 20                            200	
+  9  10 Petrify       magic/other    13       13    60   30    2   55   0    15- 30  69: -: -     30000        800	00
+        Medusa Gaze                                                                               32000        200	
+ 10  11 Mana Shield   magic/other     6        5    40   20    1   30   0    15- 30  13: -: -     16000        500	00
+                                                                                                               160	
+ 11  12 Fireball      fire            8        7    25   10    1   70   0    40- 80   6: -: -      8000         60	01
+                                                                                                  12000         40	
+ 12  13 Guardian      fire            9        8    45   15    2   65   0    20- 40   2: -: -     14000        190	01
+                                                                                                  12000         80	
+ 13  14 Lightning Bl  lightning       8        7    30   15    1   60   0    20- 60 100: -: -     11000        150	00
+                                                                                                  16000         40	01
+ 14  15 Blood Wave    magic/other     9        8    35   20    1   50   0    20- 40  41: -: -     10000        300	01
+                                                                                                  12000         80	
+ 15  16 Charm         magic/other   255        3    90   30    3   35   0    10- 15  80: -: -      3000        500	00
+                                                                   40                                          240	01
+ 16  17 Inferno       fire          255       10    30   20    1   25   0    20- 40  49: -: -     20000         20	00
+ 17  18 Nova          lightning      14       10    80   60    1  100   0    15- 30  91: -: -     21000        260	00
+                                                                                     42: -: -     20000        200	01
+ 18  19 Invincibility magic/other   255       14   100   80    2  100   0     5- 10  34: -: -         0       1000	00
+                                                                                                               320	
+ 19  20 Magic Missile magic/other     3        2    12    8    1   25   0    20- 40  15: -: -      2000         20	01
+                                                                                                   4000         40	
+ 20  21 Golem         magic/other    11        9    80   40    2   80   0    15- 30  33: -: -     18000        500	00
+                                                                                                  24000        240	01
+ 21  22 Rage          magic/other   255      255    15    1    1    0   0     0-  0  43: -: -         0          0	00
+                                                                                                               200	
+ 22  23 Teleport      magic/other    14       12    30   10    1  100   1    15- 30  26: -: -     20000        500	01
+                                                                                                                80	
+ 23  24 Apocalypse    magic/other    16       15   255  200    0  150   0     5- 10  44: -: -     90000       2000	00
+                                                                                                  80000        400	
+ 24  25 Escape        magic/other   255        4    35   18    3   20   0    20- 40   3: -: -     15000        200	01
+                                                                                                                20	00
+ 25  26 Item Repair   magic/other   255      255     0    0    0  255   1    40- 80  45: -: -         0          0	00
+ 26  27 Staff Rechar  magic/other   255      255     0    0    0  255   1    40- 80  46: -: -         0          0	00
+ 27  28 Shielding     magic/other   255      255     0    0    0  255   0    40- 80  13:79:37         0          0	00
+                                                                                     13:79:68				
+ 28  29 Elemental     fire            8        6    35   15    1   75   0    40- 60  61: -: -     10500        300	00
+                                                                                                  12000         60	01
+ 29  30 Charged Bolt  lightning       1        1     8    3    1   30   0    40- 80  90: -: -      1000         10	01
+ 30  31 Holy Bolt     magic/other     1        1     7    2    1   25   0    40- 80  53: -: -      1000         10	01
+ 31  32 Arcane Flames magic/other     7        5    30   15    1   30   0    15- 30  89: -: -     16000        120	00
+															01
+ 32  33 Telekinesis   magic/other     2        2    20    2    1   35   0    20- 40  55: -: -      2500         40	00
+                                                    30   15                                        4000			
+ 33  34 Heal All      magic/other     1        1    50   30    1   30   1    20- 40  60: -: -      2000         15	00
+                                                                                                   8000         80	
+ 34  35 Blood Star    magic/other    14       13    25   10    1   70   0    40- 60  24: -: -     18000        200	00
+                                                                                                  16000         40	01
+ 35  36 Bone Spirit   magic/other     9        7    50   20    2   55   0    20- 60  63: -: -     11500        400	00
+                                                                                                  12000        120	01
+ 36  37 Resurrect     magic/other   255        6   150   50    5  100   1    15- 30  54: -: -     30000        200	00
+ 37  38 Restoration   magic/other    13       14    80   40    2   60   0    10- 20  85: -: -     25000         20	00
+        Divine Cure                                                                               28000        160	
+ 38  39 the Jester    magic/other   255        4   255    1    3   30   0    15- 30  96: -: -    100000         40	01
+ 39  40 Lightning Wa  lightning       3        2    24   12    1   30   0    15- 30  71: -: -      6000         80	01
+ 40  41 Immolation    fire           14       10    80   60    1  100   0    15- 30  92: -: -     21000        260	00
+                                                                                     72: -: -     20000        200	01
+ 41  42 Warp          magic/other     4        4    32   18    2   30   1    15- 30  78: -: -      4000        100	00
+                                                                                                                40	
+ 42  43 Barrier       magic/other     6        4    45   15    2   35   0    15- 30  79: -: -     10000        400	00
+                                                                                                  12000         80	
+ 43  44 Arcane Star   magic/other     3        3    12    6    1   40   0    40- 80  32: -: -      3000         20	00
+                                                                                                   4000			01	
+ 44  45 Doom Serpe    magic/other    15       14   255  100    0  120   0     4-  8  16: -: -     60000       2000	00
+                                                                                                               200	01
+ 45  46 Mana          magic/other   255      255    15    1    1   10   1    40- 80  68: -: -      3000         40	00
+ 46  47 Fire Tr Rune  magic/other   255      255   255   10    1   48   0    40- 80  89: -: -      8000         60	01
+        the Elemental fire                                                           61:61:61
+ 47  48 Rune of Light magic/other   255      255     0    0    0   48   0    40- 80  90: -: -      8000         60	01
+        Fury                                                                         43:79:37				00
+ 48  49 Rune of Nova  magic/other   255      255   255   10    1   48   0    40- 80  91: -: -      8000         60	01
+                                                                                     42:42:42
+ 49  50 Rune of Immo  magic/other   255      255   255   10    1   48   0    40- 80  92: -: -      8000         60	01
+                                                                                     72:72:72
+ 50  51 Rune of Stone magic/other   255      255   255   10    1   48   0    40- 80  93: -: -      8000         60	01

@@ -1,0 +1,69 @@
+
+
+Vileness flag "+0069DD24]=00000008"
+
+
+Missile vs monster:
+
+:0042F4E9 69DBC8550000            imul ebx, 000055C8
+:0042F4EF A114AE6E00              mov eax, dword ptr [006EAE14]
+:0042F4F4 F684184155000010        test byte ptr [eax+ebx+00005541], 10			bug
+:0042F4FC 8D841840550000          lea eax, dword ptr [eax+ebx+00005540]
+:0042F503 7407                    je 0042F50C
+:0042F505 838E24DD690008          or dword ptr [esi+0069DD24], 00000008
+
+Melee vs monster:
+
+:0045BDD9 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BDDE F684304155000001        test byte ptr [eax+esi+00005541], 01			correct, but nonexistant
+:0045BDE6 8D843040550000          lea eax, dword ptr [eax+esi+00005540]
+:0045BDED 7407                    je 0045BDF6
+:0045BDEF 838B24DD690008          or dword ptr [ebx+0069DD24], 00000008
+
+
+Oude disabled 'Vileness' check veranderd in 'StoneCursed' check for regeneration
+
+File Offset 00042C46
+
+:00443846 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044384D 7500                    jne 0044384F
+wordt
+:00443846 83BE8CDC69000F          cmp dword ptr [esi+0069DC8C], 0000000F
+:0044384D 7437                    je 00443886
+
+
+Gargoyle healing:
+
+:0043EA25 F68024DD690008          test byte ptr [eax+0069DD24], 08			'Vileness' flag
+:0043EA2C 7552                    jne 0043EA80
+
+
+Changed Vile check to StoneCurse check for Scavengers and Gravediggers:
+
+File Offset 00040B63
+
+:00441763 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044176A 756A                    jne 004417D6
+wordt
+:00441763 83BE8CDC69000F          cmp dword ptr [esi+0069DC8C], 0000000F
+:0044176A 746A                    je 004417D6
+
+
+Fallen One attacktype: healing from Warcry
+
+:00440F1D F68624DD690008          test byte ptr [esi+0069DD24], 08
+:00440F24 753A                    jne 00440F60
+:00440F26 8B96D0DC6900            mov edx, dword ptr [esi+0069DCD0]
+:00440F2C 8BCF                    mov ecx, edi
+:00440F2E E826010000              call 00441059
+:00440F33 0FB68621DD6900          movzx eax, byte ptr [esi+0069DD21]
+:00440F3A 8BBE18DD6900            mov edi, dword ptr [esi+0069DD18]
+:00440F40 8B961CDD6900            mov edx, dword ptr [esi+0069DD1C]
+:00440F46 8D4C0002                lea ecx, dword ptr [eax+eax+02]
+:00440F4A 8D861CDD6900            lea eax, dword ptr [esi+0069DD1C]
+:00440F50 8BDF                    mov ebx, edi
+:00440F52 2BD9                    sub ebx, ecx
+:00440F54 3BDA                    cmp ebx, edx
+:00440F56 7C06                    jl 00440F5E
+:00440F58 03D1                    add edx, ecx
+:00440F5A 8910                    mov dword ptr [eax], edx

@@ -1,0 +1,102 @@
+* Referenced by a CALL at Addresses:
+|:0043E12E   , :0044488A   
+|
+:0043DAF4 55                      push ebp
+:0043DAF5 8BEC                    mov ebp, esp
+:0043DAF7 83EC0C                  sub esp, 0000000C
+:0043DAFA 53                      push ebx
+:0043DAFB 56                      push esi
+:0043DAFC 8BF2                    mov esi, edx
+:0043DAFE 57                      push edi
+:0043DAFF 81FEC8000000            cmp esi, 000000C8
+:0043DB05 8975FC                  mov dword ptr [ebp-04], esi
+:0043DB08 894DF8                  mov dword ptr [ebp-08], ecx
+:0043DB0B 0F83C6000000            jnb 0043DBD7
+:0043DB11 69F6E4000000            imul esi, 000000E4
+:0043DB17 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043DB1D 85C0                    test eax, eax
+:0043DB1F 0F84B2000000            je 0043DBD7
+:0043DB25 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	Dead ?
+:0043DB2F 0F8EA2000000            jle 0043DBD7
+:0043DB35 833877                  cmp dword ptr [eax], 00000077			Shadow
+:0043DB38 750D                    jne 0043DB47
+:0043DB3A 80BE90DC690002          cmp byte ptr [esi+0069DC90], 02		retreating
+:0043DB41 0F8490000000            je 0043DBD7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DB38(C)
+|
+:0043DB47 6A64                    push 00000064
+:0043DB49 B104                    mov cl, 04
+:0043DB4B 5A                      pop edx
+:0043DB4C E809C4FDFF              call 00419F5A
+:0043DB51 8BD8                    mov ebx, eax
+:0043DB53 6A0F                    push 0000000F
+:0043DB55 5F                      pop edi
+:0043DB56 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi		Stone cursed
+:0043DB5C 7502                    jne 0043DB60
+:0043DB5E 8BDD                    mov ebx, ebp					Never hit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DB5C(C)
+|
+:0043DB60 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043DB63 8D55F4                  lea edx, dword ptr [ebp-0C]
+:0043DB66 E84A750000              call 004450B5
+:0043DB6B 85C0                    test eax, eax
+:0043DB6D 7568                    jne 0043DBD7
+:0043DB6F 3B5D08                  cmp ebx, dword ptr [ebp+08]
+:0043DB72 7D63                    jge 0043DBD7
+:0043DB74 8B5510                  mov edx, dword ptr [ebp+10]
+:0043DB77 B105                    mov cl, 05
+:0043DB79 2B550C                  sub edx, dword ptr [ebp+0C]
+:0043DB7C 42                      inc edx
+:0043DB7D E8D8C3FDFF              call 00419F5A
+:0043DB82 03450C                  add eax, dword ptr [ebp+0C]
+:0043DB85 C1E006                  shl eax, 06
+:0043DB88 29861CDD6900            sub dword ptr [esi+0069DD1C], eax		Deal damage
+:0043DB8E F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	Dead ?
+:0043DB98 7F1C                    jg 0043DBB6
+:0043DB9A 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+:0043DBA0 8B55FC                  mov edx, dword ptr [ebp-04]
+:0043DBA3 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0043DBA6 7507                    jne 0043DBAF
+:0043DBA8 E8DD010000              call 0043DD8A
+:0043DBAD EB1B                    jmp 0043DBCA
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DBA6(C)
+|
+:0043DBAF E8D6010000              call 0043DD8A
+:0043DBB4 EB21                    jmp 0043DBD7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DB98(C)
+|
+:0043DBB6 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+:0043DBBC 8B55F8                  mov edx, dword ptr [ebp-08]
+:0043DBBF 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043DBC2 50                      push eax
+:0043DBC3 750D                    jne 0043DBD2
+:0043DBC5 E814000000              call 0043DBDE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DBAD(U)
+|
+:0043DBCA 89BE8CDC6900            mov dword ptr [esi+0069DC8C], edi
+:0043DBD0 EB05                    jmp 0043DBD7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043DBC3(C)
+|
+:0043DBD2 E807000000              call 0043DBDE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043DB0B(C), :0043DB1F(C), :0043DB2F(C), :0043DB41(C), :0043DB6D(C)
+|:0043DB72(C), :0043DBB4(U), :0043DBD0(U)
+|
+:0043DBD7 5F                      pop edi
+:0043DBD8 5E                      pop esi
+:0043DBD9 5B                      pop ebx
+:0043DBDA C9                      leave
+:0043DBDB C20C00                  ret 000C

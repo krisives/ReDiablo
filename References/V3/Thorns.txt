@@ -1,0 +1,13 @@
+()Thorns - Attacker takes 1+clvl/2 damage:
+
+Teruggezet naar 1+clvl/4 vanwege Thorns+MS+LowLife bug en omdat het wat te heftig was.
+
+File Offset: 3D9AC
+
+:0043E5AC C1E801                  shr eax, 01				eax := clvl/2
+wordt
+:0043E5AC C1E802                  shr eax, 02				eax := clvl/4
+
+
+
+

@@ -1,0 +1,7 @@
+Increasing durability loss for shooting with bows:
+
+file offset 0005BAD9
+
+:0045C6D9 6A14                    push 00000014
+changed into
+:0045C6D9 6A10                    push 00000010

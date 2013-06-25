@@ -1,0 +1,50 @@
+The bloody walls in Butcher's room are made to not become transparent when the door is open.
+
+With Ulmo's ViewTile program the TIL entry number is found, which gives the corresponding TIL offset (multiply by 8). The TIL values found correspond to the SOL offsets of the sub-tiles.
+
+TIL entry	TIL offset	TIL values = SOL offsets	SOL values
+
+165		00000528	6301 6401 6501 6601		1F001F00
+166		00000530	6701 6801 6901 6A01		1F001F00
+167		00000538	6B01 6C01 6D01 6E01		3F2F1F00
+168		00000540	6F01 7001 7101 7201		2F2F0000
+169		00000548	7301 7401 7501 7601		2F2F0000
+170		00000550	7701 7801 7901 7A01		00000000
+171		00000558	7B01 7C01 7D01 7E01		00000000
+172		00000560	7F01 8001 8101 8201		00000000
+173		00000568	8301 8401 8501 8601		00000000
+
+
+LEVELS\L1DATA\L1.SOL
+
+00000163 1F00 1F00 1F00 1F00 3F2F 1F00 2F2F 0000 ........?/..//..
+00000173 2F2F 0000                               //..
+changed into
+00000163 1700 1700 1700 1700 3727 1700 2727 0000 ........7'..''..
+00000173 2727 0000                               ''..
+
+
+
+Cave tile corrections:
+
+Tile 79
+
+File offset in L3.TIL = 00000278
+File offset in L3.SOL = 00000125 00000126 00000127 00000128 (all unique) 
+
+LEVELS\L3DATA\L3.SOL
+
+00000125 0100 0700                               ....
+changed into
+00000125 0100 0701                               ....
+
+Tile 132
+
+File offset in L3.TIL = 00000420
+File offset in L3.SOL = 000001E4 000001E5 000001E6 000001E7 (all unique) 
+
+LEVELS\L3DATA\L3.SOL
+
+000001E4 2727 0100                               ''..
+changed into
+000001E4 2727 0001                               ''..

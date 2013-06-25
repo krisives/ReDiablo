@@ -1,0 +1,30 @@
+Rage duration longer, mostly for lower level characters:
+
+old duration      = clvl + 10*slvl + 390  (22 secs at clvl=40, slvl=1) 
+previous duration = 9*clvl + 2*slvl + 512 (44 secs at clvl=40, slvl=1) 
+new duration      = 9*clvl + 2*slvl + 768 (56 secs at clvl=40, slvl=1) 
+
+File Offset 00034182
+
+:00434D82 8D8C4A00020000          lea ecx, dword ptr [edx+2*ecx+00000200]
+wordt
+:00434D82 8D8C4A00030000          lea ecx, dword ptr [edx+2*ecx+00000300]
+
+
+Invincibility duration longer, mostly for lower level characters:
+
+File Offset 00033093
+
+:00433C93 C1E104                  shl ecx, 04
+:00433C96 D1F9                    sar ecx, 1
+:00433C98 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+:00433C9E E8A7A70000              call 0043E44A
+:00433CA3 90                      nop
+wordt
+:00433C93 41                      inc ecx
+:00433C94 41                      inc ecx
+:00433C95 C1E103                  shl ecx, 03
+:00433C98 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+:00433C9E E8A7A70000              call 0043E44A
+:00433CA3 41                      inc ecx
+

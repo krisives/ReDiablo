@@ -1,0 +1,15 @@
+()Critical Hit - Melee
+
+Warrior/Barbarian : clvl/2 % for double damage
+Monk :              clvl/4 % for double damage 
+
+File Offset: 5AE88
+
+:0045BA88 E8A828FEFF              call 0043E335
+wordt
+:0045BA88 E8A628FEFF              call 0043E333
+
+
+Ter compensatie worden de bogen wat in damage verlaagd.
+
+Bij controle van de RND[100] routine bleek dat we al dezelfde 'cl' gebruiken als in Hellfire voor Critical hit gebruikt werd.

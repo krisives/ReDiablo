@@ -1,0 +1,46 @@
+()Randomize pRNG (again)
+
+44A966 0F -> 0E -> 0F -> 0E
+
+Hellfire 0F : stuck pRNG
+in 2.2 0E : Crystalion's fix
+in 2.3 weer 0F : fix disabled vanwege spookjes, geen effect
+in 2.4 weer 0E : fix enabled voor betere random hits (?)
+
+
+Chainlightning Range
+
+Now:
+
+:004381D0 8DBE887A6900            lea edi, dword ptr [esi+00697A88]
+:004381D6 8B07                    mov eax, dword ptr [edi]
+:004381D8 D13F                    sar dword ptr [edi], 1
+:004381DA 83F810                  cmp eax, 00000010
+:004381DD 7E03                    jle 004381E2
+:004381DF 6A10                    push 00000010
+:004381E1 58                      pop eax
+:004381E2 90                      nop
+:004381E3 90                      nop
+:004381E4 90                      nop
+:004381E5 0F8E9C000000            jle 00438287
+:004381EB C745F46C004900          mov [ebp-0C], 0049006C
+:004381F2 8945E8                  mov dword ptr [ebp-18], eax
+
+Ergens iets mis gegaan, lijkt me.
+
+()Nieuw voorstel:
+
+Range = slvl + 2, max = 12
+
+:004381D0 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004381D6 83C003                  add eax, 00000003
+:004381D9 83F80D                  cmp eax, 0000000D
+:004381DC 7E03                    jle 004381E1
+:004381DE 6A0D                    push 0000000D
+:004381E0 58                      pop eax
+:004381E1 83F801                  cmp eax, 00000001
+:004381E4 0F8E9D000000            jle 00438287
+:004381EA 48                      dec eax
+
+Deze code lijkt meer op original Hellfire code dan Crystalion's fix, maar heeft aangepast max.
+

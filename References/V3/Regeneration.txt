@@ -1,0 +1,108 @@
+Monster Regeneration
+
+
+()No regeneration:
+
+Disables Scavenging too.
+
+:0044384D 7537                    jne 00443886
+wordt
+:0044384D EB37                    jmp 00443886
+
+
+
+:00443846 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044384D 7537                    jne 00443886
+:0044384F 8B861CDD6900            mov eax, dword ptr [esi+0069DD1C]	eax := cur.hps
+:00443855 3B8618DD6900            cmp eax, dword ptr [esi+0069DD18]
+:0044385B 7D29                    jge 00443886				jmp if max.hps
+:0044385D A9C0FFFFFF              test eax, FFFFFFC0
+:00443862 7E22                    jle 00443886				jmp if dead
+:00443864 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]	cl := mlvl
+
+By Sierra:
+Reg. in 1/64 HP per 1/20 sec. = mlvl/2 (min. = 1)
+
+Normal/mlvl=1  -> 1/3 HP/sec
+Normal/mlvl=32 -> 5   HP/sec
+Hell/mlvl=1    -> 5   HP/sec
+Hell/mlvl=32   -> 10   HP/sec
+
+:0044386A 80F901                  cmp cl, 01
+:0044386D 0FBEC9                  movsx ecx, cl
+:00443870 7E0C                    jle 0044387E
+:00443872 D1F9                    sar ecx, 1
+:00443874 03C8                    add ecx, eax
+:00443876 898E1CDD6900            mov dword ptr [esi+0069DD1C], ecx
+:0044387C EB08                    jmp 00443886
+
+By Crystalion:
+Reg. in 1/64 HP per 1/20 sec. = mlvl, mlvl*2, mlvl*4 op Normal, Nite, Hell
+
+Normal/mlvl=1  -> 1/3 HP/sec
+Normal/mlvl=32 -> 10  HP/sec
+Hell/mlvl=1    -> 40  HP/sec
+Hell/mlvl=32   -> 80  HP/sec
+
+:0044386A 83FB03                  cmp ebx, 00000003
+:0044386D 0FBEC9                  movsx ecx, cl
+:00443870 7E14                    jle 00443886
+:00443872 50                      push eax
+:00443873 8BC1                    mov eax, ecx
+:00443875 8A0DC0706000            mov cl, byte ptr [006070C0]
+:0044387B D3E0                    shl eax, cl
+:0044387D 59                      pop ecx
+
+Gevolgd door:
+
+:0044387E 03C1                    add eax, ecx
+:00443880 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044384D(C), :0044385B(C), :00443862(C), :00443870(C)
+|
+:00443886 enz.
+
+
+
+()Regeneration - Varying by Type
+
+Reg. in 1/64 HP per 1/20 sec. = mlvl (mlvl*2 if Demon)
+
+Normal/mlvl=1  -> 1/3 HP/sec  (no Demons)
+Normal/mlvl=32 -> 10  HP/sec  (20 HP/sec if Demon)
+Hell/mlvl=1    -> 10  HP/sec  (20 HP/sec if Demon)
+Hell/mlvl=32   -> 20  HP/sec  (40 HP/sec if Demon)
+
+:0044386A 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:00443870 80797202                cmp byte ptr [ecx+72], 02		Animals !
+:00443874 0FBEC9                  movsx ecx, cl				Gives negative regeneration
+:00443877 7505                    jne 0044387E
+:00443879 D1E1                    shl ecx, 1
+:0044387B 909090                  3*nop
+
+Little bit changed:
+Bepaling van monstertype wordt nu gedaan voor monsterlevel, dit voorkomt dat de regeneratie veel te
+hoog wordt. ecx en cl zijn deels hetzelfde register denk ik.
+:0044386A 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:00443870 80797201                cmp byte ptr [ecx+72], 01		Demons
+:00443864 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:00443874 0FB6C9                  movzx ecx, cl				No negative regeneration
+:00443877 7505                    jne 0044387E
+:00443879 D1E1                    shl ecx, 1
+:0044387B 90                      nop
+:0044387C 90                      nop
+:0044387D 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00443877(C)
+|
+:0044387E 03C1                    add eax, ecx
+:00443880 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+
+()Re-Activate Regeneration:
+
+:0044384D EB37                    jmp 00443886
+wordt
+:0044384D 7537                    jne 00443886
+

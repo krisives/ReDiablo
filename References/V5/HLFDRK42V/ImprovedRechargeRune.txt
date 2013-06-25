@@ -1,0 +1,214 @@
+Rune of Recharging will work, without lowering durability, on any item that holds spell charges. It will not work on Tomes of Lore or Potion Bags.
+
+
+Freeing spell number 51 (old Rune of Stone and Recharging):
+
+file offset 00029397
+
+:00429F97 6A33                    push 00000033
+changed into
+:00429F97 6A1B                    push 0000001B
+
+
+Using call to Manacost routine for Spell Recharge spell effect to indicate the use of a Rune:
+
+file offset 00034240
+
+:00434E40 8BCE                    mov ecx, esi
+:00434E42 E8B5710300              call 0046BFFC
+:00434E47 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00434E4D 7525                    jne 00434E74
+changed into
+:00434E40 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00434E46 752C                    jne 00434E74
+:00434E48 8BC6                    mov eax, esi
+:00434E4A E84ACD0100              call 00451B99
+:00434E4F
+
+Using free space from Gloomy Shrine:
+
+file offset 00050F99
+
+:00451B99 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451B9F 03CE                    add ecx, esi
+:00451BA1 FF09                    dec dword ptr [ecx]
+:00451BA3 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00451BA9 8D0C32                  lea ecx, dword ptr [edx+esi]
+:00451BAC 8B941A840E0000          mov edx, dword ptr [edx+ebx+00000E84]
+:00451BB3 3911                    cmp dword ptr [ecx], edx
+:00451BB5 7D02                    jge 00451BB9
+:00451BB7 8911                    mov dword ptr [ecx], edx
+changed into
+:00451B99 69C0C8550000            imul eax, 000055C8
+:00451B9F 030514AE6E00            add eax, dword ptr [006EAE14]
+:00451BA5 80B8A800000004          cmp byte ptr [eax+000000A8], 04
+:00451BAC 7502                    jne 00451BB0
+:00451BAE 33D2                    xor edx, edx
+:00451BB0 899064550000            mov dword ptr [eax+00005564], edx
+:00451BB6 C3                      ret
+:00451BB7 9090                    2*nop
+
+
+Adjusting the Recharging:
+
+file offset 000276BA
+
+:004282BA 83BC02780400000A        cmp dword ptr [edx+eax+00000478], 0000000A
+:004282C2 8DB4028C030000          lea esi, dword ptr [edx+eax+0000038C]
+:004282C9 7E38                    jle 00428303
+:004282CB 8B8EE0000000            mov ecx, dword ptr [esi+000000E0]
+:004282D1 85C9                    test ecx, ecx
+:004282D3 742E                    je 00428303
+:004282D5 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:004282DC 6BC938                  imul ecx, 00000038
+:004282DF 99                      cdq
+:004282E0 F7B9F4754B00            idiv dword ptr [ecx+004B75F4]
+:004282E6 B126                    mov cl, 26
+:004282E8 8BD0                    mov edx, eax
+:004282EA E86B1CFFFF              call 00419F5A
+:004282EF 40                      inc eax
+:004282F0 8BCE                    mov ecx, esi
+:004282F2 8BD0                    mov edx, eax
+changed into
+:004282BA 8DB4028C030000          lea esi, dword ptr [edx+eax+0000038C]
+:004282C1 83BEDC00000036          cmp dword ptr [esi+000000DC], 00000036
+:004282C8 7439                    je 00428303
+:004282CA 33D2                    xor edx, edx
+:004282CC 3B96E0000000            cmp edx, dword ptr [esi+000000E0]
+:004282D2 742F                    je 00428303
+:004282D4 83B8645500001B          cmp dword ptr [eax+00005564], 0000001B
+:004282DB 899064550000            mov dword ptr [eax+00005564], edx
+:004282E1 740E                    je 004282F1
+:004282E3 8B96E8000000            mov edx, dword ptr [esi+000000E8]
+:004282E9 E9381C0300              jmp 00459F26
+:004282EE 909090                  3*nop                 
+:004282F1 42                      inc edx
+:004282F2 8BCE                    mov ecx, esi
+
+Using free space from CharacterStun:
+
+file offset 00059326
+
+:00459F26 90                      nop
+:00459F27 90                      nop
+:00459F28 90                      nop
+:00459F29 90                      nop
+:00459F2A 90                      nop
+:00459F2B 90                      nop
+:00459F2C 03D0                    add edx, eax
+:00459F2E 8B45FC                  mov eax, dword ptr [ebp-04]
+:00459F31 C1F806                  sar eax, 06
+:00459F34 3BC2                    cmp eax, edx
+:00459F36 EB0C                    jmp 00459F44
+:00459F38 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+changed into
+:00459F26 3B96E4000000            cmp edx, dword ptr [esi+000000E4]
+:00459F2C 0F8ED1E3FCFF            jle 00428303
+:00459F32 8996E4000000            mov dword ptr [esi+000000E4], edx
+:00459F38 E9BCE3FCFF              jmp 004282F9
+:00459F3D 9090                    2*nop
+
+
+Original Recharging follows.
+
+
+Recharge left-clicked item:
+
+:0040A166 83F804                  cmp eax, 00000004
+:0040A169 7520                    jne 0040A18B				jmp if not 'recharge' cursor
+:0040A16B A03C164D00              mov al, byte ptr [004D163C]
+:0040A170 3CFF                    cmp al, FF
+:0040A172 0F8442010000            je 0040A2BA
+:0040A178 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0040A17E 0FBED0                  movsx edx, al
+:0040A181 E81CE10100              call 004282A2
+:0040A186 E937010000              jmp 0040A2C2				jmp exit
+
+
+* Referenced by a CALL at Address:
+|:0040A181   
+|
+:004282A2 56                      push esi
+:004282A3 57                      push edi
+:004282A4 8BF9                    mov edi, ecx
+:004282A6 69D274010000            imul edx, 00000174
+:004282AC 8BC7                    mov eax, edi
+:004282AE 69C0C8550000            imul eax, 000055C8
+:004282B4 030514AE6E00            add eax, dword ptr [006EAE14]
+:004282BA 83BC02780400000A        cmp dword ptr [edx+eax+00000478], 0000000A
+:004282C2 8DB4028C030000          lea esi, dword ptr [edx+eax+0000038C]
+:004282C9 7E38                    jle 00428303
+:004282CB 8B8EE0000000            mov ecx, dword ptr [esi+000000E0]		spell code
+:004282D1 85C9                    test ecx, ecx
+:004282D3 742E                    je 00428303
+:004282D5 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:004282DC 6BC938                  imul ecx, 00000038
+:004282DF 99                      cdq
+:004282E0 F7B9F4754B00            idiv dword ptr [ecx+004B75F4]			Qlvl for spellbook
+:004282E6 B126                    mov cl, 26
+:004282E8 8BD0                    mov edx, eax
+:004282EA E86B1CFFFF              call 00419F5A
+:004282EF 40                      inc eax					eax = 1..(clvl/qlvl)
+:004282F0 8BCE                    mov ecx, esi
+:004282F2 8BD0                    mov edx, eax
+:004282F4 E81D000000              call 00428316					actual recharging by Sorc skill
+:004282F9 8BCF                    mov ecx, edi
+:004282FB 6A01                    push 00000001
+:004282FD 5A                      pop edx
+:004282FE E8BCC7FFFF              call 00424ABF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004282C9(C), :004282D3(C)
+|
+:00428303 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]			
+:00428309 7508                    jne 00428313
+:0042830B 6A01                    push 00000001					clear cursor
+:0042830D 59                      pop ecx		
+:0042830E E8DAF7FDFF              call 00407AED
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428309(C)
+|
+:00428313 5F                      pop edi
+:00428314 5E                      pop esi
+:00428315 C3                      ret
+
+
+Sorcerer's recharge:
+
+:00428316 53                      push ebx
+:00428317 6A01                    push 00000001
+:00428319 5B                      pop ebx
+:0042831A 3BDA                    cmp ebx, edx
+:0042831C 7D01                    jge 0042831F
+:0042831E 4A                      dec edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042831C(C)
+|
+:0042831F 8B81E8000000            mov eax, dword ptr [ecx+000000E8]
+:00428325 3999EC000000            cmp dword ptr [ecx+000000EC], ebx
+:0042832B 7E2E                    jle 0042835B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428341(C)
+|
+:0042832D 3981E4000000            cmp dword ptr [ecx+000000E4], eax
+:00428333 7D20                    jge 00428355
+:00428335 0191E4000000            add dword ptr [ecx+000000E4], edx
+:0042833B FF89EC000000            dec dword ptr [ecx+000000EC]
+:00428341 0F8FE6FFFFFF            jg 0042832D
+:00428347 8999EC000000            mov dword ptr [ecx+000000EC], ebx
+:0042834D 3981E4000000            cmp dword ptr [ecx+000000E4], eax
+:00428353 7E06                    jle 0042835B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428333(C)
+|
+:00428355 8981E4000000            mov dword ptr [ecx+000000E4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042832B(C), :00428353(C)
+|
+:0042835B 5B                      pop ebx
+:0042835C C3                      ret

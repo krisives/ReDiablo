@@ -1,0 +1,7 @@
+Slain Hero (level 9 in SP) gives Lightning Wall instead of Lightning Book:
+
+file offset 000506A6
+
+:004512A6 6A03                    push 00000003
+changed into
+:004512A6 6A28                    push 00000028

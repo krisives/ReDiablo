@@ -1,0 +1,44 @@
+The combination of a shield and 2-handed weapons did not always show properly to other players. This was caused by checking for character class on the spectator, not the wielder. The following should fix this.
+
+File Offset 0002F907
+
+:00430507 E85A3F0100              call 00444466
+changed into
+:00430507 8BC3                    mov eax, ebx
+:00430509 03C7                    add eax, edi
+:0043050B 90                      nop
+
+File Offset 0001E076
+
+:0041EC76 E88C180100              call 00430507
+changed into
+:0041EC76 E891180100              call 0043050C
+:0041EC7B 
+
+File Offset 0001FC09
+
+:00420809 E8F9FC0000              call 00430507
+changed into
+:00420809 E8744AFEFF              call 00405282
+:0042080E 
+
+File Offset 00021DF2
+
+:004229F2 E810DB0000              call 00430507
+changed into
+:004229F2 E88F28FEFF              call 00405286
+:004229F7 
+
+Using free space from Itemspells:
+
+File Offset 00004682
+
+:00405282 50                      push eax
+:00405283 68344F4900              push 00494F34
+:00405288 E933010000              jmp 004053C0
+changed into
+:00405282 8BC7                    mov eax, edi
+:00405284 EB02                    jmp 00405288
+:00405286 8BC6                    mov eax, esi
+:00405288 E97FB20200              jmp 0043050C
+:0040528D 

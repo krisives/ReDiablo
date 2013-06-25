@@ -1,0 +1,19 @@
+:0043BCCF 8B55F4                  mov edx, dword ptr [ebp-0C]
+:0043BCD2 53                      push ebx
+:0043BCD3 57                      push edi
+:0043BCD4 E8FC020000              call 0043BFD5
+:0043BCD9 8A45FC                  mov al, byte ptr [ebp-04]
+:0043BCDC 8B7DE4                  mov edi, dword ptr [ebp-1C]
+:0043BCDF FEC0                    inc al
+:0043BCE1 8886BC000000            mov byte ptr [esi+000000BC], al
+:0043BCE7 8A470C                  mov al, byte ptr [edi+0C]
+:0043BCEA 84C0                    test al, al
+:0043BCEC 740A                    je 0043BCF8
+:0043BCEE D0E0                    shl al, 1
+:0043BCF0 8886C0000000            mov byte ptr [esi+000000C0], al
+:0043BCF6 EB07                    jmp 0043BCFF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043BCEC(C)
+|
+:0043BCF8 8086C000000005          add byte ptr [esi+000000C0], 05

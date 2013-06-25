@@ -1,0 +1,55 @@
+Experimental Ghost fixing
+
+
+This routine can (re-)activate monsters that are otherwise considered 'Dead' (Hp 0<->1):
+
+* Referenced by a CALL at Address:
+|:004718D2   
+|
+:004718F3 55                      push ebp
+:004718F4 8BEC                    mov ebp, esp
+:004718F6 51                      push ecx
+:004718F7 51                      push ecx
+:004718F8 53                      push ebx
+:004718F9 56                      push esi
+:004718FA 57                      push edi
+:004718FB 8BFA                    mov edi, edx
+:004718FD 33D2                    xor edx, edx
+:004718FF 894DF8                  mov dword ptr [ebp-08], ecx
+:00471902 0FB61F                  movzx ebx, byte ptr [edi]
+:00471905 8BF3                    mov esi, ebx
+:00471907 69F6E4000000            imul esi, 000000E4
+:0047190D 39961CDD6900            cmp dword ptr [esi+0069DD1C], edx	checks for 0
+:00471913 0F8EF0010000            jle 00471B09
+:00471919 A180DC6900              mov eax, dword ptr [0069DC80]
+...
+:00471AF7 808E28DD6900FF          or byte ptr [esi+0069DD28], FF	activate monster
+...
+:00471B09 5F                      pop edi
+:00471B0A 5E                      pop esi
+:00471B0B 5B                      pop ebx
+:00471B0C C9                      leave
+:00471B0D C3                      ret
+
+
+File Offset 00070D0D
+
+:0047190D 39961CDD6900            cmp dword ptr [esi+0069DD1C], edx
+wordt
+:0047190D E8354C0000              call 00476547
+:00471912 90                      nop
+
+
+Using space from Call to Loading complete nut:
+
+File Offset 00075945
+
+:00476545 381DD8535700            cmp byte ptr [005753D8], bl
+:0047654B 7407                    je 00476554
+:0047654D E84DFEFFFF              call 0047639F
+:00476552 EB0E                    jmp 00476562
+wordt
+:00476545 EB0C                    jmp 00476554
+:00476547 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0
+:00476551 C3                      ret
+:00476552 9090                    2*nop

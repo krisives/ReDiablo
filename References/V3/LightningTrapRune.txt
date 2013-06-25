@@ -1,0 +1,78 @@
+Lightning Trap Rune
+
+
+Changing the effect of a normal Lightning Rune to 'Ring of Lightning'
+
+During testing is was found that Rings do harm monsters and can 'trap' them, but do no actual damage to them.
+
+The duration of the Lightning Trap is shorter then that of the Fire Trap. Increasing it without affecting other spells is difficult.
+
+
+Using old V&K Bloodstar (1C) for a second Ring-effect of type Lightning, which calls the normal Fire Ring routines:
+
+000A6678 1C00 0000 4A37 4300 E860 4300 0100 0000 ....J7C..`C.....
+000A6688 0100 1600 FFFF FFFF FFFF FFFF           ............
+wordt
+000A6678 1C00 0000 7B49 4300 438D 4300 0000 0000 ....{IC.C.C.....
+000A6688 0102 0300 FFFF FFFF FFFF FFFF           ............
+
+
+Adjusting Rune code to call this new Spell effect:
+
+File Offset 0002F589
+
+:00430189 C786E87A690004000000    mov dword ptr [esi+00697AE8], 00000004
+wordt
+:00430189 C786E87A69001C000000    mov dword ptr [esi+00697AE8], 0000001C
+
+
+Adjusting Ring of Fire code to support Lightning (Spell effect 04):
+
+File Offset 00038254
+
+:00438E54 FFB6887A6900            push dword ptr [esi+00697A88]
+:00438E5A 8BD7                    mov edx, edi
+:00438E5C 8BCB                    mov ecx, ebx
+:00438E5E FF75EC                  push [ebp-14]
+:00438E61 FF75E8                  push [ebp-18]
+:00438E64 6A02                    push 00000002
+:00438E66 6A05                    push 00000005		-> SmallFire effect
+wordt
+:00438E54 E8075EFFFF              call 0042EC60
+:00438E59 52                      push edx
+:00438E5A FF75EC                  push [ebp-14]
+:00438E5D FF75E8                  push [ebp-18]
+:00438E60 6A02                    push 00000002
+:00438E62 51                      push ecx		-> SmallFire or Lightning effect
+:00438E63 8BD7                    mov edx, edi
+:00438E65 8BCB                    mov ecx, ebx
+:00438E67 90                      nop
+
+
+Using free space from SpellBook Display:
+
+File Offset 0002E060
+
+:0042EC60 90                      nop
+:0042EC61 69D2C8550000            imul edx, 000055C8
+:0042EC67 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042EC6D 388C32B8010000          cmp byte ptr [edx+esi+000001B8], cl
+:0042EC74 0F8E0E020000            jle 0042EE88
+:0042EC7A 90                      nop
+:0042EC7B 90                      nop
+wordt
+:0042EC60 8B96887A6900            mov edx, dword ptr [esi+00697A88]
+:0042EC66 8B8E587A6900            mov ecx, dword ptr [esi+00697A58]
+:0042EC6C 83E91C                  sub ecx, 0000001C
+:0042EC6F 6A04                    push 00000004
+:0042EC71 59                      pop ecx
+:0042EC72 7401                    je 0042EC75
+:0042EC74 41                      inc ecx
+:0042EC75 C3                      ret
+:0042EC76 90909090                4*nop
+
+
+Name change:
+
+000A37A0 4C69 6768 746E 696E 6720 5472 6170 2052 Lightning Trap R
+000A37B0 756E 6500 5275 6E65 0000 0000 4669 7265 une.Rune....Fire

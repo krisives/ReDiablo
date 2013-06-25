@@ -1,0 +1,34 @@
+Killing The King of the Nest freezes the game since amulets have a new look.
+
+
+Disabling special drop for King of the Nest:
+
+File Offset 0003C96B
+
+:0043D56B 752F                    jne 0043D59C
+wordt
+:0043D56B EB2F                    jmp 0043D59C
+
+
+
+Info: Killing 'King of the Nest'
+
+:0043D565 3B05C4094B00            cmp eax, dword ptr [004B09C4]
+:0043D56B 752F                    jne 0043D59C
+:0043D56D 33DB                    xor ebx, ebx
+:0043D56F 381DD4535700            cmp byte ptr [005753D4], bl	check for TheoQuest
+:0043D575 7410                    je 0043D587			always for V40
+:0043D577 8B5624                  mov edx, dword ptr [esi+24]
+:0043D57A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D57D E8FBA8FEFF              call 00427E7D
+:0043D582 E9CA000000              jmp 0043D651
+:0043D587 8B5624                  mov edx, dword ptr [esi+24]
+:0043D58A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D58D 6A01                    push 00000001
+:0043D58F 53                      push ebx
+:0043D590 6A0D                    push 0000000D
+:0043D592 E845E3FEFF              call 0042B8DC			create the amulet
+:0043D597 E9B5000000              jmp 0043D651
+
+
+

@@ -1,0 +1,110 @@
+The Charged Bolt spelleffect only produces one spark. The others are spawned in the routine that handles the casting of all spells. 
+
+
+:0046C166 803E34                  cmp byte ptr [esi], 34
+:0046C169 753C                    jne 0046C1A7
+:0046C16B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0046C16E 6A1E                    push 0000001E
+:0046C170 5A                      pop edx
+:0046C171 E886FEFFFF              call 0046BFFC
+:0046C176 8B451C                  mov eax, dword ptr [ebp+1C]
+:0046C179 D1F8                    sar eax, 1
+:0046C17B 83C003                  add eax, 00000003
+:0046C17E 3BC3                    cmp eax, ebx
+:0046C180 7E25                    jle 0046C1A7
+:0046C182 8BF0                    mov esi, eax
+:0046C184 FF751C                  push [ebp+1C]
+:0046C187 8B550C                  mov edx, dword ptr [ebp+0C]	character coordinate 
+:0046C18A 8B4D08                  mov ecx, dword ptr [ebp+08]	character coordinate
+:0046C18D 53                      push ebx
+:0046C18E FF75FC                  push [ebp-04]
+:0046C191 FF7518                  push [ebp+18]
+:0046C194 6A34                    push 00000034
+:0046C196 FF75F8                  push [ebp-08]
+:0046C199 FF7514                  push [ebp+14]			cursor coordinate
+:0046C19C FF7510                  push [ebp+10]			cursor coordinate
+:0046C19F E88B95FCFF              call 0043572F
+:0046C1A4 4E                      dec esi
+:0046C1A5 75DD                    jne 0046C184
+
+Adjusting extra spawns:
+
+file offset 0006B587
+
+:0046C187 8B550C                  mov edx, dword ptr [ebp+0C]	
+:0046C18A 8B4D08                  mov ecx, dword ptr [ebp+08]	
+changed to
+:0046C187 8B5514                  mov edx, dword ptr [ebp+14]	
+:0046C18A 8B4D10                  mov ecx, dword ptr [ebp+10]	
+
+
+This creates remote sparks, except the first spark, which still comes from the character.
+
+The following replaces the, not correctly working, Lightning Trap Rune spell with a 'remote' Charged Bolt effect, to correct the 'first' spark.
+
+Charged Bolt is spelleffect 34h. Lightning Trap rune is spelleffect 5Ah, which calls spelleffect 1Ch (ring of lightning), which calls spelleffect 04h (small patch of lightning).
+
+
+Adjust the check on CB:
+
+file offset 0006B566
+
+:0046C166 803E34                  cmp byte ptr [esi], 34
+becomes
+:0046C166 803E5A                  cmp byte ptr [esi], 5A
+
+
+Changing Lightning Trap Rune effect (5Ah), to call effect 34h instead of 1Ch:
+
+File Offset 0002F589
+
+:00430189 C786E87A69001C000000    mov dword ptr [esi+00697AE8], 0000001C
+becomes
+:00430189 C786E87A690034000000    mov dword ptr [esi+00697AE8], 00000034
+
+
+Changing CB spell to spawn the remote effect instead:
+
+000B6678 1E08 0100 3082 4B00 0000 0000 0100 0000 ....0.K.........
+000B6688 0100 0000 0100 0000 0000 0000 1E00 0000 ................
+000B6698 5234 0000 0103 0000 2800 0000 5000 0000 R4......(...P...
+000B66A8 E803 0000 3200 0000                     ....2...
+becomes
+000B6699 5A                                      Z
+
+
+Disable mana use for the replaced Lighting Trap spell, as this is handled in the generic spellcasting routine
+
+000B6A68 30FF 0200 6C81 4B00 0000 0000 FFFF FFFF 0...l.K.........
+000B6A78 FFFF FFFF 0100 0000 0000 0000 3000 0000 ............0...
+000B6A88 585A 0000 010A 0000 2800 0000 5000 0000 XZ......(...P...
+000B6A98 401F 0000 2C01 0000                     @...,...
+changed into
+000B6A69 00                                      .
+000B6A8C 0000                                    ..
+
+
+This works, but the 'first' spark does not always go in the desired direction.
+
+Changing the rune spell effect to spawn 08h (also used by familiars) instead of 34h (moving CB spark), to create a short-lived non-moving non-damageing spark:
+
+File Offset 0002F589
+
+:00430189 C786E87A690034000000    mov dword ptr [esi+00697AE8], 00000034
+becomes
+:00430189 C786E87A690008000000    mov dword ptr [esi+00697AE8], 00000008
+
+
+Halving the number of sparks, since this spell is now much more powerful (4+slvl/2 is now 3+slvl/4, including the non-moving spark):
+
+file offset 0006B579
+
+:0046C179 D1F8                    sar eax, 1
+:0046C17B 83C003                  add eax, 00000003
+changed into
+:0046C179 C1F802                  sar eax, 02
+:0046C17C 40                      inc eax
+:0046C17D 40                      inc eax
+
+
+All works as intended. Now the Lightning Trap Rune will produce a CB, just as the spell, so it should receive another function.

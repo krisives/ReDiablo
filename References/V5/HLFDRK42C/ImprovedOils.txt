@@ -1,0 +1,147 @@
+Improving Oils
+
+
+Accuracy: Tohit increase from 2-3 to 4-6
+Hardening: AC increase from 2-3 to 4-6
+
+file offset 0002781C
+
+:0042841C 81C6F8000000            add esi, 000000F8				Accuracy
+:00428422 833E32                  cmp dword ptr [esi], 00000032
+:00428425 E95D010000              jmp 00428587
+changed into
+...
+:00428422 E95D010000              jmp 00428584
+:00428427 909090                  3*nop
+
+file offset 0002797E
+
+:0042857E 81C6D4000000            add esi, 000000D4				Hardening
+:00428584 833E3C                  cmp dword ptr [esi], 0000003C
+:00428587 7D00                    jge 00428589
+:00428589 B144                    mov cl, 44
+:0042858B E80F980200              call 00451D9F
+changed into
+...
+:00428584 6A03                    push 00000003
+:00428586 5A                      pop edx
+:00428587 B144                    mov cl, 44
+:00428589 E811980200              call 00451D9F
+:0042858E 03C3                    add eax, ebx
+
+
+Mastery: Tohit increase from 3-5 to 6-10
+Imperviousness: AC increase from 3-5 to 6-10
+
+file offset 0002782A
+
+:0042842A 81C6F8000000            add esi, 000000F8				Mastery
+:00428430 833E64                  cmp dword ptr [esi], 00000064
+:00428433 E964010000              jmp 0042859C
+changed into
+...
+:00428430 E967010000              jmp 0042859C
+:00428435 909090                  3*nop
+
+file offset 00027993
+
+:00428593 81C6D4000000            add esi, 000000D4				Imperviousness
+:00428599 833E78                  cmp dword ptr [esi], 00000078
+:0042859C 7D00                    jge 0042859E
+:0042859E 8BD3                    mov edx, ebx
+:004285A0 B144                    mov cl, 44
+:004285A2 E8B319FFFF              call 00419F5A
+:004285A7 03C3                    add eax, ebx
+changed into
+...
+:00428599 909090                  3*nop
+:0042859C 03D3                    add edx, ebx
+:0042859E B144                    mov cl, 44
+:004285A0 E8FA970200              call 00451D9F
+:004285A5 03C3                    add eax, ebx
+:004285A7 40                      inc eax
+:004285A8 40                      inc eax
+
+
+Sharpness: Damage increase from 1 to 2, also removing limit
+
+file offset 00027844
+
+:00428444 8BD1                    mov edx, ecx
+:00428446 2B96CC000000            sub edx, dword ptr [esi+000000CC]
+:0042844C 83FA78                  cmp edx, 00000078
+:0042844F 0F8D56010000            jnl 004285AB
+:00428455 41                      inc ecx
+:00428456 8908                    mov dword ptr [eax], ecx
+:00428458 E94E010000              jmp 004285AB
+changed into
+:00428444 41                      inc ecx
+:00428445 41                      inc ecx
+:00428446 8908                    mov dword ptr [eax], ecx
+:00428448 E95E010000              jmp 004285AB
+:0042844D 9090                    2*nop
+
+Now free space from 0042844D to 0042845D (16 bytes)
+
+
+Death: Damage increase from 1 and 2 to 2 and 4, also removing limit
+
+file offset 0002786F
+
+:0042846F 8BFA                    mov edi, edx
+:00428471 8B30                    mov esi, dword ptr [eax]
+:00428473 2BFE                    sub edi, esi
+:00428475 83FF78                  cmp edi, 00000078
+:00428478 0F8D2D010000            jnl 004285AB
+:0042847E 46                      inc esi
+:0042847F 83C202                  add edx, 00000002
+:00428482 8930                    mov dword ptr [eax], esi
+:00428484 8911                    mov dword ptr [ecx], edx
+:00428486 E920010000              jmp 004285AB
+changed into
+:0042846F 8B30                    mov esi, dword ptr [eax]
+:00428471 46                      inc esi
+:00428472 46                      inc esi
+:00428473 83C204                  add edx, 00000004
+:00428476 8930                    mov dword ptr [eax], esi
+:00428478 8911                    mov dword ptr [ecx], edx
+:0042847A E92C010000              jmp 004285AB
+:0042847F 12*90                   12*nop
+
+Now free space from 0042847F to 0042848B (12 bytes)
+
+
+Fortitude: durability increase from 5-15 to 10-20
+
+file offset 0002795A
+
+:0042855A 83C005                  add eax, 00000005
+changed into
+:0042855A 83C00A                  add eax, 0000000A
+
+
+Oil of Repair: Removing durability loss and adjusting description
+
+file offset 00027891
+
+:00428491 3D01000000              cmp eax, 00000001
+:00428496 0F8E0F010000            jle 004285AB
+:0042849C 48                      dec eax
+:0042849D E98C000000              jmp 0042852E
+changed into
+:00428491 E99E000000              jmp 00428534
+:00428496 12*90                   12*nop
+
+Now free space from 00428496 to 004284A7 (17 bytes)
+
+Adjusting the description:
+
+000A48E0 6C6F 7765 7273 2064 7572 6162 696C 6974 lowers durabilit
+000A48F0 7900 0000 0000 0000 7265 7061 6972 7320 y.......repairs 
+000A4900 6172 6D6F 7220 616E 6420 7765 6170 6F6E armor and weapon
+000A4910 7300 0000 6461 6D61 6765 2070 6F74 656E s...damage poten
+changed into
+000A48E0 6172 6D6F 7220 616E 6420 7765 6170 6F6E armor and weapon
+000A48F0 7300 0000 0000 0000 636F 6D70 6C65 7465 s.......complete
+000A4900 6C79 2072 6570 6169 7273 0000 0000 0000 ly repairs......
+000A4910 0000 0000 6461 6D61 6765 2070 6F74 656E ....damage poten

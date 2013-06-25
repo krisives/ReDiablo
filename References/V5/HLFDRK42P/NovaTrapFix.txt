@@ -1,0 +1,88 @@
+Nova trap is fixed to originate from the trapped chests again, and (plain) Arrow traps no longer appear in Caves and deeper levels (chances for Fire Arrow and Lightning Arrow traps are increased because of this). 
+
+
+file offset 000503CD
+
+:00450FCD 7424                    je 00450FF3		arrow trap
+:00450FCF 49                      dec ecx
+:00450FD0 741C                    je 00450FEE		fire arrow trap
+:00450FD2 49                      dec ecx
+:00450FD3 7415                    je 00450FEA		nova trap
+:00450FD5 49                      dec ecx
+:00450FD6 740E                    je 00450FE6		lightning arrow trap
+:00450FD8 49                      dec ecx
+:00450FD9 7407                    je 00450FE2		potion breaking trap
+:00450FDB 49                      dec ecx
+:00450FDC 7515                    jne 00450FF3		arrow trap
+:00450FDE 6A53                    push 00000053		mana sucking trap
+:00450FE0 EB0E                    jmp 00450FF0
+:00450FE2 6A52                    push 00000052		
+:00450FE4 EB0A                    jmp 00450FF0
+:00450FE6 6A38                    push 00000038		
+:00450FE8 EB06                    jmp 00450FF0
+:00450FEA 6A2A                    push 0000002A
+:00450FEC EB02                    jmp 00450FF0
+:00450FEE 6A1B                    push 0000001B	
+:00450FF0 5A                      pop edx
+:00450FF1 EB02                    jmp 00450FF5
+:00450FF3 33D2                    xor edx, edx	
+changed into
+:00450FCD 7417                    je 00450FE6		lightning arrow trap
+:00450FCF 49                      dec ecx
+:00450FD0 741C                    je 00450FEE		nova trap
+:00450FD2 49                      dec ecx
+:00450FD3 7415                    je 00450FEA		fire arrow trap
+:00450FD5 49                      dec ecx
+:00450FD6 740E                    je 00450FE6		lightning arrow trap
+:00450FD8 49                      dec ecx
+:00450FD9 7407                    je 00450FE2		potion breaking trap
+:00450FDB 49                      dec ecx
+:00450FDC 750C                    jne 00450FEA		fire arrow trap
+:00450FDE 6A53                    push 00000053		mana sucking trap
+:00450FE0 EB12                    jmp 00450FF4	
+:00450FE2 6A52                    push 00000052	
+:00450FE4 EB0E                    jmp 00450FF4	
+:00450FE6 6A38                    push 00000038	
+:00450FE8 EB0A                    jmp 00450FF4	
+:00450FEA 6A1B                    push 0000001B	
+:00450FEC EB06                    jmp 00450FF4
+:00450FEE E97E280000              jmp 00453871	
+:00450FF3 90                      nop
+:00450FF4 5A                      pop edx
+
+
+Using some free space from obsolete 'Nakrul' books:
+
+file offset 00052C71
+
+:00453871 56                      push esi
+:00453872 57                      push edi
+:00453873 8BFA                    mov edi, edx
+:00453875 8BF7                    mov esi, edi
+:00453877 6BF678                  imul esi, 00000078
+:0045387A 80BE00E66D0000          cmp byte ptr [esi+006DE600], 00
+:00453881 0F84B4000000            je 0045393B
+:00453887 833D10AB6D0000          cmp dword ptr [006DAB10], 00000000
+changed into
+:00453871 53                      push ebx
+:00453872 53                      push ebx
+:00453873 6AFF                    push FFFFFFFF
+:00453875 6A01                    push 00000001
+:00453877 6A2A                    push 0000002A
+:00453879 50                      push eax
+:0045387A 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:00453880 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:00453886 52                      push edx
+:00453887 51                      push ecx
+:00453888 E98AD7FFFF              jmp 00451017
+:0045388D 90                      nop
+
+
+Nopping some free space:
+
+file offset 00052F25
+
+:00453B25 E847FDFFFF              call 00453871
+:00453B2A EB48                    jmp 00453B74
+changed into
+:00453B25 90909090909090          7*nop

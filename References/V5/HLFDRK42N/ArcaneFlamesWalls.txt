@@ -1,0 +1,632 @@
+Arcane Flames and elemental Walls
+
+Arcane Flames is a new spell based on Ring of Fire, doing a non-damageing Magic type attack with Knockback. It will not affect characters.
+
+The Ring of Fire trap is replaced by a new Lightning Arrow trap.
+
+Fire and Lightning Walls have their damage disabled, duration increased, and no longer attack characters.
+
+Blood Wave is also excluded from attacks against players, to prevent a crash bug, and icons for Seeing and Medusa Gaze are modified.
+
+
+Zeroing damage for Fire Trap spell effect, which is used for both ring and Fire Wall:
+
+file offset 0003114D
+
+:00431D4D C1E004                  shl eax, 04
+:00431D50 D1F8                    sar eax, 1
+changed into
+:00431D4D 909090                  3*nop
+:00431D50 33C0                    xor eax, eax
+
+Such is not needed for the Lightning Trap spell effect.
+
+
+Zeroing damage for Ring spell effect:
+
+file offset 00038174
+
+:00438D74 7E14                    jle 00438D8A
+:00438D76 69C9C8550000            imul ecx, 000055C8
+:00438D7C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00438D81 8A8401B8010000          mov al, byte ptr [ecx+eax+000001B8]
+:00438D88 EB0A                    jmp 00438D94
+:00438D8A E825FE0400              call 00488BB4
+:00438D8F 8A02                    mov al, byte ptr [edx]
+:00438D91 0402                    add al, 02
+:00438D93 90                      nop
+:00438D94 8845FF                  mov byte ptr [ebp-01], al
+:00438D97 90                      nop
+:00438D98 90                      nop
+:00438D99 90                      nop
+:00438D9A 90                      nop
+:00438D9B 90                      nop
+:00438D9C B135                    mov cl, 35
+:00438D9E 90                      nop
+:00438D9F 90                      nop
+:00438DA0 6A14                    push 00000014
+:00438DA2 5A                      pop edx
+:00438DA3 E8B211FEFF              call 00419F5A
+:00438DA8 8BD8                    mov ebx, eax
+:00438DAA 0FB645FF                movzx eax, byte ptr [ebp-01]
+:00438DAE 8D440302                lea eax, dword ptr [ebx+eax+02]
+:00438DB2 C1E004                  shl eax, 04
+:00438DB5 D1F8                    sar eax, 1
+:00438DB7 8945EC                  mov dword ptr [ebp-14], eax
+changed into
+:00438D74 7E06                    jle 00438D7C
+:00438D76 69C9C8550000            imul ecx, 000055C8
+:00438D7C 33C0                    xor eax, eax
+:00438D7E EB37                    jmp 00438DB7
+:00438D80 90                      nop
+:00438D81 ...
+:00438DB7 8945EC                  mov dword ptr [ebp-14], eax
+
+Now 55 bytes free space from 00438D80 to 00438DB7.
+
+
+Zeroing damage for Lightning Wall spell effect:
+
+file offset 00038460
+
+:00439060 6A0A                    push 0000000A
+:00439062 B135                    mov cl, 35
+:00439064 5A                      pop edx
+:00439065 E8F00EFEFF              call 00419F5A
+:0043906A B135                    mov cl, 35
+:0043906C 8BD8                    mov ebx, eax
+:0043906E 6A0A                    push 0000000A
+:00439070 5A                      pop edx
+:00439071 E8E40EFEFF              call 00419F5A
+:00439076 03FB                    add edi, ebx
+:00439078 8D443802                lea eax, dword ptr [eax+edi+02]
+:0043907C C1E004                  shl eax, 04
+changed into
+:00439060 EB1B                    jmp 0043907D
+:00439062 ...
+:0043907C 90                      nop
+:0043907D 33C0                    xor eax, eax
+
+Now 27 bytes free space from 00439062 to 0043907D.
+
+
+Removing obsolete support for Ring of Lightning, and adjusting called spell effect:
+
+File Offset 00038254
+
+:00438E54 E8075EFFFF              call 0042EC60
+:00438E59 52                      push edx
+:00438E5A FF75EC                  push [ebp-14]
+:00438E5D FF75E8                  push [ebp-18]
+:00438E60 6A02                    push 00000002		flag that gives behaviour as traps
+:00438E62 51                      push ecx		SmallFire or Lightning effect
+:00438E63 8BD7                    mov edx, edi
+:00438E65 8BCB                    mov ecx, ebx
+:00438E67 90                      nop
+changed into
+:00438E54 FFB6887A6900            push dword ptr [esi+00697A88]
+:00438E5A 8BD7                    mov edx, edi
+:00438E5C 8BCB                    mov ecx, ebx
+:00438E5E FF75EC                  push [ebp-14]
+:00438E61 FF75E8                  push [ebp-18]
+:00438E64 6A00                    push 00000000		set to behave as normal spell
+:00438E66 6A11                    push 00000011		new spell effect
+
+Now 28 bytes free space from obsolete routine at 0042EC60.
+
+
+Setting Fire Wall to act as normal spell instead of trap:
+
+file offset 00038071
+
+:00438C71 6A02                    push 00000002
+changed into
+:00438C71 6A00                    push 00000000
+
+file offset 00038111
+
+:00438D11 6A02                    push 00000002
+changed into
+:00438D11 6A00                    push 00000000
+
+
+Setting Lightning Wall to act as normal spell instead of trap:
+
+file offset 00038510
+
+:00439110 6A02                    push 00000002
+changed into
+:00439110 6A00                    push 00000000
+
+file offset 000385B1
+
+:004391B1 6A02                    push 00000002
+changed into
+:004391B1 6A00                    push 00000000
+
+
+Allowing a greater spread in duration, based on spell level, for ring and both walls:
+
+file offset 000506D2
+
+:004512D2 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004512D8 83F806                  cmp eax, 00000006
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A06                    push 00000006
+:004512DF 58                      pop eax
+:004512E0 83F804                  cmp eax, 00000004
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A04                    push 00000004
+:004512E7 58                      pop eax
+:004512E8 C3                      ret
+changed into
+:004512D2 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004512D8 83F80C                  cmp eax, 0000000C
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A0C                    push 0000000C
+:004512DF 58                      pop eax
+:004512E0 83F802                  cmp eax, 00000002
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A02                    push 00000002
+:004512E7 58                      pop eax
+:004512E8 C3                      ret
+
+
+Increasing duration for Arcane Flames and Fire Wall:
+
+file offset 00031166
+
+:00431D66 90                      nop
+:00431D67 D1E0                    shl eax, 1
+changed into
+:00431D66 C1E003                  shl eax, 03
+
+
+Increasing duration for Lightning Wall, to match the Fire Wall:
+
+file offset 00031098
+
+:00431C98 69C030000000            imul eax, 00000030
+changed into
+:00431C98 69C040000000            imul eax, 00000040
+
+
+Replacing Fire Ring Trap by Lightning Arrow Trap:
+
+file offset 000503E6
+
+:00450FE6 6A51                    push 00000051
+changed into
+:00450FE6 6A38                    push 00000038
+
+
+Adjusting obsolete 'Blood' spell effect to resemble the 'Fire Trap', but with 'Holy' flames:
+
+05	Fire Trap (used by Fire Wall/Ring)
+A63F4	0500 0000 E01C 4300 6166	
+	4300 0100 0000 0101 0400
+	9100 0000 7000 0000
+
+11	Blood (obsolete)
+A6544	1100 0000 AC34 4300 9E82
+	4300 0100 0000 0200 0A00
+	6100 0000 6200 0000	
+
+000A6544 1100 0000 AC34 4300 9E82 4300 0100 0000 .....4C...C.....
+000A6554 0200 0A00 6100 0000 6200 0000           ....a...b...
+changed into
+000A6544 1100 0000 E01C 4300 6166 4300 0100 0000 ......C.afC.....
+000A6554 0103 1B00 9100 0000 6200 0000           ........b...
+
+
+Adjusting Player Missile Attack vs. Player to exclude all characters for Blood Wave, Arcane Flames, Fire Wall, Lightning Wall and another (spare) effect, and not only for Holy Bolt:
+
+file offset 00031897
+
+:00432497 83FE35                  cmp esi, 00000035
+:0043249A 0F84D3020000            je 00432773
+changed into
+:00432497 50                      push eax
+:00432498 8BC6                    mov eax, esi
+:0043249A E950C90100              jmp 0044EDEF
+:0043249F 58                      pop eax
+
+Using free space from BurningCross:
+
+file offset 0004E1EF
+
+:0044EDEF 90                      nop
+:0044EDF0 85C0                    test eax, eax
+:0044EDF2 7E1E                    jle 0044EE12
+:0044EDF4 0FB6CB                  movzx ecx, bl
+:0044EDF7 8B7C8DE4                mov edi, dword ptr [ebp+4*ecx-1C]
+:0044EDFB 6A64                    push 00000064
+:0044EDFD 8D4C8DE4                lea ecx, dword ptr [ebp+4*ecx-1C]
+:0044EE01 0FAFC7                  imul eax, edi
+:0044EE04 894DFC                  mov dword ptr [ebp-04], ecx
+:0044EE07 59                      pop ecx
+:0044EE08 99                      cdq
+:0044EE09 F7F9                    idiv ecx
+:0044EE0B 2BF8                    sub edi, eax
+:0044EE0D 8B45FC                  mov eax, dword ptr [ebp-04]
+:0044EE10 8938                    mov dword ptr [eax], edi
+changed into
+:0044EDEF 3C35                    cmp al, 35			Holy Bolt
+:0044EDF1 7419                    je 0044EE0C
+:0044EDF3 3C0E                    cmp al, 0E			Blood Wave
+:0044EDF5 7415                    je 0044EE0C
+:0044EDF7 3C11                    cmp al, 11			Arcane Flames
+:0044EDF9 7411                    je 0044EE0C
+:0044EDFB 3C05                    cmp al, 05			Fire Wall
+:0044EDFD 740D                    je 0044EE0C
+:0044EDFF 3C46                    cmp al, 46			Lightning Wall
+:0044EE01 7409                    je 0044EE0C
+:0044EE03 3C35                    cmp al, 35			(spare)
+:0044EE05 7405                    je 0044EE0C
+:0044EE07 E99336FEFF              jmp 0043249F
+:0044EE0C 58                      pop eax
+:0044EE0D E96139FEFF              jmp 00432773
+:0044EE12
+
+
+Adjusting Player Missile vs. Monster routine to set chances for a hit with Arcane Flames, Blood Wave and a spare spell effect (or these spells would eventually be of little use to non-casters):
+
+file offset 0002E796
+
+:0042F396 0F8538020000            jne 0042F5D4
+changed into
+:0042F396 0F85C4F8FFFF            jne 0042EC60
+:0042F39C 
+
+Using free space from obsolete routine at 0042EC60:
+
+file offset 0002E060
+
+:0042EC60 8B96887A6900            mov edx, dword ptr [esi+00697A88]
+:0042EC66 8B8E587A6900            mov ecx, dword ptr [esi+00697A58]
+:0042EC6C 83E91C                  sub ecx, 0000001C
+:0042EC6F 6A04                    push 00000004
+:0042EC71 59                      pop ecx
+:0042EC72 7401                    je 0042EC75
+:0042EC74 41                      inc ecx
+:0042EC75 C3                      ret
+:0042EC76 90                      nop
+:0042EC77 90                      nop
+:0042EC78 90                      nop
+:0042EC79 90                      nop
+:0042EC7A 90                      nop
+:0042EC7B 90                      nop
+changed into
+:0042EC60 50                      push eax
+:0042EC61 8B4514                  mov eax, dword ptr [ebp+14]
+:0042EC64 3C0E                    cmp al, 0E			Blood Wave
+:0042EC66 740E                    je 0042EC76
+:0042EC68 3C11                    cmp al, 11			Arcane Flames
+:0042EC6A 740A                    je 0042EC76
+:0042EC6C 3C11                    cmp al, 11			(spare)
+:0042EC6E 7406                    je 0042EC76
+:0042EC70 58                      pop eax
+:0042EC71 E95E090000              jmp 0042F5D4
+:0042EC76 58                      pop eax
+:0042EC77 E9B0AFFFFF              jmp 00429C2C
+:0042EC7C
+
+file offset 0002902C
+
+:00429C2C 8*90                    8*nop
+changed into
+:00429C2C 6A5A                    push 0000005A			always 90% chance to hit
+:00429C2E 5F                      pop edi
+:00429C2F E9E9570000              jmp 0042F41D
+:00429C34
+
+
+Adding Knockback effect to Arcane Flames:
+
+file offset 0003D63D
+
+:0043E23D 8A4514                  mov al, byte ptr [ebp+14]
+:0043E240 3C0E                    cmp al, 0E
+:0043E242 7417                    je 0043E25B
+:0043E244 3C10                    cmp al, 10
+:0043E246 7413                    je 0043E25B
+:0043E248 3C20                    cmp al, 20
+:0043E24A 740F                    je 0043E25B
+:0043E24C 3C35                    cmp al, 35
+:0043E24E 740B                    je 0043E25B
+:0043E250 3C3D                    cmp al, 3D
+:0043E252 7407                    je 0043E25B
+:0043E254 3C64                    cmp al, 64
+:0043E256 7403                    je 0043E25B
+:0043E258 33C0                    xor eax, eax
+:0043E25A C3                      ret
+:0043E25B 6A01                    push 00000001
+:0043E25D 58                      pop eax
+:0043E25E C3                      ret
+:0043E25F 909090909090            6*nop
+changed into
+:0043E23D ...
+:0043E242 741B                    je 0043E25F
+:0043E244 3C10                    cmp al, 10
+:0043E246 7417                    je 0043E25F
+:0043E248 3C20                    cmp al, 20
+:0043E24A 7413                    je 0043E25F
+:0043E24C 3C35                    cmp al, 35
+:0043E24E 740F                    je 0043E25F
+:0043E250 3C3D                    cmp al, 3D
+:0043E252 740B                    je 0043E25F
+:0043E254 3C64                    cmp al, 64
+:0043E256 7407                    je 0043E25F
+:0043E258 3C11                    cmp al, 11
+:0043E25A 7403                    je 0043E25F
+:0043E25C 33C0                    xor eax, eax
+:0043E25E C3                      ret
+:0043E25F 6A01                    push 00000001
+:0043E261 58                      pop eax
+:0043E262 C3                      ret
+:0043E263 9090                    2*nop
+
+
+Improving the visuals of Arcane Flames by setting the flames upright, and re-enabling the lightglow:
+
+file offset 00035AE4
+
+:004366E4 E89D93FFFF              call 0042FA86
+changed into
+:004366E4 E879290000              call 00439062
+:004366E9 
+
+Using free space from removed Lightning Wall damage:
+
+file offset 00038462
+
+:00439062 B135                    mov cl, 35
+:00439064 5A                      pop edx
+:00439065 E8F00EFEFF              call 00419F5A
+:0043906A B135                    mov cl, 35
+:0043906C 8BD8                    mov ebx, eax
+:0043906E 6A0A                    push 0000000A
+:00439070 5A                      pop edx
+:00439071 E8E40EFEFF              call 00419F5A
+:00439076 03FB                    add edi, ebx
+:00439078 8D443802                lea eax, dword ptr [eax+edi+02]
+:0043907C 90                      nop
+changed into
+:00439062 83BE907A690004          cmp dword ptr [esi+00697A90], 00000004
+:00439069 7402                    je 0043906D					jmp if 'Firewal' animation
+:0043906B 33D2                    xor edx, edx					choose first animation file
+:0043906D E8146AFFFF              call 0042FA86
+:00439072 C786847A690001000000    mov dword ptr [esi+00697A84], 00000001	set light glow
+:0043907C C3                      ret
+
+
+Replacing (staff-only) Fire Trap spell by Resurrect, and Resurrect by a (learnable) Arcane Flames:
+
+Spells
+pos nbr name          type qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+
+ 31  32 Resurrect     magic     7        6   150   50    5  100   1    15- 30  54: -: -     30000       1000
+        Arcane Flames                    5    30   15    1   30   0            89: -: -     16000        120
+
+ 36  37 Fire Trap     magic   255        5   255    1    3   20   1    15- 30  89: -: -      1000        400
+        Resurrect                        6   150   50    5  100                54: -: -     30000        200
+
+
+000B66E8 2096 0200 1882 4B00 0000 0000 0700 0000  .....K.........
+000B66F8 0600 0000 0000 0000 0100 0000 6400 0000 ............d...
+000B6708 5836 0000 0532 0000 0F00 0000 1E00 0000 X6...2..........
+000B6718 3075 0000 8813 0000                     0u......
+changed into
+000B66E8 201E 0200 E13B 4B00 0000 0000 0700 0000  ....;K.........
+000B66F8 0500 0000 0000 0000 0000 0000 1E00 0000 ................
+000B6708 5259 0000 010F 0000 0F00 0000 1E00 0000 RY..............
+000B6718 803E 0000 5802 0000                     .>..X...
+
+000B6800 25FF 0200 B882 4B00 0000 0000 FFFF FFFF %.....K.........
+000B6810 0500 0000 0000 0000 0100 0000 1400 0000 ................
+000B6820 5859 0000 0301 0000 0F00 0000 1E00 0000 XY..............
+000B6830 E803 0000 D007 0000                     ........
+changed into
+000B6800 2596 0200 1882 4B00 0000 0000 FFFF FFFF %.....K.........
+000B6810 0600 0000 0000 0000 0100 0000 6400 0000 ............d...
+000B6820 5836 0000 0532 0000 0F00 0000 1E00 0000 X6...2..........
+000B6830 3075 0000 E803 0000                     0u......
+
+Texts with 'Fire trap' are now obsolete.
+
+
+Correcting manacost in ring spell effect code:
+
+file offset 00033D9E
+
+:0043499E 6A2D                    push 0000002D
+changed into
+:0043499E 6A20                    push 00000020
+
+Correcting manacost in Resurrect spell effect code:
+
+file offset 0003489A
+
+:0043549A 6A20                    push 00000020
+changed into
+:0043549A 6A25                    push 00000025
+
+
+Disabling manacost in remote effect code to prevent double deduction:
+
+file offset 0002F3E9
+
+:0042FFE9 7C08                    jl 0042FFF3
+changed into
+:0042FFE9 EB08                    jmp 0042FFF3
+
+
+Setting 'Arcane' icon for this spell, correcting Resurrect icon, setting plain 'Eye' for Seeing, 'Gazing Eye' (former Seeing) for Medusa Gaze, and icons for Shielding, Fury and Elemental scroll:
+
+00093610 1B01 0203 0405 0607 0809 330D 0C11 1021 ..........3....!
+00093620 300F 0B16 1C15 2218 1914 1A1D 1326 272A 0....."......&'*
+00093630 2928 0A24 1E31 1732 2E2F 2B2D 2312 3323 )(.$.1.2./+-#.3#
+00093640 2323 2323                               ####
+changed into
+00093630 20                                       
+00093635 29                                      )
+00093619 2C                                      ,
+0009361A 09                                      .
+0009362C 33                                      3
+0009363E 1326 13                                 .&.
+
+
+Correcting damage in spellbook for both Walls:
+
+0002E31F 0001 0203 0405 0606 0606 0607 0809 060B ................
+0002E32F 0B0C 0D0E 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 2306 231A 1B1C 1C22 1D1E 1F20 ....#.#...."... 
+0002E34F 2121 06                                 !!.
+changed into
+0002E324 06                                      .
+0002E346 06                                      .
+
+
+Adjusting Scrolls of Resurrect to do the correct spell, and the price:
+
+Base Items
+pos name                 item type         qlvl  dur   damage    AC    str mag dex  price  pic  src  unique
+
+ 34 Scroll of Resurrect  3 pot/scr/jewl     1     0    0- 0    0- 0    0  10   0     200    1    0    0
+ 95 Scroll of Resurrect  3 pot/scr/jewl     1     0    0- 0    0- 0    0  10   0     200    1    1    0
+
+000A101C 2000 0000                                ...
+changed into
+000A101C 2500 0000                               %...
+
+000A1024 C800 0000 C800 0000                     ........
+changed into
+000A1024 9001 0000 9001 0000                     ........
+
+000A2238 2000 0000                                ...
+changed into
+000A2238 2500 0000                               %...
+
+000A2240 C800 0000 C800 0000                     ........
+changed into
+000A2240 9001 0000 9001 0000                     ........
+
+
+Original initial code for Ring of Fire
+
+:00438D43 55                      push ebp
+:00438D44 8BEC                    mov ebp, esp
+:00438D46 83EC18                  sub esp, 00000018
+:00438D49 53                      push ebx
+:00438D4A 56                      push esi
+:00438D4B 8BF1                    mov esi, ecx
+:00438D4D A174004900              mov eax, dword ptr [00490074]
+:00438D52 69F6B0000000            imul esi, 000000B0
+:00438D58 57                      push edi
+:00438D59 8BF8                    mov edi, eax
+:00438D5B C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:00438D65 8B8ED07A6900            mov ecx, dword ptr [esi+00697AD0]
+:00438D6B 40                      inc eax
+:00438D6C 894DE8                  mov dword ptr [ebp-18], ecx
+:00438D6F 85C9                    test ecx, ecx
+:00438D71 8945F4                  mov dword ptr [ebp-0C], eax
+:00438D74 7E14                    jle 00438D8A
+:00438D76 69C9C8550000            imul ecx, 000055C8
+:00438D7C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00438D81 8A8401B8010000          mov al, byte ptr [ecx+eax+000001B8]
+:00438D88 EB0A                    jmp 00438D94
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00438D74(C)
+:00438D8A E825FE0400              call 00488BB4
+:00438D8F 8A02                    mov al, byte ptr [edx]
+:00438D91 0402                    add al, 02
+:00438D93 90                      nop
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00438D88(U)
+:00438D94 8845FF                  mov byte ptr [ebp-01], al
+:00438D97 90                      nop
+:00438D98 90                      nop
+:00438D99 90                      nop
+:00438D9A 90                      nop
+:00438D9B 90                      nop
+:00438D9C B135                    mov cl, 35
+:00438D9E 90                      nop
+:00438D9F 90                      nop
+:00438DA0 6A14                    push 00000014
+:00438DA2 5A                      pop edx
+:00438DA3 E8B211FEFF              call 00419F5A
+:00438DA8 8BD8                    mov ebx, eax
+:00438DAA 0FB645FF                movzx eax, byte ptr [ebp-01]
+:00438DAE 8D440302                lea eax, dword ptr [ebx+eax+02]
+:00438DB2 C1E004                  shl eax, 04
+:00438DB5 D1F8                    sar eax, 1
+:00438DB7 8945EC                  mov dword ptr [ebp-14], eax
+:00438DBA 0FBE8750694A00          movsx eax, byte ptr [edi+004A6950]
+:00438DC1 85C0                    test eax, eax
+:00438DC3 0F8EC5000000            jle 00438E8E
+:00438DC9 8B4DF4                  mov ecx, dword ptr [ebp-0C]
+:00438DCC 8945F4                  mov dword ptr [ebp-0C], eax
+:00438DCF 8D8951694A00            lea ecx, dword ptr [ecx+004A6951]
+:00438DD5 894DF8                  mov dword ptr [ebp-08], ecx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00438E88(C)
+:00438DD8 0FBE59FF                movsx ebx, byte ptr [ecx-01]
+:00438DDC 0FBE39                  movsx edi, byte ptr [ecx]
+:00438DDF 039EE87A6900            add ebx, dword ptr [esi+00697AE8]
+:00438DE5 03BEEC7A6900            add edi, dword ptr [esi+00697AEC]
+:00438DEB 85DB                    test ebx, ebx
+:00438DED 0F8E8A000000            jle 00438E7D
+:00438DF3 83FB70                  cmp ebx, 00000070
+:00438DF6 0F8D81000000            jnl 00438E7D
+:00438DFC 85FF                    test edi, edi
+:00438DFE 7E7D                    jle 00438E7D
+:00438E00 83FF70                  cmp edi, 00000070
+:00438E03 7D78                    jge 00438E7D
+:00438E05 8BC3                    mov eax, ebx
+:00438E07 6BC070                  imul eax, 00000070
+:00438E0A 03C7                    add eax, edi
+:00438E0C 8B0C85B05B5F00          mov ecx, dword ptr [4*eax+005F5BB0]
+:00438E13 894DF0                  mov dword ptr [ebp-10], ecx
+:00438E16 80B9E0B2600000          cmp byte ptr [ecx+0060B2E0], 00
+:00438E1D 755E                    jne 00438E7D
+:00438E1F 80B8209C580000          cmp byte ptr [eax+00589C20], 00
+:00438E26 7555                    jne 00438E7D
+:00438E28 8B96607A6900            mov edx, dword ptr [esi+00697A60]
+:00438E2E 8B8E5C7A6900            mov ecx, dword ptr [esi+00697A5C]
+:00438E34 57                      push edi
+:00438E35 53                      push ebx
+:00438E36 E88CB10000              call 00443FC7
+:00438E3B 85C0                    test eax, eax
+:00438E3D 743E                    je 00438E7D
+:00438E3F 8B45F0                  mov eax, dword ptr [ebp-10]
+:00438E42 80B808EB610000          cmp byte ptr [eax+0061EB08], 00
+:00438E49 7528                    jne 00438E73
+:00438E4B 83BE047B690000          cmp dword ptr [esi+00697B04], 00000000
+:00438E52 751F                    jne 00438E73
+:00438E54 E8075EFFFF              call 0042EC60
+:00438E59 52                      push edx			slvl
+:00438E5A FF75EC                  push [ebp-14]
+:00438E5D FF75E8                  push [ebp-18]
+:00438E60 6A02                    push 00000002			00697AD0 flag
+:00438E62 51                      push ecx
+:00438E63 8BD7                    mov edx, edi
+:00438E65 8BCB                    mov ecx, ebx
+:00438E67 90                      nop
+:00438E68 6A00                    push 00000000
+:00438E6A 57                      push edi
+:00438E6B 53                      push ebx
+:00438E6C E8BEC8FFFF              call 0043572F
+:00438E71 EB0A                    jmp 00438E7D
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:00438E49(C), :00438E52(C)
+:00438E73 C786047B690001000000    mov dword ptr [esi+00697B04], 00000001
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+:00438DED(C), :00438DF6(C), :00438DFE(C), :00438E03(C), :00438E1D(C), :00438E26(C), :00438E3D(C), :00438E71(U)
+:00438E7D 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00438E80 41                      inc ecx
+:00438E81 41                      inc ecx
+:00438E82 FF4DF4                  dec [ebp-0C]
+:00438E85 894DF8                  mov dword ptr [ebp-08], ecx
+:00438E88 0F854AFFFFFF            jne 00438DD8
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00438DC3(C)
+:00438E8E 5F                      pop edi
+:00438E8F 5E                      pop esi
+:00438E90 5B                      pop ebx
+:00438E91 C9                      leave
+:00438E92 C3                      ret

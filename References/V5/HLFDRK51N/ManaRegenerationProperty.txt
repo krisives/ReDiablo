@@ -1,0 +1,69 @@
+Improved Mana regeneration (for Unique items)
+
+This replaces (obsolete) Peril as item property. It will increase Mana by 40/64 points per second, as if having 64 more Magic (this is not doubled while in town). All support for Peril in the attack routines is already removed, but it still exists as possible effect for pre- and suffixes, and unique items.
+
+
+Item Effect: 56h
+Character indicator: [x+00005588] = 04
+
+See Datachanges51N for the unique items with this new property.
+
+
+Name text (unused now, only needed for suffix or prefix):
+
+0009FEF2 0000 7065 7269 6C00 00                  ..peril..
+changed into
+0009FEF2 0000 4D61 6E52 6700 00                  ..ManRg..
+
+
+Description text:
+
+000A4A7B 0032 7820 646D 6720 746F 206D 6F6E 7374 .2x dmg to monst
+000A4A8B 2C20 3178 2074 6F20 796F 7500 00        , 1x to you..
+changed into
+000A4A7B 0049 6E63 7265 6173 6564 204D 616E 6120 .Increased Mana 
+000A4A8B 7265 6765 6E65 7261 7469 6F6E 00        regeneration.
+
+
+Regeneration code:
+
+:004535A6 50                      push eax
+:004535A7 03C6                    add eax, esi
+:004535A9 53                      push ebx
+:004535AA 51                      push ecx
+:004535AB 8B987C010000            mov ebx, dword ptr [eax+0000017C]		current Vitality
+:004535B1 E8DE010000              call 00453794					calculate amount to regenerate
+:004535B6 E8AE010000              call 00453769					add to Life
+:004535BB 8B986C010000            mov ebx, dword ptr [eax+0000016C]		current Magic
+:004535C1 E8CE010000              call 00453794					calculate amount to regenerate
+:004535C6 E8FA000000              call 004536C5					add to Mana
+:004535CB 59                      pop ecx
+:004535CC 5B                      pop ebx
+:004535CD 58                      pop eax
+:004535CE C3                      ret
+
+file offset 000529C1
+
+:004535C1 E8CE010000              call 00453794
+changed into
+:004535C1 E8014FFDFF              call 004284C7
+:004535C6
+
+Using free space:
+
+file offset 000278C7
+
+:004284C7 90                      nop
+:004284C8 ...
+:004284D9 90                      nop
+changed into
+:004284C7 E8C8B20200              call 00453794					calculate amount to regenerate
+:004284CC F6808855000004          test byte ptr [eax+00005588], 04		check for 'Peril'
+:004284D3 7402                    je 004284D7					skip if not possesed
+:004284D5 43                      inc ebx					increase Mana gain
+:004284D6 43                      inc ebx					
+:004284D7 C3                      ret
+:004284D8 90                      nop						reserved for possible improvement
+:004284D9 90                      nop
+
+

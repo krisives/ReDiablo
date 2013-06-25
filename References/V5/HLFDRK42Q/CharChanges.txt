@@ -1,0 +1,192 @@
+Various modifications to the handling of character equipment
+
+
+Barbarian has lost his Clvl/4 bonus to AC, while Monks (with staff or barehanded) and Bards (with at least one sword in hand) now have a 1+Clvl/2 bonus to AC:
+
+file offset 00023288
+
+:00423E88 E925010000              jmp 00423FB2
+changed into
+:00423E88 E9F5000000              jmp 00423F82
+:00423E8D 
+
+file offset 00023380
+
+:00423F80 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423F85 6A04                    push 00000004
+:00423F87 5F                      pop edi
+:00423F88 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00423F8B 0FBE8430B8010000        movsx eax, byte ptr [eax+esi+000001B8]
+:00423F93 99                      cdq
+:00423F94 F7FF                    idiv edi
+changed into
+:00423F80 EB38                    jmp 00423FBA
+:00423F82 F7FF                    idiv edi
+:00423F84 898188010000            mov dword ptr [ecx+00000188], eax
+:00423F8A 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00423F91 40                      inc eax
+:00423F92 D1E8                    shr eax, 1
+:00423F94 9090                    2*nop
+
+
+Less Vitality bonus to damage for Barbarian: Vit · clvl / 100  is now  Vit · clvl / 125
+
+file offset 00023349
+
+:00423F49 6A64                    push 00000064
+changed into
+:00423F49 6A7D                    push 0000007D
+
+
+Lower base damage for Rogues: (Str+Dex) · clvl / 200  is now  Dex · clvl / 200
+
+file offset 000231D0
+
+:00423DD0 038164010000            add eax, dword ptr [ecx+00000164]
+changed into
+:00423DD0 909090909090            6*nop
+
+
+More Life from Vitality items for Warrior and Barbarian:
+
+Warrior 	2·Vitcharacter + 2·Vititems   + 2·clvl + Lifeitems +18
+is now  	2·Vitcharacter + 2.5·Vititems + 2·clvl + Lifeitems +18
+
+Barbarian 	2·Vitcharacter + 2.5·Vititems + 2·clvl + Lifeitems +18
+is now  	2·Vitcharacter + 3·Vititems   + 2·clvl + Lifeitems +18
+
+file offset 000234F9
+
+:004240F9 84D2                    test dl, dl
+:004240FB 7507                    jne 00424104
+:004240FD 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00424100 D1E1                    shl ecx, 1				2x for Warrior
+:00424102 EB2E                    jmp 00424132
+:00424104 80FA05                  cmp dl, 05
+:00424107 750C                    jne 00424115
+:00424109 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0042410C 03C9                    add ecx, ecx
+:0042410E 8BF9                    mov edi, ecx
+:00424110 C1FF02                  sar edi, 02				2.5x for Barbarian
+:00424113 EB16                    jmp 0042412B
+changed into
+:004240F9 80FA05                  cmp dl, 05
+:004240FC 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:004240FF 7507                    jne 00424108
+:00424101 8BF9                    mov edi, ecx
+:00424103 D1E1                    shl ecx, 1				
+:00424105 EB24                    jmp 0042412B				3x for Barbarian
+:00424107 90                      nop
+:00424108 84D2                    test dl, dl
+:0042410A 7509                    jne 00424115
+:0042410C ...								2.5x for Warrior
+
+
+
+The following is information only.
+
+
+Armor Class, by JG
+
+Warrior, Rogue, Sorcerer: Dex/5 + ACitems
+Monk with plate: Dex/5 + ACitems
+Monk with mail: Dex/5 + ACitems + clvl/2
+Monk with leather and other light armor: Dex/5 + ACitems + 2·clvl
+Monk with no armor: Dex/5 + ACitems + 2·clvl
+Bard: Dex/5 + ACitems
+Barbarian: Dex/5 + ACitems + clvl/4
+
+  When calculating AC for a Monk, unique plate is treated as mail and unique mail as leather.
+  Shields only give half AC (rounded up) to the Barbarian.
+
+Bow character damage, by JG
+
+Warrior: Str·clvl / 200
+Rogue: (Str+Dex) · clvl / 200
+Sorcerer: Str·clvl / 200
+Monk: (Str+Dex) · clvl / 600
+Bard: (Str+Dex) · clvl / 500
+Barbarian: Str·clvl / 600
+
+Melee character damage, by JG
+
+Warrior: Str·clvl / 100
+Rogue: (Str+Dex) · clvl / 200
+Sorcerer: Str·clvl / 100
+Monk with staff or bare-handed: (Str+Dex) · clvl / 150
+Monk with other weapons: (Str+Dex) · clvl / 300
+Bard with at least one sword: (Str+Dex) · clvl / 150
+Bard with any weapon(s) except sword: Str·clvl / 100
+Barbarian with axes and clubs: Str·clvl / 75
+Barbarian except for axes and clubs: Str·clvl / 100
+Extra bonus for Barbarian without shield: Vit·clvl / 100
+
+  All Bow character damage is doubled for player versus player except for Rogues.
+  The Barbarian’s bonus for not using a shield does not apply if he is using a staff.
+  Magic damage is halved in player versus player.
+
+Life, by JG
+
+Warrior: 	2·Vitcharacter + 2·Vititems   + 2·clvl + Lifeitems +18
+Rogue: 		1·Vitcharacter + 1.5·Vititems + 2·clvl + Lifeitems +23
+Sorcerer: 	1·Vitcharacter + 1·Vititems   + 1·clvl + Lifeitems +9
+Monk: 		1·Vitcharacter + 1.5·Vititems + 2·clvl + Lifeitems +23
+Bard: 		1·Vitcharacter + 1.5·Vititems + 2·clvl + Lifeitems +23
+Barbarian: 	2·Vitcharacter + 2.5·Vititems + 2·clvl + Lifeitems +18
+
+
+Life calculation code:
+
+:004240F9 84D2                    test dl, dl
+:004240FB 7507                    jne 00424104
+:004240FD 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00424100 D1E1                    shl ecx, 1				2x for Warrior
+:00424102 EB2E                    jmp 00424132
+:00424104 80FA05                  cmp dl, 05
+:00424107 750C                    jne 00424115
+:00424109 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0042410C 03C9                    add ecx, ecx
+:0042410E 8BF9                    mov edi, ecx
+:00424110 C1FF02                  sar edi, 02				2.5x for Barbarian
+:00424113 EB16                    jmp 0042412B
+:00424115 80FA01                  cmp dl, 01
+:00424118 740A                    je 00424124
+:0042411A 80FA03                  cmp dl, 03
+:0042411D 7405                    je 00424124
+:0042411F 80FA04                  cmp dl, 04
+:00424122 750B                    jne 0042412F
+:00424124 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00424127 8BF9                    mov edi, ecx
+:00424129 D1FF                    sar edi, 1
+:0042412B 03CF                    add ecx, edi
+:0042412D EB03                    jmp 00424132				1.5x for Rogue, Monk and Bard
+:0042412F 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00424132 C1E106                  shl ecx, 06
+:00424135 014DD8                  add dword ptr [ebp-28], ecx
+
+Mana calculation code:
+
+:00424138 8B4DD0                  mov ecx, dword ptr [ebp-30]
+:0042413B 80FA02                  cmp dl, 02
+:0042413E 7502                    jne 00424142
+:00424140 D1E1                    shl ecx, 1				2x for Sorceror
+:00424142 80FA01                  cmp dl, 01
+:00424145 741A                    je 00424161
+:00424147 80FA03                  cmp dl, 03
+:0042414A 7415                    je 00424161
+:0042414C 80FA04                  cmp dl, 04
+:0042414F 7516                    jne 00424167
+:00424151 8BF9                    mov edi, ecx
+:00424153 8BD1                    mov edx, ecx
+:00424155 90                      nop
+:00424156 90                      nop
+:00424157 90                      nop
+:00424158 D1FA                    sar edx, 1
+:0042415A 03F9                    add edi, ecx
+:0042415C 8D0C17                  lea ecx, dword ptr [edi+edx]		2.5x for Bard
+:0042415F EB06                    jmp 00424167
+:00424161 8BD1                    mov edx, ecx
+:00424163 D1FA                    sar edx, 1
+:00424165 03CA                    add ecx, edx				1.5x for Rogue and Monk
+:00424167 C1E106                  shl ecx, 06
+:0042416A 014DD4                  add dword ptr [ebp-2C], ecx

@@ -1,0 +1,33 @@
+()Lifedrain - Enable for BlackPrince ipv. Leoric
+
+:0043E5E5 8B8764DD6900            mov eax, dword ptr [edi+0069DD64]
+:0043E5EB 83382C                  cmp dword ptr [eax], 0000002C
+:0043E5EE 750F                    jne 0043E5FF
+:0043E5F0 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043E5F7 7406                    je 0043E5FF
+:0043E5F9 019F1CDD6900            add dword ptr [edi+0069DD1C], ebx
+
+
+
+Voorstellen mbt. Melee :
+
+Deze wijzingen zijn gemakkelijk als Doppelganger-stuk wordt gebruikt, wat in de buurt staat.
+
+
+()Double Damage vs. Demons -> "Extra Damage vs. Demons"
+
+Damage*3 vs. Demons if Monk
+Damage*2 vs. Demons if other char. (als nu)
+
+
+(*)Peril - te lastig
+
+Damage*2 to Monster -> Damage*3/2 to Monster
+
+
+(*)Devastation - niet nodig
+
+10 % for Double Damage if Barbarian (als nu)
+5 %  for Double Damage if other char.
+
+

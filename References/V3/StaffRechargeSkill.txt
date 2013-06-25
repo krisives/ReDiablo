@@ -1,0 +1,139 @@
+()Staff Recharge - Sorcerer's skill
+
+Decrease charges -> Decrease (current) durability
+
+:00428316 8B81E8000000            mov eax, dword ptr [ecx+000000E8]
+:0042831C 56                      push esi
+:0042831D 3981E4000000            cmp dword ptr [ecx+000000E4], eax
+:00428323 7436                    je 0042835B			jmp if fully charged
+:00428325 48                      dec eax
+:00428326 85C0                    test eax, eax
+:00428328 8981E8000000            mov dword ptr [ecx+000000E8], eax
+:0042832E 742B                    je 0042835B			jmp if no maxcharges left
+:00428330 0191E4000000            add dword ptr [ecx+000000E4], edx	incr. curcharges
+:00428336 8BB1E4000000            mov esi, dword ptr [ecx+000000E4]
+:0042833C 3BF0                    cmp esi, eax
+:0042833E 7D0B                    jge 0042834B			jmp if max or higher
+:00428340 48                      dec eax
+:00428341 8981E8000000            mov dword ptr [ecx+000000E8], eax
+:00428347 75E7                    jne 00428330			jmp if maxcharges left
+:00428349 5E                      pop esi
+:0042834A C3                      ret
+:0042834B 8B81E8000000            mov eax, dword ptr [ecx+000000E8]
+:00428351 3BF0                    cmp esi, eax
+:00428353 7E06                    jle 0042835B			jmp if not too many
+:00428355 8981E4000000            mov dword ptr [ecx+000000E4], eax
+:0042835B 5E                      pop esi
+wordt
+:00428316 53                      push ebx
+:00428317 6A01                    push 00000001
+:00428319 5B                      pop ebx
+:0042831A 3BDA                    cmp ebx, edx
+:0042831C 7D01                    jge 0042831F
+:0042831E 4A                      dec edx
+:0042831F 8B81E8000000            mov eax, dword ptr [ecx+000000E8]
+:00428325 3999EC000000            cmp dword ptr [ecx+000000EC], ebx
+:0042832B 7E2E                    jle 0042835B
+:0042832D 3981E4000000            cmp dword ptr [ecx+000000E4], eax
+:00428333 7D20                    jge 00428355
+:00428335 0191E4000000            add dword ptr [ecx+000000E4], edx	
+:0042833B FF89EC000000            dec dword ptr [ecx+000000EC]		
+:00428341 0F8FE6FFFFFF            jg 0042832D
+:00428347 8999EC000000            mov dword ptr [ecx+000000EC], ebx
+:0042834D 3981E4000000            cmp dword ptr [ecx+000000E4], eax
+:00428353 7E06                    jle 0042835B
+:00428355 8981E4000000            mov dword ptr [ecx+000000E4], eax
+:0042835B 5B                      pop ebx
+
+
+Original SpellRechargeSkill code:
+
+* Referenced by a CALL at Address:
+|:0040A181   
+|
+:004282A2 56                      push esi
+:004282A3 57                      push edi
+:004282A4 8BF9                    mov edi, ecx
+:004282A6 69D274010000            imul edx, 00000174
+:004282AC 8BC7                    mov eax, edi
+:004282AE 69C0C8550000            imul eax, 000055C8
+:004282B4 030514AE6E00            add eax, dword ptr [006EAE14]
+:004282BA 83BC02940300000A        cmp dword ptr [edx+eax+00000394], 0000000A
+:004282C2 8DB4028C030000          lea esi, dword ptr [edx+eax+0000038C]
+:004282C9 7538                    jne 00428303
+:004282CB 8B8EE0000000            mov ecx, dword ptr [esi+000000E0]
+:004282D1 85C9                    test ecx, ecx
+:004282D3 742E                    je 00428303
+:004282D5 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:004282DC 6BC938                  imul ecx, 00000038
+:004282DF 99                      cdq
+:004282E0 F7B9F4754B00            idiv dword ptr [ecx+004B75F4]
+:004282E6 B126                    mov cl, 26
+:004282E8 8BD0                    mov edx, eax
+:004282EA E86B1CFFFF              call 00419F5A
+:004282EF 40                      inc eax
+:004282F0 8BCE                    mov ecx, esi
+:004282F2 8BD0                    mov edx, eax
+:004282F4 E81D000000              call 00428316
+:004282F9 8BCF                    mov ecx, edi
+:004282FB 6A01                    push 00000001
+:004282FD 5A                      pop edx
+:004282FE E8BCC7FFFF              call 00424ABF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004282C9(C), :004282D3(C)
+|
+:00428303 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00428309 7508                    jne 00428313
+:0042830B 6A01                    push 00000001
+:0042830D 59                      pop ecx
+:0042830E E8DAF7FDFF              call 00407AED
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428309(C)
+|
+:00428313 5F                      pop edi
+:00428314 5E                      pop esi
+:00428315 C3                      ret
+
+* Referenced by a CALL at Address:
+|:004282F4   
+|
+:00428316 8B81E8000000            mov eax, dword ptr [ecx+000000E8]
+:0042831C 56                      push esi
+:0042831D 3981E4000000            cmp dword ptr [ecx+000000E4], eax
+:00428323 7436                    je 0042835B			jmp if fully charged
+:00428325 48                      dec eax
+:00428326 85C0                    test eax, eax
+:00428328 8981E8000000            mov dword ptr [ecx+000000E8], eax
+:0042832E 742B                    je 0042835B			jmp if no maxcharges left
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00428347(C)
+|
+:00428330 0191E4000000            add dword ptr [ecx+000000E4], edx	incr. curcharges
+:00428336 8BB1E4000000            mov esi, dword ptr [ecx+000000E4]
+:0042833C 3BF0                    cmp esi, eax
+:0042833E 7D0B                    jge 0042834B			jmp if max or higher
+:00428340 48                      dec eax
+:00428341 8981E8000000            mov dword ptr [ecx+000000E8], eax
+:00428347 75E7                    jne 00428330			jmp if maxcharges left
+:00428349 5E                      pop esi
+:0042834A C3                      ret
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042833E(C)
+|
+:0042834B 8B81E8000000            mov eax, dword ptr [ecx+000000E8]
+:00428351 3BF0                    cmp esi, eax
+:00428353 7E06                    jle 0042835B			jmp if not too many
+:00428355 8981E4000000            mov dword ptr [ecx+000000E4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00428323(C), :0042832E(C), :00428353(C)
+|
+:0042835B 5E                      pop esi
+:0042835C C3                      ret
+
+
+

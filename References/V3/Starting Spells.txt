@@ -1,0 +1,75 @@
+
+Give spell:
+is:
+:00458158 80FA02                  cmp dl, 02
+:0045815B 750D                    jne 0045816A
+:0045815D C784300801000001000000  mov dword ptr [eax+esi+00000108], 00000001
+:00458168 EB07                    jmp 00458171
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045815B(C)
+|
+:0045816A 899C3008010000          mov dword ptr [eax+esi+00000108], ebx
+wordt:
+:00458158 80FA02                  cmp dl, 02
+:0045815B 0F84F8ACFFFF            je 00452E59
+:00458161 80FA04                  cmp dl, 04
+:00458164 0F84FCACFFFF            je 00452E66
+:0045816A 899C3008010000          mov dword ptr [eax+esi+00000108], ebx
+En
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045815B(C)
+|
+:00452E59 C784300801000001000040  mov dword ptr [eax+esi+00000108], 40000001
+:00452E64 EB0B                    jmp 00452E71
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00458164(C)
+|
+:00452E66 C784300801000000000040  mov dword ptr [eax+esi+00000108], 40000000
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452E64(U)
+|
+:00452E71 E9FB520000              jmp 00458171
+:00452E76 90                      nop
+
+
+
+Assign Spell lvl:
+is:
+:004581A6 80B86001000002          cmp byte ptr [eax+00000160], 02
+:004581AD 7507                    jne 004581B6
+:004581AF C680C200000002          mov byte ptr [eax+000000C2], 02
+wordt:
+:004581A6 E9A7A8FFFF              jmp 00452A52
+:004581AB 90                      nop
+:004581AC 90                      nop
+:004581AD 90                      nop
+:004581AE 90                      nop
+:004581AF 90                      nop
+:004581B0 90                      nop
+:004581B1 90                      nop
+:004581B2 90                      nop
+:004581B3 90                      nop
+:004581B4 90                      nop
+:004581B5 90                      nop
+En:
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004581A6(U)
+|
+:00452A52 80B86001000004          cmp byte ptr [eax+00000160], 04
+:00452A59 7410                    je 00452A6B
+:00452A5B 80B86001000002          cmp byte ptr [eax+00000160], 02
+:00452A62 750E                    jne 00452A72
+:00452A64 C680C200000002          mov byte ptr [eax+000000C2], 02
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452A59(C)
+|
+:00452A6B C680E000000001          mov byte ptr [eax+000000E0], 01
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452A62(C)
+|
+:00452A72 E93F570000              jmp 004581B6

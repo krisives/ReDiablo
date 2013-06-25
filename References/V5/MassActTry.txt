@@ -1,0 +1,55 @@
+**************************
+Mass activation:
+
+This crashes upon activation of the lonely boss!
+
+file offset 0003EC7F
+
+:0043F87F 0F84AC000000            je 0043F931
+:0043F885 0FB6C0                  movzx eax, al
+:0043F888 C1E005                  shl eax, 05
+:0043F88B F68076084B0001          test byte ptr [eax+004B0876], 01
+:0043F892 0F8499000000            je 0043F931
+:0043F898 A180DC6900              mov eax, dword ptr [0069DC80]
+:0043F89D 85C0                    test eax, eax
+:0043F89F 0F8E8C000000            jle 0043F931
+:0043F8A5 BF60D96900              mov edi, 0069D960
+:0043F8AA 8BE8                    mov ebp, eax
+:0043F8AC 8B07                    mov eax, dword ptr [edi]
+:0043F8AE 69C0E4000000            imul eax, 000000E4
+:0043F8B4 80B85DDD690000          cmp byte ptr [eax+0069DD5D], 00
+:0043F8BB 746A                    je 0043F927
+:0043F8BD 0FB6885CDD6900          movzx ecx, byte ptr [eax+0069DD5C]
+:0043F8C4 3BCB                    cmp ecx, ebx
+:0043F8C6 755F                    jne 0043F927
+changed into
+:0043F87F 7407                    je 0043F888
+:0043F881 A180DC6900              mov eax, dword ptr [0069DC80]
+:0043F886 85C0                    test eax, eax
+:0043F888 0F8EA3000000            jle 0043F931
+:0043F88E BF60D96900              mov edi, 0069D960
+:0043F893 8BE8                    mov ebp, eax
+:0043F895 8B07                    mov eax, dword ptr [edi]
+:0043F897 69C0E4000000            imul eax, 000000E4
+:0043F89D 80B85DDD690000          cmp byte ptr [eax+0069DD5D], 00
+:0043F8A4 740B                    je 0043F8B1
+:0043F8A6 0FB6885CDD6900          movzx ecx, byte ptr [eax+0069DD5C]
+:0043F8AD 3BCB                    cmp ecx, ebx
+:0043F8AF 7417                    je 0043F8C8
+:0043F8B1 8A9644DD6900            mov dl, byte ptr [esi+0069DD44]
+:0043F8B7 80FA01                  cmp dl, 01				Diablo
+:0043F8BA 740C                    je 0043F8C8
+:0043F8BC 80FA05                  cmp dl, 05				Lazarus
+:0043F8BF 7407                    je 0043F8C8
+:0043F8C1 80FA0D                  cmp dl, 0D				Dark Lord
+:0043F8C4 7402                    je 0043F8C8
+:0043F8C6 EB5F                    jmp 0043F927
+:0043F8C8
+
+file offset 0003ED2B
+
+:0043F92B 0F857BFFFFFF            jne 0043F8AC
+changed into
+:0043F92B 0F8564FFFFFF            jne 0043F895
+:0043F931 
+

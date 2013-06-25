@@ -1,0 +1,12 @@
+Holy Shrine Fix
+
+It didn't display the message for other players.
+
+File Offset 0005198A
+
+:0045258A 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00452590 0F85D60A0000            jne 0045306C
+wordt
+:0045258A EB0A                    jmp 00452596
+:0045258C 90...                   10*nop
+

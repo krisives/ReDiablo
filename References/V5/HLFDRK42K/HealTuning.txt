@@ -1,0 +1,43 @@
+Reducing life gains from Healing and Heal All
+
+Clvl influence:
+
+file offset 0003320A
+
+:00433E0A 6A04                    push 00000004
+changed into
+:00433E0A 6A08                    push 00000008
+changed into
+:00433E0A 6A04                    push 00000004
+
+Slvl influence:
+
+file offset 00033242
+
+:00433E42 6A06                    push 00000006
+changed into
+:00433E42 6A12                    push 00000012
+changed into
+:00433E42 6A08                    push 00000008
+
+
+Prevent Healing of dead characters:
+
+file offset 000332DF
+
+:00433EDF E8A9FFFFFF              call 00433E8D				add to life
+:00433EE4
+changed into
+:00433EDF E8CE6A0400              call 0047A9B2				add to life if not dead
+:00433EE4
+
+file offset 00079DB2
+
+:0047A9B2 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:0047A9B9 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+:0047A9BF C3                      ret
+changed into
+:0047A9B2 83B89801000000          cmp dword ptr [eax+00000198], 00000000
+:0047A9B9 0F85CE94FBFF            jne 00433E8D
+:0047A9BF C3                      ret		
+

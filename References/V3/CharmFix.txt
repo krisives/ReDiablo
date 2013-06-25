@@ -1,0 +1,139 @@
+Charm spell
+
+Cleaining up the code and adding activation of Charmed monster
+
+
+File Offset 0002F8C2
+
+:004304C2 6A05                    push 00000005
+wordt
+:004304C2 6A01                    push 00000001
+
+
+File Offset 0002F8D1
+
+:004304D1 8BD3                    mov edx, ebx
+:004304D3 B191                    mov cl, 91
+:004304D5 DD5DEC                  fstp qword ptr [ebp-14]
+:004304D8 E87D9AFEFF              call 00419F5A
+:004304DD 6A01                    push 00000001
+:004304DF 5F                      pop edi
+:004304E0 03C7                    add eax, edi
+:004304E2 8945F8                  mov dword ptr [ebp-08], eax
+:004304E5 DB45F8                  fild dword ptr [ebp-08]
+:004304E8 0FB6864DDD6900          movzx eax, byte ptr [esi+0069DD4D]
+:004304EF DC0DB8004900            fmul qword ptr [004900B8]
+:004304F5 8945F8                  mov dword ptr [ebp-08], eax
+:004304F8 DC25C0004900            fsub qword ptr [004900C0]
+:004304FE DB45F8                  fild dword ptr [ebp-08]
+:00430501 DEC9                    fmulp st(1), st(0)
+:00430503 DC45EC                  fadd qword ptr [ebp-14]
+:00430506 90                      nop
+:00430507 90                      nop
+:00430508 90                      nop
+:00430509 90                      nop
+:0043050A 90                      nop
+:0043050B 8BD3                    mov edx, ebx
+:0043050D B191                    mov cl, 91
+:0043050F 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+:00430515 E8409AFEFF              call 00419F5A
+:0043051A 03C7                    add eax, edi
+:0043051C 8945F8                  mov dword ptr [ebp-08], eax
+:0043051F DB45F8                  fild dword ptr [ebp-08]
+:00430522 0FB6864EDD6900          movzx eax, byte ptr [esi+0069DD4E]
+:00430529 DC0DB8004900            fmul qword ptr [004900B8]
+:0043052F 8945F8                  mov dword ptr [ebp-08], eax
+:00430532 DC25C0004900            fsub qword ptr [004900C0]
+:00430538 DB45F8                  fild dword ptr [ebp-08]
+:0043053B DEC9                    fmulp st(1), st(0)
+:0043053D DC45EC                  fadd qword ptr [ebp-14]
+:00430540 6A01                    push 00000001
+:00430542 58                      pop eax
+:00430543 90                      nop
+:00430544 90                      nop
+:00430545 8BD3                    mov edx, ebx
+:00430547 B191                    mov cl, 91
+:00430549 88864DDD6900            mov byte ptr [esi+0069DD4D], al
+:0043054F E8069AFEFF              call 00419F5A
+:00430554 03C7                    add eax, edi
+:00430556 8945F8                  mov dword ptr [ebp-08], eax
+:00430559 DB45F8                  fild dword ptr [ebp-08]
+:0043055C 0FB68650DD6900          movzx eax, byte ptr [esi+0069DD50]
+:00430563 DC0DB8004900            fmul qword ptr [004900B8]
+:00430569 8945F8                  mov dword ptr [ebp-08], eax
+:0043056C DC25C0004900            fsub qword ptr [004900C0]
+:00430572 DB45F8                  fild dword ptr [ebp-08]
+:00430575 DEC9                    fmulp st(1), st(0)
+:00430577 DC45EC                  fadd qword ptr [ebp-14]
+:0043057A 90                      nop
+:0043057B 90                      nop
+:0043057C 90                      nop
+:0043057D 90                      nop
+:0043057E 90                      nop
+:0043057F 8BD3                    mov edx, ebx
+:00430581 B191                    mov cl, 91
+:00430583 888651DD6900            mov byte ptr [esi+0069DD51], al
+:00430589 E8CC99FEFF              call 00419F5A
+:0043058E 03C7                    add eax, edi
+:00430590 8945F8                  mov dword ptr [ebp-08], eax
+:00430593 DB45F8                  fild dword ptr [ebp-08]
+:00430596 0FB68651DD6900          movzx eax, byte ptr [esi+0069DD51]
+:0043059D DC0DB8004900            fmul qword ptr [004900B8]
+:004305A3 8945F8                  mov dword ptr [ebp-08], eax
+:004305A6 DC25C0004900            fsub qword ptr [004900C0]
+:004305AC DB45F8                  fild dword ptr [ebp-08]
+:004305AF DEC9                    fmulp st(1), st(0)
+:004305B1 DC45EC                  fadd qword ptr [ebp-14]
+:004305B4 6A01                    push 00000001
+:004305B6 58                      pop eax
+:004305B7 90                      nop
+:004305B8 90                      nop
+:004305B9 888650DD6900            mov byte ptr [esi+0069DD50], al
+:004305BF 
+wordt
+:004304D1 0FB6864DDD6900          movzx eax, byte ptr [esi+0069DD4D]
+:004304D8 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+:004304DE 8BC3                    mov eax, ebx
+:004304E0 88864DDD6900            mov byte ptr [esi+0069DD4D], al
+:004304E6 0FB68650DD6900          movzx eax, byte ptr [esi+0069DD50]
+:004304ED 888651DD6900            mov byte ptr [esi+0069DD51], al
+:004304F3 8BC3                    mov eax, ebx
+:004304F5 888650DD6900            mov byte ptr [esi+0069DD50], al
+:004304FB 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:00430502 E9B8000000              jmp 004305BF
+:00430507 
+
+Now free space from 00430507 to 004305BF (184 byte).
+
+
+Melee Monster vs. Monster
+
+Activation of target monster (for when attacker by Charmed monster):
+
+File Offset 0003CFB6
+
+:0043DBB6 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+wordt
+:0043DBB6 E8F7CD0300              call 0047A9B2
+:0043DBBB 90                      nop
+
+File Offset 00079DB2
+
+:0047A9B2 90                      nop
+:0047A9B3 90                      nop
+:0047A9B4 90                      nop
+:0047A9B5 90                      nop
+:0047A9B6 90                      nop
+:0047A9B7 90                      nop
+:0047A9B8 90                      nop
+:0047A9B9 90                      nop
+:0047A9BA 90                      nop
+:0047A9BB 90                      nop
+:0047A9BC 90                      nop
+:0047A9BD 90                      nop
+:0047A9BE 90                      nop
+:0047A9BF 90                      nop
+wordt
+:0047A9B2 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:0047A9B9 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+:0047A9BF C3                      ret

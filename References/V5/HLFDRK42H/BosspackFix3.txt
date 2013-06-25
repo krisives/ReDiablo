@@ -1,0 +1,233 @@
+The following (original) code stops bosses and minions from moving when they are separated too far. Apparantly, the interaction with the code that makes them target each other is not without problems, and this could cause stuck packs. Fixed by releasing bosses and minions from being stopped, and allowing the minions to find their boss in all situations. This makes the persistant activation of bosses less needed, so that is removed again. 
+
+
+:00443CE4 80BB5DDD690001          cmp byte ptr [ebx+0069DD5D], 01
+:00443CEB 754C                    jne 00443D39				jmp if not a minion
+:00443CED 0FB6835CDD6900          movzx eax, byte ptr [ebx+0069DD5C]
+:00443CF4 8D9B5CDD6900            lea ebx, dword ptr [ebx+0069DD5C]
+:00443CFA 69C0E4000000            imul eax, 000000E4
+:00443D00 2BB0B0DC6900            sub esi, dword ptr [eax+0069DCB0]
+:00443D06 56                      push esi
+:00443D07 E8C46E0300              call 0047ABD0
+:00443D0C 83F804                  cmp eax, 00000004
+:00443D0F 59                      pop ecx
+:00443D10 7D93                    jge 00443CA5
+:00443D12 0FB603                  movzx eax, byte ptr [ebx]
+:00443D15 69C0E4000000            imul eax, 000000E4
+:00443D1B 2BB8B4DC6900            sub edi, dword ptr [eax+0069DCB4]
+:00443D21 57                      push edi
+:00443D22 E8A96E0300              call 0047ABD0
+:00443D27 83F804                  cmp eax, 00000004
+:00443D2A 59                      pop ecx
+:00443D2B 0F8D74FFFFFF            jnl 00443CA5
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:00443D41(C), :00443D50(C)
+:00443D31 6A01                    push 00000001				clearance to move
+:00443D33 58                      pop eax
+:00443D34 E96EFFFFFF              jmp 00443CA7				jmp exit
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443CEB(C)
+:00443D39 8A8344DD6900            mov al, byte ptr [ebx+0069DD44]
+:00443D3F 84C0                    test al, al
+:00443D41 74EE                    je 00443D31				jmp if not a boss or minion
+:00443D43 0FB6C0                  movzx eax, al
+:00443D46 C1E005                  shl eax, 05
+:00443D49 F68076084B0002          test byte ptr [eax+004B0876], 02
+:00443D50 74DF                    je 00443D31
+:00443D52 8365FC00                and dword ptr [ebp-04], 00000000
+:00443D56 8D56FD                  lea edx, dword ptr [esi-03]
+:00443D59 83C603                  add esi, 00000003
+:00443D5C 3BD6                    cmp edx, esi
+:00443D5E 8975EC                  mov dword ptr [ebp-14], esi
+:00443D61 7F7F                    jg 00443DE2
+:00443D63 8D47FD                  lea eax, dword ptr [edi-03]
+:00443D66 83C703                  add edi, 00000003
+:00443D69 8BCA                    mov ecx, edx
+:00443D6B 8945F8                  mov dword ptr [ebp-08], eax
+:00443D6E 897DF0                  mov dword ptr [ebp-10], edi
+:00443D71 6BC970                  imul ecx, 00000070
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443DE0(C)
+:00443D74 8B75F8                  mov esi, dword ptr [ebp-08]
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443DD7(U)
+:00443D77 3BF7                    cmp esi, edi
+:00443D79 7F5E                    jg 00443DD9
+:00443D7B 85F6                    test esi, esi
+:00443D7D 7C54                    jl 00443DD3
+:00443D7F 83FE70                  cmp esi, 00000070
+:00443D82 7D4F                    jge 00443DD3
+:00443D84 85C9                    test ecx, ecx
+:00443D86 7C4B                    jl 00443DD3
+:00443D88 81F900310000            cmp ecx, 00003100
+:00443D8E 7D43                    jge 00443DD3
+:00443D90 8D040E                  lea eax, dword ptr [esi+ecx]
+:00443D93 8B0485E0D15700          mov eax, dword ptr [4*eax+0057D1E0]
+:00443D9A 85C0                    test eax, eax
+:00443D9C 7D04                    jge 00443DA2
+:00443D9E F7D8                    neg eax
+:00443DA0 85C0                    test eax, eax
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443D9C(C)
+:00443DA2 7401                    je 00443DA5
+:00443DA4 48                      dec eax
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443DA2(C)
+:00443DA5 69C0E4000000            imul eax, 000000E4
+:00443DAB 80B85DDD690001          cmp byte ptr [eax+0069DD5D], 01
+:00443DB2 751F                    jne 00443DD3
+:00443DB4 0FB6B85CDD6900          movzx edi, byte ptr [eax+0069DD5C]
+:00443DBB 3B7DF4                  cmp edi, dword ptr [ebp-0C]
+:00443DBE 7513                    jne 00443DD3
+:00443DC0 3990B0DC6900            cmp dword ptr [eax+0069DCB0], edx
+:00443DC6 750B                    jne 00443DD3
+:00443DC8 39B0B4DC6900            cmp dword ptr [eax+0069DCB4], esi
+:00443DCE 7503                    jne 00443DD3
+:00443DD0 FF45FC                  inc [ebp-04]
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:00443D7D(C), :00443D82(C), :00443D86(C), :00443D8E(C), :00443DB2(C), :00443DBE(C), :00443DC6(C), :00443DCE(C)
+:00443DD3 8B7DF0                  mov edi, dword ptr [ebp-10]
+:00443DD6 46                      inc esi
+:00443DD7 EB9E                    jmp 00443D77
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443D79(C)
+:00443DD9 42                      inc edx
+:00443DDA 83C170                  add ecx, 00000070
+:00443DDD 3B55EC                  cmp edx, dword ptr [ebp-14]
+:00443DE0 7E92                    jle 00443D74
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443D61(C)
+:00443DE2 0FB6835EDD6900          movzx eax, byte ptr [ebx+0069DD5E]
+:00443DE9 33C9                    xor ecx, ecx
+:00443DEB 3945FC                  cmp dword ptr [ebp-04], eax
+:00443DEE 0F94C1                  sete cl
+:00443DF1 8BC1                    mov eax, ecx
+:00443DF3 E9AFFEFFFF              jmp 00443CA7				jmp exit without clearance to move
+
+
+Disabling above code:
+
+file offset 000430E4
+
+:00443CE4 80BB5DDD690001          cmp byte ptr [ebx+0069DD5D], 01
+changed into
+:00443CE4 6A01                    push 00000001				clearance to move
+:00443CE6 58                      pop eax
+:00443CE7 EBBE                    jmp 00443CA7				jmp exit
+:00443CE9 9090                    2*nop 
+
+Now 270 bytes free codespace, from 00443CE9 to 00443DF8.
+
+
+Bosses and minions alert eachother always, regardless of distance, walls in between, or inactivity:
+
+file offset 0003EB72
+
+:0043F772 B91E3E4400              mov ecx, 00443E1E
+:0043F777 FFB7B4DC6900            push dword ptr [edi+0069DCB4]
+:0043F77D FFB7B0DC6900            push dword ptr [edi+0069DCB0]
+:0043F783 FFB6ACDC6900            push dword ptr [esi+0069DCAC]
+:0043F789 E8AA460000              call 00443E38				check for clear LOF
+:0043F78E 85C0                    test eax, eax
+:0043F790 751C                    jne 0043F7AE
+:0043F792 80BE5DDD690001          cmp byte ptr [esi+0069DD5D], 01
+:0043F799 750F                    jne 0043F7AA
+:0043F79B FE8F5EDD6900            dec byte ptr [edi+0069DD5E]
+:0043F7A1 C6865DDD690002          mov byte ptr [esi+0069DD5D], 02
+:0043F7A8 EB50                    jmp 0043F7FA
+changed into
+:0043F772 E983000000              jmp 0043F7FA
+
+Relocating code for Gargoyles in Statue mode, and adding check for full life to allow them to regenerate:
+
+:0043F777 8B8824DD6900            mov ecx, dword ptr [eax+0069DD24]
+:0043F77D 8D9024DD6900            lea edx, dword ptr [eax+0069DD24]
+:0043F783 F6C104                  test cl, 04
+:0043F786 741F                    je 0043F7A7					jmp if not in Statue mode
+:0043F788 51                      push ecx
+:0043F789 8B881CDD6900            mov ecx, dword ptr [eax+0069DD1C]		current life
+:0043F78F 3B8818DD6900            cmp ecx, dword ptr [eax+0069DD18]		maximum life
+:0043F795 59                      pop ecx
+:0043F796 750F                    jne 0043F7A7					jmp if wounded
+:0043F798 83E1FB                  and ecx, FFFFFFFB
+:0043F79B 890A                    mov dword ptr [edx], ecx
+:0043F79D C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+:0043F7A7 C3                      ret
+:0043F7A8 9090                    2*nop
+
+Now 78 bytes free codespace, from 0043F7A8 to 0043F7F6.
+
+file offset 0003EC41
+
+:0043F841 80B820DD69000C          cmp byte ptr [eax+0069DD20], 0C
+:0043F848 0F85E3000000            jne 0043F931
+:0043F84E 8B8824DD6900            mov ecx, dword ptr [eax+0069DD24]
+:0043F854 8D9024DD6900            lea edx, dword ptr [eax+0069DD24]
+:0043F85A F6C104                  test cl, 04
+:0043F85D 0F84CE000000            je 0043F931
+:0043F863 83E1FB                  and ecx, FFFFFFFB
+:0043F866 890A                    mov dword ptr [edx], ecx
+:0043F868 C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+:0043F872 E9BA000000              jmp 0043F931
+changed into
+:0043F841 80B820DD69000C          cmp byte ptr [eax+0069DD20], 0C
+:0043F848 7505                    jne 0043F84F
+:0043F84A E828FFFFFF              call 0043F777
+:0043F84F E9DD000000              jmp 0043F931
+:0043F854 ...
+
+Now 35 bytes free codespace, from 0043F854 to 0043F877.
+
+file offset 0003ECFE
+
+:0043F8FE 80B820DD69000C          cmp byte ptr [eax+0069DD20], 0C
+:0043F905 7520                    jne 0043F927
+:0043F907 8B8824DD6900            mov ecx, dword ptr [eax+0069DD24]
+:0043F90D 8D9024DD6900            lea edx, dword ptr [eax+0069DD24]
+:0043F913 F6C104                  test cl, 04
+:0043F916 740F                    je 0043F927
+:0043F918 83E1FB                  and ecx, FFFFFFFB
+:0043F91B 890A                    mov dword ptr [edx], ecx
+:0043F91D C7808CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+changed into
+:0043F8FE 80B820DD69000C          cmp byte ptr [eax+0069DD20], 0C
+:0043F905 7520                    jne 0043F927
+:0043F907 E86BFEFFFF              call 0043F777
+:0043F90C EB19                    jmp 0043F927
+:0043F90E 9090909090...           5*nop
+
+Now 25 bytes free codespace, from 0043F90E to 0043F927.
+
+
+Disabling prevented deactivation of bosses again:
+
+file offset 00042DCD
+
+:004439CD 80BE20DD69006E          cmp byte ptr [esi+0069DD20], 6E		
+:004439D4 7404                    je 004439DA					jmp if attacktype 6E 
+changed into
+:004439CD 80BE44DD690000          cmp byte ptr [esi+0069DD44], 00
+:004439D4 7504                    jne 004439DA					jmp if boss
+changed into
+:004439CD 80BE44DD690000          cmp byte ptr [esi+0069DD44], 00
+:004439D4 7500                    jne 004439D6					do not jmp
+
+
+Allowingen 'pack' behaviour for bosses with 01-packs also (Leoric, Defiler, Izual, Wraith of Izual):
+
+:0043C4E2 85DB                    test ebx, ebx				
+:0043C4E4 8A9121DD6900            mov dl, byte ptr [ecx+0069DD21]
+:0043C4EA 889021DD6900            mov byte ptr [eax+0069DD21], dl	copy attacksubtype
+:0043C4F0 741C                    je 0043C50E				jmp if 01-pack
+:0043C4F2 8A550C                  mov dl, byte ptr [ebp+0C]
+:0043C4F5 88905CDD6900            mov byte ptr [eax+0069DD5C], dl	set boss.id for minion
+:0043C4FB C6805DDD690001          mov byte ptr [eax+0069DD5D], 01	flag monster as minion
+:0043C502 8A8920DD6900            mov cl, byte ptr [ecx+0069DD20]
+:0043C508 888820DD6900            mov byte ptr [eax+0069DD20], cl	copy attacktype
+
+file offset 0003B8F0
+
+:0043C4F0 741C                    je 0043C50E
+:0043C4F2 8A550C                  mov dl, byte ptr [ebp+0C]
+:0043C4F5 88905CDD6900            mov byte ptr [eax+0069DD5C], dl
+:0043C4FB C6805DDD690001          mov byte ptr [eax+0069DD5D], 01
+changed into
+:0043C4F0 8A550C                  mov dl, byte ptr [ebp+0C]
+:0043C4F3 88905CDD6900            mov byte ptr [eax+0069DD5C], dl
+:0043C4F9 C6805DDD690001          mov byte ptr [eax+0069DD5D], 01
+:0043C500 740C                    je 0043C50E
+:0043C502
+
+This does not work for Leoric, because his group of skeletons is not treated as a regular pack.
+

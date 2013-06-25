@@ -1,0 +1,424 @@
+Target selection by Jarulf
+
+When a monster is to choose which player character to attack (if there is more than one present in the game) it will generally chose the one that is closest. However, the process of finding out who is the closest is somewhat non intuitive as the game does not calculate the true distance, but separates distances for the 2 main axis of the dungeon. This is most easily explained with an example.
+
+1.The dungeon is divided into several squares of which each square can hold a monster, player, or some dungeon inventory. Call the axis of squares running from the upper left to the lower right X, and the one running from lower left to the upper right Y.
+
+2.The game will then calculate the distance to each character separately for X and Y direction.
+
+3.It will then for each character use the largest distance of X and Y.
+
+4.Comparing the distance got from step 3, it will attack the one with the shortest distance.
+
+5.If two characters are equally close, the one that has first entered the game will be the target. It is thus wise to have Warriors enter and create a game, then have the Rogues enter it and finally the Sorcerers. If someone leaves the game, the next person to enter the game will take the place of the character that just left, not the last place.
+
+A monster will, of course, only consider those characters, including golems, that are within its current visible range and are not out of sight due to a wall or other obstacle.
+If the target ever disappears form the sight of the monster, it tends to walk up to the last position the target was seen. If the target is still not visible, it will try to pick a new target. Some monsters, as noted in chapter 5.3.3, have the ability to follow a target even if it is out of sight. In that case, they will not walk up to the last position of the target or stop, but will instead find the closest way to the target if it is not too far away.
+
+
+
+* Referenced by a CALL at Addresses:
+|:0043CC91 (supports golem)  , :0043D711 (supports golem)  , :00441A3D (for bosses?)  , :00442245   , :0044390D (for monsters just getting activated)  :0044504D (for golem, at his creation)  
+|
+:0043C8CE 55                      push ebp
+:0043C8CF 8BEC                    mov ebp, esp
+:0043C8D1 83EC24                  sub esp, 00000024
+:0043C8D4 53                      push ebx
+:0043C8D5 56                      push esi
+:0043C8D6 8BF1                    mov esi, ecx
+:0043C8D8 834DF8FF                or dword ptr [ebp-08], FFFFFFFF
+:0043C8DC 8975E4                  mov dword ptr [ebp-1C], esi
+:0043C8DF 69F6E4000000            imul esi, 000000E4
+:0043C8E5 834DF4FF                or dword ptr [ebp-0C], FFFFFFFF
+:0043C8E9 8065FF00                and byte ptr [ebp-01], 00
+:0043C8ED 81C688DC6900            add esi, 0069DC88
+:0043C8F3 57                      push edi
+:0043C8F4 8B869C000000            mov eax, dword ptr [esi+0000009C]	-> call CheckGolemOrCharmed
+:0043C8FA F6C408                  test ah, 08
+:0043C8FD 7508                    jne 0043C907				jne 0043CA26 for 'real charmed' monsters
+:0043C8FF A820                    test al, 20
+:0043C901 0F851F010000            jne 0043CA26				golem and charmed monsters
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C8FD(C)
+|
+:0043C907 33FF                    xor edi, edi
+:0043C909 897DF0                  mov dword ptr [ebp-10], edi
+:0043C90C 897DEC                  mov dword ptr [ebp-14], edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CA20(C)
+|
+:0043C90F A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043C914 03C7                    add eax, edi
+:0043C916 80781D00                cmp byte ptr [eax+1D], 00
+:0043C91A 0F84EE000000            je 0043CA0E
+:0043C920 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:0043C927 3B4834                  cmp ecx, dword ptr [eax+34]
+:0043C92A 0F85DE000000            jne 0043CA0E					not on same level
+:0043C930 80B83F01000000          cmp byte ptr [eax+0000013F], 00
+:0043C937 0F85D1000000            jne 0043CA0E
+:0043C93D F78098010000C0FFFFFF    test dword ptr [ebx+00000198], FFFFFFC0
+:0043C947 0F84C1000000            je 0043CA0E					already dead
+:0043C94D 8B5620                  mov edx, dword ptr [esi+20]
+:0043C950 8B4838                  mov ecx, dword ptr [eax+38]
+:0043C953 8955E8                  mov dword ptr [ebp-18], edx
+:0043C956 6BD270                  imul edx, 00000070
+:0043C959 894DE0                  mov dword ptr [ebp-20], ecx
+:0043C95C 8B5E24                  mov ebx, dword ptr [esi+24]
+:0043C95F 6BC970                  imul ecx, 00000070
+:0043C962 8B403C                  mov eax, dword ptr [eax+3C]
+:0043C965 8A9C1AD0786000          mov bl, byte ptr [edx+ebx+006078D0]
+:0043C96C 2A9C01D0786000          sub bl, byte ptr [ecx+eax+006078D0]
+:0043C973 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C979 8B4624                  mov eax, dword ptr [esi+24]
+:0043C97C F6DB                    neg bl
+:0043C97E 1BDB                    sbb ebx, ebx
+:0043C980 2B44393C                sub eax, dword ptr [ecx+edi+3C]
+:0043C984 43                      inc ebx
+:0043C985 50                      push eax
+:0043C986 E845E20300              call 0047ABD0
+:0043C98B 8BF8                    mov edi, eax
+:0043C98D 8B45E8                  mov eax, dword ptr [ebp-18]
+:0043C990 2B45E0                  sub eax, dword ptr [ebp-20]
+:0043C993 59                      pop ecx
+:0043C994 50                      push eax
+:0043C995 E836E20300              call 0047ABD0
+:0043C99A 3BC7                    cmp eax, edi
+:0043C99C 59                      pop ecx
+:0043C99D 7E12                    jle 0043C9B1
+:0043C99F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C9A5 8B7DEC                  mov edi, dword ptr [ebp-14]
+:0043C9A8 8B4620                  mov eax, dword ptr [esi+20]
+:0043C9AB 2B443938                sub eax, dword ptr [ecx+edi+38]
+:0043C9AF EB10                    jmp 0043C9C1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C99D(C)
+|
+:0043C9B1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C9B7 8B7DEC                  mov edi, dword ptr [ebp-14]
+:0043C9BA 8B4624                  mov eax, dword ptr [esi+24]
+:0043C9BD 2B44393C                sub eax, dword ptr [ecx+edi+3C]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C9AF(U)
+|
+:0043C9C1 50                      push eax
+:0043C9C2 E809E20300              call 0047ABD0
+:0043C9C7 84DB                    test bl, bl
+:0043C9C9 59                      pop ecx
+:0043C9CA 740A                    je 0043C9D6
+:0043C9CC 807DFF00                cmp byte ptr [ebp-01], 00
+:0043C9D0 7415                    je 0043C9E7
+:0043C9D2 84DB                    test bl, bl
+:0043C9D4 7506                    jne 0043C9DC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C9CA(C)
+|
+:0043C9D6 807DFF00                cmp byte ptr [ebp-01], 00
+:0043C9DA 7505                    jne 0043C9E1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C9D4(C)
+|
+:0043C9DC 3B45F4                  cmp eax, dword ptr [ebp-0C]
+:0043C9DF 7C06                    jl 0043C9E7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C9DA(C)
+|
+:0043C9E1 837DF8FF                cmp dword ptr [ebp-08], FFFFFFFF
+:0043C9E5 7527                    jne 0043CA0E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043C9D0(C), :0043C9DF(C)
+|
+:0043C9E7 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:0043C9EA 83A69C000000EF          and dword ptr [esi+0000009C], FFFFFFEF
+:0043C9F1 894DF8                  mov dword ptr [ebp-08], ecx
+:0043C9F4 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043C9FA 03CF                    add ecx, edi
+:0043C9FC 8945F4                  mov dword ptr [ebp-0C], eax
+:0043C9FF 885DFF                  mov byte ptr [ebp-01], bl
+:0043CA02 8A5140                  mov dl, byte ptr [ecx+40]
+:0043CA05 8A4944                  mov cl, byte ptr [ecx+44]
+:0043CA08 8855FE                  mov byte ptr [ebp-02], dl
+:0043CA0B 884DFD                  mov byte ptr [ebp-03], cl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043C91A(C), :0043C92A(C), :0043C937(C), :0043C947(C), :0043C9E5(C)
+|
+:0043CA0E FF45F0                  inc [ebp-10]
+:0043CA11 81C7C8550000            add edi, 000055C8
+:0043CA17 81FF20570100            cmp edi, 00015720
+:0043CA1D 897DEC                  mov dword ptr [ebp-14], edi
+:0043CA20 0F8CE9FEFFFF            jl 0043C90F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043C901(C)
+|
+:0043CA26 8365F000                and dword ptr [ebp-10], 00000000		init monster loop
+:0043CA2A 833D80DC690000          cmp dword ptr [0069DC80], 00000000
+:0043CA31 0F8E9A010000            jle 0043CBD1
+:0043CA37 C745EC60D96900          mov [ebp-14], 0069D960
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CBCB(C)
+|
+:0043CA3E 8B45EC                  mov eax, dword ptr [ebp-14]			start monster loop
+:0043CA41 8B08                    mov ecx, dword ptr [eax]
+:0043CA43 3B4DE4                  cmp ecx, dword ptr [ebp-1C]
+:0043CA46 894DDC                  mov dword ptr [ebp-24], ecx
+:0043CA49 0F846C010000            je 0043CBBB
+:0043CA4F 8BF9                    mov edi, ecx
+:0043CA51 69FFE4000000            imul edi, 000000E4
+:0043CA57 F7871CDD6900C0FFFFFF    test dword ptr [edi+0069DD1C], FFFFFFC0
+:0043CA61 0F8E54010000            jle 0043CBBB					monster already dead
+:0043CA67 83BFA8DC690001          cmp dword ptr [edi+0069DCA8], 00000001
+:0043CA6E 750D                    jne 0043CA7D					
+:0043CA70 83BFACDC690000          cmp dword ptr [edi+0069DCAC], 00000000
+:0043CA77 0F843E010000            je 0043CBBB					uninitialized location
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CA6E(C)
+|
+:0043CA7D E816FEFFFF              call 0043C898					not really needed!
+:0043CA82 85C0                    test eax, eax					
+:0043CA84 740D                    je 0043CA93					jmp if not a quest attacktype
+:0043CA86 83BF58DD690000          cmp dword ptr [edi+0069DD58], 00000000
+:0043CA8D 0F8528010000            jne 0043CBBB					dont target special immune monsters
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CA84(C)
+|
+:0043CA93 8B869C000000            mov eax, dword ptr [esi+0000009C]
+:0043CA99 A820                    test al, 20
+:0043CA9B 753F                    jne 0043CADC					jne 0043CAF8 for some free space
+:0043CA9D F6C408                  test ah, 08
+:0043CAA0 753A                    jne 0043CADC					jne 0043CAF8 for some free space
+:0043CAA2 8B87A8DC6900            mov eax, dword ptr [edi+0069DCA8]		normal monster only close targets
+:0043CAA8 2B4620                  sub eax, dword ptr [esi+20]
+:0043CAAB 50                      push eax
+:0043CAAC E81FE10300              call 0047ABD0
+:0043CAB1 83F802                  cmp eax, 00000002
+:0043CAB4 59                      pop ecx
+:0043CAB5 7D15                    jge 0043CACC
+:0043CAB7 8B87ACDC6900            mov eax, dword ptr [edi+0069DCAC]
+:0043CABD 2B4624                  sub eax, dword ptr [esi+24]
+:0043CAC0 50                      push eax
+:0043CAC1 E80AE10300              call 0047ABD0
+:0043CAC6 83F802                  cmp eax, 00000002
+:0043CAC9 59                      pop ecx
+:0043CACA 7C10                    jl 0043CADC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CAB5(C)
+|
+:0043CACC 8B4DE4                  mov ecx, dword ptr [ebp-1C]			except witches and such
+:0043CACF E89DFDFFFF              call 0043C871
+:0043CAD4 85C0                    test eax, eax
+:0043CAD6 0F84DF000000            je 0043CBBB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043CA9B(C), :0043CAA0(C), :0043CACA(C)
+|
+:0043CADC 8B869C000000            mov eax, dword ptr [esi+0000009C]		possible free space
+:0043CAE2 A820                    test al, 20
+:0043CAE4 7512                    jne 0043CAF8
+:0043CAE6 F6C408                  test ah, 08
+:0043CAE9 750D                    jne 0043CAF8
+
+
+:0043CAEB F68724DD690020          test byte ptr [edi+0069DD24], 20	for normal monsters
+:0043CAF2 0F84C3000000            je 0043CBBB				next if target not charmed or golem
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043CAE4(C), :0043CAE9(C)
+|
+:0043CAF8 8B87A8DC6900            mov eax, dword ptr [edi+0069DCA8]
+:0043CAFE 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043CB01 8BD8                    mov ebx, eax
+:0043CB03 894DE8                  mov dword ptr [ebp-18], ecx
+:0043CB06 6BC970                  imul ecx, 00000070
+:0043CB09 6BDB70                  imul ebx, 00000070
+:0043CB0C 8B5624                  mov edx, dword ptr [esi+24]
+:0043CB0F 895DE0                  mov dword ptr [ebp-20], ebx
+:0043CB12 8B9FACDC6900            mov ebx, dword ptr [edi+0069DCAC]
+:0043CB18 8A8411D0786000          mov al, byte ptr [ecx+edx+006078D0]
+:0043CB1F 8B4DE0                  mov ecx, dword ptr [ebp-20]
+:0043CB22 2A8419D0786000          sub al, byte ptr [ecx+ebx+006078D0]
+:0043CB29 8B8FA8DC6900            mov ecx, dword ptr [edi+0069DCA8]
+:0043CB2F F6D8                    neg al
+:0043CB31 1BC0                    sbb eax, eax
+:0043CB33 40                      inc eax
+:0043CB34 8845FC                  mov byte ptr [ebp-04], al
+:0043CB37 8B45E8                  mov eax, dword ptr [ebp-18]
+:0043CB3A 2BC1                    sub eax, ecx
+:0043CB3C 50                      push eax
+:0043CB3D E88EE00300              call 0047ABD0
+:0043CB42 8BD8                    mov ebx, eax
+:0043CB44 8B4624                  mov eax, dword ptr [esi+24]
+:0043CB47 2B87ACDC6900            sub eax, dword ptr [edi+0069DCAC]
+:0043CB4D 59                      pop ecx
+:0043CB4E 50                      push eax
+:0043CB4F E87CE00300              call 0047ABD0
+:0043CB54 3BD8                    cmp ebx, eax
+:0043CB56 59                      pop ecx
+:0043CB57 7E0B                    jle 0043CB64
+:0043CB59 8B4620                  mov eax, dword ptr [esi+20]
+:0043CB5C 2B87A8DC6900            sub eax, dword ptr [edi+0069DCA8]
+:0043CB62 EB09                    jmp 0043CB6D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CB57(C)
+|
+:0043CB64 8B4624                  mov eax, dword ptr [esi+24]
+:0043CB67 2B87ACDC6900            sub eax, dword ptr [edi+0069DCAC]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CB62(U)
+|
+:0043CB6D 50                      push eax
+:0043CB6E E85DE00300              call 0047ABD0
+:0043CB73 59                      pop ecx
+:0043CB74 8A4DFC                  mov cl, byte ptr [ebp-04]
+:0043CB77 84C9                    test cl, cl
+:0043CB79 740A                    je 0043CB85
+:0043CB7B 807DFF00                cmp byte ptr [ebp-01], 00
+:0043CB7F 7415                    je 0043CB96
+:0043CB81 84C9                    test cl, cl
+:0043CB83 7506                    jne 0043CB8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CB79(C)
+|
+:0043CB85 807DFF00                cmp byte ptr [ebp-01], 00
+:0043CB89 7505                    jne 0043CB90
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CB83(C)
+|
+:0043CB8B 3B45F4                  cmp eax, dword ptr [ebp-0C]
+:0043CB8E 7C06                    jl 0043CB96
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CB89(C)
+|
+:0043CB90 837DF8FF                cmp dword ptr [ebp-08], FFFFFFFF
+:0043CB94 7525                    jne 0043CBBB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043CB7F(C), :0043CB8E(C)
+|
+:0043CB96 8B55DC                  mov edx, dword ptr [ebp-24]
+:0043CB99 838E9C00000010          or dword ptr [esi+0000009C], 00000010
+:0043CBA0 8955F8                  mov dword ptr [ebp-08], edx
+:0043CBA3 8A97B0DC6900            mov dl, byte ptr [edi+0069DCB0]
+:0043CBA9 8855FE                  mov byte ptr [ebp-02], dl
+:0043CBAC 8A97B4DC6900            mov dl, byte ptr [edi+0069DCB4]
+:0043CBB2 8855FD                  mov byte ptr [ebp-03], dl
+:0043CBB5 8945F4                  mov dword ptr [ebp-0C], eax
+:0043CBB8 884DFF                  mov byte ptr [ebp-01], cl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043CA49(C), :0043CA61(C), :0043CA77(C), :0043CA8D(C), :0043CAD6(C)
+|:0043CAF2(C), :0043CB94(C)
+|
+:0043CBBB FF45F0                  inc [ebp-10]
+:0043CBBE 8345EC04                add dword ptr [ebp-14], 00000004
+:0043CBC2 8B45F0                  mov eax, dword ptr [ebp-10]
+:0043CBC5 3B0580DC6900            cmp eax, dword ptr [0069DC80]
+:0043CBCB 0F8C6DFEFFFF            jl 0043CA3E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CA31(C)
+|
+:0043CBD1 8B45F8                  mov eax, dword ptr [ebp-08]
+:0043CBD4 83F8FF                  cmp eax, FFFFFFFF
+:0043CBD7 7418                    je 0043CBF1
+:0043CBD9 80A69D000000FB          and byte ptr [esi+0000009D], FB
+:0043CBE0 89464C                  mov dword ptr [esi+4C], eax
+:0043CBE3 8A45FE                  mov al, byte ptr [ebp-02]
+:0043CBE6 884650                  mov byte ptr [esi+50], al
+:0043CBE9 8A45FD                  mov al, byte ptr [ebp-03]
+:0043CBEC 884651                  mov byte ptr [esi+51], al
+:0043CBEF EB07                    jmp 0043CBF8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CBD7(C)
+|
+:0043CBF1 808E9D00000004          or byte ptr [esi+0000009D], 04
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043CBEF(U)
+|
+:0043CBF8 5F                      pop edi
+:0043CBF9 5E                      pop esi
+:0043CBFA 5B                      pop ebx
+:0043CBFB C9                      leave
+:0043CBFC C3                      ret
+
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:0042310D   , :0043CA7D   
+|
+:0043C898 69C9E4000000            imul ecx, 000000E4
+:0043C89E 8A8920DD6900            mov cl, byte ptr [ecx+0069DD20]
+:0043C8A4 80F91C                  cmp cl, 1C		Lazarus
+:0043C8A7 7421                    je 0043C8CA
+:0043C8A9 80F91F                  cmp cl, 1F		Warlord
+:0043C8AC 741C                    je 0043C8CA
+:0043C8AE 80F912                  cmp cl, 12		Gharbad
+:0043C8B1 7417                    je 0043C8CA
+:0043C8B3 80F916                  cmp cl, 16		Zhar the Mad
+:0043C8B6 7412                    je 0043C8CA
+:0043C8B8 80F917                  cmp cl, 17		Snotspill
+:0043C8BB 740D                    je 0043C8CA
+:0043C8BD 80F91E                  cmp cl, 1E		Lachdanan
+:0043C8C0 7408                    je 0043C8CA
+:0043C8C2 80F91D                  cmp cl, 1D		Witch at Laz
+:0043C8C5 7403                    je 0043C8CA
+:0043C8C7 33C0                    xor eax, eax
+:0043C8C9 C3                      ret
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043C8A7(C), :0043C8AC(C), :0043C8B1(C), :0043C8B6(C), :0043C8BB(C)
+|:0043C8C0(C), :0043C8C5(C)
+|
+:0043C8CA 6A01                    push 00000001
+:0043C8CC 58                      pop eax
+:0043C8CD C3                      ret
+
+
+
+
+* Referenced by a CALL at Address:
+|:0043CACF   
+|
+:0043C871 69C9E4000000            imul ecx, 000000E4
+:0043C877 8A8920DD6900            mov cl, byte ptr [ecx+0069DD20]
+:0043C87D 80F903                  cmp cl, 03		Skelet Archer
+:0043C880 7412                    je 0043C894
+:0043C882 80F907                  cmp cl, 07		Goat Archer
+:0043C885 740D                    je 0043C894
+:0043C887 80F90E                  cmp cl, 0E		Witch
+:0043C88A 7408                    je 0043C894
+:0043C88C 80F91D                  cmp cl, 1D		Witch at Laz
+:0043C88F 7403                    je 0043C894
+:0043C891 33C0                    xor eax, eax
+:0043C893 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043C880(C), :0043C885(C), :0043C88A(C), :0043C88F(C)
+|
+:0043C894 6A01                    push 00000001
+:0043C896 58                      pop eax
+:0043C897 C3                      ret

@@ -1,0 +1,31 @@
+Rune of Fire
+
+Changed to 'Fire Trap Rune'
+
+
+File Offset 0002F413
+
+:00430013 C786E87A69005E000000    mov dword ptr [esi+00697AE8], 0000005E	RuneBomb
+wordt
+:00430013 C786E87A690051000000    mov dword ptr [esi+00697AE8], 00000051	RingOfFire
+
+
+'Rune of Fire' -> 'Fire Trap Rune'
+
+000A37B0 6700 0000 5275 6E65 0000 0000 5275 6E65 g...Rune....Rune
+000A37C0 206F 6620 4669 7265 0000 0000 416D 756C  of Fire....Amul
+wordt
+000A37B0 6700 0000 5275 6E65 0000 0000 4669 7265 g...Rune....Fire
+000A37C0 2054 7261 7020 5275 6E65 0000 416D 756C  Trap Rune..Amul
+
+
+
+Rune of Lightning changed to Acid Puddle.
+
+Invisible and without damage. Not implemented.
+
+File Offset 0002F589
+
+:00430189 C786E87A690004000000    mov dword ptr [esi+00697AE8], 00000004	LightBall
+wordt
+:00430189 C786E87A69003B000000    mov dword ptr [esi+00697AE8], 0000003B	AcidPuddle

@@ -1,0 +1,30 @@
+()Blacksmith Oil - Repairs 20% -> 25%, max. = 30 dur.points
+
+:004284F9 81F9FF000000            cmp ecx, 000000FF
+:004284FF 90                      nop
+:00428500 90                      nop
+:00428501 90                      nop
+:00428502 90                      nop
+:00428503 90                      nop
+:00428504 90                      nop
+:00428505 8BBEEC000000            mov edi, dword ptr [esi+000000EC]
+:0042850B 3BF9                    cmp edi, ecx
+:0042850D 7D13                    jge 00428522
+:0042850F 8D4104                  lea eax, dword ptr [ecx+04]
+:00428512 6A05                    push 00000005
+:00428514 99                      cdq
+:00428515 5B                      pop ebx
+:00428516 F7FB                    idiv ebx
+wordt
+:004284F9 8BBEEC000000            mov edi, dword ptr [esi+000000EC]
+:004284FF 3BF9                    cmp edi, ecx
+:00428501 7D1F                    jge 00428522
+:00428503 8D4104                  lea eax, dword ptr [ecx+04]
+:00428506 C1E802                  shr eax, 02
+:00428509 6A1E                    push 0000001E
+:0042850B 5B                      pop ebx
+:0042850C 3BC3                    cmp eax, ebx
+:0042850E 7E08                    jle 00428518
+:00428510 8BC3                    mov eax, ebx
+:00428512 909090909090		  6*nop
+

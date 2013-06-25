@@ -1,0 +1,12 @@
+Improve Mendicant's Shrine
+
+Change Gold/2 to Gold-1 added to Xp
+
+File Offset 0005218B
+
+:00452D8B D1FB                    sar ebx, 1
+wordt
+:00452D8B 4B                      dec ebx
+:00452D8C 90                      nop
+
+Not sure it will substract correct amount of gold, but testing will show.

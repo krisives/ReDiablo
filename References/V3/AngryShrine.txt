@@ -1,0 +1,15 @@
+Changing Magical Shrine into Angry Shrine
+
+Gives Rage and full mana to all characters on the same dungeonlevel.
+
+File Offset 000510B9
+
+:00451CB9 6A4F                    push 0000004F		Barrier
+wordt
+:00451CB9 6A2B                    push 0000002B		Rage
+
+Name change:
+
+000B41E0 6500 0000 4D61 6769 6361 6C00 476C 6F6F e...Magical.Gloo
+wordt
+000B41E0 6500 0000 416E 6772 7900 0000 476C 6F6F e...Angry...Gloo

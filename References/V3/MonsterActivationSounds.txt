@@ -1,0 +1,168 @@
+Monster Activation sounds :
+
+
+Activation Sounds to implement:
+
+Skeleton King			by slotnr.	3C2	only for MP
+Gharbad				004B0884	3BB	only for MP
+Warlord				004B0984	3C6	only for MP
+Zhar the Mad			004B08C4	3C8	only for MP
+The Dark Lord			by slotnr.	3C7	wlock01 replaced by Nakrul2
+
+namepointers [+0069DD60]
+
+
+
+00098970 7230 312E 7761 7600 5366 785C 4865 6C6C r01.wav.Sfx\Hell
+00098980 6669 7265 5C4E 414B 5255 4C32 2E77 6176 fire\NAKRUL2.wav
+
+
+
+Expanding sounds, where Butcher, Nakrul and Defiler is covered. Reduced Nakrul's code as data options are already reduced.
+
+File Offset 00042CB8
+
+:004438B8 750A                    jne 004438C4
+:004438BA B9B7030000              mov ecx, 000003B7
+:004438BF E8494CFDFF              call 0041850D
+:004438C4 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004438CA 813889000000            cmp dword ptr [eax], 00000089		137 = Nakrul
+:004438D0 7524                    jne 004438F6
+:004438D2 803DD853570000          cmp byte ptr [005753D8], 00
+:004438D9 7407                    je 004438E2
+:004438DB B9E5030000              mov ecx, 000003E5
+:004438E0 EB0F                    jmp 004438F1
+:004438E2 833D6C73570000          cmp dword ptr [0057736C], 00000000
+:004438E9 B9E3030000              mov ecx, 000003E3
+:004438EE 7501                    jne 004438F1
+:004438F0 41                      inc ecx
+:004438F1 E8174CFDFF              call 0041850D
+:004438F6 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004438FC 83387C                  cmp dword ptr [eax], 0000007C		124 = Defiler
+:004438FF 750A                    jne 0044390B
+:00443901 B9DD030000              mov ecx, 000003DD
+wordt
+:004438B8 7507                    jne 004438C1
+:004438BA B9B7030000              mov ecx, 000003B7
+:004438BF EB45                    jmp 00443906
+:004438C1 813889000000            cmp dword ptr [eax], 00000089		Nakrul
+:004438C7 7507                    jne 004438D0
+:004438C9 B9E5030000              mov ecx, 000003E5
+:004438CE EB36                    jmp 00443906
+:004438D0 83387C                  cmp dword ptr [eax], 0000007C		Defiler
+:004438D3 7507                    jne 004438DC
+:004438D5 B9DD030000              mov ecx, 000003DD
+:004438DA EB2A                    jmp 00443906
+:004438DC 83386E                  cmp dword ptr [eax], 0000006E		Diablo
+:004438DF 7507                    jne 004438E8
+:004438E1 B9C7030000              mov ecx, 000003C7
+:004438E6 EB1E                    jmp 00443906
+:004438E8 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:004438EF 741A                    je 0044390B
+:004438F1 833832                  cmp dword ptr [eax], 00000032		Leoric
+:004438F4 7507                    jne 004438FD
+:004438F6 B9C2030000              mov ecx, 000003C2
+:004438FB EB09                    jmp 00443906
+:004438FD E85AD90000              call 0045125C				nu de rest nog.
+:00443902 85C9                    test ecx, ecx
+:00443904 7405                    je 0044390B
+
+
+Nieuwe routine over oude SlainHero:
+
+File Offset 0005065C
+
+:0045125C 90                      nop
+:0045126B 90                      nop
+:0045126C 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:00451272 6899000000              push 00000099
+:00451277 6A09                    push 00000009
+:00451279 E885A5FDFF              call 0042B803
+:0045127E E9E6000000              jmp 00451369
+:00451283 5B                      pop ebx
+:00451284 3ACB                    cmp cl, bl
+:00451286 750B                    jne 00451293
+:00451288 53                      push ebx
+:00451289 52                      push edx
+:0045128A 6A77                    push 00000077
+:0045128C 6A03                    push 00000003
+:0045128E E987000000              jmp 0045131A
+:00451293 80F902                  cmp cl, 02
+:00451296 753A                    jne 004512D2
+wordt
+:0045125C 33C9                    xor ecx, ecx
+:0045125E 8B8660DD6900            mov eax, dword ptr [esi+0069DD60]
+:00451264 3B0584084B00            cmp eax, dword ptr [004B0884]		Gharbad
+:0045126A 7506                    jne 00451272
+:0045126C B9BB030000              mov ecx, 000003BB
+:00451271 C3                      ret
+:00451272 3B05C4084B00            cmp eax, dword ptr [004B08C4]		Zhar
+:00451278 7506                    jne 00451280
+:0045127A B9C8030000              mov ecx, 000003C8
+:0045127F C3                      ret
+:00451280 3B0584094B00            cmp eax, dword ptr [004B0984]		Warlord
+:00451286 7505                    jne 0045128D
+:00451288 B9C6030000              mov ecx, 000003C6
+:0045128D C3                      ret
+:0045128E 90909090909090909090    10*nop
+
+
+
+
+Original code after monster-regeneration
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044384D(C), :00443858(C), :00443869(C)
+|
+:00443886 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0044388C 8B8EACDC6900            mov ecx, dword ptr [esi+0069DCAC]
+:00443892 6BC070                  imul eax, 00000070
+:00443895 F684080069610002        test byte ptr [eax+ecx+00616900], 02
+:0044389D 8DBC0800696100          lea edi, dword ptr [eax+ecx+00616900]
+:004438A4 746C                    je 00443912
+:004438A6 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:004438AD 7563                    jne 00443912
+:004438AF 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004438B5 833833                  cmp dword ptr [eax], 00000033
+:004438B8 750A                    jne 004438C4
+:004438BA B9B7030000              mov ecx, 000003B7
+:004438BF E8494CFDFF              call 0041850D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004438B8(C)
+|
+:004438C4 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004438CA 813889000000            cmp dword ptr [eax], 00000089
+:004438D0 7524                    jne 004438F6
+:004438D2 803DD853570000          cmp byte ptr [005753D8], 00
+:004438D9 7407                    je 004438E2
+:004438DB B9E5030000              mov ecx, 000003E5
+:004438E0 EB0F                    jmp 004438F1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004438D9(C)
+|
+:004438E2 833D6C73570000          cmp dword ptr [0057736C], 00000000
+:004438E9 B9E3030000              mov ecx, 000003E3
+:004438EE 7501                    jne 004438F1
+:004438F0 41                      inc ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004438E0(U), :004438EE(C)
+|
+:004438F1 E8174CFDFF              call 0041850D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004438D0(C)
+|
+:004438F6 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004438FC 83387C                  cmp dword ptr [eax], 0000007C
+:004438FF 750A                    jne 0044390B
+:00443901 B9DD030000              mov ecx, 000003DD
+:00443906 E8024CFDFF              call 0041850D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004438FF(C)
+|
+:0044390B 8BCB                    mov ecx, ebx
+:0044390D E8BC8FFFFF              call 0043C8CE

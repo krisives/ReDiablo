@@ -1,0 +1,19 @@
+MLVL for bosses is set to 2*dlvl, or to mlvl+5 when dlvl=0. Changed this to mlvl+2 in all cases, which should prevent drops of qlvl 35 and higher base items in Normal Mode.
+
+file offset 0003B0E7
+
+:0043BCE7 8A470C                  mov al, byte ptr [edi+0C]
+:0043BCEA 84C0                    test al, al
+:0043BCEC 740A                    je 0043BCF8
+:0043BCEE D0E0                    shl al, 1
+:0043BCF0 8886C0000000            mov byte ptr [esi+000000C0], al
+:0043BCF6 EB07                    jmp 0043BCFF
+:0043BCF8 8086C000000005          add byte ptr [esi+000000C0], 05
+changed into
+:0043BCE7 EB0F                    jmp 0043BCF8
+:0043BCE9 90                      nop
+:0043BCEA ...
+:0043BCF8 8086C000000002          add byte ptr [esi+000000C0], 02
+
+Now 15 bytes free space from 0043BCE9 to 0043BCF8.
+

@@ -1,0 +1,62 @@
+Character speeds
+
+The Dark:
+
+000B4690 02000000 00000000 0A100802 14140614 08090E08 12080514 ........................
+000B46A8 10061408 0A0C0810 0806140D 0814080C 0A081008 03141007 ........................
+000B46C0 14080C0C 08120804 140E0714 080A0B0A 10080214 14061408 ........................
+000B46D8 09130000 00000000 00080000 00040000 00020000 00080000 ........................
+
+Hellfire:
+
+000B4690 02000000 00000000 0A100802 14140614 08090E08 12080414 ........................
+000B46A8 10071408 0A0C0810 0806140C 0814080C 08081008 03141206 ........................
+000B46C0 14080C0D 08120804 14100714 080A0C0A 10080214 14061408 ........................
+000B46D8 090E0000 00000000 00080000 00040000 00020000 00080000 ........................
+
+
+
+Speeds in Hexvalues (TheDark/Hellfire)
+
+			Warrior Rogue   Sorc   Monk  Bard  Barbarian
+
+
+Idle frameset Dungeon	 0A	08	08     08    08	    0A
+Attack frameset		 10	12	10     10    12	    10
+Walk frameset Dungeon	 08	08	08     08    08	    08
+Block speed		 02	05/04	06     03    04	    02
+Death frameset		 14	14	14     14    14	    14
+Spellcasting frameset	 14	10	0D/0C  10/12 0E/10  14
+Hitrecover speed	 06	06/07	08     07/06 07	    06
+Idle frameset Town	 14	14	14     14    14	    14
+Walk frameset Town	 08	08	08     08    08	    08
+Attack speed		 09	0A	0C     0C    0A	    09
+Spellcasting speed 	 0E	0C	0A/08  0C/0D 0B/0C  13/0E
+
+
+
+Attack speeds:
+
+Weapon 		Suffix 		Warrior		Rogue	Sorcerer	Monk	Bard	Barbarian
+
+Swords/Clubs	Normal 		0.45		0.50	0.60		0.60	0.50	0.45
+		Swiftness	0.40		0.45	0.55		0.55	0.45	0.40
+		Speed & Haste	0.35		0.40	0.50		0.50	0.40	0.35
+
+Axes 		Normal 		0.50		0.65	0.80		0.70	0.65	0.40
+		Swiftness	0.45		0.60	0.75		0.65	0.60	0.35
+		Speed & Haste	0.40		0.55	0.70		0.60	0.55	0.30
+
+Staves		Normal		0.55		0.55	0.60		0.40	0.55	0.55
+		Swiftness	0.50		0.50	0.55		0.35	0.50	0.50
+		Speed & Haste	0.45		0.45	0.50		0.30	0.45	0.45
+
+Unarmed		Normal		0.45		0.50	0.60		0.35	0.50	0.45
+		Swiftness						0.30
+		Speed & Haste						0.25
+
+Shield				0.45		0.50	0.45		0.45	0.50	0.45
+
+Spell				0.70		0.60	0.50		0.60	0.55	0.95
+
+

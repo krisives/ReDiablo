@@ -1,0 +1,13 @@
+Fixing bosspacks that get stuck
+
+file offset 0003EBC9
+
+:0043F7C9 83F804                  cmp eax, 00000004
+changed into
+:0043F7C9 83F801                  cmp eax, 00000001
+
+file offset 0003EBE1
+
+:0043F7E1 83F804                  cmp eax, 00000004
+changed into
+:0043F7E1 83F801                  cmp eax, 00000001

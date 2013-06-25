@@ -1,0 +1,104 @@
+DarkMage animations
+
+Existing CL2's
+
+dmagea.CL2	168 8x21 (ok, but no glow on staff)
+dmaged.CL2	184 8x23 (all the same orientation)
+dmageh.CL2	 48  8x6 (one direction seems missing, another double)
+dmagen.CL2	 48  8x6 (short, needs slowing)
+dmages.CL2	144 8x18 (phasing, shows not always well with a TRN)
+dmagew.CL2	  ?    ? (crashes viewer)
+
+magea.CL2	160 8x20
+maged.CL2	224 8x28 (all the same orientation)
+mageh.CL2	 64  8x8
+magen.CL2	 96 8x12
+mages.CL2	160 8x20 (phasing)
+magew.CL2	  8  8x1 (empty)
+
+Animation Pointers:
+
+Mage 		004B239C (000B0D9C)
+DarkMage	004B224C (000B0C4C)
+
+
+Using DarkMage animation for Advocates and DarkMages:
+
+Added MAGEW.CL2 to DARK.MPQ as "Monsters\DarkMage\Dmagew.CL2", using "A" option.
+
+Dark Mage:
+
+Animation pointer 9C234B00 -> 4C224B00
+Idle frameset 0C -> 06
+Walk frameset 01 ok
+Attack frameset 14 ok
+Hit frameset 08 -> 06
+Death frameset 1C -> 17
+Phasing frameset 14 -> 12
+Idle speed 00 -> 03
+Attack frame 08 ok
+Phasing frame 00 ok
+Removing TRN file for nicer phasing
+
+000AB770 8000 0000 1405 0000 9C23 4B00 0100 0000 .........#K.....
+000AB780 2C22 4B00 0000 0000 0100 0000 9C30 4B00 ,"K..........0K.
+000AB790 0C00 0000 0100 0000 1400 0000 0800 0000 ................
+000AB7A0 1C00 0000 1400 0000 0000 0000 0000 0000 ................
+000AB7B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AB7C0 EC2E 4B00 2A2E 2000 A500 0000 A500 0000 ..K.*. .........
+000AB7D0 1C00 0000 0003 0000 0382 0814 2300 0000 ............#...
+000AB7E0 0078 0100 1500 1500 0000 0700 7017 0000 .x..........p...
+wordt
+000AB770 8000 0000 1405 0000 4C22 4B00 0100 0000 ........L"K.....
+000AB780 2C22 4B00 0000 0000 0000 0000 0000 0000 ,"K.............
+000AB790 0600 0000 0100 0000 1400 0000 0600 0000 ................
+000AB7A0 1700 0000 1200 0000 0300 0000 0000 0000 ................
+000AB7B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AB7C0 EC2E 4B00 2A2E 2000 A500 0000 A500 0000 ..K.*. .........
+000AB7D0 1C00 0000 0003 0000 0382 0814 2300 0000 ............#...
+000AB7E0 0078 0100 1500 1500 0000 0700 7017 0000 .x..........p...
+
+TRN for Archmage Naj stays GENERAL :
+
+000AF308 841B 4B00                               ..K.
+
+
+Advocate:
+
+Animation pointer 9C234B00 -> 4C224B00
+Idle frameset 0C -> 06
+Walk frameset 01 ok
+Attack frameset 14 ok
+Hit frameset 08 -> 06
+Death frameset 1C -> 17
+Phasing frameset 14 -> 12
+Idle speed 00 -> 03
+Attack frame 08 ok
+Phasing frame 00 ok
+Removing TRN file for nicer phasing
+
+000ADEF0 8000 0000 AA05 0000 9C23 4B00 0100 0000 .........#K.....
+000ADF00 2C22 4B00 0000 0000 0100 0000 0823 4B00 ,"K..........#K.
+000ADF10 0C00 0000 0100 0000 1400 0000 0800 0000 ................
+000ADF20 1C00 0000 1400 0000 0000 0000 0000 0000 ................
+000ADF30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000ADF40 FC22 4B00 1E1E 1E00 9100 0000 9100 0000 ."K.............
+000ADF50 1C00 0000 0003 0000 0378 080F 1900 0000 .........x......
+000ADF60 0064 0100 1500 1500 0000 0700 6813 0000 .d..........h...
+wordt
+000ADEF0 8000 0000 AA05 0000 4C22 4B00 0100 0000 ........L"K.....
+000ADF00 2C22 4B00 0000 0000 0000 0000 0000 0000 ,"K..........#K.
+000ADF10 0600 0000 0100 0000 1400 0000 0600 0000 ................
+000ADF20 1700 0000 1200 0000 0300 0000 0000 0000 ................
+000ADF30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000ADF40 FC22 4B00 1E1E 1E00 9100 0000 9100 0000 ."K.............
+000ADF50 1C00 0000 0003 0000 0378 080F 1900 0000 .........x......
+000ADF60 0064 0100 1500 1500 0000 0700 6813 0000 .d..........h...
+
+TRN for Lazarus stays GENERAL :
+
+000AF308 841B 4B00                               ..K.
+
+TRN for Zamphir stays BHKA :
+
+000AFE48 281B 4B00                               (.K.

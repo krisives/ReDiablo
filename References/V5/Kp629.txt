@@ -1,0 +1,283 @@
+Correspondence with Kp629
+
+
+Yes, "true HP" is the nickname that I gave to my modifications to the monster
+statistics display function (it also retrieves the monster's resists from live
+table, allowing accurate display even if the resistances differ from the
+"standard" for that monster).  I believe that the failure to transmit damage
+when it is not stunned is simply an example of how rushed the programmers were
+when they added network code, that they attached in a place that is not always
+executed.  I should probably clarify that (IIRC) damage to a non-resistant
+monster *would* be relayed to other hosts in classic, regardless of whether the
+damage was sufficient to stun.  I can check the code later to verify this. 
+Regarding 1 HP during death, I had not noticed that in the code, but I do recall
+it happening several times in recent battles.  Of course, I've only skimmed the
+death code, so I could easily have missed any material in there about HP going
+to 1.
+
+I recall that you changed the code to allow stunning a monster if the damage is
+great enough, regardless of resistance.  Do you happen to recall what changes
+you made to do this?  If not, I can check the notes you have posted and/or your
+resulting exe.  If you made the change in the same way that I initially planned
+mine (before I decided not to stun if resistant), you could very well be
+triggering the network transmit of a "damage monster" packet, which, during
+heavy fights, would produce ghosting.
+
+One parting note about networking: at least in Diablo, all the networking is
+handled via calls to the storm DLL, and most such functions are fairly short
+(that is, there is a function dedicated solely to calling a function in storm). 
+The storm DLL is then responsible for invoking the SNP file to do the actual
+network I/O.  I believe this heavily abstracted model was done to permit use of
+storm DLL with multiple games, and the use of multiple media types (IP, IPX,
+modem, etc.) via plugging in the appropriate SNP.  The model was likely
+preserved in Hellfire, even if the SNP for IP play negotiated over battle.net
+was not.
+
+-Kp
+
+> 
+> Hello Kp629,
+> 
+> Thank you very much for this information. Although our 'ghost' problem
+> seems be be something else, yet still created by packet loss, it was indeed
+> interesting to read and helps us greatly in understanding the networking
+> aspect of the game.
+> 
+> Some questions appear after reading:
+> 
+> With True HP hack, you mean the display of current HP?
+> 
+> Isn't it strange that the game does not transmit damage if a monster does
+> not get stunned?
+> 
+> Did you ever notice in the code that handles monster deaths, that monsters
+> temporarely have 1 HP (while sending info to other gamers perhaps)? Dr.Zed
+> mentioned this once, in a time I wasn't able to trace it in Hellfire, and I
+> never found it by myself.
+> 
+> Zenda
+> 
+> At 15:16 21-10-01 -0500, you wrote:
+> >Hello,
+> >        Some time ago, one of you mentioned on V&K's Modmaking board that The
+> >Dark seemed to have problems with "ghost" monsters, which would be live on
+> some
+> >systems and dead on others.  I encountered a similar phenomenon recently in
+> >Diablo v1.09 in my own modmaking efforts.  Upon comparing information with
+> Zoey.
+> >at the DSF meeting Saturday, I realized that my problem is different from the
+> >one you are seeing, but I thought that I would go ahead and mention the
+> details
+> >of my problem (and fix) in case it is of use to you.
+> >
+> >        After having used the true HP hack for some months, it became
+> apparent
+> >that the game clients were not communicating damage to monsters which
+> resisted
+> >the source of damage, for instance Fireballing a Blood Knight would not
+> show any
+> >HP change on systems other than that of the caster.  After doing some code
+> >analysis, I determined that this is because the function which sends such
+> >notices is called from the function which checks for stun.  As you know,
+> Diablo
+> >normally skips the stun-check function entirely if the target is resistant.
+> >Therefore, by skipping the stun-check, it also skipped the code which
+> would have
+> >generated a notice to other clients that the monster had been wounded.
+> >        So, I figured I'd just add in a quick branch in the
+> resist-specific area
+> >to call the network code too (I didn't want to stun resistant enemies).
+> >However, this ended up leading to more serious problems: ghost monsters
+> during
+> >heavy fighting.  After serious testing, I determined that it was a resource
+> >problem.  Since most enemies in my Hell/Hell have *at least* 1500 HP, Chain
+> >Lightning becomes a very practical way to deal with fire immune, lightning
+> >resistant enemies.  The problem arose because each frame, a packet would be
+> >generated for each monster being hit with a lightning stream.  With several
+> >casts in effect at any given time, that very quickly reached an excessive
+> number
+> >of packets per second.  The resulting data flood overwhelmed the other hosts,
+> >forcing them to drop packets to keep up.  Unfortunately, they dropped packets
+> >indiscriminately -- meaning kill packets got lost too.  We observed that
+> because
+> >some ghosts
+> >would spontaneously keel over ~5-10 seconds after the fighting stopped,
+> since in
+> >smaller fights, the application retry would eventually get the kill packet
+> >through.  Thinking back, it may actually have been some other source dropping
+> >packets to keep up, but I am reasonably certain that packet loss was at fault
+> >for the ghosting problem.
+> >        I decided that the most effective solution was to simply reduce the
+> >number of packets in the network, which I accomplished using the Diablo Chat
+> >Extensions DLL.  I set it up to patch into the function which transmits a
+> >"damage monster" packet, and instead add the amount of damage to a local data
+> >structure.  Then, every 4 frames (.2 seconds), I loop through and send a
+> unified
+> >packet for each monster that has been hurt in the last 4 frames.  This
+> cuts the
+> >traffic to 1
+> >packet per monster per 4 frames, regardless of how heavy the fighting is.  It
+> >does lead to some wasted mana when two mages attack the same enemy since
+> they'll
+> >end up dealing slightly more than fatal damage to it before it goes down, but
+> >the expenditure is minor and I consider the removal of ghosts far more
+> >valuable.  If it ever becomes a real problem, I feel I could change it to 1
+> >packet per monster per frame, which is still far better than the
+> unbuffered form
+> >was giving.
+> >
+> >        I hope this is of some help to you, or at least makes for interesting
+> >reading. :)
+> >
+> >-Kp
+
+
+
+.......
+
+
+Though many of my techniques are not applicable in your case, due to the lack of
+requirement that the exe remain untouched, some of my methods may still be
+applicable.  First, a little bit of background is in order.
+
+As I'm sure you're aware, the code segment in most executables is read-only,
+meaning that the program suffers an access violation if you try to write any new
+data there.  This is unacceptable for a hook DLL (HDL).  Thus, the
+VirtualProtect call is vital.  VirtualProtect allows any code running in the
+context of a process to change the memory protection of any page in that
+process.  Specifically, a DLL could use it to un-write-protect a page of code in
+another DLL or in the main executable, allowing the DLL (or anything else) to
+change the contents at run time.  A quick sample of how to use VirtualProtect to
+change code, then I'll get on to how the HDL is useful in your case.  I believe
+one of you mentioned being familiar with C code.
+
+--begin excerpt from source--
+{	DWORD oldProt;
+	if (VirtualProtect (0x401040, 2, PAGE_EXECUTE_READWRITE, &oldProt)) {
+		*(PWORD) 0x401040 = 0x18b;
+		VirtualProtect (0x401040, 2, oldProt, &oldProt);
+	}
+}
+
+First, a 32 bit value named oldProt is declared.  (Win32 SDK defines the types I
+used here.)  oldProt is used for saving the protections of the page prior to my
+change, so that they can be restored later.  Next, VirtualProtect is called to
+change 2 bytes starting at 0x401040 from their current permissions (whatever
+those are) to permissions which permit reading, writing, and running those
+bytes.  VirtualProtect returns nonzero on success, zero on failure.  If it
+returned zero, the permissions would be unchanged and it would not be safe to
+write to that segment.  On a nonzero return, the body of the if is executed.
+
+The first operation, *(PWORD) 0x401040 ... treats that address as a pointer to a
+word, which Win32 defines to be a 16 bit value.  It then writes 0x18b to that
+location.  Recall that on x86 chips, multi-byte values are stored little end
+first.  Therefore, it actually places "8b 01" into memory at that location. 
+(This is an example opcode; incidentally, the opcode chosen evaluates as "mov
+eax, dword ptr [ecx]".)  Finally, VirtualProtect is called again to restore the
+original permissions on that section of memory.  The address of oldProt is
+passed again because the Win32 kernel will fail the call if it cannot return the
+value.
+
+I've found three principle advantages of HDLs over direct hex-editing.
+
+1) I have near limitless space, which is valuable more for the amount of data I
+can store than for the code space I require.
+2) I can code complex sections in a high level language, such as C.  For
+example, the code I used for formatting a joining user's statstring would've
+been quite a pain to write in assembly, but it was fairly quick in C.  (This
+code supports showing most relevant info from a user's statstring, regardless of
+what game they're using.)
+3) The sections which I code in assembly, of which there are quite a few, I can
+code in an assembly language and let the assembler handle the details of
+figuring out which opcodes to use, how far a jump needs to transition, and so
+forth.  A great convenience, since checking over large functions to verify them
+can at times be quite time consuming.
+
+Unfortunately, I'm not near my code at the moment, so I don't have my notes on
+where Hellfire talk is sent / shown.  However, finding it was pretty easy.  For
+sending, I took advantage of the hot message support, F9-F12.  Search for
+references to Kernel32.GetPrivateProfileString.  Diablo and Hellfire both use
+that to look up the messages from their INI files when you press the button. 
+Shortly below that, the program bitwise or's ecx with 0xffffffff, loads a value
+into edx, then makes a call.  That call transmits the message to the other
+players.  Now search for other references to the call, of which there are two. 
+One of them is, IMO, a crude hack by the programmers.  It sends a talk event to
+self and no one else, with the text of your current executable version (this is
+how the 'v' key is implemented).  The reference is responsible for transmitting
+typed messages to the other players.  Above it should be an operation that
+iterates over a global array, turning on bits in ecx if members of the array are
+set.  That's how it handles the mute function: each member of the array
+corresponds to one player.  When zero, that player can hear you and when one,
+cannot (or maybe the other way around).  Not having experimented with Hellfire,
+I don't know if /commands get that far or are removed earlier.  It should be
+easy enough to backtrack through the code to find a good place to attach,
+though.  I'll come back to attaching in a moment.
+
+For finding where talk is displayed, I simply searched for references to the
+string "lvl", since I knew that appears when someone speaks ("%s (lvl %d): %s").
+
+One last piece of information is needed before work can begin on how to attach:
+you need a DLL.  For brevity's sake, I'll skip DLL construction in depth.  There
+are two ways you can link to the DLL, statically or dynamicly.  Though static
+linking is easier when you're building a DLL, adding a DLL afterwards is
+probably easier dynamicly.  To do this, you'll need to find some portion of
+Hellfire's code which runs reasonably early on in the startup process and have
+it call LoadLibraryA after pushing an ANSI string containing the name of your
+DLL.  LoadLibraryA uses stdcall convention: it cleans up the stack when it is
+done, so you don't need to pop that argument back off.  The return value is zero
+on failure or the memory address of the DLL on success.  The system
+automatically triggers DllMain when you call LoadLibrary, but due to some weird
+things done in the kernel, it may not be safe to perform memory edit operations
+from within DllMain.  If you can't, you'll need a separate init routine to do
+those.  Since I don't know what your level of experience is in this area, I'll
+leave it out for now; however, if you wish assistance, please let me know.
+
+Attaching is a fairly simple process, once all the overhead code is done. 
+Simply use VirtualProtect to grant write access to the piece of code you wish to
+attach to, then write in
+the code for a call or a long jump to your function.
+
+Lastly, Zamal had asked that I include a sample of code for writing to a file. 
+Below is some sample C code.
+
+HANDLE hFile; // global somewhere
+
+// In some init routine
+{	hFile = CreateFileA ("myfile.txt", GENERIC_WRITE, FILE_SHARE_READ, NULL,
+OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	/* Filename is "myfile.txt", requesting write access only, allowing other
+processes that want to open the file read-only to do so (but deny if they wish
+to write it), NULL security descriptor, open the file always (open if it exists,
+create it if it does not), normal attributes (not readonly / hidden), and NULL
+template, since 9x rejects if you use a non-NULL. */
+}
+
+// when someone speaks
+{
+	char buf[256];
+	DWORD written;
+	sprintf (buf, "%s (lvl %d): %s", playername, playerlvl, talktext);
+	WriteFile (hFile, buf, strlen (buf), &written, NULL);
+	/* Print the speech into a buffer of ours, then use WriteFile.
+	 * Writing to hFile, as opened above.  Writing from the buffer buf, using
+strlen (buf) as the number of bytes to write.  Address of a variable telling how
+much was written is passed, so the OS can notify us of failure to write out all
+the data.  Finally, not doing overlapped IO, so NULL for fifth argument. */
+}
+
+// In DllMain, when the process is terminating
+{	CloseHandle (hFile);
+}
+	/* Close the handle, which should also sync any data still hanging in the
+buffer */
+
+All constants and functions should be prototyped in the Win32 SDK which comes
+with Microsoft Visual C++.
+
+Let me know if you need any clarifications.  Good luck. :)
+
+-Kp
+
+
+

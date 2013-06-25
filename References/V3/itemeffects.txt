@@ -1,0 +1,298 @@
+
+Hi there,
+
+Your conclusions seem correct and maybe I can back it up by 
+presenting a few small, as Crys would have said, technical 
+factoids.
+
+First, we have to be aware that we have base items. Upon them we 
+can place prefixes and suffixes. Prefixes and suffixes each have 
+quite a few data about them (the relevant from a non technical 
+point of view can be found in my Guide). Another data they have, 
+is that they have a numerical number telling which of the many 
+magical properties they represent. There is a table with all such 
+effects. One such effect is for example +% ToHit, another one 
+is +magic, and a further one is +swing speed (which can have any 
+of 4 values) and so on (the actual amount is then specified 
+separately, it is still the same effect (by the way, the +Magic 
+and -Magic are in fact two separate such effects. Some effects 
+does not need an additional range or value. An example would be 
+"of ages". Now, all such effects does not have a 
+corresponding prefix or suffix. For example, there are no prefix 
+or suffix that has the effect that the game describes as 
+"constantly lose hit points". Another effect not 
+available as a prefix or suffix is the "one handed 
+weapon" which makes any two handed weapon instead being two 
+handed. Nothing would have prevented prefixes or suffixes from 
+having those effects, and indeed, in some mods, people have 
+actually added prefixes and suffixes with those effects that 
+would normally not be found on prefixes and suffixes.
+
+But what about the unique items, you may ask? Where do they come 
+in? Well, just as a prefix or suffix is something that can be 
+added to a base item, so is the uniqueness. People may think of 
+them as special items, but if you have read my Guide, you should 
+know that they are in fact just a base item to which we add the 
+properties of the unique "item". Technically they work 
+much like a prefix or suffix, although they can effect other 
+things like the name of the item. They also as opposed to 
+prefixes and suffixes can have up to 6 effects. Those (up to) 6 
+effects are technically described in the data for the unique 
+item, just as it is for the prefix and suffix, that is, first by 
+the number of the effect, and then the possible additional values 
+(usually a min and max value or in some cases just one value or 
+in other cases with no such value, depending on the effect).
+
+Unique items uses some effects that you not normally find on 
+prefixes and suffixes, and one such example is the Constricting 
+ring, it has the "constantly lose hit point" effect. It 
+also has the effect "+% to all resistances". It also 
+has the effect that gives the item a special picture. Again, this 
+is a normal effect that COULD be attached to a prefix or suffix, 
+but no prefix or suffix exists with it. It is worth noticing that 
+the effect on the constricting ring that gives +75% resist 
+all, is the SAME effect used for Obsidian, Jade and so on. It is 
+NOT s special set all resistance to 75% for example. He min 
+and max values is just set to values not found on any of the 
+existing prefixes, 75 and 75. This is by the way, typical for 
+almost all unique items (with a few exceptions though), the min 
+and max value is the same. As explained later, the game will for 
+those effects that do take a range, ALWAYS pick a value randomly 
+within the range. For the constricting ring, it will be between 
+75 and 75, which of course always gives 75. Nothing would have 
+prevented the unique items from having a more varied values.
+
+Here it is worth noticing that for an effect as +swing speed, the 
+game also actually gives a range if I recall correctly, where 1 
+is readiness and 4 is haste, so if one would have given the 
++swing speed effect a range of 3 to 4, some of those items would 
+be like the haste suffix and some like the speed suffix. ALL 
+suffixes and unique items with this effect has the same value for 
+max and min though.
+
+So, where is this leading us, well, lets move on and see how the 
+game handles the effects and the items. When an item is created, 
+it is first created as a plain base item. If the game then 
+decides that it should have prefix or suffix (this all really 
+happens all at once in the item creation, you can’t add a prefix 
+to an existing base item), it will first decide which one, and 
+then call a special routine that sets up the item correctly 
+according to that prefix. Passed to that routine is not the 
+prefix or suffix, but actually the effect number of that prefix 
+or suffix, and the min/max range. That routine will then set up 
+the correct data on the item. Internally, each item is (just like 
+each monster, player and so on) really a chunk of values. For 
+items it happens to be 368 bytes of data. This data includes for 
+example the text string describing the data and about everything 
+else that the game needs to know about the item at runtime. I 
+won’t describe any of that data structure, there are quite a few 
+"hacker" sites that have lists describing it (it is 
+actually that data structure that trainers save as .itm files 
+(along with its own header in most cases). I have not seen any 
+completely complete such description though although I have 
+myself complete knowledge of all data entries for the item data 
+structure (typically missing things are requirement fulfilment 
+data and animation data (when an item is dropped it is actually 
+an animation that is played and data for it is stored on the 
+item, there is actually a "process items" entry just as a 
+process players and monsters and so on, in the game engine, which 
+handles those animations of items dropping).
+
+Any way, back to the routine that sets up all the data depending 
+on the effect. Such data are stored on the item in two ways. 
+Either as a value, or as a flag. Think of it as any effect that 
+has a range of values attached to it such as +%Tohit, +Magic 
+and so on, are stores as the actual value (of course, each item 
+has values and flags for ALL possible effects. It just happens to 
+be that they are almost all set to 0 (for a plain base item they 
+ARE all 0. For a dragon’s ring of wizardry, the two values for 
++mana and +magic will of course be set to non 0 values. For the 
+effects that has no such numerical range, the game instead sets a 
+flag. For example, if the effect is the one that give fast block, 
+the game will set the proper flag that indicates, this item has 
+the fast block effect. An item will never have a range set on it, 
+the game always pick a random value within the range and it is 
+only that value that is stored on the item.
+
+It is worth mentioning that some effects that may SEEM to have 
+numerical ranges, actually are handled with flags. Life and Mana 
+stealing for example. They are NOT stored as a value telling how 
+much is going to be stolen, but instead, 4 different flags are 
+used, one for each of the 4 possible stealing options, 3% 
+life, 5% life, 3% mana and 5% mana (a fifth flag 
+indicate the random life stealing used only by the undead crown).
+
+Similarly, when an item is unique, the same routine is called, 
+once for each of the up to 6 effects possible. The routine 
+actually have no idea if the item happens to be a magical item or 
+a unique item, and does not need  to know it either.
+
+Now, each item existing anywhere in the game, be it on a player, 
+on the ground or for sell in the shops, exists as such a data 
+entry of 368 bytes (items not yet dropped by monsters and chests 
+and so on, does NOT exist yet but are created upon actual drop).
+
+OK. Now we know how the game handles prefixes/suffixes and 
+uniqueness of items (as effects) and we know how the game handles 
+items with effects (sets up the data either as a numerical value 
+OR a flag).
+
+So, what happens when you equip an item (or many items). It is 
+not until you do that that the effects of the items really have 
+any use and are processed in any way? Well, lets take a look at 
+that too (don’t despair, this will all soon lead to the 
+explanation of why the CR behaves as it does and you will also be 
+able to tell why most other items behave as they do).
+
+Items in the backpack or belt are really non active, that is, 
+their effects do not affect the player in any way. It is not 
+until you equip an item that its effects affect your character. 
+So how do the game know when you strike an opponent if you have 
+an item with life stealing? Or what your final ToHit will be? 
+Will it each time go through all your 7 possible equipped items? 
+Of course not, that would be time consuming and to much work. 
+Instead, each time you equip or unequip an item, or enter a game 
+and so on, it will call a routine that checks through all your 
+items and sort of create a "super" item that is all the 
+properties of the items you have equipped merged into one.
+
+Now, to compile this "super item", the game will ONLY 
+look through the values and flags I mentioned above, it will NOT 
+in any way go back the prefixes and suffixes or unique items and 
+their data. It actually does not care from where the values on 
+the item came. So, it will go through all items and sum up the 
+value on each item that tells how much +magic that item gives 
+(for most items it will of course be 0). It will then store this 
+sum on the character. The it do the same with +%ToHit and so 
+on.
+
+So what about the flags? Well, a flag can either be on or off. 
+There is no count of how many item has a specific flag set. This 
+means that if at LEAST one item has a specific flag set, that 
+flag will also be set on the character. So, it does not matter if 
+you have one or 7 items with the flag indicating fast block 
+equipped, you will still only have the flag set on the character 
+and no number indicating how many items had the flag set.
+
+After all those summing up of all data on the items is done, 
+additional work is needed. For some values, non item values are 
+also added in. Take for example mana, to the sum of all +mana 
+from items, the game will also ad a sum based on what the sum of 
++magic was. And further add the amount of mana you have naturally 
+with the character and the mana you get from the natural magic. 
+This value is then stored as your max modified mana. At this 
+point it will also through a somewhat complex method check if you 
+fulfil the requirements of the item to equip it. If not, it mark 
+the item (and show it as red) and have to sort of redo the 
+summing as the "red" item will not contribute to the 
+"super item". Lets not go into more details about the 
+requirements.
+
+OK. So now, we have all the information from all the items 
+equipped stored on the character. When the game needs to do 
+something with the character, for example fight, it will only 
+check the data of this "super item", it will never pass 
+through all the individual items. So for example, when the game 
+want to know your ToHit, it simply take your dex, divide it by 5 
+and add 50 and then add the value in the "super item" and 
+thus gets the final tohit (shown on the character screen for 
+example). Similarly, when the game want to know if you have any 
+item that absorbs half the damage from traps, it simply check the 
+flag for it (it is one of the effects saved as a flag). It does 
+not matter if you have 7 such items or only one, since the game 
+will only check if the flag is on or off.
+
+As I mentioned above, the "constantly lose hit points" 
+effect is stored as a flag. So the game will not really know if 
+you have one such item equipped or two (or seven). It just knows 
+that you have at LEAST one such item equipped and will if the 
+flag is set, subtract a specific amount of life (4/64 points of 
+life really).
+
+This is the reason why most prefixes/suffixes and effects from 
+unique items that have no special value are NOT cumulative (note 
+that things like life stealing that seems to have a value 
+actually are controlled by flags, the reason 3% and 5% 
+are not cumulative just happens to be the result of how the game 
+checks the flags).
+
+So, when do the game actually check for the effect 
+"constantly lose hit points"? And how often? Well, it was 
+mentioned by Das Regard that even if you just equipped it for a 
+fraction of a second, it removed some life. Here we must discuss 
+briefly how the game works to explain this.
+
+As some may know, it is typically referred to as the game runs at 
+20 frames per second. To avoid confusion, this "frame 
+rate" is NOT the rate at which the graphic card updates the 
+screen. It is simply the rate at which the game processes 
+players, monsters and so on. Assume you have a graphics card that 
+is set to refresh the screen at 80Hz (that is, 80 times per 
+second) it will do so, however, it will show the same screen for 
+4 such updates, then the game will update the status of 
+everything and for another 4 times it will show a new screen. 
+Let’s be happy with this explanation which was perhaps not 
+completely correct but it is sort of irrelevant here. We settle 
+for the fact that 20 times each second the game will process each 
+monster, each player (and anything else that needs processing) 
+and update its status.
+
+When the game comes to processing the players, it first do some 
+checks to see if you are not dead, and if the values are within 
+some lose boundaries and a few other things (and if there is 
+actually a player at ALL at that player slot). Then it checks if 
+the character has the flag set for the effect that 
+"constantly lose hit points", if so, it removes 4/64th 
+points of life from that player (regardless of as many items with 
+that effect you happen to have equipped as mentioned above). It 
+will also make a check here for the effect "mana equals 
+0" or corruption as the suffix that uses this effect is 
+called.  The game actually checked for this already above when it 
+summed up all mana, but this is an extra check. You may for 
+example have gained mana by levelling up (I don’t think it 
+reprocesses the items when you level up, that is why character 
+base damage will not be updated for example). It then continue to 
+the correct routine depending on what action your player is 
+currently doing and so on, but that is beyond the scope of this 
+post and totally irrelevant to the subject we are discussing here.
+
+So, what about Mana Shield and using the constricting ring you 
+may ask? Well, one might have thought that the game would when it 
+checked for the "constantly lose hit points" check if you 
+have a Mana Shield running and if so, instead remove mana. 
+However, this is NOT how it is done. I would figure that they 
+thought that as there are so many different places (well, there 
+are not that many, but quite a few) where you can lose life, it 
+is better to handle it when the Mana Shield effect is processed 
+(which it will be done later when the game processes all spell 
+effects). That way, a section of the code does not have to bother 
+about if you have a Mana Shield or not, it just subtract life and 
+leave it to the Mana Shield to convert it to mana loss later on. 
+This may seem like a good idea, but as we know, it leads to a 
+whole bunch of nasty bugs. One such was the life stealing of the 
+Black death, although it is perhaps a special case, it needs 
+special handling and messing with the effects to see IF you have 
+a Mana Shield, and if so, also update its information about your 
+life.
+
+Personally I would have done a generic routine that subtracted 
+(or added) life which all routines that wanted to affect your 
+life (usually it is damage) called and which if a Mana Shield was 
+running, instead removed mana (for example, there are such 
+routines that increase or decrease your basic stats such as magic 
+and vitality). That way, you would have avoided many of the bugs, 
+including such things as hit recovery problems when damage is 
+greater than your current life while using Mana Shield). It would 
+still not manage to handle the "correct" reduction of 
+mana for the constricting ring as that is a problem with the 
+precision of which life and mana is held. The ring really remove 
+a very small number and when it is later lowered by the Mana 
+Shield, well, there simply are no way to get the needed precision.
+
+The above explains why you will lose life even if you equip an 
+item only for a fraction of a second.
+
+Well, that would also conclude this explanation of how the 
+magical effects on items work.
+ 
+Jarulf

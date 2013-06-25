@@ -1,0 +1,158 @@
+by Jarulf
+
+If we skip stuff like how the game build the actual screen, takes 
+input from the mouse and keyboard and such, there are really 3 
+steps that are interesting (4 if one add dungeon features but 
+they don't really affect players or monsters directly (barrels do 
+their attack at the time you hit it within the player update).
+The three step (in order done) are:1. process players2. process monsters
+3. process effectsIn the player process the player will get his current action 
+advanced one frame and if it reaches the attack frame, that is 
+the frame where an attack will strike, that attack will be 
+carried out. If an action reaches the end, the next one is prepared.
+(Please note that this description is of occur brief and not 
+complete, but gives what I think is the important information to 
+you, my update will have this topic I post about here covered quite well).
+In the monster process the game will typically figure out who is 
+the target of the monster, then call the AI to decide action (if 
+an action is already ongoing, no change is done, that is, a 
+monster (or player) can't change or abort an ongoing action, so 
+if an attack is started, it must be completed or aborted by an 
+outside cause (like being attacked)). Then the current action is 
+advanced (that is, the next frame is handled and if it is an 
+attack, the game will check if it has reached the proper frame 
+for the actual attack and if so actually do the attack.
+For both monsters and players, the action may spawn an effect, 
+this happens if a spell is cast as the action. The effect is then 
+set up properly at the time it is spawned. Each effect has a 
+specific setup code.
+In the effect processing, each effect (basically spells or parts 
+of spells) is updated (just as each effect as a startup code, it 
+has an update code). he update will typically move the effect 
+some distance (unless stationary), handle all type of specific 
+tasks (some effect spawn additional effects as they go on), of 
+course, there will be checks if it hit a wall or so. It will also 
+check if it has a valid target in its location (that is, a player 
+or monster) and if so, do an attack (including To Hit check first 
+of course). Some effects are terminated upon hit, some are not, 
+some are transformed into a splash attack and so on.
+As for your specific question about the lightning spells. Chain 
+lightning is just a bunch of lightning spells (actually there is 
+a chain lightning effect that as its only task will spawn one 
+lightning effect for each target within range and then it will 
+terminate). The Nova effect will spawn some 90 or so bolts (each 
+an effect) that will travel away form the caster  (resulting in 
+the typical ring or bolts, it will only hit once on each target. 
+SImilary Charged bolt is a moving bolt that hit once as well 
+although it will be terminated when it hits as oposed to Nova 
+that will continue and can thus hit more than one target.
+The lightning effect seems to be the main focus of your question 
+so lets explain it in more detail.
+The lightning effect is a totally invisible effect that starts at 
+the casters location and moves on in a straight line (with a 
+speed value of 32). Each time it enters a new location, it will 
+in that location spawn a stationary bolt. The bolt has a duration 
+of [slvl/2]+6)/20 seconds or [slvl/2]+6 frames (since the game 
+runs internally at 20 frames per second). A bolt from a monster 
+always has the duration of 0.5 second or 10 frames and one from a 
+trap 0.4 seconds or 8 frames. Obviously the bolt closest to the 
+caster will disappear first as it was spawned first. The end 
+effect is a visual stream of lighting that seems to move away 
+form the caster. The lightning effect will be terminated as soon 
+as it hits an obstacle.
+The individual bolts are each an effect and as such are also 
+updated one each frame. In each frame they will if there is a 
+target in their location, try to hit it. This is done with a 
+normal To Hit attempt using the To Hit formula for magical 
+attacks in my Guide. If it hits, the damage (possibly adjusted 
+for resistance) that it deals will be Rnd[clvl] + Rnd[2] + 2 if 
+it originated form a player. If it originated form a monster, it 
+will have deal damage in the range given in my Guide for the 
+monster divided by 32 (a Red storm on normal difficulty will thus 
+have a bolt that do 8/32 to 18/32 damage. Remember that the game 
+keeps track of damage, life and mana with 6 extra bits of 
+precision or 1/64th of a point). For traps the damage is (dlvl + 
+Rnd[dlvl])/32. It is worth noticing that the actual damage of a 
+bolt is determined at the time it is created, so a single bolt 
+will do the same damage for all of its duration. Different bolts 
+within a lightning spell can have different damage values though.
+What does this mean? Well, assume the target stands still within 
+the lightning spell from a player will attack (and make a 
+separate to hit each time) [slvl/2]+6 times (once each frame) and 
+each time if hit, do the damage stated above. Assume a level 10 
+lightning spell, it will thus attack 11 times and can do anything 
+from 0 (no hits) to 11*(clvl-1)+33 damage (minimum damage if it 
+hits all times is 22. For a level 50 mage with level 20 spells, 
+it can do as much as 16*(50-1)+48 or 832 point of damage if it 
+hits all times. Assuming it hits all times, the average would be 
+(832 + 16*2)/2=432 damage. Not bad.
+A Red Storm on hell difficulty will similarly do (assuming it 
+hits every time which is not that obvious) damage in the range 
+from 10*36/32 to 10*78/32 (or 11.2 to 24.4 with an average of 
+17.8). Not that impressing.
+Please feel free to correct the above, especially the numbers, as 
+I grabbed them and calculated rather quick. I might of course 
+also have got something wrong and thus if anyone have experienced 
+anything else, please tell me.
+As is evident form the above, EACH attack will at the time it 
+hits do the damage immediately and for EACH attack the game will 
+check for such things as hit recovery and death (I would say that 
+due to this, someone getting "killed" by a monster while 
+using Mana Shield, will NOT take any more damage until the game 
+reaches the Mana Shield effect and revives you, this might be a 
+serious bug if it is true as it really means that if you are 
+under heavy attack, you will never take more damage than your 
+current life (I think it is always capped at -1 life for an 
+individual attack but not sure, could be 0 or whatever value it 
+ends up at as well) The reason for this is that if the target is 
+dead, the attack would be aborted before it enters the to hit check). 
+I hope this will clarify what you asked for. Currently the update 
+of my Guide is completely done EXCEPT for the need of checking 
+through the battle chapter one final time or two. So hopefully 
+early next week. Although each spell is not explained with this 
+detail, some of this and a lot more will be explained in the new 
+battle chapter and the corrected and updated spell information in 
+chapter 4 (it should now be more or less complete with all 
+applicable damage, speed and duration data for all spells, both 
+from players and monsters (as well as from traps).
+I noticed an interesting discussion about the fireball some pages 
+back. Although I must confess I don’t have the fireball spell 
+mapped out in such detail as would be needed I can comment some. 
+From what I remember, the fireball spell will if it hit, 
+transform into splash mode and in the next frame, deal splash 
+damage. It will for EACH of the 9 locations do a separate attack 
+(and thus as evident from above do separate to hit checks for 
+each one that will of course be totally unaffected of the initial 
+hit (be it a wall or a monster or player). I still think the to 
+hit formula would be the same as the effect should still be 
+flagged as originating from the same player (or monster if 
+advocate). Due to the way the spell seems to transform into 
+splash damage rather than dealing it immediately, there might be 
+some effects to it but I have found no obvious such ones. If none 
+is done, the damage for the splash damage is IDENTICAL to what it 
+was for the fireball itself (just as for the bolts above within a 
+lightning spell, the actual damage is calculated upon initiating 
+the fireball). I have never bothered looking at the actual parts 
+that handles the movement and thus check for blocking features in 
+the dungeon but I think Crystallion mentioned that before the 
+splash damage attacks, it will first check if that location is 
+"visible" from the caster, why this is made only the 
+designers can tell of course. But it is well known that the 
+splash damage will NOT be applied (or rather it will not try to 
+hit) if the fireball (or the "visible check line of 
+sight") passes over lava and a few other dungeon features 
+(although over some it will apply, obviously the routine that 
+check for visibility and the one that checks for the movement of 
+the spell has some different set of conditions for what blocks).
+Also, to avoid confusion over SC. Think of it as giving the 
+attack an auto hit value of 100%. Don’t confuse or start 
+thinking about AC or any such things (spells don’t use AC at all 
+and are still affected by SC). And as said above, ALL (without 
+exceptions as far as I can recall) attacks will do a to hit check 
+(even if it is just to realize the target was SC and thus have an 
+auto hit of 100% (this is technically handled by the game 
+simply jumping over all other to hit check right into the next 
+step which is damage and block stuff). There are only three 
+different cases, melee, arrow and spell. Each has its own To Hit 
+formula, bit there are no other cases or special cases (even 
+charges use the same one (melee) although it alters the base To Hit to be 500%).

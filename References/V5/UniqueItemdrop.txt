@@ -1,0 +1,11 @@
+
+Chance for items being unique:
+
+[ebp+08] is 1 or 15 (for bosses)
+
+:00426FEE 6A64                    push 00000064
+:00426FF0 5A                      pop edx
+:00426FF1 B11C                    mov cl, 1C
+:00426FF3 E8622FFFFF              call 00419F5A
+:00426FF8 3B4508                  cmp eax, dword ptr [ebp+08]
+:00426FFB 7F7C                    jg 00427079

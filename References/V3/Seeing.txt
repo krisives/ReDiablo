@@ -1,0 +1,434 @@
+Seeing Monsters/Bosses
+
+
+
+()Tekstchange - Display Hp's:
+
+000B23B0 69737461 6E636500 48697420 506F696E istance.Hit Poin
+000B23C0 7473203A 2025692D 25690000 546F7461 ts : %i-%i..Tota
+wordt
+000B23B0 69737461 6E636500 48697470 6F696E74 istance.Hitpoint
+000B23C0 73202569 206F6620 25690000 546F7461 s %i of %i..Tota
+
+
+
+()View HP (if not a Boss)
+
+Dit vervangt vorige aanpassing. 
+
+Nu zal HP-info komen als kills > 30, maar ook als gebruiker Seeing (Infravision) heeft.
+Nu ook correcte plaatsing van HP-info (niet verwisseld).
+Tevens voorbereiding voor View HP for Bosses.
+
+Seeing-check kan indien nodig achteraf disabled worden door : je -> jmp op 0044447C.
+
+(? Adressen al zo goed mogelijk berekend.)
+
+dus
+:0044443F 833B00                  cmp dword ptr [ebx], 00000000
+:00444442 7C7E                    enz.
+
+Wordt:
+:0044443F E816000000              call 0044445A				call CHECK_IV
+:00444444 50                      push eax
+:00444445 85C0                    test eax, eax
+:00444447 7505                    jne 0044444E    			jmp to displayhp if IV
+:00444449 833B1E                  cmp dword ptr [ebx], 0000001E
+:0044444C 7C05                    jl 00444453				skip displayhp if kills<30
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444447(C)
+|
+:0044444E E82C000000              call 0044447F				call DISPLAY_HP
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044444C(C)
+|
+:00444453 58                      pop eax
+:00444454 85C0                    test eax, eax
+:00444456 7573                    jne 004444CB    			jmp to displayres if IV 
+:00444458 EB68                    jmp 004444C2
+
+* Referenced by a CALL at Address:
+|:0044443F   
+|
+:0044445A 51                      push ecx				CHECK_IV : out=eax (00=No IV, 01=IV)
+:0044445B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00444460 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00444466 69C0C8550000            imul eax, 000055C8
+:0044446C 03C1                    add eax, ecx
+:0044446E 59                      pop ecx
+:0044446F 8B80D0010000            mov eax, dword ptr [eax+000001D0]
+:00444475 C3                      ret
+
+
+:00444476 90                      nop
+:00444477 90                      nop
+:00444478 90                      nop
+:00444479 90                      nop
+:0044447A 90                      nop
+:0044447B 90                      nop
+:0044447C 90                      nop
+:0044447D 90                      nop
+:0044447E 90                      nop
+
+
+
+* Referenced by a CALL at Address:
+|:0044444E   
+|
+:0044447F 51                      push ecx				DISPLAY_HP
+:00444480 52                      push edx
+:00444481 A12C164D00              mov eax, dword ptr [004D162C]
+:00444486 69C0E4000000            imul eax, 000000E4
+:0044448C 8B901CDD6900            mov edx, dword ptr [eax+0069DD1C]
+:00444492 8B8818DD6900            mov ecx, dword ptr [eax+0069DD18]
+:00444498 C1E906                  shr ecx, 06
+:0044449B C1EA06                  shr edx, 06
+:0044449E 51                      push ecx
+:0044449F 52                      push edx
+
+* Possible StringData Ref from Data Obj ->"Hitpoints %i of %i"
+                                  |
+:004444A0 68B8394B00              push 004B39B8				"Hit Points : %i-%i"
+:004444A5 56                      push esi
+:004444A6 E815560300              call 00479AC0
+:004444AB 83C410                  add esp, 00000010
+:004444AE 8BCE                    mov ecx, esi
+:004444B0 6A01                    push 00000001
+:004444B2 5A                      pop edx
+:004444B3 E89200FCFF              call 0040454A
+:004444B8 5A                      pop edx
+:004444B9 59                      pop ecx
+:004444BA C3                      ret
+
+
+:004444BB 90                      nop
+:004444BC 5A                      pop edx
+:004444BD E88800FCFF              call 0040454A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444458(U)
+|
+:004444C2 833B0F                  cmp dword ptr [ebx], 0000000F
+:004444C5 0F8CF0000000            jl 004445BB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444456(C)
+|
+:004444CB 833DC070600000          cmp dword ptr [006070C0], 00000000
+
+
+
+()View HP for Bosses if Seeing
+
+Experiment. Alleen als bovenstaande goed werkt.
+Replaces useless 'Some Resistances info' en zo.
+
+:004445CA A12C164D00              mov eax, dword ptr [004D162C]
+:004445CF 53                      push ebx
+:004445D0 69C0E4000000            imul eax, 000000E4
+:004445D6 56                      push esi
+:004445D7 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+wordt
+:004445CA 53                      push ebx
+:004445CB 56                      push esi
+:004445CC E88EFEFFFF  (?)         call 0044445A				call CHECK_IV
+:004445D1 85C0                    test eax, eax
+:004445D3 7405                    je 004445DA    		
+:004445D5 E8AAFEFFFF  (?)         call 0044447F				call DISPLAY_HP
+:004445DA EB3B                    jmp 004446615
+:004445DC 90                      nop
+
+
+()View Resistances for Bosses
+
+
+:004445CC E889FEFFFF              call 0044445A
+:004445D1 85C0                    test eax, eax
+:004445D3 740A                    je 004445DF
+:004445D5 BEC0114D00              mov esi, 004D11C0
+:004445DA E8A0FEFFFF              call 0044447F
+:004445DF EB34                    jmp 00444615
+:004445E1 90                      nop
+:004445E2 BEC0114D00              mov esi, 004D11C0
+:004445E7 68203A4B00              push 004B3A20 	"No resistances"
+:004445EC 56                      push esi
+:004445ED E83E570300              call 00479D30
+:004445F2 59                      pop ecx
+:004445F3 59                      pop ecx
+:004445F4 6A01                    push 00000001
+:004445F6 8BCE                    mov ecx, esi
+:004445F8 5A                      pop edx
+:004445F9 E84CFFFBFF              call 0040454A
+
+dus
+
+:004445D3 740A                    je 004445DF
+wordt
+:004445D3 740F                    je 004445E4
+
+:004445DF EB34                    jmp 00444615
+:004445E1 90                      nop
+:004445E2 BEC0114D00              mov esi, 004D11C0
+wordt
+:004445DF E802000000              call 004445E6		call VIEWBOSSRESIST
+:004445E4 C3                      ret
+:004445E5 90                      nop
+:004445E6 53                      push ebx		start VIEWBOSSRESIST
+:004445E7 55                      push ebp
+:004445E8 56                      push esi
+:004445E9 57                      push edi
+:004445EA BEC0114D00              mov esi, 004D11C0
+:004445EF A12C164D00              mov eax, dword ptr [004D162C]
+:004445F4 69C0E4000000            imul eax, 000000E4
+:004445FA 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+:00444600 E9E5FEFFFF              jmp 004444EA		jmp to view normal monster resist
+:00444605 90909090                4*nop
+
+Now free code from here to 00444654!
+
+
+Originele 'View Restances for Bosses' :
+
+
+* Referenced by a CALL at Address:
+|:004058AE   
+|
+:004445CA A12C164D00              mov eax, dword ptr [004D162C]
+:004445CF 53                      push ebx
+:004445D0 69C0E4000000            imul eax, 000000E4
+:004445D6 56                      push esi
+:004445D7 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+:004445DD 83E33F                  and ebx, 0000003F
+:004445E0 7540                    jne 00444622
+:004445E2 BEC0114D00              mov esi, 004D11C0
+
+* Possible StringData Ref from Data Obj ->"No resistances"
+                                  |
+:004445E7 68203A4B00              push 004B3A20
+:004445EC 56                      push esi
+:004445ED E83E570300              call 00479D30
+:004445F2 59                      pop ecx
+:004445F3 59                      pop ecx
+:004445F4 6A01                    push 00000001
+:004445F6 8BCE                    mov ecx, esi
+:004445F8 5A                      pop edx
+:004445F9 E84CFFFBFF              call 0040454A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044464D(C)
+|
+* Possible StringData Ref from Data Obj ->"No Immunities"
+                                  |
+:004445FE 68103A4B00              push 004B3A10
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444654(U)
+|
+:00444603 56                      push esi
+:00444604 E827570300              call 00479D30
+:00444609 59                      pop ecx
+:0044460A 59                      pop ecx
+:0044460B 6A01                    push 00000001
+:0044460D 8BCE                    mov ecx, esi
+:0044460F 5A                      pop edx
+:00444610 E835FFFBFF              call 0040454A
+:00444615 C70594114D0001000000    mov dword ptr [004D1194], 00000001
+:0044461F 5E                      pop esi
+:00444620 5B                      pop ebx
+:00444621 C3                      ret
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004445E0(C)
+|
+:00444622 F6C307                  test bl, 07
+:00444625 7407                    je 0044462E
+
+* Possible StringData Ref from Data Obj ->"Some Magic Resistances"
+                                  |
+:00444627 68F8394B00              push 004B39F8
+:0044462C EB05                    jmp 00444633
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444625(C)
+|
+* Possible StringData Ref from Data Obj ->"No resistances"
+                                  |
+:0044462E 68203A4B00              push 004B3A20
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044462C(U)
+|
+:00444633 BEC0114D00              mov esi, 004D11C0
+:00444638 56                      push esi
+:00444639 E8F2560300              call 00479D30
+:0044463E 59                      pop ecx
+:0044463F 59                      pop ecx
+:00444640 6A01                    push 00000001
+:00444642 5A                      pop edx
+:00444643 8BCE                    mov ecx, esi
+:00444645 E800FFFBFF              call 0040454A
+:0044464A F6C338                  test bl, 38
+:0044464D 74AF                    je 004445FE
+
+* Possible StringData Ref from Data Obj ->"Some Magic Immunities"
+                                  |
+:0044464F 68E0394B00              push 004B39E0
+:00444654 EBAD                    jmp 00444603
+
+
+
+
+
+
+
+:004444EA 83E33F                  and ebx, 0000003F
+:004444ED 7512                    jne 00444501
+
+* Possible StringData Ref from Data Obj ->"No magic resistance"
+                                  |
+:004444EF 68A4394B00              push 004B39A4
+:004444F4 56                      push esi
+:004444F5 E836580300              call 00479D30
+:004444FA 59                      pop ecx
+:004444FB 59                      pop ecx
+:004444FC E9B0000000              jmp 004445B1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004444ED(C)
+|
+:00444501 F6C307                  test bl, 07
+
+* Possible StringData Ref from Data Obj ->"Magic "
+                                  |
+:00444504 BF9C394B00              mov edi, 004B399C
+
+* Possible StringData Ref from Data Obj ->"Fire "
+                                  |
+:00444509 BD94394B00              mov ebp, 004B3994
+:0044450E 7453                    je 00444563
+
+* Possible StringData Ref from Data Obj ->"Resists : "
+                                  |
+:00444510 6888394B00              push 004B3988
+:00444515 56                      push esi
+:00444516 E815580300              call 00479D30
+:0044451B 59                      pop ecx
+:0044451C F6C301                  test bl, 01
+:0044451F 59                      pop ecx
+:00444520 7409                    je 0044452B
+:00444522 57                      push edi
+:00444523 56                      push esi
+:00444524 E817580300              call 00479D40
+:00444529 59                      pop ecx
+:0044452A 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444520(C)
+|
+:0044452B F6C302                  test bl, 02
+:0044452E 7409                    je 00444539
+:00444530 55                      push ebp
+:00444531 56                      push esi
+:00444532 E809580300              call 00479D40
+:00444537 59                      pop ecx
+:00444538 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044452E(C)
+|
+:00444539 F6C304                  test bl, 04
+:0044453C 740D                    je 0044454B
+
+* Possible StringData Ref from Data Obj ->"Lightning "
+                                  |
+:0044453E 687C394B00              push 004B397C
+:00444543 56                      push esi
+:00444544 E8F7570300              call 00479D40
+:00444549 59                      pop ecx
+:0044454A 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044453C(C)
+|
+:0044454B 56                      push esi
+:0044454C E8EF530300              call 00479940
+:00444551 80A0BF114D0000          and byte ptr [eax+004D11BF], 00
+:00444558 59                      pop ecx
+:00444559 6A01                    push 00000001
+:0044455B 8BCE                    mov ecx, esi
+:0044455D 5A                      pop edx
+:0044455E E8E7FFFBFF              call 0040454A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044450E(C)
+|
+:00444563 F6C338                  test bl, 38
+:00444566 7453                    je 004445BB
+
+* Possible StringData Ref from Data Obj ->"Immune : "
+                                  |
+:00444568 6870394B00              push 004B3970
+:0044456D 56                      push esi
+:0044456E E8BD570300              call 00479D30
+:00444573 59                      pop ecx
+:00444574 F6C308                  test bl, 08
+:00444577 59                      pop ecx
+:00444578 7409                    je 00444583
+:0044457A 57                      push edi
+:0044457B 56                      push esi
+:0044457C E8BF570300              call 00479D40
+:00444581 59                      pop ecx
+:00444582 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444578(C)
+|
+:00444583 F6C310                  test bl, 10
+:00444586 7409                    je 00444591
+:00444588 55                      push ebp
+:00444589 56                      push esi
+:0044458A E8B1570300              call 00479D40
+:0044458F 59                      pop ecx
+:00444590 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444586(C)
+|
+:00444591 F6C320                  test bl, 20
+:00444594 740D                    je 004445A3
+
+* Possible StringData Ref from Data Obj ->"Lightning "
+                                  |
+:00444596 687C394B00              push 004B397C
+:0044459B 56                      push esi
+:0044459C E89F570300              call 00479D40
+:004445A1 59                      pop ecx
+:004445A2 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444594(C)
+|
+:004445A3 56                      push esi
+:004445A4 E897530300              call 00479940
+:004445A9 80A0BF114D0000          and byte ptr [eax+004D11BF], 00
+:004445B0 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004444FC(U)
+|
+:004445B1 6A01                    push 00000001
+:004445B3 8BCE                    mov ecx, esi
+:004445B5 5A                      pop edx
+:004445B6 E88FFFFBFF              call 0040454A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004444C5(C), :00444566(C)
+|
+:004445BB 5F                      pop edi
+:004445BC 5E                      pop esi
+:004445BD 5D                      pop ebp
+:004445BE C70594114D0001000000    mov dword ptr [004D1194], 00000001
+:004445C8 5B                      pop ebx
+:004445C9 C3                      ret

@@ -1,0 +1,34 @@
+Disabling Damage bonus for Barbarians using Clubs:
+
+File Offset 000232AB
+
+:00423EAB 83FA04                  cmp edx, 00000004
+:00423EAE 743C                    je 00423EEC
+:00423EB0 83F804                  cmp eax, 00000004
+:00423EB3 7437                    je 00423EEC
+wordt
+:00423EAB 9090909090              5*nop
+:00423EB0 9090909090              5*nop
+
+
+Bow character damage
+
+Warrior: Str·clvl /100 /2
+Rogue: (Str+Dex) · clvl /200
+Sorcerer: Str·clvl /100 /2
+Monk: (Str+Dex) · clvl /300 /2
+Bard: (Str+Dex) · clvl /250 /2
+Barbarian: Str·clvl /300 /2
+
+Melee character damage
+
+Warrior: Str·clvl / 100
+Rogue: (Str+Dex) · clvl / 200
+Sorcerer: Str·clvl / 100
+Monk with staff or bare-handed: (Str+Dex) · clvl / 150
+Monk with other weapons: (Str+Dex) · clvl / 300
+Bard with at least one sword: (Str+Dex) · clvl / 150
+Bard with any weapon(s) except sword: Str·clvl / 100
+Barbarian with axes (and clubs): Str·clvl / 75
+Barbarian except for axes (and clubs): Str·clvl / 100
+Extra bonus for Barbarian without shield, staff or bow: Vit·clvl / 100

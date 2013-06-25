@@ -1,0 +1,255 @@
+Changing spell icon for Sanctuary:
+
+00093610 1B01 0203 0420 0607 082C 090D 0C11 1021 ..... ...,.....!
+00093620 300F 0B16 1C15 2218 1F14 1A1D 3326 272A 0.....".....3&'*
+00093630 1328 0A24 1E29 1705 2E2F 2B2D 2312 3333 .(.$.).../+-#.33
+00093640 3333 3333                               3333
+changed into
+00093630 31                                      1
+
+
+Adjusted requirements and spell charge prices:
+
+pos nbr name                type       qlvl(bo) qlvl(st) req town  charges  effects    price(bo)  multiplier
+
+  2   3 Lightning           lightning       4        3    25   0    20- 60   7: -: -      4000         40
+                                                          30
+000B60AC 1900 0000                               ....
+changed into
+000B60AC 1E00 0000                               ....
+
+  6   7 Town Portal         magic/other     3        3    20   0    15- 30  10: -: -      4000         60
+                                                                                                       40
+000B61A4 2C01 0000                               ,...
+changed into
+000B61A4 C800 0000                               ....
+
+  7   8 Stone Curse         magic/other     6        5    55   0    15- 30  30: -: -      8000        100
+                                                          40                                           80
+000B61C4 3700 0000                               7...
+changed into
+000B61C4 2800 0000                               (...
+
+000B61DC F401 0000                               ....
+changed into
+000B61DC 9001 0000                               ....
+
+  9  10 Medusa Gaze         magic/other    13       13    55   0    15- 30  69: -: -     32000        200
+                                                          60
+000B6234 3700 0000                               7...
+changed into
+000B6234 3C00 0000                               <...
+
+ 12  13 Guardian            fire            9        8    65   0    20- 40   2: -: -     12000         80
+                                                          60
+000B62DC 4100 0000                               A...
+changed into
+000B62DC 3C00 0000                               <...
+
+ 15  16 Charm               magic/other   255        3    40   0    10- 15  80: -: -      3000        240
+                                                                                                      160
+000B639C B004 0000                               ....
+changed into
+000B639C 2003 0000                                ...
+
+ 19  20 Magic Missile       magic/other     3        2    25   0    20- 40  15: -: -      6000         40
+                                                          30
+000B6464 1900 0000                               ....
+changed into
+000B6464 1E00 0000                               ....
+
+ 20  21 Golem               magic/other    11        9    80   0    15- 30  33: -: -     24000        240
+                                                                                                      160
+000B64B4 B004 0000                               ....
+changed into
+000B64B4 2003 0000                                ...
+
+ 22  23 Teleport            magic/other    14       12   100   1    15- 30  26: -: -     20000        100
+                                                          80                                           80
+000B650C 6400 0000                               d...
+changed into
+000B650C 5000 0000                               P...
+
+000B6524 F401 0000                               ....
+changed into
+000B6524 9001 0000                               ....
+
+ 28  29 Elemental           fire            8        6    75   0    40- 60  61:61:61     12000         60
+                                                          80                                           80
+000B665C 4B00 0000                               K...
+changed into
+000B665C 5000 0000                               P...
+
+000B6674 2C01 0000                               ,...
+changed into
+000B6674 9001 0000                               ....
+
+ 30  31 Holy Bolt           magic/other     1        1    25   0    40- 80  53: -: -      1000         10
+                                                          30
+000B66CC 1900 0000                               ....
+changed into
+000B66CC 1E00 0000                               ....
+
+ 32  33 Telekinesis         magic/other     2        2    35   0    20- 40  55: -: -      4000         40
+                                                          30
+000B673C 2300 0000                               #...
+changed into
+000B673C 1400 0000                               ....
+
+ 35  36 Bone Spirit         magic/other     9        7    55   0    20- 60  63: -: -     12000        120
+                                                          50
+000B67E4 3700 0000                               7...
+changed into
+000B67E4 3200 0000                               2...
+
+ 36  37 Resurrect           magic/other   255        6   100   1    15- 30  54: -: -     30000        200
+                                                                                                      160
+000B6834 E803 0000                               ....
+changed into
+000B6834 2003 0000                                ...
+
+ 38  39 Identify            magic/other   255        4    10   1    15- 30  40: -: -    100000        100
+                                                                                                       80
+000B68A4 F401 0000                               ....
+changed into
+000B68A4 9001 0000                               ....
+
+ 41  42 Warp                magic/other     4        4    30   1    15- 30  78: -: -      4000         60
+                                                                                                       40
+000B694C 2C01 0000                               ,...
+changed into
+000B694C C800 0000                               ....
+
+ 42  43 Barrier             magic/other     6        4    35   0    15- 30  79: -: -     12000         80
+                                                          30
+000B696C 2300 0000                               #...
+changed into
+000B696C 1E00 0000                               ....
+
+ 45  46 Mana                magic/other   255      255    10   1    40- 80  68: -: -      3000        200
+                                                                                                      160
+000B6A2C E803 0000                               ....
+changed into
+000B6A2C 2003 0000                                ...
+
+
+
+Improved Elemental and Doom Serpent spells
+
+
+This will make the spells create 3 Elementals/Serpents. Those will not be seen separately, but it triples the impact. Doom Serpents will no longer appear on staves, manacost for Elemental has increased.
+
+
+Adjusting spell data:
+
+pos nbr name                type             effects 
+   
+ 28  29 Elemental           fire             61: -: -   
+                                             61:61:61
+
+000B6640 1D23 0000 4082 4B00 0000 0000 0800 0000 .#..@.K.........
+000B6650 0600 0000 0100 0000 0000 0000 4B00 0000 ............K...
+000B6660 523D 0000 010F 0000 2800 0000 3C00 0000 R=......(...<...
+000B6670 E02E 0000 2C01 0000                     ....,...
+changed into
+000B6661 3D3D 3D                                 ===
+000B6641 28                                      (
+000B6665 14                                      .
+
+ 44  45 Doom Serpents       magic/other      16: -: - 
+                                             16:16:16
+
+000B69C0 2DFF 0200 8481 4B00 0000 0000 0F00 0000 -.....K.........
+000B69D0 0E00 0000 0100 0000 0000 0000 7800 0000 ............x...
+000B69E0 5210 0000 0064 0000 0400 0000 0800 0000 R....d..........
+000B69F0 60EA 0000 B004 0000                     `.......
+changed into
+000B69E1 1010 10                                 ...
+000B69D0 FFFF FFFF                               ....
+
+
+Disabling Manacost for Doom Serpents spell effect:
+
+file offset 00051ABE
+
+:004526BE E839990100              call 0046BFFC
+changed into
+:004526BE 9090909090              5*nop
+
+
+Disabling manacost for Elemental spell effect:
+
+file offset 000335A9
+
+:004341A9 6A1D                    push 0000001D
+:004341AB 5A                      pop edx
+:004341AC E84B7E0300              call 0046BFFC
+:004341B1 5F                      pop edi
+:004341B2 5E                      pop esi
+:004341B3 5B                      pop ebx
+:004341B4 C9                      leave
+:004341B5 C21C00                  ret 001C
+changed into
+:004341A9 5F                      pop edi
+:004341AA 5E                      pop esi
+:004341AB 5B                      pop ebx
+:004341AC C9                      leave
+:004341AD C21C00                  ret 001C
+:004341B0 9090909090909090        8*nop		
+
+
+Adding manacost at casting of the spells:
+
+file offset 0006B56F
+
+:0046C16F 803E20                  cmp byte ptr [esi], 20
+:0046C172 7533                    jne 0046C1A7
+:0046C174 E9F145FCFF              jmp 0043076A
+changed into
+:0046C16F 0FB616                  movzx edx, byte ptr [esi]
+:0046C172 E92F46FCFF              jmp 004307A6
+:0046C177 9090                    2*nop
+
+file offset 0002FB6A
+
+:0043076A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043076D 6A2C                    push 0000002C
+changed into
+:0043076A 9090                    2*nop
+:0043076C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+Using free space from Jester spell:
+
+file offset 0002FBA2
+
+:004307A2 90                      nop
+:004307A3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004307A6 6A0A                    push 0000000A
+:004307A8 5F                      pop edi
+:004307A9 6A07                    push 00000007
+:004307AB 5A                      pop edx
+:004307AC E84BB80300              call 0046BFFC
+:004307B1 EB0B                    jmp 004307BE
+:004307B3 6A1A                    push 0000001A
+:004307B5 EB06                    jmp 004307BD
+:004307B7 6A2C                    push 0000002C
+:004307B9 EB02                    jmp 004307BD
+:004307BB 6A1E                    push 0000001E
+:004307BD 5F                      pop edi
+:004307BE 69F6B0000000            imul esi, 000000B0
+changed into
+:004307A2 EBC8                    jmp 0043076C
+:004307A4 EBCF                    jmp 00430775
+:004307A6 80FA10                  cmp dl, 10
+:004307A9 7504                    jne 004307AF
+:004307AB 6A2D                    push 0000002D
+:004307AD EBF3                    jmp 004307A2
+:004307AF 80FA20                  cmp dl, 20
+:004307B2 7504                    jne 004307B8
+:004307B4 6A2C                    push 0000002C
+:004307B6 EBEA                    jmp 004307A2
+:004307B8 80FA3D                  cmp dl, 3D
+:004307BB 75E7                    jne 004307A4
+:004307BD 6A1D                    push 0000001D
+:004307BF EBE1                    jmp 004307A2
+:004307C1 909090                  3*nop	

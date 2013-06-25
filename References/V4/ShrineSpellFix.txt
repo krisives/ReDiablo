@@ -1,0 +1,55 @@
+Shrine Spells cost no Mana
+
+Spells cast by Shrines have to support this to skip the manacost.
+
+Does not seem to work! Not implemented.
+
+Placed on free space from Mysterious Shrine.
+
+File Offset 00050CCF
+
+:004518CF 90                      nop
+:004518D0 6A06                    push 00000006
+:004518D2 8BCE                    mov ecx, esi
+:004518D4 5A                      pop edx
+:004518D5 E8E0CF0000              call 0045E8BA
+:004518DA EB22                    jmp 004518FE
+:004518DC 6A06                    push 00000006
+:004518DE 8BCE                    mov ecx, esi
+:004518E0 5A                      pop edx
+:004518E1 E83CCF0000              call 0045E822
+:004518E6 EB16                    jmp 004518FE
+:004518E8 6A06                    push 00000006
+:004518EA 8BCE                    mov ecx, esi
+:004518EC 5A                      pop edx
+:004518ED E832CE0000              call 0045E724
+wordt
+:004518CF 807C241800              cmp byte ptr [esp+18], 00
+:004518D4 7505                    jne 004518DB
+:004518D6 E821A70100              call 0046BFFC
+:004518DB E9ADEAFDFF              jmp 0043038D
+:004518E0 807C241800              cmp byte ptr [esp+18], 00
+:004518E5 7505                    jne 004518EC
+:004518E7 E810A70100              call 0046BFFC
+:004518EC E90BFFFDFF              jmp 004317FC
+:004518F1 90                      nop
+
+
+Manacost for Barrier (supporting Magical Shrine):
+
+File Offset 0002F788
+
+:00430388 E86FBC0300              call 0046BFFC
+wordt
+:00430388 E942150200              jmp 004518CF
+:0043038D 5F                      pop edi
+
+
+Manacost for Warp (supporting Magic Circle):
+
+File Offset 00030BF7
+
+:004317F7 E800A80300              call 0046BFFC
+wordt
+:004317F7 E9E4000200              jmp 004518E0
+:004317FC 5F                      pop edi

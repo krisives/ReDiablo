@@ -1,0 +1,174 @@
+Eldritch Shrine: Giving Full potions instead of Rejuvenation potions
+
+Adjusting the text:
+
+0009E88C 4372 696D 736F 6E20 616E 6420 417A 7572 Crimson and Azur
+0009E89C 6520 6265 636F 6D65 2061 7320 7468 6520 e become as the 
+0009E8AC 7375 6E                                 sun
+wordt
+0009E88C 4372 696D 736F 6E20 616E 6420 417A 7572 Crimson and Azur
+0009E89C 6520 696E 2061 6275 6E64 616E 6365 0000 e in abundance..
+0009E8AC 0000 00                                 ...
+
+
+Magic code
+02 = Potion of Full Healing
+03 = Potion of Healing
+06 = Potion of Mana
+07 = Potion of Full Mana
+12 = Potion of Rejuvenation
+13 = Potion of Full Rejuventaion
+
+File Offset 000515D6
+
+:004521D6 83F903                  cmp ecx, 00000003
+:004521D9 7405                    je 004521E0
+:004521DB 83F906                  cmp ecx, 00000006
+:004521DE 755C                    jne 0045223C
+:004521E0 6A12                    push 00000012
+wordt
+:004521D6 9090909090              5*nop
+:004521DB 83F906                  cmp ecx, 00000006
+:004521DE 755C                    jne 0045223C
+:004521E0 6A07                    push 00000007
+
+File Offset 00051646
+
+:00452246 83F902                  cmp ecx, 00000002
+:00452249 7405                    je 00452250
+:0045224B 83F907                  cmp ecx, 00000007
+:0045224E 755C                    jne 004522AC
+:00452250 6A13                    push 00000013
+wordt
+:00452246 9090909090              5*nop
+:0045224B 83F903                  cmp ecx, 00000003
+:0045224E 755C                    jne 004522AC
+:00452250 6A02                    push 00000002
+
+File Offset 000516E8
+
+:004522E8 83F903                  cmp ecx, 00000003
+:004522EB 7405                    je 004522F2
+:004522ED 83F906                  cmp ecx, 00000006
+:004522F0 755C                    jne 0045234E
+:004522F2 6A12                    push 00000012
+wordt
+:004522E8 9090909090              5*nop
+:004522ED 83F906                  cmp ecx, 00000006
+:004522F0 755C                    jne 0045234E
+:004522F2 6A07                    push 00000007
+
+File Offset 00051758
+
+:00452358 83F902                  cmp ecx, 00000002
+:0045235B 7405                    je 00452362
+:0045235D 83F907                  cmp ecx, 00000007
+:00452360 755C                    jne 004523BE
+:00452362 6A13                    push 00000013
+wordt
+:00452358 9090909090              5*nop
+:0045235D 83F903                  cmp ecx, 00000003
+:00452360 755C                    jne 004523BE
+:00452362 6A02                    push 00000002
+
+
+Rewriting for free space:
+
+File Offset 00051592
+
+:00452192 90                      nop
+...
+:004522D5 83B90C48000000          cmp dword ptr [ecx+0000480C], 00000000
+:004522DC 0F85DC000000            jne 004523BE
+wordt
+:00452192 8BD8                    mov ebx, eax
+:00452194 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452199 69DBC8550000            imul ebx, 000055C8
+:0045219F 83650800                and dword ptr [ebp+08], 00000000
+:004521A3 83BC18D847000000        cmp dword ptr [eax+ebx+000047D8], 00000000
+:004521AB 0F8EBE000000            jle 0045226F
+:004521B1 895DF8                  mov dword ptr [ebp-08], ebx
+:004521B4 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:004521B7 03C8                    add ecx, eax
+:004521B9 83B9C00D000000          cmp dword ptr [ecx+00000DC0], 00000000
+:004521C0 0F858F000000            jne 00452255
+:004521C6 8B89940E0000            mov ecx, dword ptr [ecx+00000E94]
+:004521CC 83F906                  cmp ecx, 00000006
+:004521CF 7561                    jne 00452232
+:004521D1 6A07                    push 00000007
+:004521D3 59                      pop ecx
+:004521D4 E802000000              call 004521DB
+:004521D9 EB4B                    jmp 00452226
+
+:004521DB E8BAE2FFFF              call 0045049A
+:004521E0 8BD0                    mov edx, eax
+:004521E2 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004521E7 8D8C18A4530000          lea ecx, dword ptr [eax+ebx+000053A4]
+:004521EE 50                      push eax
+:004521EF E82329FDFF              call 00424B17
+:004521F4 58                      pop eax
+:004521F5 50                      push eax
+:004521F6 8D8C18A4530000          lea ecx, dword ptr [eax+ebx+000053A4]
+:004521FD E8192AFDFF              call 00424C1B
+:00452202 58                      pop eax
+:00452203 50                      push eax
+:00452204 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00452207 C784180855000001000000  mov dword ptr [eax+ebx+00005508], 00000001
+:00452212 58                      pop eax
+:00452213 C3                      ret
+
+:00452214 8DB418A4530000          lea esi, dword ptr [eax+ebx+000053A4]
+:0045221B 6A5D                    push 0000005D
+:0045221D 59                      pop ecx
+:0045221E F3                      repz
+:0045221F A5                      movsd
+:00452220 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452225 C3                      ret
+
+:00452226 8DBC08B80D0000          lea edi, dword ptr [eax+ecx+00000DB8]
+:0045222D E8E2FFFFFF              call 00452214
+:00452232 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00452235 8B8C08940E0000          mov ecx, dword ptr [eax+ecx+00000E94]
+:0045223C 83F903                  cmp ecx, 00000003
+:0045223F 7514                    jne 00452255
+:00452241 6A02                    push 00000002
+:00452243 59                      pop ecx
+:00452244 E892FFFFFF              call 004521DB
+:00452249 8DBC08B80D0000          lea edi, dword ptr [eax+ecx+00000DB8]
+:00452250 E8BFFFFFFF              call 00452214
+:00452255 FF4508                  inc [ebp+08]
+:00452258 8B4D08                  mov ecx, dword ptr [ebp+08]
+:0045225B 8145F874010000          add dword ptr [ebp-08], 00000174
+:00452262 3B8C18D8470000          cmp ecx, dword ptr [eax+ebx+000047D8]
+:00452269 0F8C45FFFFFF            jl 004521B4
+:0045226F 895D08                  mov dword ptr [ebp+08], ebx
+:00452272 C745F808000000          mov [ebp-08], 00000008
+:00452279 8B4D08                  mov ecx, dword ptr [ebp+08]
+:0045227C 03C8                    add ecx, eax
+:0045227E 83B90C48000000          cmp dword ptr [ecx+0000480C], 00000000
+:00452285 7542                    jne 004522C9
+:00452287 8B89E0480000            mov ecx, dword ptr [ecx+000048E0]
+:0045228D 83F906                  cmp ecx, 00000006
+:00452290 7514                    jne 004522A6
+:00452292 6A07                    push 00000007
+:00452294 59                      pop ecx
+:00452295 E841FFFFFF              call 004521DB
+:0045229A 8DBC0804480000          lea edi, dword ptr [eax+ecx+00004804]
+:004522A1 E86EFFFFFF              call 00452214
+:004522A6 8B4D08                  mov ecx, dword ptr [ebp+08]
+:004522A9 8B8C08E0480000          mov ecx, dword ptr [eax+ecx+000048E0]
+:004522B0 83F903                  cmp ecx, 00000003
+:004522B3 7514                    jne 004522C9
+:004522B5 6A02                    push 00000002
+:004522B7 59                      pop ecx
+:004522B8 E81EFFFFFF              call 004521DB
+:004522BD 8DBC0804480000          lea edi, dword ptr [eax+ecx+00004804]
+:004522C4 E84BFFFFFF              call 00452214
+:004522C9 81450874010000          add dword ptr [ebp+08], 00000174
+:004522D0 FF4DF8                  dec [ebp-08]
+:004522D3 0F85A0FFFFFF            jne 00452279
+:004522D9 B118                    mov cl, 18
+:004522DB E981080000              jmp 00452B61
+:004522E0 9090                    2*nop
+
+Now free space from 004522E0 to 004523D5.

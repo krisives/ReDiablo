@@ -1,0 +1,63 @@
+Altered locations for Lazarus, Red Vex and Blackjade (in MP):
+
+file offset 0003B043
+
+:0043BC43 8D7C0013                lea edi, dword ptr [eax+eax+13]
+:0043BC47 8D5C0916                lea ebx, dword ptr [ecx+ecx+16]
+changed into
+:0043BC43 8D7C0015                lea edi, dword ptr [eax+eax+15]
+:0043BC47 8D5C0916                lea ebx, dword ptr [ecx+ecx+16]
+
+file offset 0003B050
+
+:0043BC50 8D7C0015                lea edi, dword ptr [eax+eax+15]
+:0043BC54 8D5C0913                lea ebx, dword ptr [ecx+ecx+13]
+changed into
+:0043BC50 8D7C001A                lea edi, dword ptr [eax+eax+1A]
+:0043BC54 8D5C0915                lea ebx, dword ptr [ecx+ecx+15]
+
+file offset 0003B05D
+
+:0043BC5D 8D7C0015                lea edi, dword ptr [eax+eax+15]
+:0043BC61 8D5C0919                lea ebx, dword ptr [ecx+ecx+19]
+changed into
+:0043BC5D 8D7C001A                lea edi, dword ptr [eax+eax+1A]
+:0043BC61 8D5C0917                lea ebx, dword ptr [ecx+ecx+17]
+
+
+
+Adding single Black Prince to Diablo's room:
+
+000AEF74 5D00 0000                               ]...
+changed into
+000AEF74 2C00 0000                               ,...
+
+Making sure that the two Reality Weavers bosses still appear on Diablo's level:
+
+file offset 00039E09
+
+:0043AA09 E850FFFFFF              call 0043A95E
+changed into
+:0043AA09 E900390000              jmp 0043E30E
+:0043AA0E 
+
+Using free space from MvP attack code:
+
+file offset 0003D70E
+
+:0043E30E 90                      nop
+:0043E30F 90                      nop
+:0043E310 90                      nop
+:0043E311 90                      nop
+:0043E312 90                      nop
+:0043E313 8D843070550000          lea eax, dword ptr [eax+esi+00005570]
+:0043E31A 6685C9                  test cx, cx
+:0043E31D E945030000              jmp 0043E667
+changed into
+:0043E30E E84BC6FFFF              call 0043A95E
+:0043E313 8BD7                    mov edx, edi
+:0043E315 6A5D                    push 0000005D
+:0043E317 59                      pop ecx
+:0043E318 E841C6FFFF              call 0043A95E
+:0043E31D E9ECC6FFFF              jmp 0043AA0E
+:0043E322

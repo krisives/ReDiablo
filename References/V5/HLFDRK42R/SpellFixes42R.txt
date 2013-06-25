@@ -1,0 +1,40 @@
+Spellfixes
+
+
+Small fix in Divine Cure spell, related to negative Slvls:
+
+file offset 00033E59
+
+:00434A59 7502                    jne 00434A5D
+changed into
+:00434A59 7D02                    jge 00434A5D
+
+
+Providing Manacost routine for Mana spell effect (without it, Mana Spell items will not use charges):
+
+file offset 0003338A
+
+:00433F8A 746D                    je 00433FF9
+changed into
+:00433F8A 7468                    je 00433FF4
+
+file offset 000333F4
+
+:00433FF4 9090909090              5*nop
+changed into
+:00433FF4 E80CE30100              call 00452305
+:00433FF9 
+
+file offset 00051705
+
+:00452305 FF82A00B0000            inc dword ptr [edx+00000BA0]
+:0045230B FF82A00B0000            inc dword ptr [edx+00000BA0]
+:00452311 C3                      ret
+changed into
+:00452305 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00452308 6A2E                    push 0000002E
+:0045230A 5A                      pop edx
+:0045230B E8EC9C0100              call 0046BFFC
+:00452310 C3                      ret
+:00452311 90                      nop
+

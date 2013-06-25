@@ -1,0 +1,185 @@
+Data Changes for Ghost in town:
+
+Towners\Butch\Deadguy.CEL to Objects\Ghost.CEL
+Wounded Townsman          to Lost Soul
+Slain Townsman            to Lost Soul
+
+Changed calls
+:0047651D E865F8FFFF              call 00475D7C
+to
+:0047651D E85AF8FFFF              call 00475D87
+
+
+The following jumps are changed to keep the animation in motion after and during talking to it.
+:00476679 3C01                    cmp al, 01
+:0047667B 742C                    je 004766A9
+:0047667D 8BC6                    mov eax, esi
+
+* Possible StringData Ref from Data Obj ->"Slain Townsman"
+to
+:00476679 3C01                    cmp al, 01
+:0047667B EB2C                    jmp 004766A9
+:0047667D 8BC6                    mov eax, esi
+
+* Possible StringData Ref from Data Obj ->"Lost Soul"
+
+And
+:004766B0 740A                    je 004766BC
+To
+:004766B0 EB0A                    jmp 004766BC
+
+
+New code for ghost in town
+
+* Possible StringData Ref from Data Obj ->"Ogden the Tavern owner"
+                                  |
+:00475D72 68D0B74C00              push 004CB7D0
+:00475D77 E95DFFFFFF              jmp 00475CD9
+
+* Referenced by a CALL at Address:
+|:0047651D   
+|
+:00475D7C 56                      push esi
+:00475D7D 57                      push edi
+:00475D7E 6A0A                    push 0000000A
+:00475D80 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00475D86 6AFF                    push FFFFFFFF
+:00475D88 6A20                    push 00000020				X coordinaat
+:00475D8A 6A18                    push 00000018				Y coordinaat
+:00475D8C 6A02                    push 00000002
+:00475D8E 6A01                    push 00000001				Active (Yes=01, No=00)
+:00475D90 BA80000000              mov edx, 00000080			Animation size
+:00475D95 E8D9FDFFFF              call 00475B73
+:00475D9A 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00475DA0 E860FEFFFF              call 00475C05
+:00475DA5 8B35E8F16F00            mov esi, dword ptr [006FF1E8]
+:00475DAB 33D2                    xor edx, edx
+
+* Possible StringData Ref from Data Obj ->"Objects\Ghost.CEL"
+                                  |
+:00475DAD B914B84C00              mov ecx, 004CB814
+:00475DB2 C1E608                  shl esi, 08
+:00475DB5 E87542FAFF              call 0041A02F
+:00475DBA 8986FCF26F00            mov dword ptr [esi+006FF2FC], eax
+:00475DC0 8D86D8F26F00            lea eax, dword ptr [esi+006FF2D8]
+:00475DC6 6A08                    push 00000008
+:00475DC8 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00475DD5(C)
+|
+:00475DC9 8BBEFCF26F00            mov edi, dword ptr [esi+006FF2FC]
+:00475DCF 8938                    mov dword ptr [eax], edi
+:00475DD1 83C004                  add eax, 00000004
+:00475DD4 49                      dec ecx
+:00475DD5 75F2                    jne 00475DC9
+:00475DD7 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00475DDD 6A0D                    push 0000000D				Number of frames
+:00475DDF 5A                      pop edx
+:00475DE0 90                      nop
+:00475DE1 90                      nop
+:00475DE2 90                      nop
+:00475DE3 90                      nop
+:00475DE4 90                      nop
+:00475DE5 90                      nop
+:00475DE6 90                      nop
+:00475DE7 90                      nop
+:00475DE8 6A03                    push 00000003
+:00475DEA 8996F8F26F00            mov dword ptr [esi+006FF2F8], edx
+:00475DF0 52                      push edx
+:00475DF1 8B96E8F26F00            mov edx, dword ptr [esi+006FF2E8]
+:00475DF7 E844FDFFFF              call 00475B40
+:00475DFC A1E8F16F00              mov eax, dword ptr [006FF1E8]
+:00475E01 C1E008                  shl eax, 08
+:00475E04 05B8F26F00              add eax, 006FF2B8
+
+* Possible StringData Ref from Data Obj ->"Ghost of a Townsman"
+                                  |
+:00475E09 6800B84C00              push 004CB800
+
+
+:00475E0E 50                      push eax
+:00475E0F E81C3F0000              call 00479D30
+:00475E14 FF05E8F16F00            inc dword ptr [006FF1E8]
+:00475E1A 59                      pop ecx
+:00475E1B 59                      pop ecx
+:00475E1C 5F                      pop edi
+:00475E1D 5E                      pop esi
+:00475E1E C3                      ret
+
+
+
+Original code for wounded townsman
+
+* Possible StringData Ref from Data Obj ->"Ogden the Tavern owner"
+                                  |
+:00475D72 68D0B74C00              push 004CB7D0
+:00475D77 50                      push eax
+:00475D78 E8B33F0000              call 00479D30
+:00475D7D FF05E8F16F00            inc dword ptr [006FF1E8]
+:00475D83 59                      pop ecx
+:00475D84 59                      pop ecx
+:00475D85 5E                      pop esi
+:00475D86 C3                      ret
+
+* Referenced by a CALL at Address:
+|:0047651D   
+|
+:00475D87 56                      push esi
+:00475D88 57                      push edi
+:00475D89 6A0A                    push 0000000A
+:00475D8B 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00475D91 6AFF                    push FFFFFFFF
+:00475D93 6A20                    push 00000020
+:00475D95 6A18                    push 00000018
+:00475D97 6A02                    push 00000002
+:00475D99 6A01                    push 00000001
+:00475D9B 6A60                    push 00000060
+:00475D9D 5A                      pop edx
+:00475D9E E8D0FDFFFF              call 00475B73
+:00475DA3 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00475DA9 E857FEFFFF              call 00475C05
+:00475DAE 8B35E8F16F00            mov esi, dword ptr [006FF1E8]
+:00475DB4 33D2                    xor edx, edx
+
+* Possible StringData Ref from Data Obj ->"Towners\Butch\Deadguy.CEL"
+                                  |
+:00475DB6 B914B84C00              mov ecx, 004CB814
+:00475DBB C1E608                  shl esi, 08
+:00475DBE E86C42FAFF              call 0041A02F
+:00475DC3 8986FCF26F00            mov dword ptr [esi+006FF2FC], eax
+:00475DC9 8D86D8F26F00            lea eax, dword ptr [esi+006FF2D8]
+:00475DCF 6A08                    push 00000008
+:00475DD1 5A                      pop edx
+:00475DD2 8BCA                    mov ecx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00475DE0(C)
+|
+:00475DD4 8BBEFCF26F00            mov edi, dword ptr [esi+006FF2FC]
+:00475DDA 8938                    mov dword ptr [eax], edi
+:00475DDC 83C004                  add eax, 00000004
+:00475DDF 49                      dec ecx
+:00475DE0 75F2                    jne 00475DD4
+:00475DE2 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:00475DE8 6A06                    push 00000006
+:00475DEA 8996F8F26F00            mov dword ptr [esi+006FF2F8], edx
+:00475DF0 52                      push edx
+:00475DF1 8B96E8F26F00            mov edx, dword ptr [esi+006FF2E8]
+:00475DF7 E844FDFFFF              call 00475B40
+:00475DFC A1E8F16F00              mov eax, dword ptr [006FF1E8]
+:00475E01 C1E008                  shl eax, 08
+:00475E04 05B8F26F00              add eax, 006FF2B8
+
+* Possible StringData Ref from Data Obj ->"Wounded Townsman"
+                                  |
+:00475E09 6800B84C00              push 004CB800
+:00475E0E 50                      push eax
+:00475E0F E81C3F0000              call 00479D30
+:00475E14 FF05E8F16F00            inc dword ptr [006FF1E8]
+:00475E1A 59                      pop ecx
+:00475E1B 59                      pop ecx
+:00475E1C 5F                      pop edi
+:00475E1D 5E                      pop esi
+:00475E1E C3                      ret
+

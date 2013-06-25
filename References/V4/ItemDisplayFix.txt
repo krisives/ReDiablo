@@ -1,0 +1,52 @@
+Full info for item held in cursor:
+
+File Offset 00004B82
+
+:00405782 83B8AC5300000B          cmp dword ptr [eax+000053AC], 0000000B
+:00405789 7526                    jne 004057B1
+:0040578B 8BB068540000            mov esi, dword ptr [eax+00005468]
+:00405791 8BCE                    mov ecx, esi
+:00405793 E840190000              call 004070D8
+:00405798 50                      push eax
+:00405799 56                      push esi
+wordt
+:00405782 E805000000              call 0040578C
+:00405787 E9CF000000              jmp 0040585B
+:0040578C 56                      push esi
+:0040578D 8BF0                    mov esi, eax
+:0040578F 81C6A4530000            add esi, 000053A4
+:00405795 E98C290200              jmp 00428126
+
+Now free space here.
+
+
+
+Fixing spellbooks to show proper magic requirement always:
+
+File Offset 00028C55
+
+:00429855 8A8661010000            mov al, byte ptr [esi+00000161]
+wordt
+:00429855 E850BFFDFF              call 004057AA
+:0042985A 90                      nop
+
+File Offset 00004BAA
+
+:004057AA 90                      nop
+:004057AB 90                      nop
+:004057AC E9EE010000              jmp 0040599F
+:004057B1 39B808550000            cmp dword ptr [eax+00005508], edi
+:004057B7 7521                    jne 004057DA
+:004057B9 E8BEEDFFFF              call 0040457C
+:004057BE B920514900              mov ecx, 00495120
+wordt
+:004057AA 51                      push ecx
+:004057AB 52                      push edx
+:004057C4 8BCE                    mov ecx, esi
+:004057AE 81C1D07A90FF            add ecx, FF907AD0
+:004057B4 E853510200              call 0042A90C
+:004057B9 8A8191866F00            mov al, byte ptr [ecx+006F8691]
+:004057BF 5A                      pop edx
+:004057C0 59                      pop ecx
+:004057C1 C3                      ret
+:004057C2 90                      nop

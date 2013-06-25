@@ -1,0 +1,87 @@
+Sounds in The Dark:
+
+Nr.	WavPtr.		Name		Note
+
+
+073			fountain	BloodFountain, PurifyingSpring and MurkyPool
+074			golum
+075			golumded
+076			gshrine
+077			guard
+078			grdlanch
+079			holybolt
+07A			hyper		used for Magic Circle
+
+3B6	0049A132	wlock01		used as lvl16 intro
+3B7	0049A118	butcher
+3B8	0049A0FC	garbud01	
+3B9	0049A0E0	garbud02
+3BA	0049A0C4	garbud03
+3BB	0049A0A8	garbud04	MP Gharbad activation
+3BC	0049A08C	diablod		used as Ghost death
+3BD	0049A074	lach01
+3BE	0049A05C	lach02
+3BF	0049A044	lach03
+3C0	0049A02C	laz01
+3C1	0049A014	laz02
+3C2	00499FF8	sking01		Leoric activation
+3C3	00499FE0	snot01
+3C4	00499FC8	snot02
+3C5	00499FB0	snot03
+3C6	00499F94	warlrd01	Warlord activation
+3C7	00499F78	nakrul2		previous Diablo activation 
+3C8	00499F60	zhar01		Zhar activation
+3C9	00499F48	zhar02
+3CA	00499F2C	lvl16int	used as Diablo death
+3CB	00499F10	farmer1
+3CC	00499EF4	farmer2
+3CD	00499ED8	farmer2A
+3CE	00499EBC	farmer3
+3CF	00499EA0	farmer4
+3D0	00499E84	farmer5
+3D1	00499E68	farmer6
+3D2	00499E4C	farmer7
+3D3	00499E30	farmer8
+3D4	00499E14	farmer9
+3D5	00499DF8	teddybr1
+3D6	00499DDC	teddybr2
+3D7	00499DC0	teddybr3
+3D8	00499DA4	teddybr4
+3D9	00499D88	defiler1	not exist
+3DA	00499D6C	defiler2	not exist
+3DB	00499D50	defiler3	not exist
+3DC	00499D34	defiler4	not exist
+3DD	00499D18	defiler8	played at activation
+3DE	00499CFC	defiler6
+3DF	00499CE0	defiler7
+3E0	00499C38	Nakruls1
+3E1	00499C70	Nakruls2
+3E2	00499C38	Nakruls1
+3E3	00499C70	Nakruls2
+3E4	00499C70	Nakruls2	Diablo activation
+3E5	00499C38	Nakruls1	Dark Ghost activation
+3E6	00499C1C	naratr3		unused (Cornerstone)
+3E7	00499C00	cowsut1
+3E8	00499BE4	cowsut2
+3E9	00499BC8	cowsut3
+3EA	00499BAC	cowsut4
+3EB	00499B90	cowsut4A
+3EC	00499B74	cowsut5
+3ED	00499B58	cowsut6
+3EE	00499B3C	cowsut7
+3EF	00499B20	cowsut8
+3F0	00499B04	cowsut9
+3F1	00499AE8	cowsut10
+3F2	00499ACC	cowsut11
+3F3	00499AB0	cowsut12
+3F4	00499A94	skljrn1		
+3F5	00499A78	naratr6		journal
+3F6	00499A5C	naratr7		journal
+3F7	00499A40	naratr8		journal
+3F8	00499A24	naratr5		journal
+3F9	00499A08	naratr9		journal
+3FA	004999EC	naratr4		unused (Reconstructed note)
+3FB	004999D0	trader1		
+3FC	004999B8	cropen
+3FD	004999A0	crclos
+

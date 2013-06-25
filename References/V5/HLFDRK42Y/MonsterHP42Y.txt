@@ -1,0 +1,124 @@
+Increasing Monster's life for Nightmare and Hellmode
+
+
+                Hellfire            Dark 4.2            
+
+Nightmare       3*Normal + 100   -> 4*Normal + 100   -> 5*normal + 100
+Hellmode        4*Normal + 200   -> 6*Normal + 200   -> 8*normal + 200
+
+
+Normal monsters in Nightmare:
+
+File Offset 0003A811
+
+:0043B411 898618DD6900            mov dword ptr [esi+0069DD18], eax
+changed into
+:0043B411 E8F1F40300              call 0047A907
+:0043B416 90                      nop
+changed into
+:0043B411 E8A4790100              call 00452DBA
+:0043B416 90                      nop
+
+
+Normal monsters in Hellmode:
+
+File Offset 0003A8BA
+
+:0043B4BA 898618DD6900            mov dword ptr [esi+0069DD18], eax
+changed into
+:0043B4BA E806F40300              call 0047A8C5
+:0043B4BF 90                      nop
+changed into
+:0043B4BA E8FB780100              call 00452DBA
+:0043B4BF 90                      nop
+
+
+Bosses in Nightmare:
+
+File Offset 0003B21C
+
+:0043BE1C 898690000000            mov dword ptr [esi+00000090], eax
+changed into
+:0043BE1C E8ACC6FEFF              call 004284CD
+:0043BE21 90                      nop
+changed into
+:0043BE1C E87E6F0100              call 00452D9F
+:0043BE21 90                      nop
+
+
+Bosses in Hellmode:
+
+File Offset 0003B2A3
+
+:0043BEA3 898690000000            mov dword ptr [esi+00000090], eax
+changed into
+:0043BEA3 E81FC6FEFF              call 004284C7
+:0043BEA8 90                      nop
+changed into
+:0043BEA3 E8F76E0100              call 00452D9F
+:0043BEA8 90                      nop
+
+
+Using free space from obsolete Sparkling Shrine:
+
+file offset 0005219F
+
+:00452D9F 85C0                    test eax, eax
+:00452DA1 0F85C5020000            jne 0045306C
+:00452DA7 8B7DFC                  mov edi, dword ptr [ebp-04]
+:00452DAA 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00452DB0 0F85B6020000            jne 0045306C
+:00452DB6 B12F                    mov cl, 2F
+:00452DB8 E8E47CFCFF              call 0041AAA1
+:00452DBD 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:00452DC4 69C0E8030000            imul eax, 000003E8
+changed into
+:00452D9F 53                      push ebx
+:00452DA0 51                      push ecx
+:00452DA1 8B0DC0706000            mov ecx, dword ptr [006070C0]
+:00452DA7 8B9E90000000            mov ebx, dword ptr [esi+00000090]
+:00452DAD D3E3                    shl ebx, cl
+:00452DAF 03C3                    add eax, ebx
+:00452DB1 898690000000            mov dword ptr [esi+00000090], eax
+:00452DB7 59                      pop ecx
+:00452DB8 5B                      pop ebx
+:00452DB9 C3                      ret
+:00452DBA 56                      push esi
+:00452DBB 81C688DC6900            add esi, 0069DC88
+:00452DC1 E8D9FFFFFF              call 00452D9F
+:00452DC6 5E                      pop esi
+:00452DC7 C3                      ret
+:00452DC8 9090                    2*nop
+
+
+Now free space at:
+
+File Offset 00079CC5
+
+:0047A8C5 038618DD6900            add eax, dword ptr [esi+0069DD18]
+:0047A8CB EB3A                    jmp 0047A907
+:0047A8CD 90                      nop
+:0047A8CE 90                      nop
+:0047A8CF 90                      nop
+
+File Offset 00079D07
+
+:0047A907 038618DD6900            add eax, dword ptr [esi+0069DD18]
+:0047A90D EB16                    jmp 0047A925
+:0047A90F 90                      nop
+
+File Offset 00079D25
+
+:0047A925 898618DD6900            mov dword ptr [esi+0069DD18], eax
+:0047A92B C3                      ret
+:0047A92C 90                      nop
+:0047A92D 90                      nop
+:0047A92E 90                      nop
+:0047A92F 90                      nop
+
+File Offset 000278C7
+
+:004284C7 038690000000            add eax, dword ptr [esi+00000090]
+:004284CD 038690000000            add eax, dword ptr [esi+00000090]
+:004284D3 898690000000            mov dword ptr [esi+00000090], eax
+:004284D9 C3                      ret

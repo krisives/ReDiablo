@@ -1,0 +1,55 @@
+not just town, this does everywhere
+by Vector- 
+don't know exactly what this does, though my guess would be that it alters the frame speed of the walk animations...?
+
+4E5CD 86 > B8 	at 44F1CD
+4E748 86 > B8	at 44F348
+4E89B 86 > B8	at 44F49B
+4F825 86 > B8	at 450425
+
+that will make the characters walk at high speeds, you could probably get the characters walking not quite so fast by setting it to somewhere between 86 and B8, but I haven't the slightest clue what result that will have, nor how efficient/non-crashing this code, as I got it from an old hack.....
+
+
+Posted on Dec 14 1999, 5:21 PM
+from IP address 208.242.230.172
+Respond to this message
+
+Goto Forum Home
+Responses
+
+
+no, no, no..... Jarulf, Dec 15 1999
+
+
+
+by 
+Jarulf
+<a href="/Profile/"></a>
+<P>
+</center>
+Well, I don't doubt its working, but you can't just change the number to alter the speed.<br>
+<br>
+The original instruction is:<br>
+<br>
+cmp dword ptr [esi+00687968], eax<br>
+<br>
+Here eax is fetched from right before the starting stats for characters and hapens to be 8 for all character classes. In town it is hard coded to 8 though (end result, always 8 :)<br>
+<br>
+687968 is used as a frame counter. Only Casting spells uses that for frame counting, for other actions another system is used (hmm, I wonder if that may be a reason for the haste bug, will have to check).<br>
+<br>
+IN Hellfire, the fast walk is done by every others frame (odd frame) increase the 687928 and also the normal frame counter (as I said, I have not looked much at it, but would guess one is a frame counter and one is a sort of distance walked counter).<br>
+<br>
+What is strange though, is that change you propose would change the instruction to:<br>
+<br>
+cmp dword ptr [eax+00687968], edi<br>
+<br>
+Which hardly makes sense. Did I miss somethng?<br>
+<br>
+Ohh, by the way, the last change is for death, not walk as far as I can see.<P>
+<center>
+<i>
+Posted on 
+Dec 15 1999
+, 
+06:24 AM
+

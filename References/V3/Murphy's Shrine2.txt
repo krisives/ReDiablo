@@ -1,0 +1,50 @@
+()Murphy's Shrine
+
+File Offset: 523B0
+
+:00452FB0 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452FB5 69C0C8550000            imul eax, 000055C8
+:00452FBB 030514AE6E00            add eax, dword ptr [006EAE14]
+:00452FC1 83BC1894030000FF        cmp dword ptr [eax+ebx+00000394], FFFFFFFF	
+:00452FC9 8DB4188C030000          lea esi, dword ptr [eax+ebx+0000038C]
+:00452FD0 7418                    je 00452FEA
+:00452FD2 6A02                    push 00000002
+:00452FD4 32C9                    xor cl, cl
+:00452FD6 5A                      pop edx
+:00452FD7 E87E6FFCFF              call 00419F5A
+:00452FDC 85C0                    test eax, eax
+:00452FDE 750A                    jne 00452FEA
+:00452FE0 8B86EC000000            mov eax, dword ptr [esi+000000F0]
+:00452FE6 85C0                    test eax, eax
+:00452FE8 7510                    jne 00452FFA
+
+:00452FEA 81C374010000            add ebx, 00000174
+:00452FF0 81FB2C0A0000            cmp ebx, 00000A2C
+:00452FF6 7CB8                    jl 00452FB0
+:00452FF8 EB1D                    jmp 00453017
+
+:00452FFA D1F8                    sar eax, 1
+:00452FFC 8986F0000000            mov dword ptr [esi+000000F0], eax
+:00453002 3B86EC000000            cmp eax, dword ptr [esi+000000EC]
+
+()Kleine correctie hier (Cur.Dur werd niet goed aangepast):
+
+:00453008 7E06                    jle 00453010
+:0045300A 8B86EC000000            mov eax, dword ptr [esi+000000EC]
+:00453010 8901                    mov dword ptr [ecx], eax
+wordt
+:00453008 7D08                    jge 00453012
+:0045300A 8986EC000000            mov dword ptr [esi+000000EC], eax
+:00453010 9090                    2*nop
+
+Verder weer onveranderd:
+
+:00453012 6A01                    push 00000001
+:00453014 5F                      pop edi
+:00453015 90                      nop 
+:00453016 90                      nop 
+:00453017 85FF                    test edi, edi
+
+
+
+Nog niet getest!

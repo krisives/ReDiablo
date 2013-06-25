@@ -1,0 +1,419 @@
+New spell: Arcane Destruction 
+
+Like Nova and Immolation, but here the magic based Arcane Star spell, including splash and knockback, is used. Damage is the same as for Arcane Star, but calculated with the Slvl for Arcane Destruction. Cost to cast will be the same as for Nova, as is the case for Immolation (spell data is ignored there, which is actually a bug but not worth fixing).
+
+Arcane Destruction will take the place of Identify, and Jester will be replaced by (a non-learnable) Identify.
+
+This spell will have the former Arcane Flames icon, while Arcane Flames will be renamed to Sanctuary and receive the Shielding icon. Apocalypse will receive the Flaming Skull icon, for evaluation.
+
+
+Supplying the name:
+
+000A39EC 5363 726F 6C6C 206F 6620 426F 6E65 2053 Scroll of Bone S
+000A39FC 7069 7269 7400                          pirit.
+changed into
+000A39EC 4172 6361 6E65 2044 6573 7472 7563 7469 Arcane Destructi
+000A39FC 6F6E 0000 0000                          on....
+
+
+Renaming Arcane Flames:
+
+000B25E1 4172 6361 6E65 2046 6C61 6D65 7300      Arcane Flames.
+changed into
+000B25E1 5361 6E63 7475 6172 7900 0000 0000      Sanctuary.....
+
+
+Adjusting spell icons:
+
+00093610 1B01 0203 0405 0607 082C 090D 0C11 1021 .........,.....!
+00093620 300F 0B16 1C15 2218 1914 1A1D 1326 272A 0....."......&'*
+00093630 2028 0A24 1E29 1732 2E2F 2B2D 2312 3333  (.$.).2./+-#.33
+00093640 3333 3333                               3333
+changed into
+00093615 20                                       
+00093628 1F                                      .
+0009362C 33                                      3
+00093630 13                                      .
+00093637 05                                      .
+
+
+Adjusting Spell Data:
+
+pos nbr name          type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects   price(bo)  multiplier
+
+  4   5 Identify      magic/other    16       16   150   50    5  100   1    15- 30  40: -: -     30000       100
+        Arcane Destruction                          80   60    1        0            96: -: -     20000       120
+
+000B6100 0596 0200 3883 4B00 3883 4B00 1000 0000 ....8.K.8.K.....
+000B6110 1000 0000 0000 0000 0100 0000 6400 0000 ............d...
+000B6120 5628 0000 0532 0000 0F00 0000 1E00 0000 V(...2..........
+000B6130 3075 0000 F401 0000                     0u......
+changed into
+000B6100 0550 0200 EC4F 4A00 EC4F 4A00 1000 0000 .P...OJ..OJ.....
+000B6110 1000 0000 0100 0000 0000 0000 6400 0000 ............d...
+000B6120 5260 0000 013C 0000 0F00 0000 1E00 0000 R`...<..........
+000B6130 204E 0000 5802 0000                      N..X...
+
+ 38  39 the Jester    magic/other   255        4   255    1    3   30   0    15- 30  96: -: -    100000        40
+        Identify                                                   10   1            40: -: -                 100
+
+000B6870 27FF 0200 C881 4B00 0000 0000 FFFF FFFF '.....K.........
+000B6880 0400 0000 0100 0000 0000 0000 1E00 0000 ................
+000B6890 5860 0000 0301 0000 0F00 0000 1E00 0000 X`..............
+000B68A0 A086 0100 C800 0000                     ........
+changed into
+000B6870 27FF 0200 3883 4B00 3883 4B00 FFFF FFFF '...8.K.8.K.....
+000B6880 0400 0000 0000 0000 0100 0000 0A00 0000 ................
+000B6890 5628 0000 0301 0000 0F00 0000 1E00 0000 V(..............
+000B68A0 A086 0100 F401 0000                     ........
+
+
+Adjusting spell code for Tome of Lore:
+
+000A11E4 0500 0000                               ....
+changed into
+000A11E4 2700 0000                               '...
+
+Adjusting spell code for all scrolls of Identify:
+
+000A0DBC 0500 0000                               ....
+changed into
+000A0DBC 2700 0000                               '...
+
+000A21EC 0500 0000                               ....
+changed into
+000A21EC 2700 0000                               '...
+
+000A2660 0500 0000                               ....
+changed into
+000A2660 2700 0000                               '...
+
+000A2744 0500 0000                               ....
+changed into
+000A2744 2700 0000                               '...
+
+Adjusting spell code for Identify spell Suffix:
+
+0008B9C8 0500 0000                               ....
+changed into
+0008B9C8 2700 0000                               '...
+
+Adjusting spell code for Naj's Puzzler:
+
+0008DEC0 0500 0000                               ....
+changed into
+0008DEC0 2700 0000                               '...
+
+
+Adjusting the spell effect data:
+
+000A6DE8 6000 0000 6A07 4300 B19F 4100 0000 0000 `...j.C...A.....
+000A6DF8 0200 FF00 FFFF FFFF FFFF FFFF           ............
+changed into
+000A6DE8 6000 0000 AF4B 4300 1097 4300 0000 0000 `....KC...C.....
+000A6DF8 0103 FF00 7200 0000 FFFF FFFF           ....r.......
+
+
+Adjusting spell book display:
+
+0002E31F 0001 0203 0406 0606 0606 0607 0809 060B ................
+0002E32F 0B0C 0D0E 0F10 1011 1212 1212 1314 1516 ................
+0002E33F 1617 1819 2306 2306 1B1C 1C22 1D1E 1F20 ....#.#...."... 
+0002E34F 2121 06                                 !!.
+changed into
+0002E323 22                                      "
+
+
+Adding support to the update code of Immolation:
+
+file offset 00038B13
+
+:00439713 83EC18                  sub esp, 00000018
+changed into
+:00439713 83EC20                  sub esp, 00000020
+
+file offset 00038B23
+
+:00439723 8B8FD47A6900            mov ecx, dword ptr [edi+00697AD4]
+changed into
+:00439723 E95270FFFF              jmp 0043077A
+:00439728 90                      nop
+
+
+file offset 00038B87
+
+:00439787 FFB7887A6900            push dword ptr [edi+00697A88]
+:0043978D 8B55F4                  mov edx, dword ptr [ebp-0C]
+:00439790 0FB60E                  movzx ecx, byte ptr [esi]
+:00439793 FF75F0                  push [ebp-10]
+:00439796 03D1                    add edx, ecx
+:00439798 03C3                    add eax, ebx
+:0043979A 8BCB                    mov ecx, ebx
+:0043979C FF75EC                  push [ebp-14]
+:0043979F FF75FC                  push [ebp-04]
+:004397A2 6A4A                    push 0000004A
+changed into
+:00439787 FF75E4                  push [ebp-1C]
+:00439793 FF75F0                  push [ebp-10]
+:0043978D 8B55F4                  mov edx, dword ptr [ebp-0C]
+:00439790 0FB60E                  movzx ecx, byte ptr [esi]
+:00439793 FF75EC                  push [ebp-14]
+:00439796 03D1                    add edx, ecx
+:00439798 03C3                    add eax, ebx
+:0043979A 8BCB                    mov ecx, ebx
+:0043979C FF75FC                  push [ebp-04]
+:0043979F FF75E0                  push [ebp-20]
+:004397A2 9090                    2*nop
+
+
+file offset 00038BB1
+
+:004397B1 FFB7887A6900            push dword ptr [edi+00697A88]
+:004397B7 8B55F4                  mov edx, dword ptr [ebp-0C]
+:004397BA 0FB606                  movzx eax, byte ptr [esi]
+:004397BD FF75F0                  push [ebp-10]
+:004397C0 8BCA                    mov ecx, edx
+:004397C2 2BC8                    sub ecx, eax
+:004397C4 FF75EC                  push [ebp-14]
+:004397C7 0FB646FF                movzx eax, byte ptr [esi-01]
+:004397CB FF75FC                  push [ebp-04]
+:004397CE 6A4A                    push 0000004A
+changed into
+:004397B1 FF75E4                  push [ebp-1C]
+:004397B4 FF75F0                  push [ebp-10]
+:004397B7 8B55F4                  mov edx, dword ptr [ebp-0C]
+:004397BA 0FB606                  movzx eax, byte ptr [esi]
+:004397BD FF75EC                  push [ebp-14]
+:004397C0 8BCA                    mov ecx, edx
+:004397C2 2BC8                    sub ecx, eax
+:004397C4 FF75FC                  push [ebp-04]
+:004397C7 0FB646FF                movzx eax, byte ptr [esi-01]
+:004397CB FF75E0                  push [ebp-20]
+:004397CE 9090                    2*nop
+
+
+file offset 00038BE0
+
+:004397E0 FFB7887A6900            push dword ptr [edi+00697A88]
+:004397E6 8B55F4                  mov edx, dword ptr [ebp-0C]
+:004397E9 0FB606                  movzx eax, byte ptr [esi]
+:004397EC FF75F0                  push [ebp-10]
+:004397EF 8BCA                    mov ecx, edx
+:004397F1 03C8                    add ecx, eax
+:004397F3 FF75EC                  push [ebp-14]
+:004397F6 0FB646FF                movzx eax, byte ptr [esi-01]
+:004397FA FF75FC                  push [ebp-04]
+:004397FD 6A4A                    push 0000004A
+changed into
+:004397E0 FF75E4                  push [ebp-1C]
+:004397E3 FF75F0                  push [ebp-10]
+:004397E6 8B55F4                  mov edx, dword ptr [ebp-0C]
+:004397E9 0FB606                  movzx eax, byte ptr [esi]
+:004397EC FF75EC                  push [ebp-14]
+:004397EF 8BCA                    mov ecx, edx
+:004397F1 03C8                    add ecx, eax
+:004397F3 FF75FC                  push [ebp-04]
+:004397F6 0FB646FF                movzx eax, byte ptr [esi-01]
+:004397FA FF75E0                  push [ebp-20]
+:004397FD 9090                    2*nop
+
+
+file offset 00038C0F
+
+:0043980F FFB7887A6900            push dword ptr [edi+00697A88]
+:00439815 8B55F4                  mov edx, dword ptr [ebp-0C]
+:00439818 0FB606                  movzx eax, byte ptr [esi]
+:0043981B FF75F0                  push [ebp-10]
+:0043981E 8BCA                    mov ecx, edx
+:00439820 2BC8                    sub ecx, eax
+:00439822 FF75EC                  push [ebp-14]
+:00439825 0FB646FF                movzx eax, byte ptr [esi-01]
+:00439829 FF75FC                  push [ebp-04]
+:0043982C 6A4A                    push 0000004A
+changed into
+:0043980F FF75E4                  push [ebp-1C]
+:00439812 FF75F0                  push [ebp-10]
+:00439815 8B55F4                  mov edx, dword ptr [ebp-0C]
+:00439818 0FB606                  movzx eax, byte ptr [esi]
+:0043981B FF75EC                  push [ebp-14]
+:0043981E 8BCA                    mov ecx, edx
+:00439820 2BC8                    sub ecx, eax
+:00439822 FF75FC                  push [ebp-04]
+:00439825 0FB646FF                movzx eax, byte ptr [esi-01]
+:00439829 FF75E0                  push [ebp-20]
+:0043982C 9090                    2*nop
+
+
+
+Disabling mana cost for the individual Arcane Star spell effect:
+
+file offset 0003C81E
+
+:0043D41E 6A2C                    push 0000002C
+:0043D420 5A                      pop edx
+:0043D421 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:0043D427 E8D0EB0200              call 0046BFFC
+:0043D42C 5F                      pop edi
+:0043D42D 5E                      pop esi
+:0043D42E 5B                      pop ebx
+:0043D42F C9                      leave
+:0043D430 C21C00                  ret 001C
+:0043D433 90                      nop
+changed into
+:0043D41E 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+:0043D424 5F                      pop edi
+:0043D425 5E                      pop esi
+:0043D426 5B                      pop ebx
+:0043D427 C9                      leave
+:0043D428 C21C00                  ret 001C
+:0043D42B 909090909090909090      9*nop			
+
+Adding mana cost to the casting of Arcane Star:
+
+file offset 0006B56F
+
+:0046C16F EB36                    jmp 0046C1A7
+:0046C171 9090909090909090        8*nop
+changed into
+:0046C16F 803E20                  cmp byte ptr [esi], 20
+:0046C172 7533                    jne 0046C1A7
+:0046C174 E9F145FCFF              jmp 0043076A
+:0046C179 
+
+
+Using now free space from Jester spell initial code:
+
+file offset 0002FB6A
+
+:0043076A 55                      push ebp
+:0043076B 8BEC                    mov ebp, esp
+:0043076D 51                      push ecx
+:0043076E 56                      push esi
+:0043076F 57                      push edi
+:00430770 6A01                    push 00000001
+:00430772 8955FC                  mov dword ptr [ebp-04], edx
+:00430775 5F                      pop edi
+:00430776 8BF1                    mov esi, ecx
+:00430778 6A0A                    push 0000000A
+:0043077A 80C9FF                  or cl, FF
+:0043077D 5A                      pop edx
+:0043077E E8D797FEFF              call 00419F5A
+:00430783 83F809                  cmp eax, 00000009
+:00430786 7736                    ja 004307BE
+:00430788 FF248505084300          jmp dword ptr [4*eax+00430805]
+:0043078F 6A01                    push 00000001
+:00430791 EB2A                    jmp 004307BD
+:00430793 6A06                    push 00000006
+:00430795 EB26                    jmp 004307BD
+:00430797 6A26                    push 00000026
+:00430799 EB22                    jmp 004307BD
+:0043079B 6A02                    push 00000002
+:0043079D EB1E                    jmp 004307BD
+:0043079F 6A0F                    push 0000000F
+:004307A1 EB1A                    jmp 004307BD
+
+changed into
+
+:0043076A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043076D 6A2C                    push 0000002C
+:0043076F 5A                      pop edx
+:00430770 E887B80300              call 0046BFFC
+:00430775 E92DBA0300              jmp 0046C1A7
+
+:0043077A 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00430780 8945E4                  mov dword ptr [ebp-1C], eax
+:00430783 83BF587A690048          cmp dword ptr [edi+00697A58], 00000048
+:0043078A 7505                    jne 00430791
+:0043078C 6A4A                    push 0000004A
+:0043078E 58                      pop eax
+:0043078F EB03                    jmp 00430794
+:00430791 6A20                    push 00000020
+:00430793 58                      pop eax
+:00430794 8945E0                  mov dword ptr [ebp-20], eax
+:00430797 8B8FD47A6900            mov ecx, dword ptr [edi+00697AD4]
+:0043079D E9878F0000              jmp 00439729
+:004307A2 90                      nop						
+
+Now free space from 004307A2 to 0043082D.
+
+
+Cryptic Shrine now casts Arcane Destruction:
+
+file offset 00051540
+
+:00452140 6A48                    push 00000048
+changed into
+:00452140 6A60                    push 00000060
+
+
+Original Jester spell effect, initializing code:
+
+:0043076A 55                      push ebp
+:0043076B 8BEC                    mov ebp, esp
+:0043076D 51                      push ecx
+:0043076E 56                      push esi
+:0043076F 57                      push edi
+:00430770 6A01                    push 00000001
+:00430772 8955FC                  mov dword ptr [ebp-04], edx
+:00430775 5F                      pop edi
+:00430776 8BF1                    mov esi, ecx
+:00430778 6A0A                    push 0000000A
+:0043077A 80C9FF                  or cl, FF
+:0043077D 5A                      pop edx
+:0043077E E8D797FEFF              call 00419F5A
+:00430783 83F809                  cmp eax, 00000009
+:00430786 7736                    ja 004307BE
+:00430788 FF248505084300          jmp dword ptr [4*eax+00430805]
+:0043078F 6A01                    push 00000001
+:00430791 EB2A                    jmp 004307BD
+:00430793 6A06                    push 00000006
+:00430795 EB26                    jmp 004307BD
+:00430797 6A26                    push 00000026
+:00430799 EB22                    jmp 004307BD
+:0043079B 6A02                    push 00000002
+:0043079D EB1E                    jmp 004307BD
+:0043079F 6A0F                    push 0000000F
+:004307A1 EB1A                    jmp 004307BD
+:004307A3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004307A6 6A0A                    push 0000000A
+:004307A8 5F                      pop edi
+:004307A9 6A07                    push 00000007
+:004307AB 5A                      pop edx
+:004307AC E84BB80300              call 0046BFFC
+:004307B1 EB0B                    jmp 004307BE
+:004307B3 6A1A                    push 0000001A
+:004307B5 EB06                    jmp 004307BD
+:004307B7 6A2C                    push 0000002C
+:004307B9 EB02                    jmp 004307BD
+:004307BB 6A1E                    push 0000001E
+:004307BD 5F                      pop edi
+:004307BE 69F6B0000000            imul esi, 000000B0
+:004307C4 8B5508                  mov edx, dword ptr [ebp+08]
+:004307C7 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004307CA FFB6887A6900            push dword ptr [esi+00697A88]
+:004307D0 8A86D07A6900            mov al, byte ptr [esi+00697AD0]
+:004307D6 6A00                    push 00000000
+:004307D8 FFB6CC7A6900            push dword ptr [esi+00697ACC]
+:004307DE 50                      push eax
+:004307DF 57                      push edi
+:004307E0 FF7514                  push [ebp+14]
+:004307E3 FF7510                  push [ebp+10]
+:004307E6 FF750C                  push [ebp+0C]
+:004307E9 E8414F0000              call 0043572F
+:004307EE C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:004307F8 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+:004307FF 5F                      pop edi
+:00430800 5E                      pop esi
+:00430801 C9                      leave
+:00430802 C21C00                  ret 001C
+
+:00430805 8F074300                DWORD 0043078F
+:00430809 8F074300                DWORD 0043078F
+:0043080D 93074300                DWORD 00430793
+:00430811 97074300                DWORD 00430797
+:00430815 9B074300                DWORD 0043079B
+:00430819 9F074300                DWORD 0043079F
+:0043081D A3074300                DWORD 004307A3
+:00430821 B3074300                DWORD 004307B3
+:00430825 B7074300                DWORD 004307B7
+:00430829 BB074300                DWORD 004307BB

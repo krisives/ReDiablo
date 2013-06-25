@@ -1,0 +1,197 @@
+
+
+
+Spells
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+  1   2 Healing             magic/other     1        1     5    1    3   20   1    20- 40  37: -: -      1000         10
+ 33  34 Heal Other          magic/other     1        1     5    1    3   20   1    20- 40  60: -: -      1000         10
+
+
+25	Healing
+A6774	2500 0000 D63D 4300 B195
+	4100 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+
+3C	Heal Other
+A69F8	3C00 0000 6C40 4300 B19F
+	4100 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+
+
+:00433DD6 55                      push ebp
+:00433DD7 8BEC                    mov ebp, esp
+:00433DD9 51                      push ecx
+:00433DDA 51                      push ecx
+:00433DDB 53                      push ebx
+:00433DDC 56                      push esi
+:00433DDD 57                      push edi
+:00433DDE 894DF8                  mov dword ptr [ebp-08], ecx
+:00433DE1 6A0A                    push 0000000A
+:00433DE3 B139                    mov cl, 39
+:00433DE5 5A                      pop edx
+:00433DE6 E86F61FEFF              call 00419F5A
+:00433DEB 8B751C                  mov esi, dword ptr [ebp+1C]
+:00433DEE 8BF8                    mov edi, eax
+:00433DF0 69F6C8550000            imul esi, 000055C8
+:00433DF6 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433DFB 47                      inc edi
+:00433DFC 33DB                    xor ebx, ebx
+:00433DFE C1E706                  shl edi, 06
+:00433E01 389C30B8010000          cmp byte ptr [eax+esi+000001B8], bl
+:00433E08 7E22                    jle 00433E2C
+:00433E0A 6A04                    push 00000004
+:00433E0C B139                    mov cl, 39
+:00433E0E 5A                      pop edx
+:00433E0F E84661FEFF              call 00419F5A
+:00433E14 40                      inc eax
+:00433E15 C1E006                  shl eax, 06
+:00433E18 03F8                    add edi, eax
+:00433E1A A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E1F 43                      inc ebx
+:00433E20 0FBE8430B8010000        movsx eax, byte ptr [eax+esi+000001B8]
+:00433E28 3BD8                    cmp ebx, eax
+:00433E2A 7CDE                    jl 00433E0A
+:00433E2C 8B5DF8                  mov ebx, dword ptr [ebp-08]
+:00433E2F 8365FC00                and dword ptr [ebp-04], 00000000
+:00433E33 69DBB0000000            imul ebx, 000000B0
+:00433E39 83BB887A690000          cmp dword ptr [ebx+00697A88], 00000000
+:00433E40 7E1E                    jle 00433E60
+:00433E42 6A06                    push 00000006
+:00433E44 B139                    mov cl, 39
+:00433E46 5A                      pop edx
+:00433E47 E80E61FEFF              call 00419F5A
+:00433E4C 40                      inc eax
+:00433E4D C1E006                  shl eax, 06
+:00433E50 03F8                    add edi, eax
+:00433E52 FF45FC                  inc [ebp-04]
+:00433E55 8B45FC                  mov eax, dword ptr [ebp-04]
+:00433E58 3B83887A6900            cmp eax, dword ptr [ebx+00697A88]
+:00433E5E 7CE2                    jl 00433E42
+:00433E60 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E65 03C6                    add eax, esi
+:00433E67 8A8860010000            mov cl, byte ptr [eax+00000160]
+:00433E6D 84C9                    test cl, cl
+:00433E6F 740A                    je 00433E7B
+:00433E71 80F905                  cmp cl, 05
+:00433E74 7405                    je 00433E7B
+:00433E76 80F903                  cmp cl, 03
+:00433E79 7502                    jne 00433E7D
+:00433E7B D1E7                    shl edi, 1
+:00433E7D 80F901                  cmp cl, 01
+:00433E80 7405                    je 00433E87
+:00433E82 80F904                  cmp cl, 04
+:00433E85 7506                    jne 00433E8D
+:00433E87 8BCF                    mov ecx, edi
+:00433E89 D1F9                    sar ecx, 1
+:00433E8B 03F9                    add edi, ecx
+:00433E8D 01B898010000            add dword ptr [eax+00000198], edi
+:00433E93 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433E98 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00433E9B 8D8198010000            lea eax, dword ptr [ecx+00000198]
+:00433EA1 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:00433EA7 3908                    cmp dword ptr [eax], ecx
+:00433EA9 7E02                    jle 00433EAD
+:00433EAB 8908                    mov dword ptr [eax], ecx
+:00433EAD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433EB2 01BC3090010000          add dword ptr [eax+esi+00000190], edi
+:00433EB9 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:00433EC0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00433EC5 03C6                    add eax, esi
+:00433EC7 8D8890010000            lea ecx, dword ptr [eax+00000190]
+:00433ECD 8B8094010000            mov eax, dword ptr [eax+00000194]
+:00433ED3 3901                    cmp dword ptr [ecx], eax
+:00433ED5 7E02                    jle 00433ED9
+:00433ED7 8901                    mov dword ptr [ecx], eax
+:00433ED9 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00433EDC 6A02                    push 00000002
+:00433EDE 5A                      pop edx
+:00433EDF E818810300              call 0046BFFC
+:00433EE4 6A01                    push 00000001
+:00433EE6 58                      pop eax
+:00433EE7 5F                      pop edi
+:00433EE8 89838C7A6900            mov dword ptr [ebx+00697A8C], eax
+:00433EEE 5E                      pop esi
+:00433EEF A3400E4D00              mov dword ptr [004D0E40], eax
+:00433EF4 5B                      pop ebx
+:00433EF5 C9                      leave
+:00433EF6 C21C00                  ret 001C
+
+
+Heal Other:
+
+:0043406C 69C9B0000000            imul ecx, 000000B0
+:00434072 56                      push esi
+:00434073 8B74241C                mov esi, dword ptr [esp+1C]
+:00434077 6A22                    push 00000022
+:00434079 C7818C7A690001000000    mov dword ptr [ebx+00697A8C], 00000001
+:00434083 5A                      pop edx
+:00434084 8BCE                    mov ecx, esi
+:00434086 E8717F0300              call 0046BFFC
+:0043408B 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00434091 7508                    jne 0043409B
+:00434093 6A0A                    push 0000000A
+:00434095 59                      pop ecx
+:00434096 E8523AFDFF              call 00407AED
+:0043409B 5E                      pop esi
+:0043409C C21C00                  ret 001C
+
+
+
+
+Healing
+Type: fire
+Min. Damage: Rec(slvl, 1 + [clvl/2])
+Max. Damage: Rec(slvl, 10 + [clvl/2])
+Quick Min. Damage: (1 + clvl/2) · (9/8) ^slvl
+Quick Max. Damage: (10 + clvl/2) · (9/8) ^slvl
+Duration: 4·slvl/5 + 2·clvl/5 seconds (maximum 24
+seconds, minimum 0.8 seconds)
+Fire frequency: every 0.8 second
+Blockable: Yes
+Type: n/a
+Mana Cost: 8 + 2·clvl - 3·slvl
+Min. Healing: bonus·(1 + clvl + slvl)
+Max. Healing: bonus·(10 + 4·clvl + 6·slvl)
+Real Healing: bonus·(Rnd[10] + Itt(clvl, Rnd[4]+1) +
+Itt(slvl, Rnd[6]+1) + 1)
+Bonus:
+Warrior, Monk and Barbarian: 2.0
+Rogue and Bard: 1.5
+Sorcerer: 1.0
+Note:
+* The fire bolts shot by a Guardian are determined by
+the slvl of your Firebolt spell, so the shown damage is
+actually bogus.
+* You will get normal experience for any monster that
+your guardians kill.
+Note:
+* The actual distribution of the healing is bell curve
+shaped.
+
+
+
+Heal Other Holy Bolt
+Type: n/a
+Mana Cost: 8 + 2·clvl - 3·slvl
+Min. Healing: bonus·(1 + clvl + slvl)
+Max. Healing: bonus·(10 + 4·clvl + 6·slvl)
+Real Healing: bonus·(Rnd[10] + Itt(clvl, Rnd[4]+1) +
+Itt(slvl, Rnd[6]+1) + 1)
+Bonus:
+Monk: 3.0
+Warrior and Barbarian: 2.0
+Rogue and Bard: 1.5
+Sorcerer: 1.0
+Type: n/a
+Min. Damage: 9 + clvl
+Max. Damage: 18 + clvl
+Speed: 16 + 2·slvl
+Note:
+* The actual distribution of the healing is bell curve
+shaped.
+Note:
+* This spell only works on undead monsters and
+Diablo. See chapter 5.2 for information about which
+monsters are undead. It does not work against

@@ -1,0 +1,10 @@
+Piercing missiles vs. characters (Arrows -> Bone Spirit):
+
+Not useful for Bone Spirit, but serves as disabling a previous quickfix.
+
+File Offset 00052907
+
+:00453507 837D1400                cmp dword ptr [ebp+14], 00000000
+wordt
+:00453507 837D143F                cmp dword ptr [ebp+14], 0000003F
+

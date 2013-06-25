@@ -1,0 +1,163 @@
+Monster magic item drop by Sierra:
+
+
+* Referenced by a CALL at Addresses:
+|:0043D194   , :0043DE55   
+|
+:0043D4E1 53                      push ebx
+:0043D4E2 56                      push esi
+:0043D4E3 57                      push edi
+:0043D4E4 8BF9                    mov edi, ecx
+:0043D4E6 8BF7                    mov esi, edi
+:0043D4E8 6A02                    push 00000002
+:0043D4EA 69F6E4000000            imul esi, 000000E4
+:0043D4F0 8BDA                    mov ebx, edx
+:0043D4F2 59                      pop ecx
+:0043D4F3 81C688DC6900            add esi, 0069DC88
+:0043D4F9 E895250200              call 0045FA93
+:0043D4FE 85C0                    test eax, eax
+:0043D500 742B                    je 0043D52D
+:0043D502 8B86D8000000            mov eax, dword ptr [esi+000000D8]	boss name
+:0043D508 3B0584084B00            cmp eax, dword ptr [004B0884]
+:0043D50E 751D                    jne 0043D52D				jmp of not DarkLord/GhardbadWeak
+:0043D510 8B5624                  mov edx, dword ptr [esi+24]
+:0043D513 33DB                    xor ebx, ebx
+:0043D515 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D518 53                      push ebx
+:0043D519 6A01                    push 00000001
+:0043D51B 42                      inc edx
+:0043D51C 5F                      pop edi
+:0043D51D 41                      inc ecx
+:0043D51E 57                      push edi
+:0043D51F 53                      push ebx
+:0043D520 6A04                    push 00000004
+:0043D522 57                      push edi
+:0043D523 E852A2FEFF              call 0042777A
+:0043D528 E924010000              jmp 0043D651				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043D500(C), :0043D50E(C)
+|
+:0043D52D 8B86D8000000            mov eax, dword ptr [esi+000000D8]	boss name
+:0043D533 3B05E4094B00            cmp eax, dword ptr [004B09E4]
+:0043D539 752A                    jne 0043D565				jmp if not RedHorror/Defiler
+:0043D53B B9DD030000              mov ecx, 000003DD
+:0043D540 E806ADFDFF              call 0041824B
+:0043D545 85C0                    test eax, eax
+:0043D547 7405                    je 0043D54E
+:0043D549 E82AADFDFF              call 00418278
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D547(C)
+|
+:0043D54E 8325A0B56E0000          and dword ptr [006EB5A0], 00000000
+:0043D555 8B5624                  mov edx, dword ptr [esi+24]
+:0043D558 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D55B E801A9FEFF              call 00427E61
+:0043D560 E9EC000000              jmp 0043D651				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D539(C)
+|
+:0043D565 3B05C4094B00            cmp eax, dword ptr [004B09C4]
+:0043D56B 752F                    jne 0043D59C				jmp if not NestKing/HorkDemon
+:0043D56D 33DB                    xor ebx, ebx
+:0043D56F 381DD4535700            cmp byte ptr [005753D4], bl
+:0043D575 7410                    je 0043D587
+:0043D577 8B5624                  mov edx, dword ptr [esi+24]
+:0043D57A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D57D E8FBA8FEFF              call 00427E7D
+:0043D582 E9CA000000              jmp 0043D651				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D575(C)
+|
+:0043D587 8B5624                  mov edx, dword ptr [esi+24]
+:0043D58A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D58D 6A01                    push 00000001
+:0043D58F 53                      push ebx
+:0043D590 6A0D                    push 0000000D				drop amulet
+:0043D592 E845E3FEFF              call 0042B8DC
+:0043D597 E9B5000000              jmp 0043D651				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D56B(C)
+|
+:0043D59C 8B86DC000000            mov eax, dword ptr [esi+000000DC]	base monster number
+:0043D5A2 8B00                    mov eax, dword ptr [eax]
+:0043D5A4 83F875                  cmp eax, 00000075
+:0043D5A7 0F84A4000000            je 0043D651				jmp exit if HorkSpawn
+:0043D5AD 3D89000000              cmp eax, 00000089
+:0043D5B2 0F8586000000            jne 0043D63E				jmp if not Nakrul
+:0043D5B8 8B0D6C735700            mov ecx, dword ptr [0057736C]
+:0043D5BE F7D9                    neg ecx
+:0043D5C0 1BC9                    sbb ecx, ecx
+:0043D5C2 33DB                    xor ebx, ebx
+:0043D5C4 81C1E4030000            add ecx, 000003E4
+:0043D5CA 381DD8535700            cmp byte ptr [005753D8], bl
+:0043D5D0 7405                    je 0043D5D7
+:0043D5D2 B9E5030000              mov ecx, 000003E5
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D5D0(C)
+|
+:0043D5D7 E86FACFDFF              call 0041824B
+:0043D5DC 85C0                    test eax, eax
+:0043D5DE 7405                    je 0043D5E5
+:0043D5E0 E893ACFDFF              call 00418278
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D5DE(C)
+|
+:0043D5E5 6A01                    push 00000001
+:0043D5E7 891DBCB56E00            mov dword ptr [006EB5BC], ebx
+:0043D5ED 5F                      pop edi
+:0043D5EE C7057C735700FEFFFFFF    mov dword ptr [0057737C], FFFFFFFE
+:0043D5F8 8B5624                  mov edx, dword ptr [esi+24]
+:0043D5FB 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D5FE 57                      push edi
+:0043D5FF 53                      push ebx
+:0043D600 6886000000              push 00000086
+:0043D605 57                      push edi
+:0043D606 E898E3FEFF              call 0042B9A3
+:0043D60B 8B5624                  mov edx, dword ptr [esi+24]
+:0043D60E 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D611 57                      push edi
+:0043D612 53                      push ebx
+:0043D613 6A7C                    push 0000007C
+:0043D615 6A0A                    push 0000000A
+:0043D617 E887E3FEFF              call 0042B9A3
+:0043D61C 8B5624                  mov edx, dword ptr [esi+24]
+:0043D61F 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D622 57                      push edi
+:0043D623 53                      push ebx
+:0043D624 6A77                    push 00000077
+:0043D626 6A03                    push 00000003
+:0043D628 E876E3FEFF              call 0042B9A3
+:0043D62D 8B5624                  mov edx, dword ptr [esi+24]
+:0043D630 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D633 57                      push edi
+:0043D634 53                      push ebx
+:0043D635 6A18                    push 00000018				drop Apocalypse book
+:0043D637 E8E7E0FEFF              call 0042B723
+:0043D63C EB13                    jmp 0043D651				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D5B2(C)
+|
+:0043D63E 83FF03                  cmp edi, 00000003
+:0043D641 7E0E                    jle 0043D651
+:0043D643 8B5620                  mov edx, dword ptr [esi+20]
+:0043D646 53                      push ebx
+:0043D647 FF7624                  push [esi+24]
+:0043D64A 8BCF                    mov ecx, edi
+:0043D64C E8DD9DFEFF              call 0042742E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043D528(U), :0043D560(U), :0043D582(U), :0043D597(U), :0043D5A7(C)
+|:0043D63C(U), :0043D641(C)
+|
+:0043D651 5F                      pop edi
+:0043D652 5E                      pop esi
+:0043D653 5B                      pop ebx
+:0043D654 C3                      ret

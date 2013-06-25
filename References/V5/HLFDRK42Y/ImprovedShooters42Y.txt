@@ -1,0 +1,48 @@
+Disabling the faster retreat of mages:
+
+file offset 00042299
+
+:00442E99 E8DFE8FFFF              call 0044177D
+:00442E9E 90                      nop
+:00442E9F 8B542410                mov edx, dword ptr [esp+10]
+:00442EA3 90                      nop
+:00442EA4 90                      nop
+changed into
+:00442E99 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00442E9F 8B542410                mov edx, dword ptr [esp+10]
+:00442EA3 D1F8                    sar eax, 1
+
+Now 16 bytes free space from 0044177D to 0044178D:
+
+:0044177D 51                      push ecx
+:0044177E 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00441784 8BC8                    mov ecx, eax
+:00441786 C1F902                  sar ecx, 02
+:00441789 2BC1                    sub eax, ecx
+:0044178B 59                      pop ecx
+:0044178C C3                      ret
+
+
+Fixing 'teleporting' witches
+
+Because the lightradius for other characters is not properly registered, checking for 'in sight' gives problems. Monsters will not act the same for players if the creator of the game is not in view. Lag-delayed updates will then produce 'jumping' monsters. The effect is countered by allowing a longer period for the improved behaviour. This will also produce more aggressive behaviour towards characters with very low light radius for all shooting monsters.
+
+See for more details ImprovedShooters.txt from 42Q.
+
+file offset 0005115A
+
+:00451D5A 80BE28DD6900FF          cmp byte ptr [esi+0069DD28], FF
+:00451D61 741F                    je 00451D82				skip 'bypass' if in sight
+changed into
+:00451D5A 80BE28DD6900FF          cmp byte ptr [esi+0069DD28], FF
+:00451D61 7D00                    jge 00451D63				check disabled
+
+Free space possible now.
+
+file offset 00040857
+
+:00441457 80F9FF                  cmp cl, FF
+:0044145A 7452                    je 004414AE
+changed into
+:00441457 80F9D0                  cmp cl, D0				allow more persistent behaviour
+:0044145A 7D52                    jge 004414AE

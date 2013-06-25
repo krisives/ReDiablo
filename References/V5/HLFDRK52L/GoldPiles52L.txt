@@ -1,0 +1,80 @@
+Maximum Gold piles (10000) now have a distinct image.
+
+File offset 0000686D
+
+:0040746D 81FAC4090000            cmp edx, 000009C4
+changed into
+:0040746D 81FA10270000            cmp edx, 00002710
+
+File offset 0001EB30
+
+:0041F730 3DC4090000              cmp eax, 000009C4
+changed into
+:0041F730 3D10270000              cmp eax, 00002710
+
+File offset 0001ECF1
+
+:0041F8F1 81F9C4090000            cmp ecx, 000009C4
+changed into
+:0041F8F1 81F910270000            cmp ecx, 00002710
+
+File offset 0001F6D7
+
+:004202D7 81FFC4090000            cmp edi, 000009C4
+changed into
+:004202D7 81FF10270000            cmp edi, 00002710
+
+File offset 0001F74F
+
+:0042034F 81FBC4090000            cmp ebx, 000009C4
+changed into
+:0042034F 81FB10270000            cmp ebx, 00002710
+
+File offset 0001F7EE
+
+:004203EE 81FBC4090000            cmp ebx, 000009C4
+changed into
+:004203EE 81FB10270000            cmp ebx, 00002710
+
+File offset 0001FA27
+
+:00420627 81FFC4090000            cmp edi, 000009C4
+changed into
+:00420627 81FF10270000            cmp edi, 00002710
+
+File offset 0001FABB
+
+:004206BB 81FBC4090000            cmp ebx, 000009C4
+changed into
+:004206BB 81FB10270000            cmp ebx, 00002710
+
+File offset 000240B6
+
+:00424CB6 3DC4090000              cmp eax, 000009C4
+changed into
+:00424CB6 3D10270000              cmp eax, 00002710
+
+File offset 00024E43
+
+:00425A43 3DC4090000              cmp eax, 000009C4
+changed into
+:00425A43 3D10270000              cmp eax, 00002710
+
+File offset 00026C5A
+
+:0042785A 3DC4090000              cmp eax, 000009C4
+changed into
+:0042785A 3D10270000              cmp eax, 00002710
+
+File offset 0006ECAF
+
+:0046F8AF 81F9C4090000            cmp ecx, 000009C4
+changed into
+:0046F8AF 81F910270000            cmp ecx, 00002710
+
+File offset 0006ECFC
+
+:0046F8FC 81F9C4090000            cmp ecx, 000009C4
+changed into
+:0046F8FC 81F910270000            cmp ecx, 00002710
+

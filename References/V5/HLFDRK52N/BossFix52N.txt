@@ -1,0 +1,42 @@
+Correcting special minion-type for Blacktongue (bug introduced by Trap-Golem from 52M)
+
+File offset 0002F95C
+
+:0043055C 6A01                    push 00000001
+:0043055E 5A                      pop edx
+:0043055F E814B50000              call 0043BA78
+:00430564 E9F7B40000              jmp 0043BA60
+:00430569 83F961                  cmp ecx, 00000061				Defiler (first selected monster type)
+:0043056C 74EE                    je 0043055C
+:0043056E 83F922                  cmp ecx, 00000022				Doomskull (first selected monster type)
+:00430571 74E9                    je 0043055C
+:00430573 83F949                  cmp ecx, 00000049				Blacktongue (second selected monster type)
+:00430576 7505                    jne 0043057D
+:00430578 6A02                    push 00000002
+:0043057A 5A                      pop edx
+:0043057B EBE2                    jmp 0043055F
+:0043057D 83F924                  cmp ecx, 00000024				Conjurer (second selected monster type)
+:00430580 74F6                    je 00430578
+:00430582 EBDB                    jmp 0043055F
+:00430584 90                      nop
+:00430585 90                      nop
+:00430586 90                      nop
+:00430587 90                      nop
+:00430588 90                      nop
+changed into
+:0043055C ...
+:00430573 83F924                  cmp ecx, 00000024				Conjurer (second selected monster type)
+:00430576 7504                    jne 0043057D
+:00430578 6A02                    push 00000002
+:0043057A EBE2                    jmp 0043055E
+:0043057C 83F949                  cmp ecx, 00000049				Blacktongue (third selected monster type)
+:0043057F 75DE                    jne 0043055F
+:00430581 6A03                    push 00000003
+:00430583 EBD9                    jmp 0043055E
+:00430585 90                      nop
+:00430586 90                      nop
+:00430587 90                      nop
+:00430588 90                      nop
+
+
+

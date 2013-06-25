@@ -1,0 +1,32 @@
+ 
+About Adria
+by Jarulf 
+
+I think I have answered this some time, but I am hopeless in keeping notes of stuff I tell 
+
+Anyway, here is a quick Guide to Adria.
+
+First of, recreation. Adria recreation starts at 425a6c (it should be easy to track backwards to general item recreation for the interested).
+
+The first thing that is tested for are three specific base items in slot 19, 1e and 1b. These are the unlimited supply items at Adria. They are recreated just like they were created, more or less by the game simply setting up the desired base item.
+
+For other base items, the game will actually jump into the middle of the item creation routine for Adria at 425262, paasing along the ilvl on the item and also seting the pRNG to the seed of the item. The base item is not passed on as it will also be recreated (this is not the case for items from many other sources).
+
+Before we jump onwards, lets go back and look at the general Adria creation routine. it is found at 4253c3.
+
+First of it adds the three permanent items at Adria to the list (so to change that, one need to change both places and unless one is satisfied with 3 items, extra code is needed). Next a random number is picked between 10 and 17 for number of items at Adria (including the first three ones).
+
+We are now at 4254b6 and will now loop through and fill all the slots with items (the loop ends at 425526). First the pRNG is set with the seed. Next the game calls the routine at 425262. Anyone paying attention relaises that this is the address I gave above for item recreation. meaning that for 
+
+If we wait even more with the actual code at 425262, we notice that the code following the call in both the creation and recreation are identical with an exception, there is some additional code in the item CREATION. First, once the item is completely created 8the recreation routine is then happy and exit  the game check for the price limit and if too high, loop back to create a new item. Then ot do some additional checking for books and requirements so that they are shown as red correctly in the sale list and so on. That is it.
+
+So lets go on to the routine that we have mentioned so many times. The only thing passes is the ilvl and the pRNG is set witrh the seed before calling it. This routine circle through all base items and do the following chekcs of the base item data. That the base item has a non 0 value in byte 0. Then calls 451fa for more base item checks. Byte 12 is checkd for value 0 (potions, scrolls and so on) or A (staves) and if so, the base item is OK. It then checks if the effect of byte 56 is 6 or 7 (mana and full mana) and if so sets that it is no longer correct (those are allredy at sale as the three permanent items, so watch out for this if you mess with those three). It checks for the Town Portal spell in byte 60 (it also allready exists) and scrolls of healing (Pepin sell those). Finally, if single player, it excludes ressurect and Heal Other spells. If the base item was OK according to the above it will when it get back, check the qlvl so that it is not higher than the ilvl. If all the above is OK, it adds the base item to the list of possible base items. 
+
+When all base items have been checked, it pick a random one from the possible ones and returns (to creation or recreation.
+
+Next in both creation and recreation it set up the data for the base item and then follows some random check, mesing with ilvlv and staves and so on. It has no real effect, but I guess that at some time Adria sold other items as well and this affected the probabilities some. Finally, it calls the magic set up of the base item which will check for prefixes/suffixes and also put spells on staves (spells on books are selected in the base item set up. he first push is the one that make sure the item is magical for sure if I recall correctly.
+
+Finally for Adria, the game sort the items.
+
+That is it. Hope this hlped some. The code for other town people are in the same place more or less, so it should be easy to check out.
+

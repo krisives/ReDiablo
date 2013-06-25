@@ -1,0 +1,24 @@
+Skeleton Tomes normally only drop, besides books, scrolls of one specific type (those not needing a target cursor). This resulted in Scrolls of Warp being very common in the first Church levels. Adjusted to make all types of scrolls possible.
+
+
+file offset 0005255C
+
+:0045315C 85C0                    test eax, eax
+:0045315E 0FB64508                movzx eax, byte ptr [ebp+08]
+:00453162 53                      push ebx
+:00453163 50                      push eax
+:00453164 7404                    je 0045316A
+:00453166 6A15                    push 00000015
+:00453168 EB02                    jmp 0045316C
+:0045316A 6A18                    push 00000018
+changed into
+:0045315C 8BD0                    mov edx, eax
+:0045315E ...
+:00453164 0FB6922A694A00          movzx edx, byte ptr [edx+004A692A]
+:0045316B 52                      push edx
+
+Providing data:
+
+000A532A 0000 0000 0000                          ......
+changed into
+000A532A 1515 1616 1800                          ......

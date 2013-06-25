@@ -1,0 +1,55 @@
+Lowering damage for the now remote Nova and Immolation spells
+
+((Rnd[15]+Rnd[15]+Rnd[15]+Rnd[15]+Rnd[15]+CLVL+5)/2)*(9/8)^SLVL
+changed into
+((Rnd[8]+Rnd[8]+Rnd[8]+Rnd[8]+Rnd[8]+CLVL+5)/2)*(9/8)^SLVL
+
+Spell effects:
+
+2A	Nova
+A6800	2A00 0000 AF4B 4300 B295
+	4300 0100 0000 0102 0300
+	8200 0000 FFFF FFFF
+
+48	Immolation
+A6B48	4800 0000 AF4B 4300 1097
+	4300 0100 0000 0101 0100
+	6D00 0000 7000 0000
+
+
+Adjusting damage at the shared primary spellcode:
+
+File Offset 00033FD9
+
+:00434BD9 6A0F                    push 0000000F
+changed into
+:00434BD9 6A08                    push 00000008
+
+
+Adjusting SpellBook Damages (per bolt):
+
+File Offset 0002DFB0
+
+:0042EBB0 83C14B                  add ecx, 0000004B
+changed into
+:0042EBB0 83C128                  add ecx, 00000028
+
+
+The following makes all monsters immune to the spells, and is NOT IMPLEMENTED.
+
+Setting Nova to always act as a 'Trap' so it can hurt the caster:
+
+File Offset 00038A04
+
+:00439604 EB0A                    jmp 00439610
+changed into
+:00439604 EB03                    jmp 00439609
+
+Setting Immolation to always act as a 'Trap' so it can hurt the caster:
+
+File Offset 00038B62
+
+:00439762 EB0A                    jmp 0043976E
+changed into
+:00439762 EB03                    jmp 00439767
+

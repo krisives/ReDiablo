@@ -1,0 +1,15 @@
+()Monster Regeneration - een poging tot acceptabele regeneratie
+
+Demons: mlvl  (was mlvl*2)
+Other: mlvl/4 (was mlvl)
+
+File Offset: 42C77
+
+:00443877 7505                    jne 0044387E
+:00443879 D1E1                    shl ecx, 1
+:0044387B 90                      nop
+wordt
+:00443877 7405                    je 0044387E
+:00443879 C1E902                  shr ecx, 02
+
+Dit lijkt voor Demons nog erg hard te gaan, maar testen zal dat moeten uitwijzen.

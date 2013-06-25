@@ -1,0 +1,325 @@
+Flag used by Dr. Zed with quickling +00687898]
+Zed uses 02 for Clairvoyance and 04 for quickling
+Original Diablo uses 01 and 02
+
+In Hellfire it's +00000120]
+Values 01, 02, 04 and 06 are used as toggles, maybe 08 ? or will get to big and overwrite adjacent values
+
+
+Running by Flag
+
+Using the original Block Bonus flag, because it is a non-saved character flag, that is not updated by the game (except with Flash) and not really in use. Leaving the old code at Blocking intact, will result in a 20% penalty (could be changed to another value) when Blocking while running (or in Town). Code at the Flash spell using this flag could be modified, but is better left as it is (giving 50% penalty to Blocking, and toggling off running). 
+
+All should work well in MP, without the original Jogging bug, but it is tested only in SP.
+
+Pressing Control toggles Running on or off. Walking and keeping down Control, however, does not look nice. There is also a risk of being in Running mode without knowing. Can be fixed if there is a scancode for 'Release Control Key'.
+
+
+
+Original checks done for Jogging changed to check on character's 0000018C address:
+
+
+File Offset 000584FA
+
+char=ebp
+
+:004590FA 381DD8B16000            cmp byte ptr [0060B1D8], bl
+:00459100 752A                    jne 0045912C
+:00459102 391DB0044A00            cmp dword ptr [004A04B0], ebx
+
+wordt
+
+:004590FA 50                      push eax
+:004590FB 53                      push ebx
+:004590FC 8BDD                    mov ebx, ebp
+:004590FE E8C144FEFF              call 0043D5C4
+:00459103 85C0                    test eax, eax
+:00459105 5B                      pop ebx
+:00459106 58                      pop eax
+:00459107 90                      nop
+
+
+File Offset 0005A4D3
+
+char=ebx
+
+:0045B0D3 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045B0DA 7564                    jne 0045B140
+:0045B0DC 833DB0044A0000          cmp dword ptr [004A04B0], 00000000
+
+wordt
+
+:0045B0D3 50                      push eax
+:0045B0D4 53                      push ebx
+:0045B0D5 E8EA24FEFF              call 0043D5C4
+:0045B0DA 85C0                    test eax, eax
+:0045B0DC 5B                      pop ebx
+:0045B0DD 58                      pop eax
+:0045B0DE 9090909090              5*nop
+
+
+File Offset 0005A6A8
+
+char=edi
+
+:0045B2A8 381DD8B16000            cmp byte ptr [0060B1D8], bl
+:0045B2AE 7572                    jne 0045B322
+:0045B2B0 391DB0044A00            cmp dword ptr [004A04B0], ebx
+
+wordt
+
+:0045B2A8 50                      push eax
+:0045B2A9 53                      push ebx
+:0045B2AA 8BDF                    mov ebx, edi
+:0045B2AC E81323FEFF              call 0043D5C4
+:0045B2B1 85C0                    test eax, eax
+:0045B2B3 5B                      pop ebx
+:0045B2B4 58                      pop eax
+:0045B2B5 90                      nop
+
+
+File Offset 0005A852
+
+char=ebx
+
+:0045B452 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045B459 7564                    jne 0045B4BF
+:0045B45B 833DB0044A0000          cmp dword ptr [004A04B0], 00000000
+
+wordt
+
+:0045B452 50                      push eax
+:0045B453 53                      push ebx
+:0045B454 E86B21FEFF              call 0043D5C4
+:0045B459 85C0                    test eax, eax
+:0045B45B 5B                      pop ebx
+:0045B45C 58                      pop eax
+:0045B45D 9090909090              5*nop
+
+
+
+Routine that sets EAX if in Town or Running:
+
+Free space from Nakrul's Death now fully used.
+
+File Offset 0003C9C4
+
+:0043D5C4 81C1E4030000            add ecx, 000003E4
+:0043D5CA 381DD8535700            cmp byte ptr [005753D8], bl
+:0043D5D0 7405                    je 0043D5D7
+:0043D5D2 B9E5030000              mov ecx, 000003E5
+:0043D5D7 E86FACFDFF              call 0041824B
+:0043D5DC 85C0                    test eax, eax
+:0043D5DE 7405                    je 0043D5E5
+:0043D5E0 E893ACFDFF              call 00418278
+
+wordt
+
+:0043D5C4 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0043D5CB 7448                    je 0043D615
+:0043D5CD A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043D5D2 69DBC8550000            imul ebx, 000055C8
+:0043D5D8 83BC188C010000EC        cmp dword ptr [eax+ebx+0000018C], FFFFFFEC
+:0043D5E0 7433                    je 0043D615
+:0043D5E2 EB37                    jmp 0043D61B
+:0043D5E4 90                      nop
+
+New version, using other char ptr which does get updated for all chars on different Pc's
+
+:0043D5C4 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0043D5CB 7449                    je 0043D616
+:0043D5CD E8946E0000              call 00444466
+:0043D5D2 0520010000              add eax, 00000120
+:0043D5D7 8A18                    mov bl, byte ptr [eax]
+:0043D5D9 8020F7                  and byte ptr [eax], F7		Setting toggle back here doesn't work OK (currently nopped out)
+:0043D5DC 80E308                  and bl, 08
+:0043D5DF 80FB08                  cmp bl, 08
+:0043D5E2 7432                    je 0043D616
+:0043D5E4 EB36                    jmp 0043D61C
+
+(The code following has been moved 1 byte down to create some space, hence the different jump addresses)
+Resetting the toggle here does work correctly, it appears that this routine is processed more often then the keypress routine
+
+Some reorganizing of Seeing check, to get a general purpose routine which returns record address for local player:
+
+File Offset 0004385A
+
+:0044445A 51                      push ecx
+:0044445B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00444460 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00444466 69C0C8550000            imul eax, 000055C8
+:0044446C 03C1                    add eax, ecx
+:0044446E 59                      pop ecx
+:0044446F 8B80D0010000            mov eax, dword ptr [eax+000001D0]
+:00444475 C3                      ret
+
+:00444476 90                      nop
+:00444477 90                      nop
+:00444478 90                      nop
+:00444479 90                      nop
+:0044447A 90                      nop
+:0044447B 90                      nop
+
+wordt
+
+:0044445A E807000000              call 00444466
+:0044445F 8B80D0010000            mov eax, dword ptr [eax+000001D0]
+:00444465 C3                      ret
+
+:00444466 51                      push ecx
+:00444467 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044446C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00444472 69C0C8550000            imul eax, 000055C8
+:00444478 03C1                    add eax, ecx
+:0044447A 59                      pop ecx
+:0044447B C3                      ret
+
+
+Set Running flag at general Keypress routine
+
+This clears BlockBonus (0000018C) for local player, or sets it to 11h if Control is pressed.
+
+
+File Offset 00099E6
+
+:0040A5E6 E98A000000              jmp 0040A675
+wordt
+:0040A5E6 E961000000              jmp 0040A64C
+:0040A5EB 
+
+
+Using available empty space from F1-F4 Hotkeys:
+
+File Offset 0009A4C
+
+:0040A64C 90                      nop
+:0040A64D 90                      nop
+:0040A64E 90                      nop
+:0040A64F E824DC0000              call 00418278
+:0040A654 891D4CB36E00            mov dword ptr [006EB34C], ebx
+:0040A65A 891DA8074D00            mov dword ptr [004D07A8], ebx
+:0040A660 881DB0B65700            mov byte ptr [0057B6B0], bl
+:0040A666 E8850C0100              call 0041B2F0
+:0040A66B E84F2C0100              call 0041D2BF
+:0040A670 E97D020000              jmp 0040A8F2
+wordt
+:0040A64C 50                      push eax
+:0040A64D E8149E0300              call 00444466
+:0040A652 058C010000              add eax, 0000018C		Blockbonus address
+:0040A657 8918                    mov dword ptr [eax], ebx
+:0040A659 83FE11                  cmp esi, 00000011		check for Control
+:0040A65C 7510                    jne 0040A66E
+:0040A65E 391D18164D00            cmp dword ptr [004D1618], ebx		
+:0040A664 7402                    je 0040A668			<- check needs disabled
+:0040A666 8930                    mov dword ptr [eax], esi
+:0040A668 58                      pop eax
+:0040A669 E989020000              jmp 0040A8F7
+:0040A66E 58                      pop eax
+:0040A66F 909090909090            6*nop
+
+This actually works (with check at 0040A65E disabled)!
+
+However, the running only stops for certain keypresses. Implementing a 'toggle' function for pressing Control:
+
+File Offset 0009A4C
+
+:0040A64C 50                      push eax
+:0040A64D E8149E0300              call 00444466
+:0040A652 058C010000              add eax, 0000018C		Blockbonus address
+:0040A657 8918                    mov dword ptr [eax], ebx
+:0040A659 83FE11                  cmp esi, 00000011		check for Control
+:0040A65C 7510                    jne 0040A66E
+:0040A65E 391D18164D00            cmp dword ptr [004D1618], ebx		
+:0040A664 7400                    je 0040A666			<- check is disabled
+:0040A666 8930                    mov dword ptr [eax], esi
+:0040A668 58                      pop eax
+:0040A669 E989020000              jmp 0040A8F7
+:0040A66E 58                      pop eax
+:0040A66F 909090909090            6*nop
+
+wordt
+
+:0040A64C 83FE11                  cmp esi, 00000011
+:0040A64F 7524                    jne 0040A675
+:0040A651 50                      push eax
+:0040A652 E80F9E0300              call 00444466
+:0040A657 058C010000              add eax, 0000018C
+:0040A65C 8338EC                  cmp dword ptr [eax], FFFFFFEC
+:0040A65F 7504                    jne 0040A665
+:0040A661 8918                    mov dword ptr [eax], ebx
+:0040A663 EB06                    jmp 0040A66B
+:0040A665 C700ECFFFFFF            mov dword ptr [eax], FFFFFFEC
+:0040A66B 58                      pop eax
+:0040A66C E986020000              jmp 0040A8F7
+:0040A671 90909090                4*nop
+
+
+New version with update char ptr
+Toggle isn't set back here, will be done in the update life routine. That way you'll only be running when the CTRL key is pressed down (I hope)
+
+:0040A64C 83FE11                  cmp esi, 00000011
+:0040A64F 7524                    jne 0040A675
+:0040A651 50                      push eax
+:0040A652 E80F9E0300              call 00444466
+:0040A657 0520010000              add eax, 00000120
+:0040A65C 800808                  or byte ptr [eax], 08
+:0040A65F 58                      pop eax
+:0040A660 90                      12*nop
+:0040A66C E986020000              jmp 0040A8F7
+:0040A671 90909090                4*nop
+
+Build the toggle function because it didn't work in the life routine. It appears that the life routine is processed before the walking routine, so no running when the toggle is set back there.
+
+:0040A64C 83FE11                  cmp esi, 00000011
+:0040A64F 7524                    jne 0040A675
+:0040A651 50                      push eax
+:0040A652 E80F9E0300              call 00444466
+:0040A657 0520010000              add eax, 00000120
+:0040A65C 53                      push ebx
+:0040A65D 8A18                    mov bl, byte ptr [eax]
+:0040A65F 80E308                  and bl, 08
+:0040A662 80FB08                  cmp bl, 08
+:0040A665 7405                    je 0040A66C
+:0040A667 800808                  or byte ptr [eax], 08		set toggle to run
+:0040A66A EB03                    jmp 0040A66F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A665(C)
+|
+:0040A66C 8020F7                  and byte ptr [eax], F7	set toggle to walk
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A66A(U)
+|
+:0040A66F 5B                      pop ebx
+:0040A670 58                      pop eax
+:0040A671 90                      nop
+:0040A672 90                      nop
+:0040A673 EB18                    jmp 0040A68D			Short jump to a jmp 0040A8F7
+
+
+Experimenting with placement of setting toggle back
+
+Changes:
+:0040A665 7405                    je 0040A66C
+To
+:0040A665 7400                    je 0040A66C		Disable toggle funtion in keypress routine
+
+Placement of toggle reset after animation procedures
+:0045DCEB E877EFFFFF              call 0045CC67
+to
+:0045DCEB E83B870100              call 0047642B
+
+This procedure sets the toggle back
+* Referenced by a CALL at Address:
+|:0045DCEB   
+|
+:0047642B 50                      push eax
+:0047642C E835E0FCFF              call 00444466
+:00476431 80A020010000F7          and byte ptr [eax+00000120], F7	Set to walk
+:00476438 58                      pop eax
+:00476439 90                      nop
+:0047643A E82868FEFF              call 0045CC67
+:0047643F C3                      ret
+
+This works fine for 1 player. The other players in the game can't run.

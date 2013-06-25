@@ -1,0 +1,37 @@
+Increasing chances to avoid Knockbacks for Warrior and Barbarian (40% -> 60%):
+
+File Offset 0003C8D3
+
+:0043D4D3 83F828                  cmp eax, 00000028
+wordt
+:0043D4D3 83F83C                  cmp eax, 0000003C
+
+
+This code was shared by the piercing effect of arrows and some spells. New routine for piercing, with slightly lower chances (40% -> 35%), using free space from small potions:
+
+File Offset 00057A25
+
+:00458625 E8A24EFEFF              call 0043D4CC
+:0045862A 
+wordt
+:00458625 E86315FDFF              call 00429B8D
+:0045862A 
+
+File Offset 00028F8D
+
+:00429B8D 90                      nop
+:00429B8E 90                      nop
+:00429B8F 7502                    jne 00429B93
+:00429B91 D1E7                    shl edi, 1
+:00429B93 80F901                  cmp cl, 01
+:00429B96 7506                    jne 00429B9E
+:00429B98 8BCF                    mov ecx, edi
+:00429B9A D1F9                    sar ecx, 1
+:00429B9C 03F9                    add edi, ecx
+wordt
+:00429B8D 51                      push ecx
+:00429B8E E8AE470100              call 0043E341
+:00429B93 59                      pop ecx
+:00429B94 83F823                  cmp eax, 00000023
+:00429B97 E93A390100              jmp 0043D4D6
+:00429B9C 9090                    2*nop

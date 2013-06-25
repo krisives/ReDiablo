@@ -1,0 +1,48 @@
+Invincibility - Fixing no-scroll-loss-when-using-speedbook bug.
+
+Bij nader inzien blijkt dat de routine waarvan ik dacht dat ie alleen mana zou doen kosten, ook staff-charges en scrolls te doen. Aangezien deze routine vervangen was door de Dexterity-Loss, werkte het dus niet meer zo goed.
+
+
+()Herstel van vorige keer:
+
+:00433CF7 7500                    jne 00433CF9				
+wordt
+:00433CF7 750C                    jne 00433D05				
+
+:00433CFD 83CAFF                  or edx, FFFFFFFF			edx := -1
+:00433D00 E81DAB0200              call 0045E822				adjust Dex
+wordt
+:00433CFD 6A19                    push 00000019
+:00433CFF 5A                      pop edx
+:00433D00 E8F7820300              call 0046BFFC				substract mana
+
+
+()Nieuwe Dexterity-loss:
+
+:00433D05 5F                      pop edi
+:00433D06 5E                      pop esi
+:00433D07 C21C00                  ret 001C
+wordt
+:00433D05 E9AA820300              jmp 0046BFB4
+
+
+()Onderstaande over oude Manacost-reduction-by-class code:
+
+:0046BFB4 7504                    jne 0046BFBA
+:0046BFB6 D1F9                    sar ecx, 1
+:0046BFB8 EB13                    jmp 0046BFCD
+:0046BFBA 3C01                    cmp al, 01
+:0046BFBC 7408                    je 0046BFC6
+:0046BFBE 3C03                    cmp al, 03
+:0046BFC0 7404                    je 0046BFC6
+:0046BFC2 3C04                    cmp al, 04
+:0046BFC4 7507                    jne 0046BFCD
+wordt
+:0046BFB4 8B4C2420                mov ecx, dword ptr [esp+20]
+:0046BFB8 83CAFF                  or edx, FFFFFFFF			
+:0046BFBB E86228FFFF              call 0045E822				
+:0046BFC0 5F                      pop edi
+:0046BFC1 5E                      pop esi
+:0046BFC2 C21C00                  ret 001C
+:0046BFC5 90                      nop
+

@@ -1,0 +1,35 @@
+Xp Awarding Shrines
+
+Because of Xp capping in MP, these shrines will be useless most of the time. Should be moved to SP only : Mendicants, Sparkling
+
+Disabling capping for these shrines only is next to impossible, for it would imply modifying all calls to the central XP awarding routine.
+
+
+0008F260 0002 0001 0000 0000 0100 0000 0000 0000 ................
+wordt
+0008F260 0002 0001 0101 0000 0100 0000 0000 0000 ................
+
+
+Shrine Tables:
+
+0008F1F0/0008F240
+Mysterious;Hidden;Gloomy;Weird;Magical;Stone;Religious;Enchanted
+
+0008F200/0008F250
+Thaumaturgic;Fascinating;Cryptic;Magical;Eldritch;Eerie;Divine;Holy;
+Sacred;Spiritual;Spooky;Abandoned;Creepy;Quiet;Secluded;Ornate
+
+0008F210/0008F260
+Glimmering;Tainted;Oily;Glowing;Mendicant's;Sparkling;Town;Shimmering;
+Solar;Murphy's
+
+
+First level of appearance:
+0008F1F0 E056 4B00 D456 4B00 0101 0101 0101 0101 .VK..VK.........
+0008F200 0101 0B01 0101 0101 0101 0101 0101 0101 ................
+0008F210 010B 0B01 0101 0101 010B 0000 0000 0000 ................
+
+Appearing in Both/SPOnly/MPOnly (00/01/02):
+0008F240 1818 0000 0000 0000 0000 0000 0000 0000 ................
+0008F250 0000 0001 0000 0100 0000 0200 0000 0100 ................
+0008F260 0002 0001 0101 0000 0100 0000 0000 0000 ................

@@ -1,0 +1,17 @@
+Stunning Barbarians at CLVL damage, instead of 3/2 CLVL damage.
+
+file offset 00059313
+
+:00459F13 8BD0                    mov edx, eax
+:00459F15 D1EA                    shr edx, 1
+:00459F17 03C2                    add eax, edx
+:00459F19 80B96001000005          cmp byte ptr [ecx+00000160], 05
+:00459F20 741D                    je 00459F3F
+changed into
+:00459F13 80B96001000005          cmp byte ptr [ecx+00000160], 05
+:00459F1A 7423                    je 00459F3F
+:00459F1C 8BD0                    mov edx, eax
+:00459F1E D1EA                    shr edx, 1
+:00459F20 03C2                    add eax, edx
+
+

@@ -1,0 +1,149 @@
+Lowering durations for Fire Wall, Lightning Wall and Arcane Flames:
+
+file offset 000506D8
+
+:004512D8 83F80C                  cmp eax, 0000000C
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A0C                    push 0000000C
+:004512DF 58                      pop eax
+:004512E0 83F802                  cmp eax, 00000002
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A02                    push 00000002
+changed into
+:004512D8 83F80A                  cmp eax, 0000000A
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A0A                    push 0000000A
+:004512DF 58                      pop eax
+:004512E0 83F803                  cmp eax, 00000003
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A03                    push 00000003
+
+file offset 00031096
+
+:00431C96 40                      inc eax
+:00431C97 40                      inc eax
+changed into
+:00431C96 9090                    2*nop
+
+file offset 00031162
+
+:00431D62 40                      inc eax
+:00431D63 40                      inc eax
+changed into
+:00431D62 9090                    2*nop
+
+
+Disabling fixed manacost for old Resurrect to prevent problems with Arcane Flames:
+
+file offset 0006B341
+
+:0046BF41 83FA20                  cmp edx, 00000020
+:0046BF44 7511                    jne 0046BF57
+changed into
+:0046BF41 EB14                    jmp 0046BF57
+:0046BF43 909090                  3*nop
+
+Now 20 bytes free space from 0046BF43 to 0046BF57
+
+
+Adjusting several checks on spell number to prevent mixup between the (swapped) Resurrect (which is not found in SP) and Arcane Flames spells, and to allow the new Heal All spell in SP (for a filled book):
+
+file offset 0002A425
+
+:0042B025 83B9041C4A0020          cmp dword ptr [ecx+004A1C04], 00000020
+changed into
+:0042B025 83B9041C4A0025          cmp dword ptr [ecx+004A1C04], 00000025
+
+file offset 0002A439
+
+:0042B039 83B9041C4A0022          cmp dword ptr [ecx+004A1C04], 00000022
+changed into
+:0042B039 83B9041C4A0064          cmp dword ptr [ecx+004A1C04], 00000064
+
+file offset 00026147
+
+:00426D47 83FE20                  cmp esi, 00000020
+changed into
+:00426D47 83FE25                  cmp esi, 00000025
+
+file offset 00026159
+
+:00426D59 83FE22                  cmp esi, 00000022
+changed into
+:00426D59 83FE64                  cmp esi, 00000064
+
+file offset 00026247
+
+:00426E47 83F820                  cmp eax, 00000020
+changed into
+:00426E47 83F825                  cmp eax, 00000025
+
+file offset 00026257
+
+:00426E57 83F822                  cmp eax, 00000022
+changed into
+:00426E57 83F864                  cmp eax, 00000064
+
+file offset 00026302
+
+:00426F02 83FF20                  cmp edi, 00000020
+changed into
+:00426F02 83FF25                  cmp edi, 00000025
+
+file offset 00026314
+
+:00426F14 83FF22                  cmp edi, 00000022
+changed into
+:00426F14 83FF64                  cmp edi, 00000064
+
+File offset 00029C13
+
+:0042A813 83F920                  cmp ecx, 00000020
+changed into
+:0042A813 83F925                  cmp ecx, 00000025
+
+File offset 00029C1D
+
+:0042A81D 83F922                  cmp ecx, 00000022
+changed into
+:0042A81D 83F964                  cmp ecx, 00000064
+
+
+Adjusting check for Stone Curse immunity to have Medusa Gaze affect all but Gargoyles and Diablo-types:
+
+file offset 00032E98
+
+:00433A98 80BA54DD690040          cmp byte ptr [edx+0069DD54], 40
+:00433A9F 7D23                    jge 00433AC4
+:00433AA1 8B8A64DD6900            mov ecx, dword ptr [edx+0069DD64]
+:00433AA7 813989000000            cmp dword ptr [ecx], 00000089
+:00433AAD 7415                    je 00433AC4
+changed into
+:00433A98 8A8A20DD6900            mov cl, byte ptr [edx+0069DD20]
+:00433A9E 80F90C                  cmp cl, 0C
+:00433AA1 7421                    je 00433AC4
+:00433AA3 80F91B                  cmp cl, 1B
+:00433AA6 741C                    je 00433AC4
+:00433AA8 E943FC0100              jmp 004536F0
+:00433AAD 9090                    2*nop
+
+Using free space from unused routine:
+
+file offset 00052AF0
+
+:004536F0 51                      push ecx
+:004536F1 8B0D10556800            mov ecx, dword ptr [00685510]
+:004536F7 E82B68FCFF              call 00419F27
+:004536FC 59                      pop ecx
+:004536FD FF248D73304500          jmp dword ptr [4*ecx+00453073]
+:00453704 90                      nop
+:00453705 90                      nop
+:00453706 90                      nop
+:00453707 90                      nop
+changed into
+:004536F0 807D1800                cmp byte ptr [ebp+18], 00
+:004536F4 750D                    jne 00453703
+:004536F6 80BA54DD690040          cmp byte ptr [edx+0069DD54], 40
+:004536FD 0F8DC103FEFF            jge 00433AC4
+:00453703 E9A703FEFF              jmp 00433AAF
+:00453708

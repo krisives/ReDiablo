@@ -1,0 +1,37 @@
+Initial Gold 100 ->  50 Gp
+
+Except Bard: 100 -> 150 Gp (because of Mana shortage, while Sorcerer has Staff of Mana)
+
+File Offset 00024316
+
+:00424F16 C784186854000064000000  mov dword ptr [eax+ebx+00005468], 00000064
+wordt
+:00424F16 51                      push ecx
+:00424F17 6A32                    push 00000032
+:00424F19 59                      pop ecx
+:00424F1A E8BB350000              call 004284DA
+:00424F1F 59                      pop ecx
+:00424F20 90                      nop
+
+
+Using free space from Oil of Skill:
+
+File Offset 000278DA
+
+:004284DA 90                      nop
+:004284DB 90                      nop
+:004284DC 0FBEF1                  movsx esi, cl
+:004284DF 3BF0                    cmp esi, eax
+:004284E1 7E09                    jle 004284EC
+:004284E3 2AC8                    sub cl, al
+:004284E5 880A                    mov byte ptr [edx], cl
+:004284E7 E9BF000000              jmp 004285AB
+:004284EC 881A                    mov byte ptr [edx], bl
+:004284EE E9B8000000              jmp 004285AB
+wordt
+:004284DA 80BC186001000004        cmp byte ptr [eax+ebx+00000160], 04
+:004284E2 7503                    jne 004284E7
+:004284E4 83C164                  add ecx, 00000064
+:004284E7 898C1868540000          mov dword ptr [eax+ebx+00005468], ecx
+:004284EE C3                      ret
+:004284EF 90909090                4*nop

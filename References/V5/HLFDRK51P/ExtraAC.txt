@@ -1,0 +1,53 @@
+Extra AC vs. Demons or Undead
+
+Now adds CLVL, instead of 25, to AC. Note that this effect is not supported for missiles, so it only affects AC vs. melee attacks.
+
+
+file offset 0003D5BE
+
+:0043E1BE 8B943088550000          mov edx, dword ptr [eax+esi+00005588]
+:0043E1C5 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0043E1C8 8B843020550000          mov eax, dword ptr [eax+esi+00005520]
+:0043E1CF 03812C550000            add eax, dword ptr [ecx+0000552C]
+:0043E1D5 F6C220                  test dl, 20
+:0043E1D8 8945F4                  mov dword ptr [ebp-0C], eax
+:0043E1DB 7412                    je 0043E1EF
+:0043E1DD 8B9F68DD6900            mov ebx, dword ptr [edi+0069DD68]
+:0043E1E3 807B7201                cmp byte ptr [ebx+72], 01
+:0043E1E7 7506                    jne 0043E1EF
+:0043E1E9 83C019                  add eax, 00000019
+:0043E1EC 8945F4                  mov dword ptr [ebp-0C], eax
+:0043E1EF F6C240                  test dl, 40
+:0043E1F2 7412                    je 0043E206
+:0043E1F4 8B9768DD6900            mov edx, dword ptr [edi+0069DD68]
+:0043E1FA 807A7200                cmp byte ptr [edx+72], 00
+:0043E1FE 7506                    jne 0043E206
+:0043E200 83C019                  add eax, 00000019
+:0043E203 8945F4                  mov dword ptr [ebp-0C], eax
+:0043E206 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+changed into
+:0043E1BE 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0043E1C1 8B9188550000            mov edx, dword ptr [ecx+00005588]
+:0043E1C7 8B8120550000            mov eax, dword ptr [ecx+00005520]
+:0043E1CD 03812C550000            add eax, dword ptr [ecx+0000552C]
+:0043E1D3 8945F4                  mov dword ptr [ebp-0C], eax
+:0043E1D6 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:0043E1DD 8B9F68DD6900            mov ebx, dword ptr [edi+0069DD68]
+:0043E1E3 807B7201                cmp byte ptr [ebx+72], 01
+:0043E1E7 7508                    jne 0043E1F1
+:0043E1E9 F6C220                  test dl, 20
+:0043E1EC 741F                    je 0043E20D
+:0043E1EE 0145F4                  add dword ptr [ebp-0C], eax
+:0043E1F1 807B7200                cmp byte ptr [ebx+72], 00
+:0043E1F5 7516                    jne 0043E20D
+:0043E1F7 F6C240                  test dl, 40
+:0043E1FA 7411                    je 0043E20D
+:0043E1FC 0145F4                  add dword ptr [ebp-0C], eax
+:0043E1FF EB0C                    jmp 0043E20D
+:0043E201 12*90                   12*nop
+:0043E20D 
+
+
+
+
+

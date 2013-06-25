@@ -1,0 +1,13 @@
+Increasing Blacksmith Oil maximum durability (120 -> 200):
+
+File Offset 00027922
+
+:00428522 83F978                  cmp ecx, 00000078
+:00428525 0F8D80000000            jnl 004285AB
+wordt
+:00428522 81F9C8000000            cmp ecx, 000000C8
+:00428528 7D10                    jge 0042853A
+:0042852A 90                      nop 
+
+
+

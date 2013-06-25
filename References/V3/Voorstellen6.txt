@@ -1,0 +1,39 @@
+()FireBolt Spell - Damage : 1 + rnd[10] + slvl + mag/8 -> 1 + rnd[10] + slvl + mag/4
+
+:0043620D C1F903                  sar ecx, 03
+wordt
+:0043620D C1F902                  sar ecx, 02
+
+:0042E8A2 C1F803                  sar eax, 03
+wordt (min. damage in spellbook)
+:0042E8A2 C1F802                  sar eax, 02
+
+:0042E8C3 C1F803                  sar eax, 03
+wordt (max. damage in spellbook)
+:0042E8C3 C1F802                  sar eax, 02
+
+
+
+()Enable Apocalypse for FallenAngel 
+
+Hiermee zullen FallenAngels (#28) een Apo doen als ze Diablo-attack (1Bh) krijgen.
+
+:0043AF0F 837DFC48                cmp dword ptr [ebp-04], 00000048	Old Incinerators
+:0043AF13 7C1D                    jl 0043AF32
+:0043AF15 837DFC4B                cmp dword ptr [ebp-04], 0000004B
+:0043AF19 7F17                    jg 0043AF32
+wordt
+:0043AF0F 837DFC6E                cmp dword ptr [ebp-04], 0000006E	DarkLord
+:0043AF13 7406                    je 0043AF1B
+:0043AF15 837DFC1C                cmp dword ptr [ebp-04], 0000001C	FallenAngel
+:0043AF19 7517                    jne 0043AF32
+
+:0043AF2B B119                    mov cl, 19
+wordt
+:0043AF2B B127                    mov cl, 27
+
+:0043B0BD 7507                    jne 0043B0C6
+wordt
+:0043B0BD EB07                    jmp 0043B0C6
+
+

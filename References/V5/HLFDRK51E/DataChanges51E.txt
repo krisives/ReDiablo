@@ -1,0 +1,146 @@
+Data changes 51E
+
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL
+
+ 46 Acid Beast            animal   19 Spit             2   6- 8    11    40-  66   30   40    4- 12   25    0-  0  I--/I-R
+                                                                         40-  60                                   I--/IRR
+000AC048 2800 0000 4200 0000                     (...B...
+changed into
+000AC048 2800 0000 3C00 0000                     (...<...
+
+000AC064 0800 0C00                               ....
+changed into
+000AC064 0800 0E00                               ....
+
+ 47 Poison Spitter        animal   19 Spit             3   8-10    15    60-  85   30   45    4- 16   25    0-  0  I--/I-R
+                                                                         60-  80              6- 16                I--/IRR
+000AC0C8 3C00 0000 5500 0000                     <...U...
+changed into
+000AC0C8 3C00 0000 5000 0000                     <...P...
+
+000AC0E4 0800 0C00                               ....
+changed into
+000AC0E4 0800 0E00                               ....
+
+000AC0DB 0410                                    ..
+changed into
+000AC0DB 0610                                    ..
+
+ 49 Lava Maw              animal   20 Fast Spit        2  12-14    25   100- 150   35   65    6- 18   40    0-  0  I-R/IRR
+                                                                         80- 110              8- 20
+000AC1C8 6400 0000 9600                          d.....
+changed into
+000AC1C8 5000 0000 6E00 0000                     P...n...
+
+000AC1DB 0612                                    ..
+changed into
+000AC1DB 0814                                    ..
+
+ 48 Doomspitter           animal   20 Fast Spit        3  C1-C2    28   140- 170   40   75   12- 22   45    0-  0  I-R/IRR
+                                                                        100- 130             12- 24
+000AC148 8C00 0000 AA00 0000                     ........
+changed into
+000AC148 6400 0000 8200 0000                     d.......
+
+000AC15B 0C16                                    ..
+changed into
+000AC15B 0C18                                    ..
+
+
+127 Firebat               animal   32 Firebat          1   9-12    19    60-  80   30  100    6- 15    -      -    II-/II-
+                                                                         50-  70              8- 16
+000AE8C8 3C00 0000 5000 0000                     <...P...
+changed into
+000AE8C8 3200 0000 4600 0000                     2...F...
+
+000AE8DB 060F                                    ..
+changed into
+000AE8DB 0810                                    ..
+
+131 Hellbat               animal   32 Firebat          2  13-13    22   100- 140   40  110    8- 21    0    0-  0  II-/II-
+                                                                         70- 100             10- 22
+000AEAC8 6400 0000 8C00 0000                     d.......
+changed into
+000AEAC8 4600 0000 6400 0000                     F...d...
+
+000AEADB 0815                                    ..
+changed into
+000AEADB 0A16                                    ..
+
+
+ 12 Counselor             demon    25 Mage             3  13-14    25    60-  90    0   90    8- 20    0    0-  0  -IR/-IR
+                                                                        100- 110                                   -IR/RIR
+000AAF48 3C00 0000 5A00 0000                     <...Z...
+changed into
+000AAF48 6400 0000 6E00 0000                     d...n...
+
+000AAF64 1400 1400                               ....
+changed into
+000AAF64 1400 1500                               ....
+
+106 Magistrate            demon    25 Mage             3  14-15    27    70- 120    0  100   10- 22    0    0-  0  -IR/-IR
+                                                                        120- 140                                   -IR/RIR
+000ADE48 4600 0000 7800 0000                     F...x...
+changed into
+000ADE48 7800 0000 8C00 0000                     x.......
+
+000ADE64 1400 1400                               ....
+changed into
+000ADE64 1400 1500                               ....
+
+108 Advocate              demon    28 Lazarus          3  16-16    30   120- 180  100  120   15- 25    0    0-  0  RIR/RIR
+                                                                        150- 180
+000ADF48 7800 0000 B400 0000                     x.......
+changed into
+000ADF48 9600 0000 B400 0000                     ........
+
+  4 Wizard                demon    28 Lazarus          3  C1-C3    31   120- 200   60  120   17- 30    0    0-  0  RIR/RIR
+                                                                        160- 200
+000AAB48 7800 0000 C800 0000                     x.......
+changed into
+000AAB48 A000 0000 C800 0000                     ........
+
+ 29 Dark Mage             demon    28 Lazarus          3  C2-C4    32   140- 220  120  130   20- 35    0    0-  0  RIR/RIR
+                                                                        180- 220
+000AB7C8 8C00 0000 DC00 0000                     ........
+changed into
+000AB7C8 B400 0000 DC00 0000                     ........
+
+
+
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL   stand walk  attk1 frame   hr
+
+122 Copper Golem          undead    2 Skeleton         3  C1-C2    27   500- 540   90  120   19- 24    -      -    -II/-II      8    13    12     8     6
+                                                                                                                                                        5
+000AE61C 0600 0000                               ....
+changed into
+000AE61C 0500 0000                               ....
+
+130 Iron Golem            undead    2 Skeleton         4  C2-C3    29   620- 660  100  125   22- 32    -      -    -II/-II      8    11    11     7     5
+                                                                                                                                     12
+000AEA14 0B00 0000                               ....
+changed into
+000AEA14 0C00 0000                               ....
+
+128 Mithril Golem         undead    2 Skeleton         5  C3-C4    31   740- 780  110  133   28- 38    -      -    -II/-II      8     9    10     6     4
+                                                                                                                                     11                 5
+000AE914 0900 0000 0A00 0000 0400 0000           ............
+changed into
+000AE914 0B00 0000 0A00 0000 0500 0000           ............
+
+
+129 Champion              undead   13 Butcher          5  C3-C4    32   280- 280  125  135   40- 50    -      -    RRI/RRI      8     8    10     6     3
+                                                                                                                                                        4
+000AE99C 0300 0000                               ....
+changed into
+000AE99C 0400 0000                               ....
+
+
+ 44 Guardian Prince       undead    2 Skeleton         5  C4-C4    32   320- 360  112  133   50- 60    -      -    RRI/RRI      8     6    10     7     2
+                                                                                                                                                        4
+000ABF1C 0200 0000                               ....
+changed into
+000ABF1C 0400 0000                               ....
+

@@ -1,0 +1,54 @@
+All characters now have a built-in Evasion, which lowers a monster's maximum chance to hit with arrows or spells by DEX/8%. Evasion from items will add 32% (to arrive at the same total as before). The limit to this 'automiss' is removed.
+
+Note that this comes on top of the normal 'automiss', which is 95 - CLVL/4 (for melee as well as missiles and spells). The final tohit for monsters can never be lower as 20%. though.
+
+
+File offset 00051D09
+
+:00452909 0F8422CEFDFF            je 0042F731
+:0045290F E9D5DBFDFF              jmp 004304E9
+:00452914 90909090                4*nop
+changed into
+:00452909 7405                    je 00452910
+:0045290B 6A40                    push 00000040
+:0045290D 5A                      pop edx
+:0045290E EB03                    jmp 00452913
+:00452910 6A60                    push 00000060
+:00452912 5A                      pop edx
+:00452913 E9D1DBFDFF              jmp 004304E9
+:00452918 
+
+
+File offset 0002F8F3
+
+:004304F3 6A40                    push 00000040
+:004304F5 5A                      pop edx
+:004304F6 2BD0                    sub edx, eax
+:004304F8 6A20                    push 00000020
+:004304FA 58                      pop eax
+:004304FB 3BD0                    cmp edx, eax
+:004304FD 7D02                    jge 00430501
+:004304FF 8BD0                    mov edx, eax
+:00430501 E92EF2FFFF              jmp 0042F734
+:00430506 90		          nop
+:00430507 8BC3                    mov eax, ebx
+:00430509 03C7                    add eax, edi
+:0043050B 90                      nop
+changed into
+:004304F3 2BD0                    sub edx, eax
+:004304F5 E93AF2FFFF              jmp 0042F734
+:004304FA 90...		          14*nop
+:00430508 8BC3                    mov eax, ebx
+:0043050A 03C7                    add eax, edi
+
+
+Correcting CALL:
+
+File offset 0001F020
+
+:0041FC20 E8E2080100              call 00430507
+changed into
+:0041FC20 E8E3080100              call 00430508
+:0041FC25 
+
+Now 14 bytes free space from 004304FA to 00430508.

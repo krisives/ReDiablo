@@ -1,0 +1,77 @@
+Monk has -clvl to AC when wearing plate armor:
+
+file offset 0002385C
+
+:0042445C 33D2                    xor edx, edx
+changed into
+:0042445C F7DA                    neg edx
+
+
+Barbarian has -2 to spell levels:
+
+file offset 00023432
+
+:00424032 88843148550000          mov byte ptr [ecx+esi+00005548], al
+changed into
+:00424032 03CE                    add ecx, esi
+:00424034 E951E80200              jmp 0045288A
+:00424039
+
+Using free space from shared shrines:
+
+file offset 00051C8A
+
+:0045288A E8EFBC0000              call 0045E57E
+:0045288F 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00452895 0F85A5070000            jne 00453040
+:0045289B B120                    mov cl, 20
+:0045289D E9BF020000              jmp 00452B61
+changed into
+:0045288A 80B96001000005          cmp byte ptr [ecx+00000160], 05
+:00452891 7502                    jne 00452895
+:00452893 2C02                    sub al, 02
+:00452895 888148550000            mov byte ptr [ecx+00005548], al
+:0045289B E99917FDFF              jmp 00424039
+:004528A0 9090                    2*nop
+
+
+Bard has improved damage only when using at least one sword, and in the other hand another sword, a shield or nothing. Bow damage is now the 'regular' Str*Clvl/200.
+
+file offset 0002322D
+
+:00423E2D 83FA01                  cmp edx, 00000001
+:00423E30 743A                    je 00423E6C
+:00423E32 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+:00423E38 83F801                  cmp eax, 00000001
+:00423E3B 742F                    je 00423E6C
+:00423E3D 83FA03                  cmp edx, 00000003
+:00423E40 7409                    je 00423E4B
+:00423E42 83F803                  cmp eax, 00000003
+:00423E45 0F8553010000            jne 00423F9E
+:00423E4B 8B8174010000            mov eax, dword ptr [ecx+00000174]
+:00423E51 BFFA000000              mov edi, 000000FA
+:00423E56 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]
+:00423E5D 038164010000            add eax, dword ptr [ecx+00000164]
+:00423E63 0FAFC2                  imul eax, edx
+:00423E66 99                      cdq
+:00423E67 E946010000              jmp 00423FB2
+changed into
+:00423E2D 8B81D80A0000            mov eax, dword ptr [ecx+00000AD8]
+:00423E33 83FA01                  cmp edx, 00000001
+:00423E36 7405                    je 00423E3D
+:00423E38 83F801                  cmp eax, 00000001
+:00423E3B 7518                    jne 00423E55					no swords
+:00423E3D 3BC2                    cmp eax, edx
+:00423E3F 742B                    je 00423E6C					2 swords
+:00423E41 83F805                  cmp eax, 00000005
+:00423E44 7426                    je 00423E6C					shield
+:00423E46 83FA05                  cmp edx, 00000005
+:00423E49 7421                    je 00423E6C					shield
+:00423E4B 83F8FF                  cmp eax, FFFFFFFF
+:00423E4E 741C                    je 00423E6C					nothing
+:00423E50 83FAFF                  cmp edx, FFFFFFFF
+:00423E53 7417                    je 00423E6C					nothing
+:00423E55 E944010000              jmp 00423F9E
+:00423E5A 909090                  3*nop
+
+Now 18 bytes free space from 00423E5A to 00423E6C.

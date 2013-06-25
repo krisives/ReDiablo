@@ -1,0 +1,161 @@
+
+Testing Spawn effect
+
+HLFDRKUTEST
+
+
+Fallen One with Spawn attack:
+
+000AB070 8000 0000 1F02 0000 C834 4B00 0100 0000 .........4K.....
+000AB080 A834 4B00 0100 0000 0100 0000 8834 4B00 .4K..........4K.
+000AB090 0B00 0000 0B00 0000 0D00 0000 0B00 0000 ................
+000AB0A0 1200 0000 0D00 0000 0300 0000 0000 0000 ................
+000AB0B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AB0C0 5509 4A00 0002 0100 0100 0000 0400 0000 U.J.............
+000AB0D0 0800 0000 0000 0000 010F 0701 0300 0500 ................
+000AB0E0 0005 0200 0800 0C00 0000 0300 2E00 0000 ................
+changed into
+000AB0D0 2200 0000 0000 0000 03                  "........
+
+
+
+In monster AI code:
+
+file offset 00041FE1
+
+:00442BE1 813D80DC6900C8000000    cmp dword ptr [0069DC80], 000000C8
+:00442BEB 0F8DA9000000            jnl 00442C9A
+:00442BF1 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00442BF4 6A00                    push 00000000
+:00442BF6 6A5F                    push 0000005F
+:00442BF8 5A                      pop edx
+:00442BF9 E895E9FFFF              call 00441593
+:00442BFE E997000000              jmp 00442C9A
+
+changed into
+
+:00442BE1 813D80DC6900C0000000    cmp dword ptr [0069DC80], 000000C0
+:00442BEB E9B2DBFEFF              jmp 004307A2
+:00442BF0 90                      nop
+:00442BF1 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00442BF4 6A00                    push 00000000
+:00442BF6 6A5F                    push 0000005F					Spawn spell effect
+:00442BF8 5A                      pop edx
+:00442BF9 E895E9FFFF              call 00441593					using 2nd attack animation
+:00442BFE E997000000              jmp 00442C9A
+
+
+using free space from Jester Spell:
+
+file offset 0002FBA2
+
+:004307A2 90                      nop
+:004307A3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004307A6 6A0A                    push 0000000A
+:004307A8 5F                      pop edi
+:004307A9 6A07                    push 00000007
+:004307AB 5A                      pop edx
+:004307AC E84BB80300              call 0046BFFC
+:004307B1 EB0B                    jmp 004307BE
+:004307B3 6A1A                    push 0000001A
+:004307B5 EB06                    jmp 004307BD
+:004307B7 6A2C                    push 0000002C
+:004307B9 EB02                    jmp 004307BD
+:004307BB 6A1E                    push 0000001E
+:004307BD 5F                      pop edi
+:004307BE 69F6B0000000            imul esi, 000000B0
+:004307C4 8B5508                  mov edx, dword ptr [ebp+08]
+:004307C7 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004307CA FFB6887A6900            push dword ptr [esi+00697A88]
+:004307D0 8A86D07A6900            mov al, byte ptr [esi+00697AD0]
+:004307D6 6A00                    push 00000000
+:004307D8 FFB6CC7A6900            push dword ptr [esi+00697ACC]
+:004307DE 50                      push eax
+:004307DF 57                      push edi
+:004307E0 FF7514                  push [ebp+14]
+:004307E3 FF7510                  push [ebp+10]
+:004307E6 FF750C                  push [ebp+0C]
+:004307E9 E8414F0000              call 0043572F
+:004307EE C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:004307F8 83A6C87A690000          and dword ptr [esi+00697AC8], 00000000
+:004307FF 5F                      pop edi
+:00430800 5E                      pop esi
+:00430801 C9                      leave
+:00430802 C21C00                  ret 001C
+
+changed into
+
+:004307A2 7D1D                    jge 004307C1
+:004307A4 56                      push esi
+:004307A5 33F6                    xor esi, esi
+:004307A7 E805430000              call 00434AB1				check if character is present
+:004307AC 7406                    je 004307B4		
+:004307AE 46                      inc esi
+:004307AF 83FE04                  cmp esi, 00000004
+:004307B2 72F3                    jb 004307A7
+:004307B4 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:004307BA 5E                      pop esi
+:004307BB 0F8430240100            je 00442BF1				only spawn if local is first character
+:004307C1 E9D4240100              jmp 00442C9A
+:004307C6 90                      nop
+
+
+
+existing code:
+
+:00434AB1 8BC6                    mov eax, esi
+:00434AB3 69C0C8550000            imul eax, 000055C8
+:00434AB9 030514AE6E00            add eax, dword ptr [006EAE14]
+:00434ABF 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:00434AC6 3B5034                  cmp edx, dword ptr [eax+34]
+:00434AC9 C3                      ret
+:00434ACA 90909090                4*nop
+
+
+
+
+
+
+Actual creation of spell effect during 2nd attack animation:
+
+:0043E759 6A00                    push 00000000
+:0043E75B 8B8ED0DC6900            mov ecx, dword ptr [esi+0069DCD0]
+:0043E761 FFB6FCDC6900            push dword ptr [esi+0069DCFC]
+:0043E767 8BC1                    mov eax, ecx
+:0043E769 C1E002                  shl eax, 02
+:0043E76C 57                      push edi
+:0043E76D 6A01                    push 00000001
+:0043E76F FFB6F8DC6900            push dword ptr [esi+0069DCF8]		spell effect
+:0043E775 8B90E8004900            mov edx, dword ptr [eax+004900E8]
+:0043E77B 0396ACDC6900            add edx, dword ptr [esi+0069DCAC]
+:0043E781 51                      push ecx
+:0043E782 0FB68ED9DC6900          movzx ecx, byte ptr [esi+0069DCD9]
+:0043E789 51                      push ecx
+:0043E78A 0FB68ED8DC6900          movzx ecx, byte ptr [esi+0069DCD8]
+:0043E791 51                      push ecx
+:0043E792 8B88C8004900            mov ecx, dword ptr [eax+004900C8]
+:0043E798 038EA8DC6900            add ecx, dword ptr [esi+0069DCA8]
+:0043E79E E88C6FFFFF              call 0043572F
+:0043E7A3 4B                      dec ebx
+:0043E7A4 75B3                    jne 0043E759
+
+or this one?:
+
+:0043E815 6A00                    push 00000000
+:0043E817 8B8ED0DC6900            mov ecx, dword ptr [esi+0069DCD0]
+:0043E81D FFB600DD6900            push dword ptr [esi+0069DD00]
+:0043E823 8BC1                    mov eax, ecx
+:0043E825 C1E002                  shl eax, 02
+:0043E828 53                      push ebx
+:0043E829 6A01                    push 00000001
+:0043E82B FFB6F8DC6900            push dword ptr [esi+0069DCF8]
+:0043E831 8B90E8004900            mov edx, dword ptr [eax+004900E8]
+:0043E837 0396ACDC6900            add edx, dword ptr [esi+0069DCAC]
+:0043E83D 51                      push ecx
+:0043E83E 0FB68ED9DC6900          movzx ecx, byte ptr [esi+0069DCD9]
+:0043E845 51                      push ecx
+:0043E846 0FB68ED8DC6900          movzx ecx, byte ptr [esi+0069DCD8]
+:0043E84D 51                      push ecx
+:0043E84E 8B88C8004900            mov ecx, dword ptr [eax+004900C8]
+:0043E854 038EA8DC6900            add ecx, dword ptr [esi+0069DCA8]
+:0043E85A E8D06EFFFF              call 0043572F

@@ -1,0 +1,86 @@
+Special Monsters in Hellfire - Demons
+
+Name		dlvl	mlvl	mlvl	HP-single	HP-multi	AC	To Hit%	Damage	MFL	Base Exp	
+			battle	items								
+			38	27	60-70		120-140		80	60	20-35	--R	2 000	
+Hork Demon1	H3	53	27	230-260 	460-520		130	145	44-74		6 000	
+			68	27	340-380		680-760		160	180	86-146	R-I	10 000
+	
+			40	30	120		240		80	110	20-30	RRI	5 000	
+The Defiler	H4	55	30	410		820		130	195	44-64		12 000	
+			70	30	580		1 160		160	230	86-126	RII	24 000	
+
+			45	40	666		1 332		125	150	40-50	III	6 000	
+Na-Krul2	C4	75	40	2 048		4 096		175	235	84-104		14 000	
+(by lever)		105	40	2 764		5 528		205	270(3)	166-206	III	28 000
+	
+			45	40	333		666		75	150	40-50		6 000	
+Na-Krul2	C4	75	40	1 049		2 098		125	235	84-104		14 000	
+(by book)		105	40	1 432		2 864		155	270(3)	166-206		28 000
+	
+1	Hork Demon has the ability to spawn Hork Spawns
+2	Na-Krul is immune to Stone Curse.
+3	Due to a bug, the base To Hit for Na-Krul will be 14% on hell.
+
+
+
+Books at Na-Krul:
+
+AC ->	AC-50
+
+HP ->	HP/2
+
+III ->	- (ofwel 38/78 -> 00)
+
+
+
+Slotnumber live table    0069D960]
+
+originele life		+0069DD18]
+
+AC			+0069DD52]
+
+resistance/immunity	+0069DD54]
+
+Name pointer		+0069DD60]
+
+Slotnumber (6E=Diablo)	+0069DD64]
+
+
+
+Weakening Nakrul:
+
+* Referenced by a CALL at Address:
+|:0044A319   
+|
+:0043B682 803DD8B1600018          cmp byte ptr [0060B1D8], 18
+:0043B689 7559                    jne 0043B6E4
+:0043B68B 8B0D7C735700            mov ecx, dword ptr [0057737C]
+:0043B691 85C9                    test ecx, ecx
+:0043B693 7C4F                    jl 0043B6E4
+:0043B695 3B0D80DC6900            cmp ecx, dword ptr [0069DC80]
+:0043B69B 7D47                    jge 0043B6E4
+:0043B69D 56                      push esi
+:0043B69E 8BF1                    mov esi, ecx
+:0043B6A0 69F6E4000000            imul esi, 000000E4
+:0043B6A6 6A02                    push 00000002
+:0043B6A8 81C688DC6900            add esi, 0069DC88
+:0043B6AE 5A                      pop edx
+:0043B6AF E83CCDFDFF              call 004183F0
+:0043B6B4 8325BCB56E0000          and dword ptr [006EB5BC], 00000000	clear Quest
+:0043B6BB 8B8690000000            mov eax, dword ptr [esi+00000090]
+:0043B6C1 8D8E90000000            lea ecx, dword ptr [esi+00000090]
+:0043B6C7 8086CA000000CE          add byte ptr [esi+000000CA], CE
+:0043B6CE 99                      cdq
+:0043B6CF 2BC2                    sub eax, edx
+:0043B6D1 D1F8                    sar eax, 1
+:0043B6D3 6683A6CC00000000        and word ptr [esi+000000CC], 0000
+:0043B6DB 898694000000            mov dword ptr [esi+00000094], eax
+:0043B6E1 8901                    mov dword ptr [ecx], eax
+:0043B6E3 5E                      pop esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043B689(C), :0043B693(C), :0043B69B(C)
+|
+:0043B6E4 C3                      ret
+

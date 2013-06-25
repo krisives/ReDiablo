@@ -1,0 +1,154 @@
+Adding activation speech for Champion Fleshdoom, and improving performance with activation sounds in general:
+
+
+file offset 00042D0B
+
+:0044390B C3                      ret
+:0044390C 90                      nop
+:0044390D E85FCE0200              call 00470771
+:00443912 
+changed into
+:0044390B EB05                    jmp 00443912
+:0044390D E95FCE0200              jmp 00470771
+:00443912 
+
+
+file offset 0006FB71
+
+:00470771 80BE44DD690000          cmp byte ptr [esi+0069DD44], 00
+:00470778 740D                    je 00470787
+:0047077A 803D38E76E0000          cmp byte ptr [006EE738], 00
+:00470781 0F842831FDFF            je 004438AF
+:00470787 C3                      ret
+:00470788 E8E4FFFFFF              call 00470771					free space
+:0047078D E9C95C0000              jmp 0047645B
+changed into
+:00470771 0FB68644DD6900          movzx eax, byte ptr [esi+0069DD44]
+:00470778 85C0                    test eax, eax
+:0047077A 740D                    je 00470789
+:0047077C 803D38E76E0000          cmp byte ptr [006EE738], 00
+:00470783 0F842631FDFF            je 004438AF
+:00470789 E98431FDFF              jmp 00443912
+:0047078E 90909090                4*nop
+
+
+file offset 00042CAF
+
+:004438AF 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004438B5 833833                  cmp dword ptr [eax], 00000033			Butcher
+:004438B8 7507                    jne 004438C1
+:004438BA B9B7030000              mov ecx, 000003B7
+:004438BF EB45                    jmp 00443906
+:004438C1 813889000000            cmp dword ptr [eax], 00000089			The Dark Ghost
+:004438C7 7507                    jne 004438D0
+:004438C9 B9E5030000              mov ecx, 000003E5
+:004438CE EB36                    jmp 00443906
+:004438D0 83387C                  cmp dword ptr [eax], 0000007C			The Defiler
+:004438D3 7507                    jne 004438DC
+:004438D5 B9DD030000              mov ecx, 000003DD
+:004438DA EB2A                    jmp 00443906
+:004438DC 83386E                  cmp dword ptr [eax], 0000006E			the Dark Lord
+:004438DF 7507                    jne 004438E8
+:004438E1 B9E4030000              mov ecx, 000003E4
+:004438E6 EB1E                    jmp 00443906
+:004438E8 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:004438EF 741A                    je 0044390B
+:004438F1 833832                  cmp dword ptr [eax], 00000032			Skeleton King
+:004438F4 7507                    jne 004438FD
+:004438F6 B9C2030000              mov ecx, 000003C2
+:004438FB EB09                    jmp 00443906
+:004438FD E85AD90000              call 0045125C
+:00443902 85C9                    test ecx, ecx
+:00443904 7405                    je 0044390B
+changed into
+:004438AF 3C01                    cmp al, 01					the Dark Lord (boss #0)
+:004438B1 7507                    jne 004438BA
+:004438B3 B9E4030000              mov ecx, 000003E4
+:004438B8 EB4C                    jmp 00443906
+:004438BA 3C0A                    cmp al, 0A					the Butcher (boss #9)
+:004438BC 7507                    jne 004438C5
+:004438BE B9B7030000              mov ecx, 000003B7
+:004438C3 EB41                    jmp 00443906
+:004438C5 3C0D                    cmp al, 0D					the Dark Ghost (boss #12)
+:004438C7 7507                    jne 004438D0
+:004438C9 B9E5030000              mov ecx, 000003E5
+:004438CE EB36                    jmp 00443906
+:004438D0 3C62                    cmp al, 62					the Defiler (boss #97)
+:004438D2 7507                    jne 004438DB
+:004438D4 B9DD030000              mov ecx, 000003DD
+:004438D9 EB2B                    jmp 00443906
+:004438DB 3C5C                    cmp al, 5C					Zhar the Mad (boss #91)
+:004438DD 7507                    jne 004438E6
+:004438DF B9C8030000              mov ecx, 000003C8
+:004438E4 EB20                    jmp 00443906
+:004438E6 3C26                    cmp al, 26					Fleshdoom (boss #37)
+:004438E8 7507                    jne 004438F1
+:004438EA B9BA030000              mov ecx, 000003BA
+:004438EF EB15                    jmp 00443906
+:004438F1 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:004438F8 7418                    je 00443912
+:004438FA E95DD90000              jmp 0045125C
+:004438FF 90909090909090          7*nop
+
+
+file offset 0005065C
+
+:0045125C 33C9                    xor ecx, ecx
+:0045125E 8B8660DD6900            mov eax, dword ptr [esi+0069DD60]
+:00451264 3B05040D4B00            cmp eax, dword ptr [004B0D04]			name of boss #36: Gharbad
+:0045126A 7506                    jne 00451272
+:0045126C B9BB030000              mov ecx, 000003BB
+:00451271 C3                      ret
+:00451272 3B05C4084B00            cmp eax, dword ptr [004B08C4]			name of boss #2: Zhar the Mad
+:00451278 7506                    jne 00451280
+:0045127A B9C8030000              mov ecx, 000003C8
+:0045127F C3                      ret
+:00451280 3B0584094B00            cmp eax, dword ptr [004B0984]			name of boss #8: Warlord
+:00451286 7505                    jne 0045128D
+:00451288 B9C6030000              mov ecx, 000003C6
+:0045128D C3                      ret
+changed into
+:0045125C 3C02                    cmp al, 02					The Skeleton King (boss #1)
+:0045125E 7507                    jne 00451267
+:00451260 B9C2030000              mov ecx, 000003C2
+:00451265 EB18                    jmp 0045127F
+:00451267 3C25                    cmp al, 25					Gharbad the Weak (boss #36)
+:00451269 7507                    jne 00451272
+:0045126B B9BB030000              mov ecx, 000003BB
+:00451270 EB0D                    jmp 0045127F
+:00451272 3C20                    cmp al, 20					Warlord of Blood (boss #31)
+:00451274 0F859826FFFF            jne 00443912
+:0045127A B9C6030000              mov ecx, 000003C6
+:0045127F E98226FFFF              jmp 00443906
+:00451284 90909090909090909090    10*nop
+
+
+Providing WAV file name (Gharbad's Quest is disabled):
+
+00098AC4 5366 785C 4D6F 6E73 7465 7273 5C47 6172 Sfx\Monsters\Gar
+00098AD4 6275 6430 332E 7761 7600                bud03.wav.
+changed into
+00098AC4 5366 785C 4D6F 6E73 7465 7273 5C49 7A75 Sfx\Monsters\Izu
+00098AD4 616C 3031 2E77 6176 0000                al01.wav..
+
+
+Adjusting some data for mage bosses to prevent a double speech on 3rd Abys level:
+
+pos name                     type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL    
+61 Archmage Naj              Wizard                28 Lazarus          3   3Y    C2      28       31   900   40- 60  RIR                                                                                                                      C3                   1000   40- 62
+000AFA20 0400 0000 9017 4B00 841B 4B00 1600 8403 ......K...K.....
+000AFA30 1C03 283C 1500 0300 0000 0000 0000 0000 ..(<............
+changed into
+000AFA2C 1700                                    ..
+000AFA2E E803                                    ..
+000AFA32 283E                                    (>
+
+ 91 Zhar the Mad              Dark Mage             28 Lazarus          3   3Y    C3      30       32   990   41- 62  RII 
+                                                                                  C2                    900   40- 60
+000AFDE0 1D00 0000 0C19 4B00 841B 4B00 1700 DE03 ......K...K.....
+000AFDF0 1C03 293E 3100 0300 0000 0000 0000 0000 ..)>1...........
+changed into
+000AFDEC 1600                                    ..
+000AFDEE 8403                                    ..
+000AFDF2 283C                                    (<
+

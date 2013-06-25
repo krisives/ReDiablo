@@ -1,0 +1,27 @@
+Lowering maximum speed for Firebolt and Holybolt
+
+
+Firebolt:
+
+File Offset 00030CAE
+
+:004318AE 83F83F                  cmp eax, 0000003F
+:004318B1 7C0B                    jl 004318BE
+:004318B3 6A3F                    push 0000003F
+wordt
+:004318AE 83F82F                  cmp eax, 0000002F
+:004318B1 7C0B                    jl 004318BE
+:004318B3 6A2F                    push 0000002F
+
+
+Holybolt:
+
+File Offset 0003474A
+
+:0043534A 83F83F                  cmp eax, 0000003F
+:0043534D 7C07                    jl 00435356
+:0043534F 6A3F                    push 0000003F
+wordt
+:0043534A 83F82F                  cmp eax, 0000002F
+:0043534D 7C07                    jl 00435356
+:0043534F 6A2F                    push 0000002F

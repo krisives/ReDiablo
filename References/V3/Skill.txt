@@ -1,0 +1,73 @@
+Places to change when changing a skill
+
+1 - Fill the namepointer for the skillname at the spell
+
+2 - Change the spell value used for the spellbook
+
+3 - Location where to change the skill value of each character 
+
+Warrior
+
+:004580BD C784301001000000000002  mov dword ptr [eax+esi+00000110], 02000000	Skill value
+:00458984 C7801001000000000002    mov dword ptr [ebx+00000110], 02000000	Skill value
+
+:00404C67 C705684D49001A000000    mov dword ptr [00494D68], 0000001A		Spell value
+
+Rogue
+
+:004580D4 C784301001000000000008  mov dword ptr [eax+esi+00000110], 08000000	Skill value
+:00458995 C7801001000000000008    mov dword ptr [ebx+00000110], 08000000	Skill value
+
+:00404C77 C705684D49001C000000    mov dword ptr [00494D68], 0000001C		Spell value
+
+Sorcerer
+
+:004580EB C784301001000000000004  mov dword ptr [eax+esi+00000110], 04000000	Skill value
+:004589A6 C7801001000000000004    mov dword ptr [ebx+00000110], 04000000	Skill value
+
+:00404C87 C705684D49001B000000    mov dword ptr [00494D68], 0000001B		Spell value
+
+Monk
+
+:0045810E C784301401000000200000  mov dword ptr [eax+esi+00000114], 00002000	Skill value
+:004589BD C7801401000000200000    mov dword ptr [ebx+00000114], 00002000	Skill value
+
+:00404C97 C705684D49002E000000    mov dword ptr [00494D68], 0000002E		Spell value
+
+Bard
+
+:00458125 C784301001000010000000  mov dword ptr [eax+esi+00000110], 00000010	Skill value
+:004589CE C7801001000010000000    mov dword ptr [ebx+00000110], 00000010	Skill value
+
+:00404CA7 C705684D490005000000    mov dword ptr [00494D68], 00000005		Spell value
+
+Barbarian
+
+:0045813C C784301001000000002000  mov dword ptr [eax+esi+00000110], 00200000	Skill value
+:004589DF C7801001000000002000    mov dword ptr [ebx+00000110], 00200000	Skill value
+
+:00404CB7 C705684D490016000000    mov dword ptr [00494D68], 00000016		Spell value
+
+
+Diablo:
+
+Warrior
+
+:0044C99F C7868878680000000002    mov dword ptr [esi+00687888], 02000000	Skill value
+:0044D013 C7868878680000000002    mov dword ptr [esi+00687888], 02000000	Skill value
+
+:00404873 C705104D48001A000000    mov dword ptr [00484D10], 0000001A		Spell value
+
+Rogue
+
+:0044C9B0 C7868878680000000008    mov dword ptr [esi+00687888], 08000000	Skill value
+:0044D023 C7868878680000000008    mov dword ptr [esi+00687888], 08000000	Skill value
+
+:00404883 C705104D48001C000000    mov dword ptr [00484D10], 0000001C		Spell value
+
+Sorcerer
+
+:0044C9C1 C7868878680000000004    mov dword ptr [esi+00687888], 04000000	Skill value
+:0044D033 C7868878680000000004    mov dword ptr [esi+00687888], 04000000	Skill value
+
+:00404893 C705104D48001B000000    mov dword ptr [00484D10], 0000001B		Spell value

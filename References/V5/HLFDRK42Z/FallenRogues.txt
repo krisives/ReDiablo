@@ -1,0 +1,218 @@
+New monster: Fallen Rogues
+
+This monstertype is based on animations normally used for the character class Rogue. Since only the attack and dying animation were usable (the same correct size), the other animations are replaced. They are labeled as Animal, but are not immune to Magic and they cannot be Stonecursed or Charmed. 
+
+A very slow (and almost invisible) walking animation is used, so the rogues appear to hide and sneak around. As attacktype, they use a modified Lazarus AI to shoot arrows without interruptions (to prevent the invisible 'idle' animation in combat). Fallen Rogues must have subtype 4, 5 or 6 for this to work. The changes also slightly affect the behaviour of Mages, and those can no longer have a another main attack as fireball.
+
+
+Added support for Fireball (subtype 3), normal arrows (subtype 4), Fire Arrow (subtype 5) and Lightning Arrow (subtype 6) as Mage attack:
+
+file offset 0004239F
+
+:00442F9F 0FB69014014900          movzx edx, byte ptr [eax+00490114]
+changed into
+:00442F9F 0FB69011014900          movzx edx, byte ptr [eax+00490111]
+
+0008F114 0134 0706                               .4..
+changed into
+0008F114 0600 1B38                               ...8
+
+
+Adjusting Mage retreat to keep Rogues from Flashing, and to give them chances for shooting or retreat when in melee range:
+
+file offset 00042299
+
+:00442E99 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00442E9F 8B542410                mov edx, dword ptr [esp+10]
+:00442EA3 D1F8                    sar eax, 1
+:00442EA5 39861CDD6900            cmp dword ptr [esi+0069DD1C], eax
+:00442EAB 8996D0DC6900            mov dword ptr [esi+0069DCD0], edx
+changed into
+:00442E99 8B542410                mov edx, dword ptr [esp+10]
+:00442E9D 8996D0DC6900            mov dword ptr [esi+0069DCD0], edx
+:00442EA3 80BE21DD690003          cmp byte ptr [esi+0069DD21], 03
+:00442EAA 7F2C                    jg 00442ED8
+:00442EAC E9CEB5FFFF              jmp 0043E47F
+:00442EB1 
+
+file offset 0003D87F
+
+:0043E47F 90 ...                  19*nop
+changed into
+:0043E47F 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:0043E485 D1F8                    sar eax, 1
+:0043E487 39861CDD6900            cmp dword ptr [esi+0069DD1C], eax
+:0043E48D E91F4A0000              jmp 00442EB1
+:0043E492
+
+file offset 000422D1
+
+:00442ED1 6A64                    push 00000064
+:00442ED3 B169                    mov cl, 69
+:00442ED5 5A                      pop edx
+:00442ED6 E87F70FDFF              call 00419F5A
+:00442EDB 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]
+:00442EE2 8D4C0914                lea ecx, dword ptr [ecx+ecx+14]
+:00442EE6 3BC1                    cmp eax, ecx
+:00442EE8 0F8DEB000000            jnl 00442FD9
+changed into
+:00442ED1 E8EF790300              call 0047A8C5
+:00442ED6 EB0D                    jmp 00442EE5
+:00442ED8 E8E8790300              call 0047A8C5
+:00442EDD 83F82D                  cmp eax, 0000002D		55% chance for retreat in melee
+:00442EE0 7FD1                    jg 00442EB3		
+:00442EE2 EB71                    jmp 00442F55
+:00442EE4 90                      nop
+:00442EE5 83F81E                  cmp eax, 0000001E
+:00442EE8 0F8DEB000000            jnl 00442FD9
+
+file offset 00079CC5
+
+:0047A8C5 038618DD6900            add eax, dword ptr [esi+0069DD18]
+:0047A8CB EB3A                    jmp 0047A907
+:0047A8CD 90                      nop
+:0047A8CE 90                      nop
+:0047A8CF 90                      nop
+changed into
+:0047A8C5 6A64                    push 00000064
+:0047A8C7 B169                    mov cl, 69
+:0047A8C9 5A                      pop edx
+:0047A8CA E88BF6F9FF              call 00419F5A
+:0047A8CF C3                      ret
+
+Adjusted changes for circle-walk and interruptions, for better behaviour:
+
+file offset 00042349
+
+:00442F49 83C00A                  add eax, 0000000A
+:00442F4C 8D0480                  lea eax, dword ptr [eax+4*eax]
+changed into
+:00442F49 6BC007                  imul eax, 00000007
+:00442F4C 83C030                  add eax, 00000030
+
+file offset 000423B7
+
+:00442FB7 83F81E                  cmp eax, 0000001E
+changed into
+:00442FB7 83F828                  cmp eax, 00000028
+
+
+Excluding Fallen Rogues from being Charmed:
+
+file offset 0002F881
+
+:00430481 EB07                    jmp 0043048A
+:00430483 90                      nop
+:00430484 90                      nop
+:00430485 90                      nop
+:00430486 90                      nop
+:00430487 90                      nop
+:00430488 90                      nop
+:00430489 90                      nop
+changed into
+:00430481 80BF20DD69001C          cmp byte ptr [edi+0069DD20], 1C
+:00430488 7409                    je 00430493
+:0043048A 
+
+
+Additions to MPQ file:
+
+filename	original	frames		function	size	
+
+Rnn.CL2		RHBAS		8x8		bow, idle	60h	replaced by DMageW.CL2
+Rna.CL2		RHBAT		8x12		bow, attack	80h
+Rnw.CL2		RHBAW		8x8		bow, walk	60h	replaced by new RnW.CL2
+Rnh.CL2		RHBHT		8x7		bow, stun	60h	replaced by RHNDT.CL2
+Rnd.CL2		RHNDT		8x20		dying		80h
+
+not used	RHBFM		8x16            firespell	60h
+not used	RHBLM		8x16            lightningspell	60h
+not used	RHBQM		8x16            magicspell	60h
+not used	RHBST		8x20		town, stand     60h
+not used	RHBWL		8x8		town, walk	60h
+
+Rna1.WAV	goatba1				bow, attack
+Rna2.WAV	goatba2				bow, attack
+Rnh1.WAV	rogue69				Getting hit
+Rnh2.WAV	rogue69b			Getting hit
+Rnd1.WAV	rogue71				Dying
+Rnd2.WAV	rogue71				Dying
+Rn.TRN		bhbs				red hair, black plate
+
+
+Created new animation file Rnw.CL2 from DMageW.CL2, by adding 8 more empty frames to it, repeating the one frame within a group 16 times, and reusing this one group 8 times:
+
+00000000 2000 0000 2C00 0000 3800 0000 4400 0000  ...,...8...D...
+00000010 5000 0000 5C00 0000 6800 0000 7400 0000 P...\...h...t...
+00000020 0100 0000 6000 0000 F300 0000 0100 0000 ....`...........
+00000030 E700 0000 7A01 0000 0100 0000 6E01 0000 ....z.......n...
+00000040 0102 0000 0100 0000 F501 0000 8802 0000 ................
+00000050 0100 0000 7C02 0000 0F03 0000 0100 0000 ....|...........
+00000060 0303 0000 9603 0000 0100 0000 8A03 0000 ................
+00000070 1D04 0000 0100 0000 1104 0000 A404 0000 ................
+changed into
+00000000 2000 0000 2000 0000 2000 0000 2000 0000  ... ... ... ...
+00000010 2000 0000 2000 0000 2000 0000 2000 0000  ... ... ... ...
+00000020 1000 0000 6000 0000 F300 0000 8601 0000 ....`...........
+00000030 1902 0000 AC02 0000 3F03 0000 D203 0000 ........?.......
+00000040 6504 0000 F804 0000 8B05 0000 1E06 0000 e...............
+00000050 B106 0000 4407 0000 D707 0000 6A08 0000 ....D.......j...
+00000060 FD08 0000 9009 0000 0100 0000 8A03 0000 ................
+00000070 1D04 0000 0100 0000 1104 0000 A404 0000 ................
+
+
+Creating pointers (sound = 000B1534/004B2B34, image = 000B12C8/004B28C8, trn = 000AFF91/004B1591):
+
+000B12C8 4D6F 6E73 7465 7273 5C46 6972 656D 616E Monsters\Fireman
+000B12D8 5C46 6972 654D 2563 2E43 4C32 0000 0000 \FireM%c.CL2....
+changed into
+000B12C8 4D6F 6E73 7465 7273 5C52 6E5C 526E 2563 Monsters\Rn\Rn%c
+000B12D8 2E43 4C32 0000 0000 0000 0000 0000 0000 .CL2............
+
+000B1534 4D6F 6E73 7465 7273 5C57 6F72 6D5C 576F Monsters\Worm\Wo
+000B1544 726D 2563 2E43 4C32 0000 0000           rm%c.CL2....
+changed into
+000B1534 4D6F 6E73 7465 7273 5C52 6E5C 526E 2563 Monsters\Rn\Rn%c
+000B1544 2569 2E57 4156 0000 0000 0000           %i.WAV......
+
+000AFF90 0000 0000 5374 6172 6579 6520 7468 6520 ....Stareye the 
+000AFFA0 5769 7463 6800 0000                     Witch...
+changed into
+000AFF90 004D 6F6E 7374 6572 735C 526E 5C52 6E2E .Monsters\Rn\Rn.
+000AFFA0 5452 4E00 0000 0000                     TRN.....
+
+
+Replaced Cabalist Mages by Fallen Rogues:
+
+pos name         type     attacktype  sub  dlvl   mlvl     HP      AC  TH1   damage1 MFL/MFL    exp  size    
+
+107 Cabalist     demon    25 Mage      3  15-16    29   120- 120    0  110   12- 24  -IR/-IR   4929   950
+    Fallen Rogue animal   28 Lazarus   6  C2-C3    34    80-  96  120  135   13- 20  RRR/RRR   6000     1
+
+stand walk  attk1 frame   hr  death  playback speed
+  12     1    20     8     8    28   0   0   0   0   0   0
+   1    16    12    12     2    20   0   0   1   1   1   0
+
+000ADE70 8000 0000 B603 0000 9C23 4B00 0100 0000 .........#K.....
+000ADE80 8023 4B00 0000 0000 0100 0000 6832 4B00 .#K.........h2K.
+000ADE90 0C00 0000 0100 0000 1400 0000 0800 0000 ................
+000ADEA0 1C00 0000 1400 0000 0000 0000 0000 0000 ................
+000ADEB0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000ADEC0 2423 4B00 1C1E 1D00 7800 0000 7800 0000 $#K.....x...x...
+000ADED0 1900 0000 0002 0000 036E 080C 1800 0000 .........n......
+000ADEE0 0000 0100 1400 1400 0000 0700 4113 0000 ............A...
+changed into
+000ADE70 8000 0000 0100 0000 C828 4B00 0000 0000 .........(K.....
+000ADE80 342B 4B00 0000 0000 0100 0000 9115 4B00 4+K...........K.
+000ADE90 0100 0000 1000 0000 0C00 0000 0200 0000 ................
+000ADEA0 1400 0000 0100 0000 0000 0000 0000 0000 ................
+000ADEB0 0100 0000 0100 0000 0100 0000 0000 0000 ................
+000ADEC0 2223 4B00 2A2C 2200 5000 0000 6000 0000 "#K.*,".P...`...
+000ADED0 1C00 0000 0003 0000 0687 0C0D 1400 0000 ................
+000ADEE0 0078 0200 4700 4700 0000 0700 7017 0000 .x..G.G.....p...
+
+Providing name:
+
+000B0D22 0000 4361 6261 6C69 7374 0000 00        ..Cabalist...
+changed into
+000B0D22 4661 6C6C 656E 2052 6F67 7565 00        Fallen Rogue.

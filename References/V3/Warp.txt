@@ -1,0 +1,141 @@
+:004316D2 55                      push ebp
+:004316D3 8BEC                    mov ebp, esp
+:004316D5 83EC18                  sub esp, 00000018
+:004316D8 894DE8                  mov dword ptr [ebp-18], ecx
+:004316DB 53                      push ebx
+:004316DC 33C9                    xor ecx, ecx
+:004316DE 56                      push esi
+:004316DF 394D1C                  cmp dword ptr [ebp+1C], ecx
+:004316E2 57                      push edi
+:004316E3 8955F8                  mov dword ptr [ebp-08], edx
+Old:
+:004316E6 C745F4FFFFFF7F          mov [ebp-0C], 7FFFFFFF
+New:
+:004316E6 C745F400000000          mov [ebp-0C], 00000000
+
+:004316ED 7C1D                    jl 0043170C
+:004316EF 8B451C                  mov eax, dword ptr [ebp+1C]
+:004316F2 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:004316F8 69C0C8550000            imul eax, 000055C8
+:004316FE 03C2                    add eax, edx
+:00431700 8B5038                  mov edx, dword ptr [eax+38]
+:00431703 8B403C                  mov eax, dword ptr [eax+3C]
+:00431706 8955F8                  mov dword ptr [ebp-08], edx		X-Char
+:00431709 894508                  mov dword ptr [ebp+08], eax		Y-Char
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004316ED(C)
+|
+:0043170C 8B4508                  mov eax, dword ptr [ebp+08]
+:0043170F 390D20027000            cmp dword ptr [00700220], ecx
+:00431715 8955F0                  mov dword ptr [ebp-10], edx		Y-Char
+:00431718 8945EC                  mov dword ptr [ebp-14], eax		X-Char
+:0043171B 894DFC                  mov dword ptr [ebp-04], ecx		Counter = 0
+:0043171E 0F8E9B000000            jle 004317BF
+:00431724 B930027000              mov ecx, 00700230
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004317B9(C)
+|
+:00431729 81F9A0027000            cmp ecx, 007002A0
+:0043172F 0F8D8A000000            jnl 004317BF
+:00431735 8B01                    mov eax, dword ptr [ecx]
+:00431737 3D08040000              cmp eax, 00000408
+:0043173C 7415                    je 00431753
+:0043173E 3D03040000              cmp eax, 00000403
+:00431743 740E                    je 00431753
+:00431745 3D02040000              cmp eax, 00000402
+:0043174A 7407                    je 00431753
+:0043174C 3D04040000              cmp eax, 00000404
+:00431751 7557                    jne 004317AA
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043173C(C), :00431743(C), :0043174A(C)
+|
+:00431753 8A15D4B16000            mov dl, byte ptr [0060B1D4]
+:00431759 80FA01                  cmp dl, 01
+:0043175C 7405                    je 00431763
+:0043175E 80FA02                  cmp dl, 02
+:00431761 7515                    jne 00431778
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043175C(C)
+|
+:00431763 3D02040000              cmp eax, 00000402
+:00431768 7417                    je 00431781
+:0043176A 3D03040000              cmp eax, 00000403
+:0043176F 7410                    je 00431781
+:00431771 3D04040000              cmp eax, 00000404
+:00431776 7409                    je 00431781
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00431761(C)
+|										Facing S ?
+:00431778 8B79F8                  mov edi, dword ptr [ecx-08]			X-stairs
+:0043177B 8B59FC                  mov ebx, dword ptr [ecx-04]			Y-stairs
+:0043177E 47                      inc edi
+:0043177F EB07                    jmp 00431788
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00431768(C), :0043176F(C), :00431776(C)
+|										Facing E ?
+:00431781 8B59FC                  mov ebx, dword ptr [ecx-04]			Y-stairs
+:00431784 8B79F8                  mov edi, dword ptr [ecx-08]			X-stairs
+:00431787 43                      inc ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043177F(U)
+|
+:00431788 8B75F8                  mov esi, dword ptr [ebp-08]			X-Char
+:0043178B 8B4508                  mov eax, dword ptr [ebp+08]			Y-Char
+:0043178E 2BF7                    sub esi, edi
+:00431790 2BC3                    sub eax, ebx
+:00431792 8BD6                    mov edx, esi
+:00431794 0FAFC0                  imul eax, eax
+:00431797 0FAFD6                  imul edx, esi
+:0043179A 03C2                    add eax, edx
+:0043179C 3B45F4                  cmp eax, dword ptr [ebp-0C]			Distance
+Old:
+:0043179F 7D09                    jge 004317AA
+New:
+:0043179F 7E09                    jle 004317AA
+
+:004317A1 8945F4                  mov dword ptr [ebp-0C], eax			Distance
+:004317A4 897DF0                  mov dword ptr [ebp-10], edi			X-Stairs
+:004317A7 895DEC                  mov dword ptr [ebp-14], ebx			Y-Stairs
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00431751(C), :0043179F(C)
+|
+:004317AA FF45FC                  inc [ebp-04]
+:004317AD 83C110                  add ecx, 00000010
+:004317B0 8B45FC                  mov eax, dword ptr [ebp-04]
+:004317B3 3B0520027000            cmp eax, dword ptr [00700220]
+:004317B9 0F8C6AFFFFFF            jl 00431729
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043171E(C), :0043172F(C)
+|
+:004317BF 8B45E8                  mov eax, dword ptr [ebp-18]
+:004317C2 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:004317C5 69C0B0000000            imul eax, 000000B0
+:004317CB C780C87A690002000000    mov dword ptr [ebx+00697AC8], 00000002
+:004317D5 83A0E87A690000          and dword ptr [eax+00697AE8], 00000000
+:004317DC 807D1800                cmp byte ptr [ebp+18], 00
+:004317E0 89885C7A6900            mov dword ptr [eax+00697A5C], ecx		Move
+:004317E6 8B4DEC                  mov ecx, dword ptr [ebp-14]			to
+:004317E9 8988607A6900            mov dword ptr [eax+00697A60], ecx		Stairs
+:004317EF 750B                    jne 004317FC
+:004317F1 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004317F4 6A2A                    push 0000002A
+:004317F6 5A                      pop edx
+:004317F7 E800A80300              call 0046BFFC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004317EF(C)
+|
+:004317FC 5F                      pop edi
+:004317FD 5E                      pop esi
+:004317FE 5B                      pop ebx
+:004317FF C9                      leave
+:00431800 C21C00                  ret 001C

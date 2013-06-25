@@ -1,0 +1,190 @@
+
+
+
+Goat Archer
+General
+1. if not active, exit
+2. if out of sight of target and it is a player, walk towards last seen position of target, exit
+3. R = Rnd[100]
+4. if last action was a ranged attack, de delay for Rnd[20]/20 seconds, exit
+
+Distance = 1 to 3
+1. if R < 10·Intf + 70, walk away from target, exit
+
+Distance > 3
+1. do ranged attack
+
+
+
+
+
+
+
+:00441416 55                      push ebp
+:00441417 8BEC                    mov ebp, esp
+:00441419 83EC14                  sub esp, 00000014
+:0044141C 53                      push ebx
+:0044141D 56                      push esi
+:0044141E 81F9C8000000            cmp ecx, 000000C8
+:00441424 57                      push edi
+:00441425 8955F4                  mov dword ptr [ebp-0C], edx
+:00441428 894DFC                  mov dword ptr [ebp-04], ecx
+:0044142B 0F835B010000            jnb 0044158C				jmp exit
+:00441431 8BF1                    mov esi, ecx
+:00441433 69F6E4000000            imul esi, 000000E4
+:00441439 83BE8CDC690000          cmp dword ptr [esi+0069DC8C], 00000000
+:00441440 7546                    jne 00441488				jmp exit
+:00441442 8A8E28DD6900            mov cl, byte ptr [esi+0069DD28]
+:00441448 84C9                    test cl, cl
+:0044144A 743C                    je 00441488				jmp exit if not active
+:0044144C E83C000000              call 0044148D				real distance routine -> ebx, edi
+:00441451 8945EC                  mov dword ptr [ebp-14], eax
+:00441454 8955F0                  mov dword ptr [ebp-10], edx
+:00441457 80F9D0                  cmp cl, D0
+:0044145A 7D52                    jge 004414AE				jmp if just activated
+:0044145C E93D240100              jmp 0045389E				jmp if long activated
+
+
+:0045389E 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:004538A4 80786503                cmp byte ptr [eax+65], 03		check following/dooropening
+:004538A8 751C                    jne 004538C6
+:004538AA 8BC3                    mov eax, ebx
+:004538AC 3BC7                    cmp eax, edi
+:004538AE 7D02                    jge 004538B2
+:004538B0 8BC7                    mov eax, edi
+:004538B2 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]	subtype
+:004538B9 D1E9                    shr ecx, 1
+:004538BB 90                      nop
+:004538BC 41                      inc ecx
+:004538BD 41                      inc ecx
+:004538BE 3BC1                    cmp eax, ecx
+:004538C0 0F8EE8DBFEFF            jle 004414AE				jmp if close and smart
+:004538C6 E996DBFEFF              jmp 00441461				jmp if far or not smart
+
+
+:00441461 FFB634DD6900            push dword ptr [esi+0069DD34]		far away or not smart
+:00441467 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0044146D 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:00441473 FFB630DD6900            push dword ptr [esi+0069DD30]
+:00441479 E83C8AFDFF              call 00419EBA
+:0044147E 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00441481 8BD0                    mov edx, eax
+:00441483 E8AFE4FFFF              call 0043F937				start following target
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00441440(C), :0044144A(C)
+|
+:00441488 E9FF000000              jmp 0044158C				jmp exit
+
+
+:004414AE 8B4DFC                  mov ecx, dword ptr [ebp-04]		just activated, or smart and close
+:004414B1 E8AEBBFFFF              call 0043D064				get facing direction
+:004414B6 80BE28DD6900FF          cmp byte ptr [esi+0069DD28], FF
+:004414BD 8945F8                  mov dword ptr [ebp-08], eax
+:004414C0 7308                    jnb 004414CA				jmp if fully active (in sight)
+:004414C2 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004414C5 E86AE40000              call 0044F934
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004414C0(C)
+|
+:004414CA 8B45F8                  mov eax, dword ptr [ebp-08]
+:004414CD 83BEF8DC69000A          cmp dword ptr [esi+0069DCF8], 0000000A
+:004414D4 8986D0DC6900            mov dword ptr [esi+0069DCD0], eax
+:004414DA 7524                    jne 00441500
+:004414DC E98E82FEFF              jmp 0042976F
+
+:0042976F 6A16                    push 00000016
+:00429771 5A                      pop edx
+:00429772 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]
+:00429779 D1E1                    shl ecx, 1
+:0042977B 2BD1                    sub edx, ecx
+:0042977D B176                    mov cl, 76
+:0042977F E95D7D0100              jmp 004414E1
+
+:004414E1 E8748AFDFF              call 00419F5A
+:004414E6 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004414E9 8BD0                    mov edx, eax
+:004414EB E836EAFFFF              call 0043FF26
+:004414F0 EB47                    jmp 00441539
+
+
+:00441500 83FF04                  cmp edi, 00000004
+:00441503 7D34                    jge 00441539
+:00441505 83FB04                  cmp ebx, 00000004
+:00441508 7D2F                    jge 00441539
+:0044150A 6A64                    push 00000064
+:0044150C B177                    mov cl, 77
+:0044150E 5A                      pop edx
+:0044150F E8468AFDFF              call 00419F5A
+:00441514 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]
+:0044151B 83C107                  add ecx, 00000007
+:0044151E 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:00441521 D1E1                    shl ecx, 1
+:00441523 3BC1                    cmp eax, ecx
+:00441525 7D12                    jge 00441539
+:00441527 8B45F8                  mov eax, dword ptr [ebp-08]
+:0044152A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0044152D 8B148520374B00          mov edx, dword ptr [4*eax+004B3720]
+:00441534 E8FEE3FFFF              call 0043F937				start retreat
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004414F0(U), :00441503(C), :00441508(C), :00441525(C)
+|
+:00441539 83BE8CDC690000          cmp dword ptr [esi+0069DC8C], 00000000
+:00441540 754A                    jne 0044158C
+:00441542 FF75F0                  push [ebp-10]
+:00441545 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0044154B 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:00441551 FF75EC                  push [ebp-14]
+:00441554 E86E2A0000              call 00443FC7				check LOS
+:00441559 85C0                    test eax, eax
+:0044155B 741C                    je 00441579
+:0044155D 837D0800                cmp dword ptr [ebp+08], 00000000
+:00441561 8B55F4                  mov edx, dword ptr [ebp-0C]
+:00441564 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00441567 6A04                    push 00000004
+:00441569 7407                    je 00441572
+:0044156B E823000000              call 00441593				shoot
+:00441570 EB1A                    jmp 0044158C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00441569(C)
+|
+:00441572 E8B5F0FFFF              call 0044062C				shoot
+:00441577 EB13                    jmp 0044158C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044155B(C)
+|
+:00441579 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0044157F 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00441582 8B44880C                mov eax, dword ptr [eax+4*ecx+0C]
+:00441586 8986DCDC6900            mov dword ptr [esi+0069DCDC], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044142B(C), :00441488(U), :00441540(C), :00441570(U), :00441577(U)
+|
+:0044158C 5F                      pop edi
+:0044158D 5E                      pop esi
+:0044158E 5B                      pop ebx
+:0044158F C9                      leave
+:00441590 C20400                  ret 0004
+
+
+Real distance routine:
+
+:0044148D 0FB686D8DC6900          movzx eax, byte ptr [esi+0069DCD8]
+:00441494 0FB696D9DC6900          movzx edx, byte ptr [esi+0069DCD9]
+:0044149B 8BBEA8DC6900            mov edi, dword ptr [esi+0069DCA8]
+:004414A1 8B9EACDC6900            mov ebx, dword ptr [esi+0069DCAC]
+:004414A7 2BF8                    sub edi, eax
+:004414A9 EB47                    jmp 004414F2
+
+:004414F2 7D02                    jge 004414F6
+:004414F4 F7DF                    neg edi
+:004414F6 2BDA                    sub ebx, edx
+:004414F8 7D02                    jge 004414FC
+:004414FA F7DB                    neg ebx
+:004414FC C3                      ret
+

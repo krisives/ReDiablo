@@ -1,0 +1,54 @@
+Code uit Zeds bestand met hellfire toevoegingen
+
+Change max blocking to 80%
+
+
+0042AD98: (0002A198)	Trap/Monster vs. Player	
+
+from:	83FB647E036A645B
+to:	83FB507E036A505B	
+
+
+0042B13E: (0002A53E)	Player vs. Player	
+
+from:
+894D10		mov dword ptr [ebp+10], ecx		
+7907		jns 0042B14A
+83651000	and dword ptr [ebp+10], 00000000		
+8B4D10		mov ecx, dword ptr [ebp+10]
+3BCB		cmp ecx, ebx
+7E05		jle 0042B153
+895D10		mov dword ptr [ebp+10], ebx
+8BCB		mov ecx, ebx
+
+to:		
+6A50		push 00000050
+5B		pop ebx
+894D10		mov dword ptr [ebp+10], ecx
+7904		jns next
+6A00		push 00000000
+59		pop ecx
+90		nop
+3BCB		cmp ecx, ebx
+7E02		jle next
+8BCB		mov ecx, ebx
+894D10		mov dword ptr [ebp+10], ecx
+
+00435B4A: (00034F4A)	Monster vs. Player
+
+from:	
+83F9647E036A6459	
+to:	
+83F9507E036A5059    
+
+HF: 0043E2BD: (3D6BD)
+from:   
+83FA647E036A645A        
+to: 
+83FA507E036A505A
+
+0044FBA9: (0004EFA9)	Player vs. Player	
+from: 
+83F9647E036A6459
+to:
+83F9507E036A5059

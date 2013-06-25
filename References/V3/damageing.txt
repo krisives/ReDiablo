@@ -1,0 +1,77 @@
+by Dr. Zed
+
+----------------------------------------------------------------
+
+Stone Curse
+
+Make SC'ed monster IMMUNE to attacks, not automatically hit.
+
+Find "+0064E660], " just after a "cmp byte ptr [REGISTER], 20" to find all 'hit monster' code sections.
+  HF: +0069DC90
+
+0042A763	Monster/Trap attacks Monster with Spell  HF: 0042F105
+0042A943	Player attacks Monster with Spell
+00435912	Monster/Trap attacks Monster
+0044F724	Player attacks Monster
+
+Find the "0064E65C], 0000000F" and change the following 'if equal, auto-hit' to auto-miss.
+     HF:  0069DC8C
+
+		Was			Now
+
+ 0042A81F	399E 5CE66400	EB [06]
+(00029C1F)	74 [07]		90 (x 6)
+HF: 0042F1C1    399E 5CE66400	EB [06]
+        	74 [07]		90 (x 6)
+
+ 0042AA68	7504 8365F400	0F84 [79010000]
+(00029E68)	jne 0042AA6E; and dword ptr [ebp-0C], 00000000
+		je 0042ABE7
+ HF: 0042F424	7504 8365F000	0F84 [A1010000]
+(00029E68)	jne 0042F42A; and dword ptr [ebp-10], 00000000
+		je 0042F5CB
+
+Monster/Trap attacks Monster:
+Was:
+00435936: (00034D36)            HF: 0043DB5E
+33DB		xor ebx, ebx
+
+Now:
+8BDD		mov ebx, ebp
+	Note: ebp is pointing to the stack, so it is a safe bet that it won't less than 100 (I'm assuming that it's sign bit wouldn't be on) Same assumption is made in HF with the next change
+
+ 0044F769	8365FC00		834DFC7F
+(0004EB69)	and dword ptr [ebp-04], 00000000
+		or dword ptr [ebp-04], 0000007F
+ HF: 0045B91B   895DE8                  896DE8
+                mov dword ptr [ebp-18], ebx
+                mov dword ptr [ebp-18], ebp
+
+----------------------------------------------------------------
+=======================================================
+
+Make '+200% damage vs. demons' into 'double damage vs. demons'
+
+...changed text.
+
+HF: 45BAFE - 45BBOE Demonslaying
+    45BB0F - 45BB29 Devastation
+    45BB67 - 45BB9A Jester
+
+Was:
+0044F8B4:
+8D3C7F	lea edi, dword ptr [edi+2*edi]
+
+Now:
+0044F8B4:
+C1E7 01	shl edi, 01
+
+HF: Jester
+Was:
+0045BDD8
+8D0480  lea eax, dword ptr [eax+4*eax]
+
+Now:
+0045BDD8
+8d0440  lea eax, dword ptr [eax+2*eax]
+=======================================================

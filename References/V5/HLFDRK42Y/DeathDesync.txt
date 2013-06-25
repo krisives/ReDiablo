@@ -1,0 +1,80 @@
+The following is an attempt to eliminate 'double dying' monsters. It does not work always, but does seem to lessen the amount.
+
+
+Checking for valid and alive monster, using free space from old Sparkling Shrine:
+
+file offset 000521DE
+
+:00452DDE 90                      nop
+:00452DDF 0FBE9410B8010000        movsx edx, byte ptr [eax+edx+000001B8]
+:00452DE7 E8A6560000              call 00458492
+:00452DEC A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452DF1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00452DF7 69C0C8550000            imul eax, 000055C8
+:00452DFD 03C1                    add eax, ecx
+:00452DFF 6A00                    push 00000000
+changed into
+:00452DDE 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]		check for valid tabel entry
+:00452DE4 85C0                    test eax, eax
+:00452DE6 7417                    je 00452DFF
+:00452DE8 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	check on HP
+:00452DF2 7E09                    jle 00452DFD
+:00452DF4 83BE8CDC690006          cmp dword ptr [esi+0069DC8C], 00000006	check for monster in dying state
+:00452DFB 7502                    jne 00452DFF
+:00452DFD 33C0                    xor eax, eax
+:00452DFF C3                      ret
+:00452E00 90                      nop
+
+
+Adjusting checks in attack routines:
+
+Melee PvM
+
+file offset 0005AC84
+
+:0045B884 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	check on HP
+:0045B88E 7E1D                    jle 0045B8AD
+changed into
+:0045B884 E85575FFFF              call 00452DDE
+:0045B889 85C0                    test eax, eax
+:0045B88B 7422                    je 0045B8AF
+:0045B88D 909090                  3*nop
+
+Missile PvM
+
+file offset 0002E6A5
+
+:0042F2A5 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	check on HP
+:0042F2AF 7E22                    jle 0042F2D3
+:0042F2B1 90                      nop
+:0042F2B2 90                      nop
+:0042F2B3 90                      nop
+changed into
+:0042F2A5 E8343B0200              call 00452DDE
+:0042F2AA 85C0                    test eax, eax
+:0042F2AC 7425                    je 0042F2D3
+:0042F2AE 909090909090            6*nop
+
+Missile MvM
+
+file offset 0002E4E7
+
+:0042F0E7 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	check on HP
+:0042F0F1 0F8ED2000000            jle 0042F1C9
+changed into
+:0042F0E7 E8F23C0200              call 00452DDE
+:0042F0EC 85C0                    test eax, eax
+:0042F0EE 0F84D5000000            je 0042F1C9
+:0042F0F4 909090                  3*nop
+
+Melee MvM
+
+file offset 0003CF25
+
+:0043DB25 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0	check on HP
+:0043DB2F 0F8EA2000000            jle 0043DBD7
+changed into
+:0043DB25 E8B4520100              call 00452DDE
+:0043DB2A 85C0                    test eax, eax
+:0043DB2C 0F84A5000000            je 0043DBD7
+:0043DB32 909090                  3*nop

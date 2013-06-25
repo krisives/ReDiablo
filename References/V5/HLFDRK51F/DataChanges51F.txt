@@ -1,0 +1,20 @@
+Restored seeding sizes for Knights, because for testing those were set to always appear.
+
+
+ 36 Blood Knight
+
+000ABAF0 A000 0000 B603 0000 9025 4B00 0000 0000 .........%K.....
+
+ 94 Doom Guard
+
+000AD7F0 A000 0000 BC02 0000 9025 4B00 0000 0000 .........%K.....
+
+ 95 Steel Lord
+
+000AD870 A000 0000 4006 0000 9025 4B00 0000 0000 ....@....%K.....
+
+ 97 Black Knight
+
+000AD970 A000 0000 B603 0000 9025 4B00 0000 0000 .........%K.....
+
+

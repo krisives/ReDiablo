@@ -1,0 +1,24 @@
+
+
+
+:00456E1F 69F6C8550000            imul esi, 000055C8
+:00456E25 033514AE6E00            add esi, dword ptr [006EAE14]
+:00456E2B 8A8E60010000            mov cl, byte ptr [esi+00000160]
+:00456E31 80F904                  cmp cl, 04
+:00456E34 7509                    jne 00456E3F
+:00456E36 833DE854680000          cmp dword ptr [006854E8], 00000000
+:00456E3D 740E                    je 00456E4D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00456E34(C)
+|
+:00456E3F 80F905                  cmp cl, 05
+:00456E42 7550                    jne 00456E94
+:00456E44 833DEC54680000          cmp dword ptr [006854EC], 00000000
+:00456E4B 7547                    jne 00456E94
+
+
+
+0008F370 4C4D 4800 0000 0000 4E55 5344 4241 4D48 LMH.....NUSDBAMH
+0008F380 5448 0000 0000 0000 5752 534D 4257 0000 TH......WRSMBW..
+0008F390 5752 534D 5257 0000                     WRSMRW..

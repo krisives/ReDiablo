@@ -1,0 +1,87 @@
+No stun for Monsters with 0 frame HitRecovery animations:
+
+
+File offset 0003C314
+
+:0043CF14 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043CF1A E8B9030000              call 0043D2D8					check for Hiddens, Blinks and Warpers
+changed into
+:0043CF14 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:0043CF1A E96622FFFF              jmp 0042F185
+
+Using free space from Spells52H:
+
+File offset 0002E585
+
+:0042F185 90                      nop
+:0042F186 90                      nop
+:0042F187 90                      nop
+:0042F188 90                      nop
+:0042F189 90                      nop
+:0042F18A 6A5A                    push 0000005A
+:0042F18C 5F                      pop edi
+:0042F18D 2BF8                    sub edi, eax
+:0042F18F 2B7D0C                  sub edi, dword ptr [ebp+0C]
+:0042F192 83FF05                  cmp edi, 00000005
+:0042F195 7D03                    jge 0042F19A
+:0042F197 6A05                    push 00000005
+:0042F199 5F                      pop edi
+:0042F19A 83FF5F                  cmp edi, 0000005F
+:0042F19D 7E03                    jle 0042F1A2
+changed into
+:0042F185 80782C00                cmp byte ptr [eax+2C], 00			check number of frames for HitRecovery animation
+:0042F189 0F84CEDE0000            je 0043D05D					
+:0042F18F 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0042F195 E83EE10000              call 0043D2D8					check for Hiddens, Blinks and Warpers
+:0042F19A E980DD0000              jmp 0043CF1F
+:0042F19F
+
+
+No hitrecovery, smoother attack-animation and slower walking speed for Golems:
+
+pos name            attacktype        sub  dlvl    mlvl     HP      AC  TH1   damage1  MFL/MFL   size    stand walk  attk1 frame   hr  death
+
+122 Copper Golem     2 Skeleton         3  C1-C2    27   500- 540   90  120   19- 24   -II/-II   700       8    13    12     8     5    21 
+                                                                                                                17                 0
+000AE5F0 9A00 0000 BC02 0000 5C1D 4B00 0000 0000 ........\.K.....
+000AE600 3C1D 4B00 0100 0000 0100 0000 E02D 4B00 <.K..........-K.
+000AE610 0800 0000 0D00 0000 0C00 0000 0500 0000 ................
+000AE620 1500 0000 0000 0000 0300 0000 0000 0000 ................
+000AE630 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AE640 531F 4B00 282A 1B00 F401 0000 1C02 0000 S.K.(*..........
+000AE650 0200 0000 0000 0000 0378 0813 1887 001E .........x......
+000AE660 245A 0000 3000 3000 0000 0300 740E 0000 $Z..0.0.....t...
+changed into
+000AE614 1100 0000                               ....
+000AE61C 0000 0000                               ....
+
+128 Mithril Golem    2 Skeleton         5  C3-C4    31   740- 780  110  133   28- 38   -II/-II   700       8    11    10     6     5    21 
+                                                                                                                15           8     0
+000AE8F0 9A00 0000 BC02 0000 5C1D 4B00 0000 0000 ........\.K.....
+000AE900 3C1D 4B00 0100 0000 0000 0000 0000 0000 <.K.............
+000AE910 0800 0000 0B00 0000 0A00 0000 0500 0000 ................
+000AE920 1500 0000 0000 0000 0300 0000 0000 0000 ................
+000AE930 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AE940 BA1D 4B00 2C2E 1F00 E402 0000 0C03 0000 ..K.,...........
+000AE950 0200 0000 0000 0000 0585 061C 2687 0032 ............&..2
+000AE960 3E6E 0000 3000 3000 0000 0300 5014 0000 >n..0.0.....P...
+changed into
+000AE914 0F00 0000                               ....
+000AE91C 0000 0000                               ....
+000AE95A 08                                      .
+
+130 Iron Golem       2 Skeleton         4  C2-C3    29   620- 660  100  125   22- 32   -II/-II   700       8    12    11     7     5    21 
+                                                                                                                16           8     0
+000AE9F0 9A00 0000 BC02 0000 5C1D 4B00 0000 0000 ........\.K.....
+000AEA00 3C1D 4B00 0100 0000 0100 0000 BC26 4B00 <.K..........&K.
+000AEA10 0800 0000 0C00 0000 0B00 0000 0500 0000 ................
+000AEA20 1500 0000 0000 0000 0300 0000 0000 0000 ................
+000AEA30 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AEA40 2F1D 4B00 2A2C 1D00 6C02 0000 9402 0000 /.K.*,..l.......
+000AEA50 0200 0000 0000 0000 047D 0716 2087 0028 .........}.. ..(
+000AEA60 3064 0000 3000 3000 0000 0300 9411 0000 0d..0.0.........
+changed into
+000AEA14 1000 0000                               ....
+000AEA1C 0000 0000                               ....
+000AEA5A 08                                      .
+

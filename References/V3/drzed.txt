@@ -1,0 +1,491 @@
+Well, I just realized that I don't have all the locations where an item's requirements are checked.  But hopefully the below code will help you track down the other code you need.
+
+To change item requirements to base stats, change the code from modified stats to base stats.  I assume you know the addresses.
+
+--------------------------------------------------------
+
+0041E1B2: Check_requirements_for_item_on_cursor
+
+Called from 0041DF80, 0041E517, 0041E609
+
+0041E1B2:
+mov eax, ecx					character #
+imul eax, 000054D8				character offset
+add eax, 00687778					start of character data
+movsx ecx, byte ptr [eax+00005418]		Strength Requirment of item on cursor
+and dword ptr [eax+0000541C], 00000000	set req. met to 'don't use'
+cmp dword ptr [eax+00000164], ecx		modified Str & requirement
+jl 0041E1FD						ret
+movzx ecx, byte ptr [eax+00005419]
+cmp dword ptr [eax+0000016C], ecx		mod magic
+jl 0041E1FD						ret
+movsx ecx, byte ptr [eax+0000541A]
+cmp dword ptr [eax+00000174], ecx		mod dex
+jl 0041E1FD						ret
+mov dword ptr [ebx+0000541C], 00000001	set req. met to TRUE
+
+0041E1FD:
+ret
+
+-------------------------------------------------
+
+0041E1FE: Set_Magic_Requirement_For_Spell_Book_On_Cursor
+imul ecx, 000054D8				character record
+push edi						preserve edi
+cmp dword ptr [ecx+0068CB0C], 00000018	Magic Code of item on cursor & Book
+jne 0041E27E					no, jump out of routine
+mov edx, dword ptr [ecx+0068CB10]		Spell code of item on cursor
+lea eax, dword ptr [ecx+0068CB10]
+imul edx, 00000038				spell record
+mov dl, byte ptr [edx+004A346C]		magic req. for level 1 book
+mov byte ptr [ecx+0068CB91], dl		magic req. of item on cursor
+mov eax, dword ptr [eax]			Spell code of item on cursor
+movsx edi, byte ptr [eax+ecx+00687839]	set loop counter to character's slvl
+test edi, edi
+je 0041E27E						if counter is 0, jump out of routine
+push esi						preserve esi
+push ebx						preserve ebx
+
+0041E239:
+mov bl, byte ptr [ecx+0068CB91]		magic req.
+push 00000064
+movzx eax, bl					magic req.
+pop esi
+lea eax, dword ptr [eax+4*eax]		5 x magic req.
+push 00000064
+shl eax, 02						4 x 5 x magic req.
+cdq
+idiv esi						20/100 x magic req.
+add al, bl						20% + 100% of magic req.
+pop ebx
+movzx esi, al					120% of magic req.
+mov byte ptr [ecx+0068CB91], al		set new magic req.
+dec edi						dec counter
+lea eax, dword ptr [esi+4*esi]		120% of magic req. x 5
+shl eax, 02						120% of req. x 5 x 4
+cdq
+idiv ebx						120% of req. x 20/100
+add eax, esi					120% of req. x 120%
+cmp eax, 000000FF					compare to 255
+jle 0041E278					next req. <= 255, next
+or byte ptr [ecx+0068CB91], FF		set req. to 255
+xor edi, edi					set counter to 0
+
+0041E278:
+test edi, edi
+jne 0041E239					coutner not 0, loop
+pop ebx
+pop esi
+
+0041E27E:
+pop edi
+ret
+
+--------------------------------------------------------
+
+Set_Magic_Requirement_For_Spell_Book_Moved_To_Backpack_While_Inventory_Closed
+
+........
+0042067C:
+imul edi, 000054D8
+and dword ptr [esp+10], 00000000
+cmp dword ptr [edi+0068BE84], 00000000
+jle 0042072A
+lea esi, dword ptr [edi+00688665]
+
+0042069A:
+cmp dword ptr [esi+FFFFFEA7], 00000000	item type & (Elixer, Book, Scroll, Potion)
+lea eax, dword ptr [esi+FFFFFF7F]		Spell code
+jne 0040710						not Elixer, Book, Scroll, Potion, jump
+
+cmp dword ptr [eax-04], 00000018		magic code & book
+jne 00420710					no, jump
+
+mov ecx, dword ptr [eax]			spell code
+imul ecx, 00000038				spell record
+mov cl, byte ptr [ecx+004A346C]		magic required for lvl 1
+mov byte ptr [esi], cl				magic required for item
+mov eax, dword ptr [eax]			spell code
+movsx ebp, byte ptr [eax+edi+00687839]	slvl for counter
+
+004206C6:
+test ebp, ebp
+je 004206FC						if counter=0, jump
+mov cl, byte ptr [esi]				set cl to magic req.
+push 00000064
+movzx eax, cl
+pop ebx
+lea eax, dword ptr [eax+4*eax]
+shl eax, 02
+cdq
+idiv ebx
+add al, cl
+dec ebp
+movzx ecx, al
+mov byte ptr [esi], al
+lea eax, dword ptr [ecx+4*ecx]
+shl eax, 02
+cdq
+idiv ebx
+add eax, ecx
+cmp eax, 000000FF
+jle 004206C6
+or byte ptr [esi], FF
+xor ebp, ebp
+jmp 004206C6
+
+004206FC:
+lea edx, dword ptr [esi+FFFFFE9F]	start of item record
+lea ecx, dword ptr [edi+00687778]	start of character record
+call 00420601
+mov dword ptr [esi+03], eax		req. met
+
+00420710:
+inc [esp+10]				counter
+add esi, 000170				next item
+mov eax, dword ptr [esp+10]		counter
+cmp eax, dword ptr [edi+0068BE84]	? & number of items in backpack
+jl 0042069A					counter < # of items, jump
+
+0042072A:
+pop edi
+pop esi
+pop ebp
+pop ebx
+pop ecx
+ret
+
+
+=================================================
+
+00425335: Set_Magic_Requirement_For_Spell_Book_From_Item_ECX
+
+	006A6228
+
+Called from 0042065A, 004254FC
+
+imul ecx, 00000170				item record
+push edi						preserve edi
+cmp dword ptr [ecx+?], 00000018		Magic Code of item on cursor & Book
+jne ?							no, jump out of routine
+mov edx, dword ptr [ecx+?]			Spell code of item on cursor
+lea eax, dword ptr [ecx+?]
+imul edx, 00000038				spell record
+mov dl, byte ptr [edx+004A346C]		magic req. for level 1 book
+mov byte ptr [ecx+?], dl		magic req. of item on cursor
+
+mov edx, dword ptr [00687774]
+imul edx, 000054D8
+
+mov eax, dword ptr [eax]			Spell code of item on cursor
+movsx edi, byte ptr [edx+eax+00687839]	set loop counter to character's slvl
+test edi, edi
+je ?						if counter is 0, jump out of routine
+push esi						preserve esi
+push ebx						preserve ebx
+
+?:
+mov bl, byte ptr [ecx+?]		magic req.
+push 00000064
+movzx eax, bl					magic req.
+pop esi
+lea eax, dword ptr [eax+4*eax]		5 x magic req.
+push 00000064
+shl eax, 02						4 x 5 x magic req.
+cdq
+idiv esi						20/100 x magic req.
+add al, bl						20% + 100% of magic req.
+pop ebx
+movzx esi, al					120% of magic req.
+mov byte ptr [ecx+?], al		set new magic req.
+dec edi						dec counter
+lea eax, dword ptr [esi+4*esi]		120% of magic req. x 5
+shl eax, 02						120% of req. x 5 x 4
+cdq
+idiv ebx						120% of req. x 20/100
+add eax, esi					120% of req. x 120%
+cmp eax, 000000FF					compare to 255
+jle ?					next req. <= 255, next
+or byte ptr [ecx+?], FF		set req. to 255
+xor edi, edi					set counter to 0
+
+?:
+test edi, edi
+jne ?					coutner not 0, loop
+pop ebx
+pop esi
+
+?:
+pop edi
+ret
+
+
+=============================================
+
+========
+
+An array of bytes found at 00091A78
+
+Item's group used to sound and apperance on ground!!!!
+
+00	Mail Armor (Medium) (also default for unused items!)
+01	Axe
+02	Potion of Healing
+03	Bow
+04	Gold Pile
+05	Helm
+06	Club
+07	Triangular Gray Shield (Heavy)
+08	Sword
+09	Magic Rock
+0A	Cleaver
+0B	Staff
+0C	Ring
+0D	Crown
+0E	Leather Armor (Light)
+0F	Round Wooden Shield (Light)
+10	Scroll
+11	Plate Armor (Heavy)
+12	Book
+13	Unused (Meat, picture offset, no drop animation or sound)
+14	Potion of Full Mana
+15	Spectral Elixer & "Rainbow Elixer" (Goldish)
+16	Elixer of Magic
+17	Potion of Full Healing
+18	Elixer of Dex & Oils
+19	Potion of Rejuv. & Golden Elixer
+1A	Elixer of Vit.
+1B	Elixer of Str
+1C	Ear
+1D	Brain
+1E	Black Mushroom
+1F	Tavern Sign
+20	Blood Stone
+21	Anvil of Fury
+22	Staff of Lazarus
+
+00 Potion of Full Mana			14
+01 White Scroll				10
+02 Brown Scroll				10
+03 Blue Scroll				10
+04 Small Gold Pile			04
+05 Medium Gold Pile			04
+06 Large Gold Pile			04
+07 "Thick Gold Ring"			0C
+08 The Bleeder				0C
+09 Bramble					0C
+0A Ring of Truth				0C
+0B Ring of Regha				0C
+0C Ring					0C
+0D Ring of Engagement			0C
+0E Constricting Ring			0C
+0F Spectral Elixir			15
+10 "Rainbow Elixir"			15
+11 Golden Elixir				19
+12 Empyrean Band				0C
+13 Ear w/ steel earring			1C
+14 Ear					1C
+15 Ear w/ gold earring			1C
+16 "orange sphere"			00
+17 "Hellraiser Box"			00
+18 "gold pyramid"				00
+19 Blood Stone				20
+1A "red sphere"				00
+1B "blue cube"				00
+1C "orange pyramid"			00
+1D "thin black vial"			18
+1E "large black vial"			18
+1F Elixir of Vitality			1A
+20 Potion of Healing			02
+21 Potion of Full Rejuvenation	19
+22 Elixir of Magic			16
+23 Potion of Full Healing		17
+24 Elixir of Dexterity			18
+25 Potion of Rejuvenation		19
+26 Elixir of Strength			1B
+27 Potion of Mana, Potion of Mana	1B
+28 Brain					1D
+29 "Claw"					00
+2A "Tooth"					00
+2B "loaf of bread"			00
+2C Optic Amulet				0C
+2D Amulet					0C
+2E "black pendant"			0C
+2F "bug brooch"				0C
+30 "ankh necklace"			0C
+31 "pouch"					00	(04, Gold in DZ mod)
+32 Wizardspike				08
+33 Dagger					08
+34 "bottle of brew"			00	(16, Magic Elixer in dz mod)
+35 Black Razor				08
+36 "thick dagger"				08
+37 "knuckle knife"			08
+38 Blade					08
+39 Bastard Sword				08
+3A The Executioner's Blade		08
+3B Mace					06
+3C Long Sword				08
+3D Broad Sword				08
+3E Falchion					08
+3F Morning Star				06
+40 Short Sword				08
+41 Claymore					08
+42 Club					06
+43 Sabre					08
+44 Gryphons Claw, The Falcon's Talon	08
+45 "bone club"				06
+46 Spiked Club				06
+47 "board w/ nail"			06
+48 Scimitar					08
+49 "angel sword"				08
+4A "rusted, grey sword"			08
+4B Full Helm				05
+4C Magic Rock				09
+4D Helm of Sprits				0D
+4E "skull crown"				0D
+4F Royal Circlet				0D
+50 Fool's Crest				05
+51 Harlequin Crest			05
+52 Helm					05
+53 Buckler					0F
+54 "horned helm"				05
+55 Veil of Steel, Gotterdamerung	05
+56 "black book"				12
+57 "red book"				12
+58 "blue book"				12
+59 Black Mushroom				1E
+5A Skull Cap				05
+5B Cap					05
+5C Torn Flesh of Souls			0E
+5D Thinking Cap				05
+5E "red tunic"				0E
+5F Crown					0D
+60 Map of the Stars			10
+61 Fungal Tome				12
+62 Great Helm				05
+63 OverLord's Helm			05
+64 "lightning shield"			07
+65 Battle Axe				01
+66 Hunter's Bow, Long Bow		03
+67 Plate Mail, Field Plate		11
+68 Stonecleaver				01
+69 Small Shield				0F
+6A Cleaver					0A
+6B Studded Leather Armor		0E
+6C Deadly Hunter, Eaglehorn		03
+6D Short Staff, Quarter Staff		0B
+6E Two-Handed Sword			08
+6F Chain Mail				00
+70 Small Axe				01
+71 Kite Shield				07
+72 Scale Mail				00
+73 "large, thick shield"		07
+74 Split Skull Shield			0F
+75 Dragon's Breach			07
+76 Short Bow, Short Bow			03
+77 Long Battle Bow, Long War Bow	03
+78 "fish bow"				03
+79 War Hammer				06
+7A Maul, The Cranium Basher		06
+7B Long Staff				0B
+7C War Staff				0B
+7D "shaman's staff"			0B
+7E Tavern Sign				1F
+7F Hard Leather Armor			0E
+80 Rags					0E
+81 Quilted Armor				0E
+82 "3 spiked balls 'n chain flail"	06
+83 Flail					06
+84 Tower Shield				07
+85 Composite Bow				03
+86 Great Sword				08
+87 Leather Armor				0E
+88 Splint Mail				00
+89 Robe					0E
+8A The Rainbow Cloak, Wisdom's Wrap, Nightscape	0E
+8B "leather shirt"			00		(0E, Leather Armor in DZ mod)
+8C Anvil of Fury				21
+8D Broad Axe				01
+8E Large Axe				01
+8F Great Axe				01
+90 Axe					01
+91 "grey cleaver"				01
+92 Blackoak Shield, Holy Defender	07
+93 Large Shield				07
+94 Gothic Shield				07
+95 Cloak					0E
+96 Cape					0E
+97 Full Plate Mail			11
+98 Gothic Plate				11
+99 Breast Plate				11
+9A Ring Mail				00
+9B Staff of Lazarus			22
+9C "ruby axe"				01
+9D Arkaine's Valor			00
+9E The Needler				03
+9F Naj's Light Plate			11
+100 The Grizzly				08
+101 The Grandfather			08
+102 The Protector				06
+103 Messerschmidt's Reaver		01
+104 Windforce				03
+105 Short War Bow				03
+106 Composite Staff			0B
+107 Short Battle Bow			03
+108 Gold					04
+
+----------
+--------------------------------------------------------
+
+Fix to the 'duping' bug.  Note that part of this code is checking if player 4's 40th inventory slot is in use and, if so, deleting it.  This code uses that memory slot.  If this wasn't done, problems would occur.
+
+Oh btw, it is trivial, but if the code made sure not to use the local player's data (like if the fourth player used the third player's data), no one would actually lose data.  By this I mean, if player 4 has 40 1x1 items, and player 1 uses this data space, player 4 isn't affected but player 1 will 'see' his backpack as only 39 items.  I don't think the game tracks other players backpacks all that well anyway.
+
+However, this is minor and not worth worrying about....
+
+
+0041E5E2:
+E8 [6488FEFF]	call 00406E4B
+90			nop
+
+00406E4B: <this is free space in my mod>
+6A5C			push 0000005C
+8DB5 30CA6800	lea esi, dword ptr [ebp+0068CA30]		item on cursor
+BF 9CBB6900		mov edi, 0069BB9C
+90			nop
+
+59			pop ecx
+F3			repz
+A5			movsd
+8DB0 486D6300	lea esi, dword ptr [eax+00636D48]
+
+833D 0CBD6900 27		cmp dword ptr [0069BD0C], 00000027
+7E [07]			jle SKIP
+C605 0CBD6900 27	mov byte ptr [0069BD0C], 27
+
+			SKIP:
+C3			ret
+
+0041EA5C:
+E9 [B5980200]	jmp 00448316
+90 90 90		nop x3
+
+00448316: <this is also free space in my mod>
+6A5C			push 0000000C
+(8DB5 14BD6800	lea esi, dword ptr [ebp+0068BD14])
+
+BE 9CBB6900		mov esi, 0069BB9C
+90			nop
+
+8DBD 30CA6800	lea edi, dword ptr [ebp+0068CA30]
+59			pop ecx
+F3			repz
+A5			movsd
+5F			pop edi
+5E			pop esi
+5D			pop ebp
+5B			pop ebx
+83C4 1C		add esp, 0000001C
+C3			ret
+
+=================================================

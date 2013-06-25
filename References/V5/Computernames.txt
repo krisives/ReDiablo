@@ -1,0 +1,144 @@
+Computernames by Selby
+
+
+
+
+I can get you started and you or someone else can finish it if they want =) I suck at this and haven't really tested it, more of an idea I've had for a long time that I never got around to working on ;-) There are several ways of doing this, I'm going to give the info on how it's been done (not a good way) and how I would like to do it (should I do it ;-) ).
+
+First a little background into the code. This is for v1.07 Diablo, I imagine Hellfire is pretty close. The following line is the assembler code in memory for the calling of the routine. This could be right, this could be wrong, I really don't know. I haven't tested it yet so I really can't say. I don't know what is stored in all of the register values so I could very well be barking up the wrong tree...
+
+:0044B1BD FF15DCA04700 Call dword ptr [0047A0DC]
+
+This calls the kernel function "GetComputerNameA"
+
+This function call also exists 
+
+:0044B629 FF15DCA04700 Call dword ptr [0047A0DC]
+
+:0044BC1B FF15DCA04700 Call dword ptr [0047A0DC]
+
+:0044BD47 FF15DCA04700 Call dword ptr [0047A0DC]
+
+as well.
+
+So we know the program is getting the computer name 4 times. But once it has it, it has to compare it somewhere, right? So we need to look further down the code to see where there could be a comparison or so and do some trial and error since we aren't good at assembler. The next couple of lines in the code are as follows:
+
+:0044B1C3 BEF2040000 mov esi, 000004F2
+:0044B1C8 8BCE mov ecx, esi
+:0044B1CA E8D984FBFF call 004036A8
+
+Okay, so we move the contents of memory address 04F2 to ESI and then more whatever was in ESI to ECX. Let's look at 04F2 and see where it gets set\used elsewhere...
+
+Looking around we notice it is only used to push the contents of it to the stack twice, imul'ted once, and put into EAX right below a comparison... 
+
+This is the actual comparison:
+
+:0044B66C B8F2040000 mov eax, 000004F2
+:0044B671 3945F8 cmp dword ptr [ebp-08], eax
+:0044B674 7514 jne 0044B68A
+
+EAX gets loaded with 4F2. Then compared. If you change the JNE statement to a JMP statement, you don't get any characters loaded regardless of computer name. So this apparently builds the list of characters that you can use... so let's just NOP it!
+
+Doh! That crashes the game upon attempting to choose a character! Guess there is something that was missed somewhere, right?
+
+
+
+dark:
+
+file offset 00055979
+
+:00456579 8945F8                  mov dword ptr [ebp-08], eax
+:0045657C B8F2040000              mov eax, 000004F2
+:00456581 3945F8                  cmp dword ptr [ebp-08], eax
+:00456584 7514                    jne 0045659A
+
+change into (?)
+
+:00456579 B8F2040000              mov eax, 000004F2
+:0045657E 8945F8                  mov dword ptr [ebp-08], eax
+:00456581 3945F8                  cmp dword ptr [ebp-08], eax
+:00456584 7514                    jne 0045659A
+
+
+
+* Reference To: KERNEL32.GetComputerNameA, Ord:00AEh
+:004561D6 FF15C8904800            Call dword ptr [004890C8]
+
+:004561DC BEF2040000              mov esi, 000004F2
+:004561E1 8BCE                    mov ecx, esi
+:004561E3 E819D7FAFF              call 00403901
+:004561E8 8BD8                    mov ebx, eax
+:004561EA 8BCB                    mov ecx, ebx
+:004561EC E8C13DFCFF              call 00419FB2
+:004561F1 8BF8                    mov edi, eax
+:004561F3 56                      push esi
+:004561F4 FF75F8                  push [ebp-08]
+:004561F7 57                      push edi
+:004561F8 E8633F0200              call 0047A160
+
+
+* Reference To: KERNEL32.GetComputerNameA, Ord:00AEh
+:00456539 FF15C8904800            Call dword ptr [004890C8]
+
+:0045653F 6A00                    push 00000000
+:00456541 FF75FC                  push [ebp-04]
+:00456544 E8F3250300              Call 00488B3C
+:00456549 8BF0                    mov esi, eax
+:0045654B 85F6                    test esi, esi
+:0045654D 744B                    je 0045659A
+:0045654F 8BCE                    mov ecx, esi
+:00456551 E85C3AFCFF              call 00419FB2
+:00456556 8BD8                    mov ebx, eax
+:00456558 8D45F8                  lea eax, dword ptr [ebp-08]
+:0045655B 6A00                    push 00000000
+:0045655D 50                      push eax
+:0045655E 56                      push esi
+:0045655F 53                      push ebx
+:00456560 FF75FC                  push [ebp-04]
+:00456563 E8CE250300              Call 00488B36
+:00456568 85C0                    test eax, eax
+:0045656A 742E                    je 0045659A
+:0045656C 8D45DC                  lea eax, dword ptr [ebp-24]
+:0045656F 8BD6                    mov edx, esi
+:00456571 50                      push eax
+:00456572 8BCB                    mov ecx, ebx
+:00456574 E8A9D1FAFF              call 00403722
+:00456579 B8F2040000              mov eax, 000004F2
+:0045657E 8945F8                  mov dword ptr [ebp-08], eax
+:00456581 3945F8                  cmp dword ptr [ebp-08], eax
+:00456584 7514                    jne 0045659A
+
+
+* Reference To: KERNEL32.GetComputerNameA, Ord:00AEh
+:0045669F FF15C8904800            Call dword ptr [004890C8]
+
+:004566A5 8B55EC                  mov edx, dword ptr [ebp-14]
+:004566A8 6A01                    push 00000001
+:004566AA 5E                      pop esi
+:004566AB 8D45D8                  lea eax, dword ptr [ebp-28]
+:004566AE 50                      push eax
+:004566AF 8BCB                    mov ecx, ebx
+:004566B1 8935D4AD6E00            mov dword ptr [006EADD4], esi
+:004566B7 E866D0FAFF              call 00403722
+:004566BC 85C0                    test eax, eax
+:004566BE 7428                    je 004566E8
+
+
+* Reference To: KERNEL32.GetComputerNameA, Ord:00AEh
+:00456C50 FF15C8904800            Call dword ptr [004890C8]
+
+:00456C56 8B5508                  mov edx, dword ptr [ebp+08]
+:00456C59 8D45E4                  lea eax, dword ptr [ebp-1C]
+:00456C5C 50                      push eax
+:00456C5D 8BCB                    mov ecx, ebx
+:00456C5F FF750C                  push [ebp+0C]
+:00456C62 E8ACCCFAFF              call 00403913
+:00456C67 8B55FC                  mov edx, dword ptr [ebp-04]
+:00456C6A 33C9                    xor ecx, ecx
+:00456C6C E8B6F5FFFF              call 00456227
+:00456C71 85C0                    test eax, eax
+:00456C73 750B                    jne 00456C80
+* Possible StringData Ref from Data Obj ->"Unable to write to save file archive"
+:00456C75 68745B4B00              push 004B5B74
+:00456C7A E8E6ACFAFF              call 00401965
+:00456C7F 59                      pop ecx

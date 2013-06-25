@@ -1,0 +1,85 @@
+Guardian
+
+
+
+* Referenced by a CALL at Addresses:
+|:00438034   , :0043805F   , :00438084   , :004380A9   
+|
+:004358C1 55                      push ebp
+:004358C2 8BEC                    mov ebp, esp
+:004358C4 51                      push ecx
+:004358C5 51                      push ecx
+:004358C6 53                      push ebx
+:004358C7 56                      push esi
+:004358C8 8BF1                    mov esi, ecx
+:004358CA 57                      push edi
+:004358CB 8975F8                  mov dword ptr [ebp-08], esi
+:004358CE 69F6B0000000            imul esi, 000000B0
+:004358D4 FF7508                  push [ebp+08]
+:004358D7 8B8E5C7A6900            mov ecx, dword ptr [esi+00697A5C]
+:004358DD 8BDA                    mov ebx, edx
+:004358DF 33FF                    xor edi, edi
+:004358E1 8B96607A6900            mov edx, dword ptr [esi+00697A60]
+:004358E7 53                      push ebx
+:004358E8 E8DAE60000              call 00443FC7
+:004358ED 85C0                    test eax, eax
+:004358EF 0F8488000000            je 0043597D
+:004358F5 8BC3                    mov eax, ebx
+:004358F7 6BC070                  imul eax, 00000070
+:004358FA 034508                  add eax, dword ptr [ebp+08]
+:004358FD 8B0485E0D15700          mov eax, dword ptr [4*eax+0057D1E0]
+:00435904 85C0                    test eax, eax
+:00435906 7E75                    jle 0043597D
+:00435908 8BC8                    mov ecx, eax
+:0043590A 69C9E4000000            imul ecx, 000000E4
+:00435910 F78138DC6900C0FFFFFF    test dword ptr [ebx+0069DC38], FFFFFFC0
+:0043591A 7E61                    jle 0043597D
+:0043591C 48                      dec eax
+:0043591D 83F803                  cmp eax, 00000003
+:00435920 7E5B                    jle 0043597D
+:00435922 FF7508                  push [ebp+08]
+:00435925 8B96607A6900            mov edx, dword ptr [esi+00697A60]
+:0043592B 8B8E5C7A6900            mov ecx, dword ptr [esi+00697A5C]
+:00435931 53                      push ebx
+:00435932 E88345FEFF              call 00419EBA
+:00435937 8945FC                  mov dword ptr [ebp-04], eax
+:0043593A A160786900              mov eax, dword ptr [00697860]
+:0043593F 8DBECC7A6900            lea edi, dword ptr [esi+00697ACC]
+:00435945 6A01                    push 00000001
+:00435947 8986F07A6900            mov dword ptr [esi+00697AF0], eax
+:0043594D 5A                      pop edx
+:0043594E 8B0F                    mov ecx, dword ptr [edi]
+:00435950 E80097FFFF              call 0042F055
+:00435955 8B96607A6900            mov edx, dword ptr [esi+00697A60]
+:0043595B 8B8E5C7A6900            mov ecx, dword ptr [esi+00697A5C]
+:00435961 50                      push eax
+:00435962 FFB6D47A6900            push dword ptr [esi+00697AD4]
+:00435968 FF37                    push dword ptr [edi]
+:0043596A 6A00                    push 00000000
+:0043596C 6A01                    push 00000001
+:0043596E FF75FC                  push [ebp-04]
+:00435971 FF7508                  push [ebp+08]
+:00435974 53                      push ebx
+:00435975 E8B5FDFFFF              call 0043572F
+:0043597A 83CFFF                  or edi, FFFFFFFF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004358EF(C), :00435906(C), :0043591A(C), :00435920(C)
+|
+:0043597D 83FFFF                  cmp edi, FFFFFFFF
+:00435980 7515                    jne 00435997
+:00435982 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00435985 6A02                    push 00000002
+:00435987 5A                      pop edx
+:00435988 E8F9A0FFFF              call 0042FA86
+:0043598D C786EC7A690003000000    mov dword ptr [esi+00697AEC], 00000003
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00435980(C)
+|
+:00435997 8BC7                    mov eax, edi
+:00435999 5F                      pop edi
+:0043599A 5E                      pop esi
+:0043599B 5B                      pop ebx
+:0043599C C9                      leave
+:0043599D C20400                  ret 0004

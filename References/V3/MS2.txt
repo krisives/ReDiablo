@@ -1,0 +1,141 @@
+Mana shield - Update effect
+
+
+()Herstel originele update:
+
+:00435CD9 E8A8C30100              call 0045208E         UPDATE_MANASHIELD
+:00435CDE C3                      ret
+:00435CDF 9090909090              5xnop
+wordt weer
+:00435CD9 C7054CD0690001000000    mov dword ptr [0069D04C], 00000001
+:00435CE3 C3                      ret
+
+
+
+()Call UPDATE_MANASHIELD vlak na ConstantlyLoseLife:
+
+:0045DC33 A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:0045DC33 E85644FFFF              call 0045208E         UPDATE_MANASHIELD
+
+
+
+()Changes to UPDATE_MANASHIELD:
+
+:0045208E 50                      push eax
+:0045208F 51                      push ecx
+:00452090 57                      push edi
+:00452091 52                      push edx
+:00452092 53                      push ebx
+:00452093 6A01                    push 00000001
+:00452095 58                      pop eax
+:00452096 A34CD06900              mov dword ptr [0069D04C], eax
+wordt
+:0045208E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452093 50                      push eax
+:00452094 51                      push ecx
+:00452095 57                      push edi
+:00452096 52                      push edx
+:00452097 53                      push ebx
+:00452098 6A01                    push 00000001
+:0045209A 58                      pop eax
+
+Waarschijnlijk is UPDATE_MANASHIELD nu verder te vereenvoudigen, aangezien voor de LifeDrain al een en ander opgezet is, maar laten we dit eerst testen.
+
+
+Hieronder volgt wat achtergrondinformatie.
+
+
+MS-drain routine:
+
+:0045208E 50                      push eax
+:0045208F 51                      push ecx
+:00452090 57                      push edi
+:00452091 52                      push edx
+:00452092 53                      push ebx
+:00452093 6A01                    push 00000001
+:00452095 58                      pop eax
+:00452096 A34CD06900              mov dword ptr [0069D04C], eax
+:0045209B BA68766900              mov edx, 00697668
+:004520A0 33DB                    xor ebx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004520FF(C)
+|
+:004520A2 8B3A                    mov edi, dword ptr [edx]
+:004520A4 69FFB0000000            imul edi, 000000B0
+:004520AA 83BF587A69000D          cmp dword ptr [edi+00697A58], 0000000D
+:004520B1 7542                    jne 004520F5
+:004520B3 8B8FCC7A6900            mov ecx, dword ptr [edi+00697ACC]
+:004520B9 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004520BF 7534                    jne 004520F5
+:004520C1 6A01                    push 00000001
+:004520C3 58                      pop eax
+:004520C4 A30C114D00              mov dword ptr [004D110C], eax
+:004520C9 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:004520CF 69C9C8550000            imul ecx, 000055C8
+:004520D5 8B8439AC010000          mov eax, dword ptr [ecx+edi+000001AC]
+:004520DC 83F800                  cmp eax, 00000000
+:004520DF 7C14                    jl 004520F5
+:004520E1 C1E80D                  shr eax, 0D
+:004520E4 40                      inc eax
+:004520E5 298439AC010000          sub dword ptr [ecx+edi+000001AC], eax
+:004520EC 298439A4010000          sub dword ptr [ecx+edi+000001A4], eax
+:004520F3 EB0C                    jmp 00452101
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004520B1(C), :004520BF(C), :004520DF(C)
+|
+:004520F5 43                      inc ebx
+:004520F6 83C204                  add edx, 00000004
+:004520F9 3B1D48D06900            cmp ebx, dword ptr [0069D048]
+:004520FF 7CA1                    jl 004520A2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004520F3(U)
+|
+:00452101 5B                      pop ebx
+:00452102 5A                      pop edx
+:00452103 5F                      pop edi
+:00452104 59                      pop ecx
+:00452105 58                      pop eax
+:00452106 C3                      ret
+
+
+
+ConstantlyLoseLife:
+
+:0045DBD2 3B2DE8AD6E00            cmp ebp, dword ptr [006EADE8]
+:0045DBD8 0F8592000000            jne 0045DC70			jmp if not current char (?)
+:0045DBDE A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DBE3 03C6                    add eax, esi
+:0045DBE5 F6804055000040          test byte ptr [eax+00005540], 40
+:0045DBEC 7445                    je 0045DC33			jmp if no drain
+:0045DBEE 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045DBF5 743C                    je 0045DC33			jmp if in town
+:0045DBF7 838098010000FC          add dword ptr [eax+00000198], FFFFFFFC
+:0045DBFE A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC03 83843090010000FC        add dword ptr [eax+esi+00000190], FFFFFFFC
+:0045DC0B 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:0045DC12 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC17 F7843098010000C0FFFFFF  test dword ptr [eax+esi+00000198], FFFFFFC0
+:0045DC22 7F09                    jg 0045DC2D			jmp if still alive
+:0045DC24 33D2                    xor edx, edx
+:0045DC26 8BCD                    mov ecx, ebp
+:0045DC28 E8AACFFFFF              call 0045ABD7			
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045DC22(C)
+|
+:0045DC2D 891D400E4D00            mov dword ptr [004D0E40], ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045DBEC(C), :0045DBF5(C)
+|								
+:0045DC33 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC38 F684304355000008        test byte ptr [eax+esi+00005543], 08
+:0045DC40 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0045DC43 742B                    je 0045DC70			jmp if no corruption
+:0045DC45 8B81A4010000            mov eax, dword ptr [ecx+000001A4]
+enz.
+

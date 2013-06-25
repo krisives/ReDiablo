@@ -1,0 +1,117 @@
+Escape spell (see Phasing.txt for more information)
+
+
+Increased maximum and decreased minimum jump range: 4+Rnd[3] is now 3+Rnd[7]
+
+File offset 00030993
+
+:00431593 6A03                    push 00000003
+changed into
+:00431593 6A07                    push 00000007
+
+File offset 000309A1
+
+:004315A1 6A03                    push 00000003
+:004315A3 83C704                  add edi, 00000004
+changed into
+:004315A1 6A07                    push 00000007
+:004315A3 83C703                  add edi, 00000003
+
+File offset 000309B2
+
+:004315B2 83C604                  add esi, 00000004
+changed into
+:004315B2 83C603                  add esi, 00000003
+
+
+Increased number of tries to improve reliability: 500 is now 900
+
+File offset 00030A22
+
+:00431622 817DFCF4010000          cmp dword ptr [ebp-04], 000001F4
+changed into
+:00431622 817DFC84030000          cmp dword ptr [ebp-04], 00000384
+
+
+Adding check to prevent jumps into unknown locations:
+
+File offset 00030A09
+
+:00431609 6BC070                  imul eax, 00000070
+:0043160C 03C6                    add eax, esi
+changed into
+:00431609 E95FBE0000              jmp 0043D46D
+:0043160E 
+
+Using old free space:
+
+File offset 0003C86D
+
+:0043D46D 83F909                  cmp ecx, 00000009
+:0043D470 7F12                    jg 0043D484
+:0043D472 50                      push eax
+:0043D473 51                      push ecx
+:0043D474 E8C80E0000              call 0043E341
+:0043D479 83F832                  cmp eax, 00000032
+:0043D47C 7D02                    jge 0043D480
+:0043D47E 33C0                    xor eax, eax
+:0043D480 85C0                    test eax, eax
+:0043D482 59                      pop ecx
+:0043D483 58                      pop eax
+:0043D484 C3                      ret
+changed into
+:0043D46D 6BC070                  imul eax, 00000070
+:0043D470 03C6                    add eax, esi
+:0043D472 F6800069610002          test byte ptr [eax+00616900], 02
+:0043D479 0F84A041FFFF            je 0043161F					jmp if location not in light-radius of character
+:0043D47F E98A41FFFF              jmp 0043160E
+:0043D484 90                      nop
+
+Disabling old obsolete call:
+
+File offset 0005AF41
+
+:0045BB41 E82C19FEFF              call 0043D472
+changed into
+:0045BB41 9090909090              5*nop
+
+
+The following is to ensure nothing really happens when no valid location can be found. Without this, characters may be transported to coordinates 0,0 and get stuck there.
+
+File offset 00030AAF
+
+:004316AF 385D18                  cmp byte ptr [ebp+18], bl
+:004316B2 89B85C7A6900            mov dword ptr [eax+00697A5C], edi
+:004316B8 89B0607A6900            mov dword ptr [eax+00697A60], esi
+:004316BE 750B                    jne 004316CB					skip Mana/Charge cost if from Shrine (obsolete)
+:004316C0 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004316C3 6A0A                    push 0000000A
+changed into
+:004316AF E97DDBFFFF              jmp 0042F231
+:004316B4 89B85C7A6900            mov dword ptr [eax+00697A5C], edi
+:004316BA 89B0607A6900            mov dword ptr [eax+00697A60], esi
+:004316C0 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004316C3 6A19                    push 00000019
+
+
+Using free space from Attackroutines42L:
+
+File offset 0002E631
+
+:0042F231 837DF800                cmp dword ptr [ebp-08], 00000000
+:0042F235 740D                    je 0042F244					skip if not resisted
+:0042F237 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0042F23A 6A01                    push 00000001
+:0042F23C 5A                      pop edx
+:0042F23D E8AE91FEFF              call 004183F0					play sound (no stun)
+:0042F242 EB2F                    jmp 0042F273
+changed into
+:0042F231 85FF                    test edi, edi
+:0042F233 750A                    jne 0042F23F
+:0042F235 85F6                    test esi, esi
+:0042F237 7506                    jne 0042F23F
+:0042F239 8B7DF4                  mov edi, dword ptr [ebp-0C]			original coordinate
+:0042F23C 8B7508                  mov esi, dword ptr [ebp+08]			original coordinate
+:0042F23F E970240000              jmp 004316B4
+:0042F244
+

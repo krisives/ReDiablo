@@ -1,0 +1,18 @@
+()Melee Player vs. Player : Friendly Hit enabled
+
+Melee test: 5e poging 
+
+:0045C300 833D5C53490000          cmp dword ptr [0049535C], 00000000	0 = PvP on
+:0045C307 7519                    jne 0045C322
+
+:0045C307 7519                    jne 0045C322
+wordt
+:0045C307 7500                    jne 0045C309
+
+Dit werkt!
+
+
+:00437BEE 8BCF                    mov ecx, edi		ecx = charnr.
+:00437BF0 6A00                    push 00000000
+:00437BF2 8BD3                    mov edx, ebx		edx = damage
+:00437BF4 E84F220200              call 00459E48		do stun

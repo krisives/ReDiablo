@@ -1,0 +1,31 @@
+Rainbow Elixir gives 3 free spendable points instead of 2 to each attribute:
+
+file offset 0002943C
+
+:0042A03C 6A02                    push 00000002
+:0042A03E 8BCE                    mov ecx, esi
+:0042A040 5B                      pop ebx
+:0042A041 8BD3                    mov edx, ebx
+:0042A043 E844460300              call 0045E68C
+:0042A048 8BD3                    mov edx, ebx
+:0042A04A 8BCE                    mov ecx, esi
+:0042A04C E8D3460300              call 0045E724
+:0042A051 8BD3                    mov edx, ebx
+:0042A053 8BCE                    mov ecx, esi
+:0042A055 E8C8470300              call 0045E822
+:0042A05A 8BD3                    mov edx, ebx
+:0042A05C 8BCE                    mov ecx, esi
+:0042A05E E857480300              call 0045E8BA
+changed into
+:0042A03C 8BCE                    mov ecx, esi
+:0042A03E E85CE20200              call 0045829F
+:0042A043 83F803                  cmp eax, 00000003
+:0042A046 7E03                    jle 0042A04B
+:0042A048 6A03                    push 00000003
+:0042A04A 58                      pop eax
+:0042A04B 018184010000            add dword ptr [ecx+00000184], eax
+:0042A051 EB10                    jmp 0042A063
+:0042A053 ...
+
+Now 16 bytes free space from 0042A053 to 0042A063.
+

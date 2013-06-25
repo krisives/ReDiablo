@@ -1,0 +1,250 @@
+Sounds in The Dark:
+
+Nr.	WavPtr.		Name		Note
+
+
+Sfx\Items
+
+
+
+Sfx\Misc
+
+not in exe		caldron		cauldron-sound (nicer then bldboil)
+
+?			fmag		loud end of search
+
+
+04D			blank		no sound
+04E			trap		trap firing
+04F			cast1		* sort of lightning
+050			cast10		part of warp
+051			cast12		*
+052			cast2		as 12
+053			cast3		* very strange
+054			cast4		lightning, long
+055			cast5		* strange
+056			cast6		telekinese (?)
+057			cast7		soft end of search
+058			cast8		original healing/healother
+059			cast9		* somewhat like 3
+05A			healing		new healing
+05B			repair		repair
+05C			acids1
+05D			acids2
+05E			apoc		apoc
+05F			arrowall	no sound
+060			bldboil		cauldron-like with static
+061			blodstar	*
+062			blsimpt		very soft
+063			bonesp		bonespirit
+064			bsimpct		part of doomserpents and bonespirit
+065			portal
+066			cbolt		charged bolt
+067			chltning	*		-> New Lightning Blast
+068			dserp		part of doomserpents
+069			elecimp1	lightning, short
+06A			elementl	teleport-arrival
+06B			ethereal	invincibility, part of warp, telekinese
+06C			fball		fireball impact
+06D			fbolt1		firebolt cast
+06E			fbolt2		firebolt cast
+06F			firimp1		soft fireball impact
+070			firimp2		soft impact used for Liches, ed.
+071			flamwave	flame wave
+072			flash		*
+073			fountain	BloodFountain, PurifyingSpring and MurkyPool
+074			golum		raising golem
+075			golumded	*
+076			gshrine		shrine	
+077			guard		raising guardian
+078			grdlanch	*
+079			holybolt	holybolt
+07A			hyper		* 
+07B			infravis	seeing
+07C			invisibl	*
+07D			invpot		potion in inventory		
+07E			lning1
+07F			ltning
+080			mshield		manashield,reflect
+081			nestxpld	opening Nest
+082			nova		nova
+083			portal		crucified skeleton
+084			puddle		acid puddle
+085			resur		*
+086			scurse		very soft
+087			scurimp		as scurse
+088			sentinel	townportal
+089			shatter		*
+08A			soulfire	like firing HolyBolt
+08B			spoutlop	lightning
+08C			spoutstr	lightning
+08D			storm		*
+08E			trapdis		trap disarm
+08F			teleport	blink
+090			vtheft		soft laugh
+091			walloop		fire
+092			wallstr		fire
+093			lmag
+
+
+Sfx\Rogue
+
+			rogue58		all too easy
+			rogue59		back to the grave
+2A8			rogue60		time to die
+2A9			rogue61		i'm not impressed
+			rogue62		sorry, did i break your concentration
+
+Sfx\Monk
+
+			monk01		Chamber of Bone book
+			monk08		Your death will be avenged		
+			monk09		Rest in peace, my friend		
+			monk10		Valor book
+			monk11		Halls of Blind book
+			monk12		Warlord book
+			monk13		I cannot use this ... yet
+353			monk14		full inventory
+354			monk15		full inventory
+355			monk16		full inventory
+			monk24		I cannot open this ... yet		
+			monk27		I cannot cast that here		
+			monk29		That did not do anything		
+			monk34		I do not have a spell ready
+			monk35		Not enough mana
+			monk43		I cannot get there from here
+373			monk46		Just what I was looking for
+			monk49		I am not thirsty
+			monk50		I am no milkmaid
+			monk52		Yes, that is a cow alright
+			monk54		In spiritum sanctum
+			monk55		Predictum otium
+			monk56		Efficio ...
+			monk55		Predictum otium
+			monk61		I am not impressed
+			monk62		I am sorry, did I break your concentration?
+			monk68		Burning cross hurts
+			monk69		getting hit
+			monk69b		getting hit
+			monk70		dying
+			monk71		dying
+395			monk79		Aha
+			monk80		The spirits of the dead are now avenged
+			monk82		Rest well, L'oric, I'll find your son
+			monk83		Your madness ends here, betrayer
+39D			monk87		This must be what Grizwold wanted
+39E			monk88		I need to get this to Lachdanan
+39F			monk89		I need to get this to Grizwold
+3A1			monk91		May the spirit of Arkaine protect me
+3A2			monk92		This is a place of great power
+3A4			monk94		Your reign of pain has ended
+3A5			monk95		Now that is a big mushroom
+3A6			monk96		entering Catacombs
+3A7			monk97		entering Church 
+3A8			monk98		entering Caves
+3A9	0049A224	monk99		entering Hell
+
+Sfx\
+
+3AA	0049F1E8	blank
+3AB	0049F1E8	blank
+3AC	0049F1E8	blank
+
+Sfx\Narrator				
+
+3AD	0049A20C	nar01		Horadrim story
+3AE	0049A1F4	nar02		Horadrim story
+3AF	0049A1DC	nar03		Horadrim story
+3B0	0049A1C4	nar04		Horadrim story
+3B1	0049A1AC	nar05		Horadrim story
+3B2	0049A194	nar06		Horadrim story
+3B3	0049A17C	nar07		Horadrim story
+3B4	0049A164	nar08		Horadrim story
+3B5	0049A14C	nar09		Horadrim story
+
+Sfx\Monsters
+
+3B6	0049A132	wlock01		used as lvl16 intro
+3B7	0049A118	butcher		activation of Butcher
+3B8	0049A0FC	garbud01	
+3B9	0049A0E0	garbud02
+3BA	0049A0C4	garbud03
+3BB	0049A0A8	garbud04	Gharbad activation (in MP)
+3BC	0049A08C	diablod		used as Ghost death
+3BD	0049A074	lach01
+3BE	0049A05C	lach02
+3BF	0049A044	lach03
+3C0	0049A02C	laz01
+3C1	0049A014	laz02
+3C2	00499FF8	sking01		Leoric activation
+3C3	00499FE0	snot01
+3C4	00499FC8	snot02
+3C5	00499FB0	snot03
+3C6	00499F94	warlrd01	Warlord activation
+3C7	00499F78	nakrul2		previous Diablo activation 
+3C8	00499F60	zhar01		Zhar activation
+3C9	00499F48	zhar02
+3CA	00499F2C	lvl16int	used as Diablo death
+
+Sfx\Hellfire
+
+3CB	00499F10	farmer1
+3CC	00499EF4	farmer2
+3CD	00499ED8	farmer2A
+3CE	00499EBC	farmer3
+3CF	00499EA0	farmer4
+3D0	00499E84	farmer5
+3D1	00499E68	farmer6
+3D2	00499E4C	farmer7
+3D3	00499E30	farmer8
+3D4	00499E14	farmer9
+3D5	00499DF8	teddybr1
+3D6	00499DDC	teddybr2
+3D7	00499DC0	teddybr3
+3D8	00499DA4	teddybr4
+3D9	00499D88	defiler1	not exist
+3DA	00499D6C	defiler2	unused ("Been enjoying? How pathetic ...")
+3DB	00499D50	defiler3	not exist
+3DC	00499D34	defiler4	unused ("I can smell you ...")
+3DD	00499D18	defiler8	Defiler activation (empty txt!)
+3DE	00499CFC	defiler6	entering a Nest level ("We have lain dormant ...")
+3DF	00499CE0	defiler7	entering a Nest level ("These lands shall be ...")
+3E0	00499C38	Nakruls1
+3E1	00499C70	Nakruls2
+3E2	00499C38	Nakruls1
+3E3	00499C70	Nakruls2
+3E4	00499C70	Nakruls2	Diablo activation
+3E5	00499C38	Nakruls1	Dark Ghost activation
+3E6	00499C1C	naratr3		unused (Cornerstone "And in the year of the ...")
+3E7	00499C00	cowsut1
+3E8	00499BE4	cowsut2
+3E9	00499BC8	cowsut3
+3EA	00499BAC	cowsut4
+3EB	00499B90	cowsut4A
+3EC	00499B74	cowsut5
+3ED	00499B58	cowsut6
+3EE	00499B3C	cowsut7
+3EF	00499B20	cowsut8
+3F0	00499B04	cowsut9
+3F1	00499AE8	cowsut10
+3F2	00499ACC	cowsut11
+3F3	00499AB0	cowsut12
+3F4	00499A94	skljrn1		?
+3F5	00499A78	naratr6		J: The Tirade "I have tried spells, threats ..."
+3F6	00499A5C	naratr7		J: His Power Grows "My home is slowly becoming ..."
+3F7	00499A40	naratr8		J: NA-KRUL "It is ranting, the creature has ..."
+3F8	00499A24	naratr5		J: The Meeting "The entrapped creature ..."
+3F9	00499A08	naratr9		J: The End "My time is quickly running out ..."
+3FA	004999EC	naratr4		unused (J: The Ensorcellment - Reconstructed note)
+3FB	004999D0	trader1		
+3FC	004999B8	cropen
+3FD	004999A0	crclos
+
+
+			witch06		about Andariel
+			witch09		about Izual
+			witch17		about Fleshdoom
+			witch18		about Warlord of Blood
+			
+			tavown07	about Izual
+			

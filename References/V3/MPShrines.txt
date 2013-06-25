@@ -1,0 +1,218 @@
+Affecting all players for several shrines, and other small changes
+
+
+Magical Shrine
+
+Gives Barrier, not Manashield, to all characters on the same dungeonlevel.
+
+File Offset 00051093
+
+:00451C93 8B75FC                  mov esi, dword ptr [ebp-04]
+:00451C96 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451C9C 0FB63DD4B16000          movzx edi, byte ptr [0060B1D4]
+:00451CA3 8BC6                    mov eax, esi
+wordt
+:00451C93 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451C99 0FB63DD4B16000          movzx edi, byte ptr [0060B1D4]
+:00451CA0 E825000000              call 00451CCA
+
+File Offset 000510B9
+
+:00451CB9 6A0D                    push 0000000D
+wordt
+:00451CB9 6A4F                    push 0000004F
+
+File Offset 000510C8
+
+:00451CC8 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00451CCE 0F8598130000            jne 0045306C
+wordt
+:00451CC8 EB0A                    jmp 00451CD4
+:00451CCA E8C50D0000              call 00452A94
+:00451CCF 8BC6                    mov eax, esi
+:00451CD1 C3                      ret
+:00451CD2 9090                    2*nop
+
+
+Stone Shrine
+
+Restores charges in all staves from all characters on the same dungeonlevel.
+
+File Offset 000510E3
+
+:00451CE3 8B45FC                  mov eax, dword ptr [ebp-04]
+:00451CE6 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00451CEC 0F854E130000            jne 00453040
+wordt
+:00451CE3 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451CE8 90909090909090909090	  10*nop
+
+
+Religious Shrine
+
+Repairs all items for all characters on same dungeonlevel.
+
+File Offset 00051198
+
+:00451D98 8B45FC                  mov eax, dword ptr [ebp-04]
+:00451D9B 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00451DA1 0F8599120000            jne 00453040
+wordt
+:00451D98 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451D9D 90909090909090909090	  10*nop
+
+
+Enchanted Shrine
+
+Affects spells of all players. Helps keeping Spellbooks wanted.
+
+File Offset 00051234
+
+:00451E34 8B45FC                  mov eax, dword ptr [ebp-04]
+:00451E37 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00451E3D 0F8529120000            jne 0045306C
+wordt
+:00451E34 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451E39 90909090909090909090	  10*nop
+
+
+Cryptic Shrine
+
+Casts Immolation, not Nova, and restores Mana for all characters on the same dungeonlevel.
+
+File Offset 00051540
+
+:00452140 6A2A                    push 0000002A
+wordt
+:00452140 6A48                    push 00000048
+
+File Offset 0005154C
+
+:0045214C 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00452152 0F85140F0000            jne 0045306C
+wordt
+:0045214C 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:00452152 69F6C8550000            imul esi, 000055C8
+
+
+Eldritch Shrine
+
+Affects all potions of all players on the same dungeonlevel.
+
+File Offset 0005158D
+
+:0045218D 8B45FC                  mov eax, dword ptr [ebp-04]
+:00452190 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00452196 0F85A40E0000            jne 00453040
+wordt
+:0045218D A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452192 90909090909090909090	  10*nop
+
+
+Holy Shrine
+
+Blinks all players to the same spot.
+
+File Offset 00051956
+
+:00452556 8B75FC                  mov esi, dword ptr [ebp-04]
+:00452559 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0045255F 8BCE                    mov ecx, esi
+wordt
+:00452556 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0045255C E83B090000              call 00452E9C
+
+
+Spiritual Shrine
+
+Gives Gold to every character on the same dungeonlevel.
+
+File Offset 00051AD9
+
+:004526D9 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:004526DC 3B1DE8AD6E00            cmp ebx, dword ptr [006EADE8]
+:004526E2 0F8584090000            jne 0045306C
+wordt
+:004526D9 8B1DE8AD6E00            mov ebx, dword ptr [006EADE8]
+:004526E0 909090909090909090	  9*nop
+
+
+Spooky Shrine
+
+Gives Mendicants effect to user (while Mendicants moved to SP), for more difference with Shimmering Shrine.
+
+File Offset 00051BEE
+
+:004527EE E96E030000              jmp 00452B61
+wordt
+:004527EE E958050000              jmp 00452D4B
+
+
+Glimmering Shrine
+
+Identifies all items for all characters on dungeonlevel, not only for user.
+
+File Offset 00051E8C
+
+:00452A8C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00452A8F 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:00452A95 0F85D1050000            jne 0045306C
+wordt
+:00452A8C 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452A92 EB07                    jmp 00452A9B
+:00452A94 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:00452A9A C3			  ret
+
+
+Oily Shrine
+
+Gives Ring of Fire, not small Firetrap. Being very useful, this Shrine is not shared.
+
+File Offset 000520AF
+
+:00452CAF 6A05                    push 00000005
+wordt
+:00452CAF 6A51                    push 00000051
+
+
+Shimmering Shrine
+
+Restores Life and Mana for all characters on dungeonlevel.
+
+File Offset 00052295
+
+:00452E95 8B75FC                  mov esi, dword ptr [ebp-04]
+:00452E98 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00452E9E 0F85C8010000            jne 0045306C
+wordt
+:00452E95 E8FAFBFFFF              call 00452A94
+:00452E9A EB08                    jmp 00452EA4
+:00452E9C E8F3FBFFFF              call 00452A94
+:00452EA1 8BCE                    mov ecx, esi
+:00452EA3 C3			  ret
+
+
+Murphy's Shrine
+
+Affects all players on the same dungeonlevel, using lesser chances (1:2 -> 1:6) to damage items, but taking all gold, not 1/3, if all items are left undamaged.
+
+File Offset 00052396
+
+:00452F96 8B45FC                  mov eax, dword ptr [ebp-04]
+:00452F99 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00452F9F 0F85C7000000            jne 0045306C
+wordt
+:00452F96 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452F9B 90909090909090909090	  10*nop
+
+File Offset 000523D2
+
+:00452FD2 6A02                    push 00000002
+wordt
+:00452FD2 6A06                    push 00000006
+
+File Offset 0005242C
+
+:0045302C 6A03                    push 00000003
+wordt
+:0045302C 6A01                    push 00000001

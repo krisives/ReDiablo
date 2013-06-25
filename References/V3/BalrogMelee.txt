@@ -1,0 +1,13 @@
+Balrog Melee
+
+Als een Balrog-type monster in aanmerking komt voor een melee aanval, nadat bepaald is dat er geen Inferno gedaan wordt, is er nog 50% kans (onafhankelijk van subtype of andere zaken) dat het monster ervan afziet, en dus niets doet.
+
+Onderstaande verwijdert dit feature. Het voorkomt niet dat monsters op melee range een Inferno doen.
+
+File Offset 00041538
+
+:00442138 85C0                    test eax, eax		eax is rnd[2] hier
+:0044213A 740A                    je 00442146
+word
+:00442138 9090                    2*nop
+:0044213A 9090                    2*nop

@@ -1,0 +1,165 @@
+Spell speeds in The Dark
+
+
+-Determine origine spell : monster, trap or player
+
+:004370B0 51                      push ecx
+:004370B1 53                      push ebx
+:004370B2 55                      push ebp
+:004370B3 8BD9                    mov ebx, ecx
+:004370B5 56                      push esi
+:004370B6 8BF3                    mov esi, ebx
+:004370B8 57                      push edi
+:004370B9 69F6B0000000            imul esi, 000000B0
+:004370BF 895C2410                mov dword ptr [esp+10], ebx
+:004370C3 FF8EC87A6900            dec dword ptr [esi+00697AC8]
+:004370C9 8B86CC7A6900            mov eax, dword ptr [esi+00697ACC]
+:004370CF 83F8FF                  cmp eax, FFFFFFFF
+:004370D2 7469                    je 0043713D				jmp if trap
+:004370D4 83BED07A690000          cmp dword ptr [esi+00697AD0], 00000000
+:004370DB 7530                    jne 0043710D				jmp if monster
+:004370DD 69C0C8550000            imul eax, 000055C8
+:004370E3 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]		character
+:004370E9 0FBE9408B8010000        movsx edx, byte ptr [eax+ecx+000001B8]
+
+Bij nader inzien blijkt dit voor Bloodstar, Fireball en Firebolt niet zo op te gaan, helaas.
+
+
+
+-Bloodstar speed (24 ipv 20 ipv 16) 
+
+Voor Witches, Fireclan-boss en player. Variable bloodstar is moeilijk (bovenstaande code niet te vinden hier), en misschien niet echt nodig. Ter compensatie opgehoogd naar 24.
+
+:00433781 6A14                    push 00000014 
+
+wordt:
+
+:00433781 6A18                    push 00000018
+
+
+-Fireball speed
+
+:00431DCA 55                      push ebp
+:00431DCB 8BEC                    mov ebp, esp
+:00431DCD 51                      push ecx
+:00431DCE 53                      push ebx
+:00431DCF 56                      push esi
+:00431DD0 8B750C                  mov esi, dword ptr [ebp+0C]
+:00431DD3 8BDA                    mov ebx, edx
+:00431DD5 57                      push edi
+:00431DD6 8B7D08                  mov edi, dword ptr [ebp+08]
+:00431DD9 3BDE                    cmp ebx, esi
+:00431DDB 894DFC                  mov dword ptr [ebp-04], ecx
+:00431DDE 751F                    jne 00431DFF
+:00431DE0 8B5510                  mov edx, dword ptr [ebp+10]
+:00431DE3 3BFA                    cmp edi, edx
+:00431DE5 7518                    jne 00431DFF
+:00431DE7 8B4514                  mov eax, dword ptr [ebp+14]
+:00431DEA C1E002                  shl eax, 02
+:00431DED 03B088BE4A00            add esi, dword ptr [eax+004ABE88]
+:00431DF3 0390A8BE4A00            add edx, dword ptr [eax+004ABEA8]
+:00431DF9 89750C                  mov dword ptr [ebp+0C], esi
+:00431DFC 895510                  mov dword ptr [ebp+10], edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00431DDE(C), :00431DE5(C)
+|
+:00431DFF 807D1800                cmp byte ptr [ebp+18], 00
+:00431E03 0F8589000000            jne 00431E92
+
+:00431E**			  get player damage (niet belangrijk hier)
+
+:00431E70 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00431E76 8D740010                lea esi, dword ptr [eax+eax+10]
+:00431E7A 83FE32                  cmp esi, 00000032
+:00431E7D 7E03                    jle 00431E82
+:00431E7F 6A32                    push 00000032
+:00431E81 5E                      pop esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00431E7D(C)
+|
+:00431E82 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00431E85 6A0C                    push 0000000C
+:00431E87 5A                      pop edx
+:00431E88 E86FA10300              call 0046BFFC
+:00431E8D 8B7D08                  mov edi, dword ptr [ebp+08]
+:00431E90 EB03                    jmp 00431E95
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00431E03(C)
+|
+:00431E92 6A10                    push 00000010
+:00431E94 5E                      pop esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00431E90(U)
+|
+:00431E95 56                      push esi
+:00431E96 8B75FC                  mov esi, dword ptr [ebp-04]
+:00431E99 FF7510                  push [ebp+10]
+:00431E9C 8BD3                    mov edx, ebx
+:00431E9E 8BCE                    mov ecx, esi
+:00431EA0 FF750C                  push [ebp+0C]
+:00431EA3 57                      push edi
+:00431EA4 E8B8E7FFFF              call 00430661
+
+Voor aan grote wijzingen te beginnen, zou ik willen testen met een vaste speed van bijv. 50 (lekker opvallend, maximaal), of iets heel laags zoals 8. 
+
+Dus:
+
+:00431E92 6A32                    push 00000032
+
+
+
+
+Firebolt speed
+
+:0043189B 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043189E 69C0B0000000            imul eax, 000000B0
+:004318A4 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:004318AA 8D440010                lea eax, dword ptr [eax+eax+10]
+:004318AE 83F83F                  cmp eax, 0000003F
+:004318B1 7C0B                    jl 004318BE
+:004318B3 6A3F                    push 0000003F
+:004318B5 EB06                    jmp 004318BD
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00431899(C)
+|
+:004318B7 6A10                    push 00000010
+:004318B9 EB02                    jmp 004318BD
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00431834(C)
+|
+:004318BB 6A1A                    push 0000001A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004318B5(U), :004318B9(U)
+|
+:004318BD 58                      pop eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004318B1(C)
+|
+:004318BE 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004318C1 50                      push eax
+:004318C2 56                      push esi
+:004318C3 53                      push ebx
+:004318C4 FF7508                  push [ebp+08]
+:004318C7 8BD7                    mov edx, edi
+:004318C9 E893EDFFFF              call 00430661
+
+Nu: monsters 26, traps 16, player 16+slvl*2 (max 63)
+
+Voorstel: monsters 32, traps 20
+
+:004318B7 6A14                    push 00000014
+
+:004318BB 6A20                    push 00000020
+
+
+
+
+

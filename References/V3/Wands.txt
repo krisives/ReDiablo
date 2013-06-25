@@ -1,0 +1,51 @@
+Implemented in 36MTest
+
+
+
+   Search for string NUSDBAMHT in your hexeditor.
+   Add the letter H at the end so the string will become NUSDBAMHTH.
+
+   Additionally change at offset 56DC7: 85 -> 8E 
+
+:004579C6 0F8587020000            jne 00457C53
+wordt
+:004579C6 0F8E87020000            jle 00457C53
+
+   This makes it so that the staff gets the right swing speed parameters when used together with a shield.
+
+   Note that if not carrying a shield, your character will still hold a staff (with 2 hands) like before. When equipping a
+   shield the character will show as holding a mace and shield.
+
+                                             by Frank
+
+
+The Joker set to 1-handed
+
+0008DDB4 0812 4A00 1E08 0500 983A 0000 2100 0000 ..J......:..!...
+0008DDC4 1E00 0000 1E00 0000 5700 0000 0000 0000 ........W.......
+0008DDD4 0000 0000 4200 0000 2700 0000 1E00 0000 ....B...'.......
+0008DDE4 4400 0000 0000 0000 0000 0000 2C00 0000 D...........,...
+0008DDF4 CF00 0000 0000 0000 0000 0000 0000 0000 ................
+0008DE04 0000 0000                               ....
+
+
+Spellcrafter set to 1-handed
+
+0008DE5C EC11 4A00 1E18 0600 60EA 0000 0E00 0000 ..J.....`.......
+0008DE6C 0200 0000 0200 0000 1500 0000 1400 0000 ................
+0008DE7C 1400 0000 0B00 0000 1400 0000 1400 0000 ................
+0008DE8C 4200 0000 2500 0000 1400 0000 4400 0000 B...%.......D...
+0008DE9C 0000 0000 0000 0000 2C00 0000 D000 0000 ........,.......
+0008DEAC 0000 0000                               ....
+
+
+This works, but shows 'one handed sword'
+
+000A4B80 706F 696E 7473 0000 6F6E 6520 6861 6E64 points..one hand
+000A4B90 6564 2073 776F 7264 0000 0000 4661 7374 ed sword....Fast
+wordt
+000A4B80 706F 696E 7473 0000 6F6E 6520 6861 6E64 points..one hand
+000A4B90 6564 0000 0000 0000 0000 0000 4661 7374 ed..........Fast
+
+
+

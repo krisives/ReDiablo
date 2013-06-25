@@ -1,0 +1,78 @@
+Improved Hardening Oils: 4-5 is now 5-7
+
+file offset 00027984
+
+:00428584 6A02                    push 00000002
+:00428586 5A                      pop edx
+:00428587 B144                    mov cl, 44
+:00428589 E811980200              call 00451D9F
+:0042858E 03C3                    add eax, ebx
+:00428590 90                      nop
+changed into
+:00428584 6A03                    push 00000003
+:00428586 ...
+:00428590 40                      inc eax
+
+
+Improved Imperviousness Oils: 6-8 is now 8-12
+
+file offset 000279A7
+
+:004285A7 40                      inc eax
+:004285A8 40                      inc eax
+changed into
+:004285A7 D1E0                    shl eax, 1
+
+
+Improved Accuracy Oils: 4-5 is now 14-16
+
+file offset 00027822
+
+:00428422 E95D010000              jmp 00428584
+:00428427 90                      nop
+:00428428 90                      nop
+:00428429 90                      nop
+changed into
+:00428422 C1E302                  shl ebx, 02
+:00428425 E95A010000              jmp 00428584
+:0042842A
+
+Oils of Mastery no longer exist.
+
+
+Allow Grizwold to sell Blacksmith oils:
+
+file offset 00029523
+
+:0042A123 E88BFFFFFF              call 0042A0B3			check for allowed item types
+changed into
+:0042A123 E85C890200              call 00452A84			check for BS Oil and allowed item types
+:0042A128 
+
+Using free space from removed Glimmering Shrine:
+
+file offset 00051E84
+
+:00452A84 85C0                    test eax, eax
+:00452A86 0F85E0050000            jne 0045306C
+:00452A8C 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452A92 EB07                    jmp 00452A9B
+changed into
+:00452A84 83F954                  cmp ecx, 00000054		base item number for Blacksmith Oil
+:00452A87 0F852676FDFF            jne 0042A0B3
+:00452A8D 6A01                    push 00000001
+:00452A8F 58                      pop eax
+:00452A90 C3                      ret
+:00452A91 909090                  3*nop
+
+
+Prices for Blacksmith and Accuracy Oils will be increased (see DataFixes42Y.txt).
+
+
+Preventing Tome of Lore from treating the Orb of Revival (now Oil of Accuracy) as Identify Scroll:
+
+file offset 0004316B
+
+:00443D6B 83FA70                  cmp edx, 00000070
+changed into
+:00443D6B 83FA6D                  cmp edx, 0000006D	spare base item number for Tome of Lore

@@ -1,0 +1,89 @@
+Reorganizing the Spell book pages
+
+
+Page 1	Skill and Fire spells
+
+        Skill
+  0   1 Firebolt            fire           
+ 11  12 Fireball            fire           
+ 12  13 Guardian            fire           
+ 28  29 Elemental           fire           
+ 40  41 Immolation          fire           
+  5   6 Fire Wall           fire           
+
+Page 2	Special and Lightning spells
+
+ 30  31 Holy Bolt           magic/other    
+ 35  36 Bone Spirit         magic/other    
+ 29  30 Charged Bolt        lightning      
+  2   3 Lightning           lightning      
+ 13  14 Lightning Blast     lightning      
+ 17  18 Nova                lightning      
+ 39  40 Lightning Wall      lightning      
+
+Page 3	Magic and non-resistable spells
+
+ 43  44 Arcane Star         magic/other    
+ 34  35 Blood Star          magic/other    
+  3   4 Flash               magic/other    
+  4   5 Arcane Destruction  magic/other    
+ 19  20 Magic Missile       magic/other    
+ 44  45 Doom Serpents       magic/other    
+ 23  24 Apocalypse          magic/other    
+
+Page 4	Manipulating and Movement spells
+
+ 20  21 Golem               magic/other    
+  7   8 Stone Curse         magic/other    
+  9  10 Medusa Gaze         magic/other    
+ 32  33 Telekinesis         magic/other    
+  6   7 Town Portal         magic/other    
+ 41  42 Warp                magic/other    
+ 22  23 Teleport            magic/other    
+
+Page 5	Healing and Protection spells
+
+  1   2 Healing             magic/other    
+ 33  34 Heal All            magic/other    
+ 37  38 Divine Help         magic/other    
+ 42  43 Barrier             magic/other    
+ 10  11 Mana Shield         magic/other    
+ 14  15 Blood Wave          magic/other    
+ 31  32 Sanctuary           magic/other    
+
+
+00093768 0000 0000 1E00 0000 0300 0000 0E00 0000 ................
+00093778 2800 0000 0400 0000 1200 0000 0100 0000 (...............
+00093788 0C00 0000 0600 0000 0F00 0000 1D00 0000 ................
+00093798 0D00 0000 2900 0000 1F00 0000 2C00 0000 ....).......,...
+000937A8 1400 0000 2300 0000 2400 0000 2D00 0000 ....#...$...-...
+000937B8 1800 0000 0700 0000 0A00 0000 2A00 0000 ............*...
+000937C8 1700 0000 2100 0000 0800 0000 1500 0000 ....!...........
+000937D8 0200 0000 2200 0000 2000 0000 0B00 0000 ...."... .......
+000937E8 2B00 0000 2600 0000 0500 0000           +...&.......
+changed into
+00093768 0000 0000 0100 0000 0C00 0000 0D00 0000 ................
+00093778 1D00 0000 2900 0000 0600 0000 1F00 0000 ....)...........
+00093788 2400 0000 1E00 0000 0300 0000 0E00 0000 $...............
+00093798 1200 0000 2800 0000 2C00 0000 2300 0000 ....(...,...#...
+000937A8 0400 0000 0500 0000 1400 0000 2D00 0000 ............-...
+000937B8 1800 0000 1500 0000 0800 0000 0A00 0000 ................
+000937C8 2100 0000 0700 0000 2A00 0000 1700 0000 !.......*.......
+000937D8 0200 0000 2200 0000 2600 0000 2B00 0000 ...."...&...+...
+000937E8 0B00 0000 0F00 0000 2000 0000           ........ ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

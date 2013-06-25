@@ -1,0 +1,49 @@
+Make Diablo a boss
+
+Over old code that gave Diablo fixed Hp
+
+Old:
+:0043B215 833F6E                  cmp dword ptr [edi], 0000006E
+:0043B218 7511                    jne 0043B22B
+:0043B21A 6A01                    push 00000001
+:0043B21C B158                    mov cl, 58
+:0043B21E 5A                      pop edx
+:0043B21F E836EDFDFF              call 00419F5A
+:0043B224 05050D0000              add eax, 00000D05
+:0043B229 EB1A                    jmp 0043B245
+
+And
+:0043B2C7 208644DD6900            and byte ptr [esi+0069DD44], al
+
+New:
+:0043B215 833F6E                  cmp dword ptr [edi], 0000006E
+:0043B218 7509                    jne 0043B223
+:0043B21A C68644DD690001          mov byte ptr [esi+0069DD44], 01
+:0043B221 EB07                    jmp 0043B22A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B218(C)
+|
+:0043B223 C68644DD690000          mov byte ptr [esi+0069DD44], 00
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043B221(U)
+|
+:0043B22A 90                      nop
+
+And
+:0043B2C7 909090909090            nop * 6
+
+
+In Diablo:
+
+:004326A8 803F6E                  cmp byte ptr [edi], 6E
+:004326AB 7511                    jne 004326BE
+:004326AD 6A01                    push 00000001
+:004326AF B158                    mov cl, 58
+:004326B1 5A                      pop edx
+:004326B2 E8C055FEFF              call 00417C77
+:004326B7 0582060000              add eax, 00000682
+:004326BC EB21                    jmp 004326DF
+And
+:00432761 208614E76400            and byte ptr [esi+0064E714], al            

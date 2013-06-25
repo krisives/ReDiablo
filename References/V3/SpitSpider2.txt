@@ -1,0 +1,14 @@
+()Enable slot 2Dh for Spit-animations
+
+Als slots 2Dh (nu Nightclan) en 55h (nu Hell-UndeadBalrog) verwisseld worden, kan slot 2Dh gebruikt worden voor een Spitting Spider voor The Nest. Hiermee komt dan tevens een Boss-slot vrij (22h DoomskullTheUnholy).
+
+:0043AF32 837DFC2E                cmp dword ptr [ebp-04], 0000002E	
+wordt
+:0043AF32 837DFC2D                cmp dword ptr [ebp-04], 0000002D	
+
+
+()Enable slot 2Dh for acid-puddles
+
+:0043D278 83F82E                  cmp eax, 0000002E
+wordt
+:0043D278 83F82D                  cmp eax, 0000002D

@@ -1,0 +1,46 @@
+Changing Flame Wave into Blood Wave, a physical 'wave' spell with knockback that does no damage.
+
+Using the unknown 'blood' animation.
+
+0E	Flame Wave (Small)
+A64F0	0E00 0000 DA31 4300 997D
+	4300 0100 0000 0101 0400
+	FFFF FFFF FFFF FFFF
+
+000A64F0 0E00 0000 DA31 4300 997D 4300 0100 0000 .....1C..}C.....
+000A6500 0101 0400 FFFF FFFF FFFF FFFF           ............
+changed into
+000A6501 000A 00                                 ...
+
+Disabling the damage:
+
+file offset 00032617
+
+:00433217 8D440801                lea eax, dword ptr [eax+ecx+01]
+changed into
+:00433217 33C0                    xor eax, eax
+:00433219 9090                    2*nop
+
+Adjust spellbook damage:
+
+file offset 0002E32D
+
+:0042EF2D 0A		FlameWave
+changed into
+:0042EF2D 06		'N/A'
+
+Adjust the name:
+
+000B6CD7 0046 6C61 6D65 2057 6176 6500           .Flame Wave.
+changed into
+000B6CD7 0042 6C6F 6F64 2057 6176 6500           .Blood Wave.
+
+Adjust the casting animation from 'Fire' to 'Magic/Other':
+
+000B6330 0F23 0000 D882 4B00 0000 0000 0900 0000 .#....K.........
+000B6340 0800 0000 0100 0000 0000 0000 3200 0000 ............2...
+000B6350 5229 0000 0114 0000 1400 0000 2800 0000 R)..........(...
+000B6360 1027 0000 DC05 0000                     .'......
+changed into
+000B6332 0200                                    ..
+

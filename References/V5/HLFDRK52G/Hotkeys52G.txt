@@ -1,0 +1,323 @@
+Existing hotkeys:
+
+A               Escape          (19h)
+Q		Invincibility	(13h)
+W		Firewall	(06h)
+E		Lightningwall	(28h)
+R		Sanctuary	(20h)
+T		Blood Wave	(0Fh)
+Y		Golem     	(15h)
+U               Charm		(10h)
+
+New hotkeys:
+
+D		Divine Help	(26h)
+F		Elemental       (1Dh)
+G		Guardian	(0Dh)
+H		Holy Bolt	(1Fh)
+J		Bone Spirit	(24h)
+K		Doom Serpents	(2Dh)
+L		Apocalypse	(18h)
+M		Town Portal	(07h)
+N		Warp		(2Ah)
+O		Medusa Gaze     (0Ah)
+X		Rage		(16h)
+
+
+Modifications to F1-F4 hotkeys:
+
+Warrior 
+F1:Healing			
+F2:Teleport 			
+F3:Barrier			
+F4:Stone Curse			
+Rogue
+F1:Healing			
+F2:Teleport			
+F3:Telekinesis SKILL
+F4:Stone Curse 			
+Sorcerer
+F1:Mana Shield
+F2:Teleport			
+F3:Medusa Gaze		-> Spell Recharge SKILL (1Bh)
+F4:Stone Curse			
+Monk
+F1:Mana Shield
+F2:Teleport			
+F3:Barrier 			
+F4:Stone Curse			
+Bard
+F1:Mana Shield
+F2:Teleport			
+F3:Divine Help		-> Barrier
+F4:Stone Curse			
+Barbarian
+F1:Healing SKILL 		
+F2:Teleport 			
+F3:Barrier 			
+F4:Rage			-> Stone Curse
+
+
+
+Key codes:
+
+a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u  v  w  x  y  z
+
+4  4  4  4  4  4  4  4  4  4  4  4  4  4  4  5  5  5  5  5  5  5  5  5  5  5
+1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  0  1  2  3  4  5  6  7  8  9  A
+
+
+A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
+
+6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  7  7  7  7  7  7  7  7  7  7  7
+1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  0  1  2  3  4  5  6  7  8  9  A
+
+
+Spells for A-P:
+
+000A52C0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+changed into
+000A52C0 1900 0026 280A 0D1F 0024 0000 072A 0000 ...&(....$...*..
+
+Spells for Q-Z:
+
+000A5302 1320 190F 1028 0615 0000                . ...(....
+changed into
+000A5302 1320 000F 1000 0616 1500                . ........
+
+Spells for F1-F4:
+
+000A52EA 0217 2B08 0217 2108 0B17 0A08 0B17 2B08 ..+...!.......+.
+000A52FA 0B17 2608 0217 2B16                     ..&...+.
+changed into
+000A52EA 0217 2B08 0217 2108 0B17 1B08 0B17 2B08 ..+...!.......+.
+000A52FA 0B17 2B08 0217 2B08                     ..+...+.
+
+
+
+File offset 00009FA2
+
+:0040ABA2 83FB47                  cmp ebx, 00000047
+:0040ABA5 7746                    ja 0040ABED
+:0040ABA7 0F8462010000            je 0040AD0F				'g'
+:0040ABAD E93EF40100              jmp 00429FF0
+changed into
+:0040ABA2 E8458D0400              call 004538EC				check spells for 'a' - 'z'
+:0040ABA7 83FB47                  cmp ebx, 00000047
+:0040ABAA 7749                    ja 0040ABF5
+:0040ABAC 90                      nop
+:0040ABAD 83EB40                  sub ebx, 00000040
+:0040ABB0 7407                    je 0040ABB9
+:0040ABB2
+
+
+File offset 00009FED
+
+:0040ABED 83EB49                  sub ebx, 00000049
+:0040ABF0 0F840F020000            je 0040AE05
+:0040ABF6 83EB08                  sub ebx, 00000008
+:0040ABF9 E8EE8C0400              call 004538EC
+:0040ABFE 90                      nop
+:0040ABFF 2BD8                    sub ebx, eax
+changed into
+:0040ABED 9090909090909090        8*nop
+:0040ABF5 83EB49                  sub ebx, 00000049
+:0040ABF8 0F8407020000            je 0040AE05
+:0040ABFE 83EB0A                  sub ebx, 0000000A
+
+
+File offset 0000A01A
+
+:0040AC1A 83FB67                  cmp ebx, 00000067
+:0040AC1D 0F87F3000000            ja 0040AD16
+:0040AC23 0F84E6000000            je 0040AD0F				'G'
+:0040AC29 83EB5E                  sub ebx, 0000005E
+:0040AC2C E9DAF30100              jmp 0042A00B
+:0040AC31 5B                      pop ebx
+changed into
+:0040AC1A E8D38C0400              call 004538F2				check spells for 'A' - 'Z'
+:0040AC1F 83FB67                  cmp ebx, 00000067
+:0040AC22 0F87EE000000            ja 0040AD16
+:0040AC28 83EB5E                  sub ebx, 0000005E
+:0040AC2B 0F84AF000000            je 0040ACE0
+:0040AC31 90                      nop
+
+
+File offset 0000A041
+
+:0040AC41 83EB03                  sub ebx, 00000003
+:0040AC44 7567                    jne 0040ACAD
+:0040AC46 E8F7A90400              call 00455642				'f' 'F'
+:0040AC4B EB60                    jmp 0040ACAD
+changed into
+:0040AC41 EB6A                    jmp 0040ACAD
+:0040AC43 90909090909090909090    10*nop
+
+
+
+File offset 00052CEC
+
+:004538EC 741A                    je 00453908
+:004538EE 83FB01                  cmp ebx, 00000001
+:004538F1 7415                    je 00453908
+:004538F3 83FB03                  cmp ebx, 00000003
+:004538F6 7410                    je 00453908
+:004538F8 83FB04                  cmp ebx, 00000004
+:004538FB 740B                    je 00453908
+:004538FD 83FB06                  cmp ebx, 00000006
+:00453900 7406                    je 00453908
+:00453902 83FB08                  cmp ebx, 00000008
+:00453905 7406                    je 0045390D
+:00453907 C3                      ret
+:00453908 E91EE2FFFF              jmp 00451B2B
+:0045390D 53                      push ebx
+:0045390E 4B                      dec ebx
+:0045390F E918E2FFFF              jmp 00451B2C
+:00453914 53                      push ebx
+:00453915 51                      push ecx
+:00453916 90                      nop
+:00453917 90                      nop
+:00453918 90                      nop
+:00453919 90                      nop
+changed into
+:004538EC 53                      push ebx
+:004538ED 83EB41                  sub ebx, 00000041
+:004538F0 EB04                    jmp 004538F6
+:004538F2 53                      push ebx
+:004538F3 83EB61                  sub ebx, 00000061
+:004538F6 7C1A                    jl 00453912
+:004538F8 380DC4EC6F00            cmp byte ptr [006FECC4], cl
+:004538FE 7512                    jne 00453912
+:00453900 83FB19                  cmp ebx, 00000019
+:00453903 7D0D                    jge 00453912
+:00453905 83FB10                  cmp ebx, 00000010
+:00453908 7C03                    jl 0045390D				A-P data at 004A68C0 (000A52C0)
+:0045390A 83C332                  add ebx, 00000032			Q-Z data at 004A6902 (000A5302)
+:0045390D E919E2FFFF              jmp 00451B2B
+:00453912 5B                      pop ebx
+:00453913 C3                      ret
+:00453914 90909090                4*nop
+:00453918 53                      push ebx
+:00453919 51                      push ecx
+
+
+File offset 000287E9
+
+:004293E9 0F8525A50200            jne 00453914
+changed into
+:004293E9 0F8529A50200            jne 00453918
+:004293EF 
+
+
+File offset 00050F2B
+
+:00451B2B 53                      push ebx
+:00451B2C 380DC4EC6F00            cmp byte ptr [006FECC4], cl
+:00451B32 7402                    je 00451B36
+:00451B34 5B                      pop ebx
+:00451B35 C3                      ret
+:00451B36 51                      push ecx
+:00451B37 8BCB                    mov ecx, ebx
+:00451B39 0FB68902694A00          movzx ecx, byte ptr [ecx+004A6902]
+changed into
+:00451B2B 51                      push ecx
+:00451B2C 8BCB                    mov ecx, ebx
+:00451B2E 0FB689C0684A00          movzx ecx, byte ptr [ecx+004A68C0]	lookup spell indicators
+:00451B35 85C9                    test ecx, ecx
+:00451B37 7507                    jne 00451B40				proceed to select if spell is found
+:00451B39 59                      pop ecx
+:00451B3A 5B                      pop ebx
+:00451B3B C3                      ret
+:00451B3C 90909090                4*nop
+
+
+===================================================================================================================
+
+New free space:
+
+
+
+:0040AD0F E873AA0400              call 00455787				brighter/darker
+:0040AD14 EB97                    jmp 0040ACAD
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0040ABAD(U)
+:00429FF0 83EB40                  sub ebx, 00000040
+:00429FF3 0F84C00BFEFF            je 0040ABB9
+:00429FF9 E8AD0B0500              call 0047ABAB
+:00429FFE E9AF0BFEFF              jmp 0040ABB2
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address::0040AC2C(U)
+:0042A00B 0F84CF0CFEFF            je 0040ACE0
+:0042A011 53                      push ebx
+:0042A012 E8670B0500              call 0047AB7E
+:0042A017 E9150CFEFF              jmp 0040AC31
+
+
+* Referenced by a CALL at Address::0042A012   
+|
+:0047AB7E 4B                      dec ebx
+:0047AB7F 4B                      dec ebx
+:0047AB80 EB29                    jmp 0047ABAB
+:0047AB82 90                      nop
+:0047AB83 90                      nop
+:0047AB84 90                      nop
+
+* Referenced by a CALL at Address:00429FF9   
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0047AB80(U)
+|
+:0047ABAB 83FB01                  cmp ebx, 00000001
+:0047ABAE 740A                    je 0047ABBA
+:0047ABB0 83FB05                  cmp ebx, 00000005
+:0047ABB3 0F84726FFDFF            je 00451B2B
+:0047ABB9 C3                      ret
+:0047ABBA 53                      push ebx
+:0047ABBB 43                      inc ebx
+:0047ABBC E96B6FFDFF              jmp 00451B2C
+
+
+57 bytes
+* Referenced by a CALL at Address:0040AD0F   				brighter/darker
+:00455787 6A1E                    push 0000001E
+:00455789 58                      pop eax
+:0045578A 3905F4594B00            cmp dword ptr [004B59F4], eax
+:00455790 7E2D                    jle 004557BF
+:00455792 832DF4594B0005          sub dword ptr [004B59F4], 00000005
+:00455799 3905F4594B00            cmp dword ptr [004B59F4], eax
+:0045579F 7D05                    jge 004557A6
+:004557A1 A3F4594B00              mov dword ptr [004B59F4], eax
+:004557A6 6800010000              push 00000100
+:004557AB BA50216E00              mov edx, 006E2150
+:004557B0 B950256E00              mov ecx, 006E2550
+:004557B5 E8FCFEFFFF              call 004556B6
+:004557BA E9BCFEFFFF              jmp 0045567B
+:004557BF C3                      ret
+
+
+
+57 bytes
+* Referenced by a CALL at Address:0040AC46   				brighter/darker
+:00455642 6A64                    push 00000064
+:00455644 58                      pop eax
+:00455645 3905F4594B00            cmp dword ptr [004B59F4], eax
+:0045564B 7D2D                    jge 0045567A
+:0045564D 8305F4594B0005          add dword ptr [004B59F4], 00000005
+:00455654 3905F4594B00            cmp dword ptr [004B59F4], eax
+:0045565A 7E05                    jle 00455661
+:0045565C A3F4594B00              mov dword ptr [004B59F4], eax
+:00455661 6800010000              push 00000100
+:00455666 BA50216E00              mov edx, 006E2150
+:0045566B B950256E00              mov ecx, 006E2550
+:00455670 E841000000              call 004556B6
+:00455675 E901000000              jmp 0045567B
+:0045567A C3                      ret
+
+
+
+
+:0040AC43 90909090909090909090    10*nop
+
+:0040ABED 9090909090909090        8*nop
+
+

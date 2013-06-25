@@ -1,0 +1,97 @@
+The lifedrain procdure for running been rewritten and optimized.
+
+Added feature: Mage get double lifedrain while running
+
+Procedure calculating amount of lifedrain (this replaces the old one on the same place):
+It's a bit shorter so there still some 45 bytes left in this complete nut part
+There is some room left for a future pre/suffix of stamina
+(File calclifedrain.hex insert at 7579F)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045DBEE(U)
+|
+:0047639F 53                      push ebx
+:004763A0 33DB                    xor ebx, ebx
+:004763A2 F6407840                test [eax+78], 40			Test if running
+:004763A6 7458                    je 00476400
+:004763A8 53                      push ebx
+:004763A9 8B989C010000            mov ebx, dword ptr [eax+0000019C]
+:004763AF C1FB02                  sar ebx, 02
+:004763B2 399898010000            cmp dword ptr [eax+00000198], ebx	Test if life > 25%
+:004763B8 5B                      pop ebx
+:004763B9 7F06                    jg 004763C1
+:004763BB 836078BF                and dword ptr [eax+78], FFFFFFBF	If not set walk
+:004763BF EB3F                    jmp 00476400
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004763B9(C)
+|
+:004763C1 83C301                  add ebx, 00000001
+:004763C4 83787850                cmp dword ptr [eax+78], 00000050	Medium Armor
+:004763C8 7C0C                    jl 004763D6
+:004763CA 83C301                  add ebx, 00000001
+:004763CD 83787860                cmp dword ptr [eax+78], 00000060	Heavy armor
+:004763D1 7C03                    jl 004763D6
+:004763D3 83C301                  add ebx, 00000001
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004763C8(C), :004763D1(C)
+|
+:004763D6 80B83C01000001          cmp byte ptr [eax+0000013C], 01	Can Block -> Shield or monk
+:004763DD 7515                    jne 004763F4
+:004763DF 83B86409000005          cmp dword ptr [eax+00000964], 00000005	Shield left
+:004763E6 7409                    je 004763F1
+:004763E8 83B8D80A000005          cmp dword ptr [eax+00000AD8], 00000005	Shield right
+:004763EF 7503                    jne 004763F4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004763E6(C)
+|
+:004763F1 83C301                  add ebx, 00000001
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004763DD(C), :004763EF(C)
+|
+:004763F4 83B86001000002          cmp dword ptr [eax+00000160], 00000002	Sorcerer
+:004763FB 7503                    jne 00476400
+:004763FD C1E301                  shl ebx, 01
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004763A6(C), :004763BF(U), :004763FB(C)
+|
+:00476400 F6804055000040          test byte ptr [eax+00005540], 40		Normal Lifedrain (ring)
+:00476407 7403                    je 0047640C
+:00476409 83C301                  add ebx, 00000001
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00476407(C)
+|
+:0047640C E8E277FEFF              call 0045DBF3
+:00476411 5B                      pop ebx
+:00476412 0F8E0C78FEFF            jle 0045DC24
+:00476418 E91078FEFF              jmp 0045DC2D
+
+
+
+Life drain procedure
+AMount substracted is made variable
+(File : lifedrain.hex insert at 5CFEE)
+
+* Referenced by a CALL at Address:
+|:0047640C   
+|
+:0045DBF3 50                      push eax
+:0045DBF4 C1E302                  shl ebx, 02
+:0045DBF7 299898010000            sub dword ptr [eax+00000198], ebx
+:0045DBFD 90                      nop
+:0045DBFE A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC03 299C3090010000          sub dword ptr [eax+esi+00000190], ebx
+:0045DC0A 90                      nop
+:0045DC0B 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:0045DC12 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC17 83BC3098010000C0        cmp dword ptr [eax+esi+00000198], FFFFFFC0
+:0045DC1F 90                      nop
+:0045DC20 90                      nop
+:0045DC21 90                      nop
+:0045DC22 58                      pop eax
+:0045DC23 C3                      ret

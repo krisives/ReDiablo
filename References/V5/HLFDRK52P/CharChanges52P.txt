@@ -1,0 +1,23 @@
+Improved chances for Barbarians with axes to receive half melee damage: 
+
+File offset 0003D96B
+
+:0043E56B D1E9                    shr ecx, 1
+changed into
+:0043E56B 9090                    2*nop
+
+File offset 0003D99A
+
+:0043E59A 6A30                    push 00000030
+changed into
+:0043E59A 6A40                    push 00000040
+
+
+Penalty to AC for plated Monks now applies to all plates:
+
+File offset 00023853
+
+:00424453 750F                    jne 00424464
+changed into
+:00424453 7400                    je 00424455
+:00424455 

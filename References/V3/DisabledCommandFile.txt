@@ -1,0 +1,99 @@
+The file 'command.drk' is no longer needed for choosing MP, Barbarian or Bard
+
+
+Forcing correct keywords for Hidden Quests and Characters, with or without 'command.drk' file found. Setting MultiTest, TheoQuest or CowQuest is not needed, but done to support future plans.
+
+
+File Offset 00008800
+
+:00409400 8BD9                    mov ebx, ecx
+:00409402 8A03                    mov al, byte ptr [ebx]
+:00409404 84C0                    test al, al
+:00409406 0F84ED010000            je 004095F9
+:0040940C 57                      push edi
+:0040940D 56                      push esi
+:0040940E 0FBEC0                  movsx eax, al
+:00409411 50                      push eax
+:00409412 E8190D0700              call 0047A130
+:00409417 85C0                    test eax, eax
+:00409419 59                      pop ecx
+:0040941A 7407                    je 00409423
+:0040941C 0FBE4301                movsx eax, byte ptr [ebx+01]
+:00409420 43                      inc ebx
+:00409421 EBEE                    jmp 00409411
+:00409423 BEA89D4800              mov esi, 00489DA8
+
+wordt
+
+:00409400 C605E053570001          mov byte ptr [005753E0], 01		BardTest
+:00409407 C605E453570001          mov byte ptr [005753E4], 01		BarbarianTest
+:0040940E C605E853570001          mov byte ptr [005753E8], 01		MultiTest
+:00409415 C605D453570000          mov byte ptr [005753D4], 00		TheoQuest
+:0040941C C605D853570000          mov byte ptr [005753D8], 00		CowQuest
+:00409423 5B                      pop ebx
+:00409424 C9                      leave
+:00409425 C3                      ret
+:00409426 9090                    2*nop
+
+Now free space from 00409426 to 004095FC (470 byte).
+
+
+
+Routine now no longer in use (by 'command.drk'):
+
+:0047A12A 90                      nop
+:0047A12B 90                      nop
+:0047A12C 90                      nop
+:0047A12D 90                      nop
+:0047A12E 90                      nop
+:0047A12F 90                      nop
+* Was referenced by a CALL at Address:00409412   
+:0047A130 833D54C34C0001          cmp dword ptr [004CC354], 00000001
+:0047A137 7E10                    jle 0047A149
+:0047A139 8B442404                mov eax, dword ptr [esp+04]
+:0047A13D 6A08                    push 00000008
+:0047A13F 50                      push eax
+:0047A140 E87B2E0000              call 0047CFC0
+:0047A145 83C408                  add esp, 00000008
+:0047A148 C3                      ret
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0047A137(C)
+:0047A149 8B4C2404                mov ecx, dword ptr [esp+04]
+* Possible StringData Ref from Data Obj ->"         (((((                  H"
+:0047A14D 8B1548C14C00            mov edx, dword ptr [004CC148]
+:0047A153 8A044A                  mov al, byte ptr [edx+2*ecx]
+:0047A156 83E008                  and eax, 00000008
+:0047A159 C3                      ret
+:0047A15A 90                      nop
+:0047A15B 90                      nop
+:0047A15C 90                      nop
+:0047A15D 90                      nop
+:0047A15E 90                      nop
+:0047A15F 90                      nop
+
+
+Routine now no longer in use (by 'command.drk'):
+
+:0047AABE 90                      nop
+:0047AABF 90                      nop
+* Was referenced by a CALL at Addresses:
+:00409432   , :00409456   , :0040947A   , :004094AE   , :004094E4   
+:0040951F   , :00409555   , :0040958C   , :004095C1   
+:0047AAC0 55                      push ebp
+:0047AAC1 8BEC                    mov ebp, esp
+:0047AAC3 57                      push edi
+...
+:0047ABBA 8BC1                    mov eax, ecx
+:0047ABBC 5B                      pop ebx
+:0047ABBD 5E                      pop esi
+:0047ABBE 5F                      pop edi
+:0047ABBF C9                      leave
+:0047ABC0 C3                      ret
+
+
+
+Propably no longer in use:
+* Referenced by a CALL at Addresses:
+(004095E6)   , :0047D2B9   
+:0047A930 A188037000              mov eax, dword ptr [00700388]
+:0047A935 85C0                    test eax, eax
+:0047A937 7512                    jne 0047A94B

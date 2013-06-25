@@ -1,0 +1,126 @@
+Changing the story books (Horadrim, Cornerstone, Nakrul, etc.) into (non-random) Shrines:
+
+file offset 00052F07
+
+:00453B07 741C                    je 00453B25
+changed into
+:00453B07 7413                    je 00453B1C
+
+file offset 0004FB1A
+
+:0045071A 8BD7                    mov edx, edi
+:0045071C 8BCE                    mov ecx, esi
+:0045071E E84E310000              call 00453871
+:00450723 EB46                    jmp 0045076B
+changed into
+:0045071A EBE6                    jmp 00450702
+:0045071C 909090909090909090      9*nop
+
+This gives always Mysterious shrine, because the books have no RNG seed, but this is acceptable in the earlier levels where these books are far apart. The routine at 00453871 is now free space, and all code related to the 'latin' books. All related book texts are obsolete too.
+
+Adjusting Mysterious shrine effect to give Eldritch effect (full potions from small ones) in early Abyss levels, and Angry Shrine in last Abyss level:
+
+file offset 00052473
+
+:00453073 7A184500                DWORD 0045187A
+changed into
+:00453073 4AB24300                DWORD 0043B24A
+
+Using free space from HP correction for normal monsters in SP:
+
+file offset 0003A64A
+
+:0043B24A 8B90A8DC6900            mov edx, dword ptr [eax+0069DCA8]
+:0043B250 6BD270                  imul edx, 00000070
+:0043B253 0390ACDC6900            add edx, dword ptr [eax+0069DCAC]
+:0043B259 80BA0069610002          cmp byte ptr [edx+00616900], 02
+:0043B260 7403                    je 0043B265
+:0043B262 33D2                    xor edx, edx
+:0043B264 C3                      ret
+:0043B265 6A01                    push 00000001
+:0043B267 5A                      pop edx
+:0043B268 C3                      ret
+:0043B269 90                      nop
+changed into
+:0043B24A 803DD8B1600010          cmp byte ptr [0060B1D8], 10
+:0043B251 0F8C23660100            jl 0045187A
+:0043B257 803DD8B1600018          cmp byte ptr [0060B1D8], 18
+:0043B25E 0F84276A0100            je 00451C8B
+:0043B264 E91C6F0100              jmp 00452185
+:0043B269 90                      nop
+
+
+Adjusting Angry Shrine to give Invincibility and full mana to only the user/reader, at Slvl=Dlvl, and have it only appear in Abyss:
+
+file offset 00051093
+
+:00451C93 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451C99 0FB63DD4B16000          movzx edi, byte ptr [0060B1D4]	dungeon type
+:00451CA0 E825000000              call 00451CCA				get local character
+:00451CA5 69C0C8550000            imul eax, 000055C8
+:00451CAB D1E7                    shl edi, 1				2x dungeon type
+:00451CAD 8B54083C                mov edx, dword ptr [eax+ecx+3C]
+:00451CB1 57                      push edi
+:00451CB2 6A00                    push 00000000
+:00451CB4 56                      push esi
+:00451CB5 03C1                    add eax, ecx
+:00451CB7 6AFF                    push FFFFFFFF
+:00451CB9 6A2B                    push 0000002B				Rage spelleffect
+:00451CBB FF7070                  push [eax+70]
+:00451CBE 8B4838                  mov ecx, dword ptr [eax+38]
+:00451CC1 52                      push edx
+:00451CC2 51                      push ecx
+:00451CC3 E8673AFEFF              call 0043572F
+:00451CC8 EB0A                    jmp 00451CD4
+:00451CCA E8C50D0000              call 00452A94				get local character
+:00451CCF 8BC6                    mov eax, esi
+:00451CD1 C3                      ret
+:00451CD2 90                      nop
+:00451CD3 90                      nop
+changed into
+:00451C93 8B75FC                  mov esi, dword ptr [ebp-04]		get user/reader
+:00451C96 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451C9C 0FB63DD8B16000          movzx edi, byte ptr [0060B1D8]	dungeon level
+:00451CA3 8BC6                    mov eax, esi
+:00451CA5 ...
+:00451CAB 9090                    2*nop
+:00451CAD ...
+:00451CB9 6A22                    push 00000022				Invincibility spelleffect
+:00451CBB ...
+:00451CC8 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00451CCE 0F8598130000            jne 0045306C				exit if not user/reader
+
+
+0008F170 F457 4B00 F82F 4B00 EC57 4B00 701B 4A00 .WK../K..WK.p.J.
+0008F180 E457 4B00 DC57 4B00 D057 4B00 C457 4B00 .WK..WK..WK..WK.
+0008F190 B457 4B00 A857 4B00 A057 4B00 E457 4B00 .WK..WK..WK..WK.
+0008F1A0 9457 4B00 8C57 4B00 8457 4B00 3C1A 4A00 .WK..WK..WK.<.J.
+0008F1B0 7C57 4B00 7057 4B00 6857 4B00 5C57 4B00 |WK.pWK.hWK.\WK.
+0008F1C0 5457 4B00 4C57 4B00 4057 4B00 3857 4B00 TWK.LWK.@WK.8WK.
+0008F1D0 2C57 4B00 2457 4B00 1C57 4B00 1457 4B00 ,WK.$WK..WK..WK.
+0008F1E0 0857 4B00 FC56 4B00 F456 4B00 E856 4B00 .WK..VK..VK..VK.
+0008F1F0 E056 4B00 D456 4B00 0101 0101 0101 0101 .VK..VK.........
+0008F200 0101 0B01 0101 0101 0101 0101 0101 0101 ................
+0008F210 010B 0B01 0101 0101 010B 0000 0000 0000 ................
+0008F220 1818 1818 1818 1818 0618 1818 1818 1818 ................
+0008F230 1818 1818 1818 1818 1818 1818 1818 180B ................
+0008F240 1818 0000 0000 0000 0000 0000 0000 0000 ................
+0008F250 0000 0001 0000 0100 0000 0200 0000 0100 ................
+0008F260 0002 0001 0101 0000 0100 0000 0000 0000 ................
+changed into
+0008F1FC 10                                      .
+0008F203 10                                      .
+
+
+Info from Charlies workshop:
+
+Shrine data begins at 9F6F0 in Diablo, 8F170 in Hellfire. 
+
+First off is the list of name pointers. To change the shrine names, follow the pointers to the name, and edit it. Some names are shared with other things, such as the Hidden Shrine.
+
+There will be a one byte seperator after the pointers and a list of 01's. These are the starting dungeon levels of the shrine slots. As you can see, all of the shrines can appear in level one.
+
+After that, you'll see a 6 byte seperator and a listing of 10's (Diablo) or 18's (Hellfire) with an 8 in the Diablo data somewhere. This is...you guessed it, the maximum dungeon level the shrine slots can be found in. In Diablo, the Enchanted Shrine can appear up to level 8 only, thus it has an 8 for it's slot. Why they have up to 16 (10 in hex, Diablo) is unknown, since shrines do not appear there).
+
+And lastly, after another 6 byte seperator, you'll see another listing of 00's, 01's, and 02's. 00 means the shrine at that particular slot can appear in both SP and MP. 01 means the shrine appears in SP only, and an 02 means the shrine only appears in MP. 
+

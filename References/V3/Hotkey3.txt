@@ -1,0 +1,189 @@
+Extra Spell hotkeys in Hellfire
+
+Nu met check op spell-level, om te voorkomen dat de spreuk onterecht ter beschikking komt (zie posting van MMagh op Bolties forum).
+
+Als de vorige variant al gecodeerd is: de wijzigingen tov die variant komen pas na 0040A60A.
+
+F1->02=Healing
+F2->17=Teleport
+F3->0B=Manashield
+F4->08=Stonecurse
+
+
+()Data Change
+
+:0048BB7C 02170B08		  Adres aan eind van oude Help-tekst, op 0008A57C
+
+dus:
+
+0008A570 616C2044 6961626C 6F212020 20202020 207C2600 00000000 al Diablo!       |&.....
+wordt
+0008A570 616C2044 00004631 2D46343A 02170B08 007C2600 00000000 al D..F1-F4:.....|&.....
+
+
+()Hiermee wordt F1=Help disabled, en de code ervoor overschreven.
+
+:0040A5D7 0F8598000000            jne 0040A675
+:0040A5DD 391D98446800            cmp dword ptr [00684498], ebx
+:0040A5E3 740B                    je 0040A5F0
+:0040A5E5 891D98446800            mov dword ptr [00684498], ebx
+:0040A5EB E907030000              jmp 0040A8F7
+:0040A5F0 381DC4EC6F00            cmp byte ptr [006FECC4], bl
+:0040A5F6 7429                    je 0040A621
+:0040A5F8 E87F9FFFFF              call 0040457C
+:0040A5FD 8BD5                    mov edx, ebp
+:0040A5FF B904554900              mov ecx, 00495504
+:0040A604 E8419FFFFF              call 0040454A
+:0040A609 8BD5                    mov edx, ebp
+:0040A60B B9F4544900              mov ecx, 004954F4
+:0040A610 E8359FFFFF              call 0040454A
+:0040A615 33C9                    xor ecx, ecx
+:0040A617 E817D50600              call 00477B33
+:0040A61C E9D6020000              jmp 0040A8F7
+:0040A621 381D54766900            cmp byte ptr [00697654], bl
+:0040A627 891D04556800            mov dword ptr [00685504], ebx
+wordt
+:0040A5D7 7C0D                    jl 0040A5E6
+:0040A5D9 83FE73                  cmp esi, 00000073
+:0040A5DC 7F08                    jg 0040A5E6
+:0040A5DE 391D18164D00            cmp dword ptr [004D1618], ebx
+:0040A5E4 7405                    je 0040A5EB
+:0040A5E6 E98A000000              jmp 0040A675
+:0040A5EB 50                  	  push eax
+:0040A5EC 51                      push ecx
+:0040A5ED 8BCE                    mov ecx, esi
+:0040A5EF 83E970                  sub ecx, 00000070
+:0040A5F2 0FBE897CBB4800          movsx ecx, byte ptr [ecx+0048BB7C]
+:0040A5F9 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0040A5FE 69C0C8550000            imul eax, 000055C8
+:0040A604 030514AE6E00            add eax, dword ptr [006EAE14]
+:0040A60A 80BC08C100000001        cmp byte ptr [eax+ecx+000000C1], 01	
+:0040A612 7C0F                    jl 0040A623
+:0040A614 8988B4000000            mov dword ptr [eax+000000B4], ecx
+:0040A61A 6A01                    push 00000001
+:0040A61C 59                      pop ecx
+:0040A61D 8988B8000000            mov dword ptr [eax+000000B8], ecx
+:0040A623 59                      pop ecx
+:0040A624 58                      pop eax
+:0040A625 E9CD020000              jmp 0040A8F7
+:0040A62A 909090                  3*nop
+
+
+()Fix
+
+Bovenstaande lijkt niets te doen, behalve F1 te disablen. 
+
+:0040A612 7C0F                    jl 0040A623
+wordt
+:0040A612 7C19                    jl 0040A62D
+
+:0040A623 59                      pop ecx
+:0040A624 58                      pop eax
+:0040A625 E9CD020000              jmp 0040A8F7
+:0040A62A 909090                  3*nop
+:0040A62D 891DE0124D00            mov dword ptr [004D12E0], ebx
+:0040A633 891DDC124D00            mov dword ptr [004D12DC], ebx
+wordt
+:0040A623 C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:0040A62D 59                      pop ecx
+:0040A62E 58                      pop eax
+:0040A62F E9C3020000              jmp 0040A8F7
+:0040A634 9090909090              5*nop
+
+Deze blijft erin.
+
+
+()Tweede Fix
+
+De eerste gaf geen verschil.
+
+:0040A5E4 7405                    je 0040A5EB
+wordt
+:0040A5E4 EB05                    jmp 0040A5EB
+
+Is reeds hersteld.
+
+
+()Derde Fix
+
+Ook tweede werkte niet.
+
+:0040A612 7C19                    jl 0040A62D
+wordt
+:0040A612 7C00                    disabled
+
+Werkt nu wel, maar geeft voor elk character altijd Firewall op F1 en niets op andere keys.
+Misschien moet de data als DWORD gelezen worden.
+
+
+()Test
+
+Derde fix wordt teruggezet, en het volgende geprobeerd:
+
+:0040A5F2 0FBE897CBB4800          movsx ecx, byte ptr [ecx+0048BB7C]
+wordt
+:0040A5F2 6A02                    push 00000002
+:0040A5F4 59                      pop ecx
+:0040A5F5 90909090                4*nop
+
+Dit werkt prima! Er moet dus een andere manier komen om het spellnumber te zetten.
+Misschien met een andere offset (400c00 ipv 401600):
+
+:0040A5F2 0FBE897CB14800          movsx ecx, byte ptr [ecx+0048B17C]
+
+Ook niet dus!
+
+
+()Fix with safe getting of spellnumber
+
+Hiermee vervalt het stukje in Data.
+
+:0040A5F2 0FBE897CB14800          movsx ecx, byte ptr [ecx+0048B17C]
+wordt
+:0040A5F2 E83D000000              call 0040A634		op 99F2h
+:0040A5F7 9090			  2*nop
+
+:0040A634 90                      nop
+:0040A635 90                      nop
+:0040A636 90                      nop
+:0040A637 90                      nop
+:0040A638 90                      nop
+:0040A639 891D18164D00            mov dword ptr [004D1618], ebx
+:0040A63F 7413                    je 0040A654
+:0040A641 381DD4B16000            cmp byte ptr [0060B1D4], bl
+:0040A647 750B                    jne 0040A654
+:0040A649 881D54766900            mov byte ptr [00697654], bl
+wordt
+:0040A634 740A                    je 0040A640		op 9A34h
+:0040A636 49                      dec ecx
+:0040A637 740B                    je 0040A644
+:0040A639 49                      dec ecx
+:0040A63A 740C                    je 0040A648
+:0040A63C 6A08                    push 00000008
+:0040A63E 59                      pop ecx
+:0040A63F C3                      ret
+:0040A640 6A02                    push 00000002
+:0040A642 59                      pop ecx
+:0040A643 C3                      ret
+:0040A644 6A17                    push 00000017
+:0040A646 59                      pop ecx
+:0040A647 C3                      ret
+:0040A648 6A0B                    push 0000000B
+:0040A64A 59                      pop ecx
+:0040A64B C3                      ret
+:0040A64C 909090                  3*nop
+
+Getest en werkt!
+
+
+
+
+Het volgende stuk blijft hiermee vrij:
+
+:0040A64F E824DC0000              call 00418278
+:0040A654 891D4CB36E00            mov dword ptr [006EB34C], ebx
+:0040A65A 891DA8074D00            mov dword ptr [004D07A8], ebx
+:0040A660 881DB0B65700            mov byte ptr [0057B6B0], bl
+:0040A666 E8850C0100              call 0041B2F0
+:0040A66B E84F2C0100              call 0041D2BF
+:0040A670 E97D020000              jmp 0040A8F2

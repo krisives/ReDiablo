@@ -1,0 +1,62 @@
+NOT IMPLEMENTED Code regarding the double wield of Barbarians and Bards 
+
+
+
+file offset 0001F384
+
+:0041FF84 80BF6001000004          cmp byte ptr [edi+00000160], 04
+changed into
+:0041FF84 50                      push eax
+:0041FF85 E818080100              call 004307A2
+:0041FF8A 58                      pop eax
+:0041FF8B 
+
+file offset 0001F3D7
+
+:0041FFD7 80BF6001000004          cmp byte ptr [edi+00000160], 04
+changed into
+:0041FFD7 50                      push eax
+:0041FFD8 E8C5070100              call 004307A2
+:0041FFDD 58                      pop eax
+:0041FFDE 
+
+file offset 0001FC54
+
+:00420854 80BF6001000004          cmp byte ptr [edi+00000160], 04
+changed into
+:00420854 50                      push eax
+:00420855 E848FF0000              call 004307A2
+:0042085A 58                      pop eax
+:0042085B 
+
+file offset 0001FCA6
+
+:004208A6 80BF6001000004          cmp byte ptr [edi+00000160], 04
+changed into
+:004208A6 50                      push eax
+:004208A7 E8F6FE0000              call 004307A2
+:004208AC 58                      pop eax
+:004208AD 
+
+
+Using free space from old Jester spell:
+
+file offset 0002FBA2
+
+:004307A2 90                      nop
+:004307A3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004307A6 6A0A                    push 0000000A
+:004307A8 5F                      pop edi
+:004307A9 6A07                    push 00000007
+:004307AB 5A                      pop edx
+:004307AC E84BB80300              call 0046BFFC
+:004307B1 EB0B                    jmp 004307BE
+changed into
+:004307A2 0FB68760010000          movzx eax, byte ptr [edi+00000160]
+:004307A9 85C0                    test eax, eax
+:004307AB 7403                    je 004307B0
+:004307AD 83E804                  sub eax, 00000004
+:004307B0 C3                      ret
+:004307B1 9090                    2*nop
+
+

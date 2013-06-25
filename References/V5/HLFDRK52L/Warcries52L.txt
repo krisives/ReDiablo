@@ -1,0 +1,7 @@
+Improved chances for Warcries
+
+file offset 0004030B
+
+:00440F0B 6A30                    push 00000030
+changed into
+:00440F0B 6A27                    push 00000027

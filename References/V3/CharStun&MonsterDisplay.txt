@@ -1,0 +1,268 @@
+Get Stunned with Resistance
+---------------------------
+
+The following code changes will allow the character to get stunned while having resistance to the attack, if the reduced damage is still large enough to do this normally.
+
+This change is needed before implementing the Display change below.
+
+A fix for monsters getting stunned like this can also be supplied.
+ 
+
+File Offset 0002ED9E
+
+:0042F99E 8A8660010000            mov al, byte ptr [esi+00000160]
+change to
+:0042F99E E9CC000000              jmp 0042FA6F		(jmp to Stun routine)
+:0042F9A3 90			  nop
+
+
+
+Display of Monsters/Bosses/Golem
+--------------------------------
+
+The following code changes will display detailed info for monsters and bosses, if number of kills is high enough or if the character is using Infravision.
+
+The amount of current and normal Hitpoints is shown, as well as accurate Resistance info. For normal monsters, the number of kills is also shown.
+
+Golem will have the same display as a boss. Diablo will not, unless some other change is made too.
+
+This code will only work properly if the fix for "Get Stunned with Resistance" is applied, because of the location of CHECKFORBOSS routine.
+
+
+
+- Data change for displaying Hitpoints:
+
+000B23B0 69737461 6E636500 48697420 506F696E istance.Hit Poin
+000B23C0 7473203A 2025692D 25690000 546F7461 ts : %i-%i..Tota
+change to
+000B23B0 69737461 6E636500 48697470 6F696E74 istance.Hitpoint
+000B23C0 73202569 206F6620 25690000 546F7461 s %i of %i..Tota
+
+
+- Change check for boss
+
+File Offset 00004C9E
+
+:0040589E 80B844DD690000          cmp byte ptr [eax+0069DD44], 00
+change to
+:0040589E E800A10200              call 0042F9A3		(call CHECKFORBOSS)
+:004058A3 85C9                    test ecx, ecx
+
+
+- Routine CHECKFORBOSS
+
+Referenced by a CALL at Address 0040589E   
+output = ecx (00:Normal, 01:Boss or Golem)
+
+File Offset 0002EDA3
+
+:0042F9A3 90			  nop
+:0042F9A4 84C0                    test al, al
+:0042F9A6 743B                    je 0042F9E3
+:0042F9A8 3C01                    cmp al, 01
+:0042F9AA 7426                    je 0042F9D2
+:0042F9AC 3C02                    cmp al, 02
+:0042F9AE 750D                    jne 0042F9BD
+:0042F9B0 FF763C                  push [esi+3C]
+:0042F9B3 8B5638                  mov edx, dword ptr [esi+38]
+:0042F9B6 B94A020000              mov ecx, 0000024A
+:0042F9BB EB31                    jmp 0042F9EE
+:0042F9BD 3C03                    cmp al, 03
+change to
+:0042F9A3 8B8864DD6900            mov ecx, dword ptr [eax+0069DD64]
+:0042F9A9 83396D                  cmp dword ptr [ecx], 0000006D		
+:0042F9AC 740C                    je 0042F9BA		(jmp if Golem)
+:0042F9AE 80B844DD690000          cmp byte ptr [eax+0069DD44], 00
+:0042F9B5 7503                    jne 0042F9BA		(jmp if boss)
+:0042F9B7 33C9                    xor ecx, ecx		(ecx := 0)
+:0042F9B9 C3                      ret
+:0042F9BA 6A01                    push 00000001
+:0042F9BC 59                      pop ecx		(ecx := 1)
+:0042F9BD C3                      ret
+:0042F9BE 90                      nop
+
+
+- Display for Normal monsters
+
+File Offset 0004383F
+
+:0044443F 833B1E                  cmp dword ptr [ebx], 0000001E
+:00444442 7C7E                    jl 004444C2
+:00444444 8BC7                    mov eax, edi
+:00444446 C1E007                  shl eax, 07
+:00444449 8B8848BF4A00            mov ecx, dword ptr [eax+004ABF48]
+:0044444F 8B904CBF4A00            mov edx, dword ptr [eax+004ABF4C]
+:00444455 A0C8DF6D00              mov al, byte ptr [006DDFC8]
+change to
+:0044443F E816000000              call 0044445A		(call CHECKIV)
+:00444444 50                      push eax
+:00444445 85C0                    test eax, eax
+:00444447 7505                    jne 0044444E		(jmp with Infravision)
+:00444449 833B1E                  cmp dword ptr [ebx], 0000001E
+:0044444C 7C05                    jl 00444453		(jmp if kills < 30)
+:0044444E E82C000000              call 0044447F		(call DISPLHP)
+:00444453 58                      pop eax
+:00444454 85C0                    test eax, eax
+:00444456 7573                    jne 004444CB		(jmp with Infravision)
+:00444458 EB68                    jmp 004444C2
+
+
+- Routine CHECKIV
+
+Referenced by a CALL at Addresses 0044443F, 004445CC   
+output = eax (00:No Infravision, 01:Infravision)
+
+File Offset 0004385A
+
+:0044445A 3C01                    cmp al, 01
+:0044445C 7504                    jne 00444462
+:0044445E D1F9                    sar ecx, 1
+:00444460 D1FA                    sar edx, 1
+:00444462 3BCD                    cmp ecx, ebp
+:00444464 7D02                    jge 00444468
+:00444466 8BCD                    mov ecx, ebp
+:00444468 3BD5                    cmp edx, ebp
+:0044446A 7D02                    jge 0044446E
+:0044446C 8BD5                    mov edx, ebp
+:0044446E 8B2DC0706000            mov ebp, dword ptr [006070C0]
+:00444474 83FD01                  cmp ebp, 00000001
+:00444477 7518                    jne 00444491
+:00444479 FEC8                    dec al
+:0044447B F6D8                    neg al
+:0044447D 1BC0                    sbb eax, eax
+change to
+:0044445A 51                      push ecx
+:0044445B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00444460 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00444466 69C0C8550000            imul eax, 000055C8
+:0044446C 03C1                    add eax, ecx
+:0044446E 59                      pop ecx
+:0044446F 8B80D0010000            mov eax, dword ptr [eax+000001D0]
+:00444475 C3                      ret
+:00444476 90                      nop
+:00444477 90                      nop
+:00444478 90                      nop
+:00444479 90                      nop
+:0044447A 90                      nop
+:0044447B 90                      nop
+:0044447C 90                      nop
+:0044447D 90                      nop
+:0044447E 90                      nop
+
+To disable this Infravision feature, change
+
+:00444475 C3                      ret
+:00444476 90                      nop
+:00444477 90                      nop
+to
+:00444475 33C0                    xor eax, eax
+:00444477 C3                      ret
+
+This disabling will reduce boss displays to only a golden name, always.
+
+
+- Routine DISPLHP
+
+Used for normal monsters and bosses.
+Referenced by a CALL at Addresses 0044444E, 004445DA   
+
+File Offset 0004387F
+
+:0044447F 83E032                  and eax, 00000032
+:00444482 83C032                  add eax, 00000032
+:00444485 8D2C48                  lea ebp, dword ptr [eax+2*ecx]
+:00444488 8D0450                  lea eax, dword ptr [eax+2*edx]
+:0044448B 03CD                    add ecx, ebp
+:0044448D 03D0                    add edx, eax
+:0044448F EB17                    jmp 004444A8
+:00444491 83FD02                  cmp ebp, 00000002
+:00444494 7512                    jne 004444A8
+:00444496 FEC8                    dec al
+:00444498 F6D8                    neg al
+:0044449A 1BC0                    sbb eax, eax
+:0044449C 83E064                  and eax, 00000064
+:0044449F 83C064                  add eax, 00000064
+:004444A2 8D0C88                  lea ecx, dword ptr [eax+4*ecx]
+:004444A5 8D1490                  lea edx, dword ptr [eax+4*edx]
+:004444A8 52                      push edx
+:004444A9 51                      push ecx
+:004444AA 68B8394B00              push 004B39B8
+:004444AF 56                      push esi
+:004444B0 E80B560300              call 00479AC0
+:004444B5 83C410                  add esp, 00000010
+:004444B8 8BCE                    mov ecx, esi
+:004444BA 6A01                    push 00000001
+change to
+:0044447F 51                      push ecx
+:00444480 52                      push edx
+:00444481 A12C164D00              mov eax, dword ptr [004D162C]
+:00444486 69C0E4000000            imul eax, 000000E4
+:0044448C 8B901CDD6900            mov edx, dword ptr [eax+0069DD1C]
+:00444492 8B8818DD6900            mov ecx, dword ptr [eax+0069DD18]
+:00444498 C1E906                  shr ecx, 06
+:0044449B C1EA06                  shr edx, 06
+:0044449E 51                      push ecx
+:0044449F 52                      push edx
+:004444A0 68B8394B00              push 004B39B8		(Hitpoints %i of %i)
+:004444A5 56                      push esi
+:004444A6 E815560300              call 00479AC0
+:004444AB 83C410                  add esp, 00000010
+:004444AE 8BCE                    mov ecx, esi
+:004444B0 6A01                    push 00000001
+:004444B2 5A                      pop edx
+:004444B3 E89200FCFF              call 0040454A
+:004444B8 5A                      pop edx
+:004444B9 59                      pop ecx
+:004444BA C3                      ret
+:004444BB 90                      nop
+
+
+- Display for Bosses
+
+File Offset 000439CA
+
+:004445CA A12C164D00              mov eax, dword ptr [004D162C]
+:004445CF 53                      push ebx
+:004445D0 69C0E4000000            imul eax, 000000E4
+:004445D6 56                      push esi
+:004445D7 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+:004445DD 83E33F                  and ebx, 0000003F
+:004445E0 7540                    jne 00444622
+:004445E2 BEC0114D00              mov esi, 004D11C0
+:004445E7 68203A4B00              push 004B3A20
+:004445EC 56                      push esi
+:004445ED E83E570300              call 00479D30
+:004445F2 59                      pop ecx
+:004445F3 59                      pop ecx
+:004445F4 6A01                    push 00000001
+:004445F6 8BCE                    mov ecx, esi
+:004445F8 5A                      pop edx
+:004445F9 E84CFFFBFF              call 0040454A
+:004445FE 68103A4B00              push 004B3A10
+:00444603 56                      push esi
+:00444604 E827570300              call 00479D30
+change to
+:004445CA 53                      push ebx
+:004445CB 56                      push esi
+:004445CC E889FEFFFF              call 0044445A		(call CHECKIV)
+:004445D1 85C0                    test eax, eax
+:004445D3 740F                    je 004445E4		(jmp without Infravision)
+:004445D5 BEC0114D00              mov esi, 004D11C0
+:004445DA E8A0FEFFFF              call 0044447F		(call DISPLHP)
+:004445DF E802000000              call 004445E6		(display boss resistances)
+:004445E4 EB1F                    jmp 00444605		(jmp exit)
+:004445E6 53                      push ebx
+:004445E7 55                      push ebp
+:004445E8 56                      push esi
+:004445E9 57                      push edi
+:004445EA BEC0114D00              mov esi, 004D11C0
+:004445EF A12C164D00              mov eax, dword ptr [004D162C]
+:004445F4 69C0E4000000            imul eax, 000000E4
+:004445FA 8A9854DD6900            mov bl, byte ptr [eax+0069DD54]
+:00444600 E9E5FEFFFF              jmp 004444EA		(jmp to normal monster display)
+:00444605 5E                      pop esi
+:00444606 5B                      pop ebx
+:00444607 C3                      ret
+:00444608 90                      nop
+
+

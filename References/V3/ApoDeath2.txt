@@ -1,0 +1,36 @@
+Diablo dying in flames
+
+
+Added a modified FIREPLAR.CL2 as DIABLOD.CL2 to DARK.MPQ.
+
+Header from modified CL2:
+
+00000000 2000 0000 2000 0000 2000 0000 2000 0000  ... ... ... ...
+00000010 2000 0000 2000 0000 2000 0000 2000 0000  ... ... ... ...
+00000020 1100 0000 4C00 0000 D805 0000 E30F 0000 ....L...........
+00000030 BB17 0000 A01F 0000 DA29 0000 1D36 0000 .........)...6..
+00000040 6643 0000 5E53 0000 A366 0000 F57B 0000 fC..^S...f...{..
+00000050 A893 0000 B8AC 0000 7EC5 0000 BBD3 0000 ........~.......
+00000060 CFD8 0000 CDDB 0000 B8DD 0000 0A00 DD02 ................
+
+Frameset is 17 frames.
+
+Death frameset from Diablo is 17 frames, for his Ghost 16 frames.
+
+
+Setting DarkLord's Death frameset from 17 to 18 to remove 'leftovers' :
+
+000AE020 1200 0000 0C00 0000 0000 0000 0000 0000 ................
+
+Setting DarkLord's Death animation speed to 2 :
+
+000AE030 0000 0000 0000 0000 0200 0000 0000 0000 ................
+
+Setting DarkGhost's Death animation speed to 2 :
+
+000AEDB0 0000 0000 0000 0000 0200 0000 0000 0000 ................
+
+Setting DarkGhost's Death frameset from 16 to 17 :
+
+000AEDA0 1100 0000 0900 0000 0400 0000 0000 0000 ................
+

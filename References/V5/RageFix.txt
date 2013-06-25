@@ -1,0 +1,338 @@
+Rage fix
+
+2B	Rage
+A681C	2B00 0000 B54C 4300 9299
+	4300 0000 0000 0100 FF00
+	FFFF FFFF FFFF FFFF
+
+
+
+Rage by JG:
+
+1.For 12 seconds it adds: 2·clvl to Strength and Vitality and 1.5·clvl to Dexterity.
+
+2.For 12 more seconds, during a lethargy phase, it decreases Strength, Dexterity and Vitality by the same amount (counted from normal values).
+
+3.Afterwards you lose 2·Vit life. There is a bug however so if you click on any item in your inventory your life is restored.
+
+
+()Rage
+Disable bugged life-loss. 2e poging.
+
+:00439B0F 03CB                    add ecx, ebx
+wordt
+:00439B0F 33C9                    xor ecx, ecx
+
+
+
+Disabling 'lethargy phase'
+
+File Offset 00038E4E
+
+:00439A4E 8987C87A6900            mov dword ptr [edi+00697AC8], eax
+wordt
+:00439A4E 8997C87A6900            mov dword ptr [edi+00697AC8], edx
+
+
+
+Primary effect:
+
+:00434CB5 55                      push ebp
+:00434CB6 8BEC                    mov ebp, esp
+:00434CB8 83EC18                  sub esp, 00000018
+:00434CBB 53                      push ebx
+:00434CBC 56                      push esi
+:00434CBD 57                      push edi
+:00434CBE 8B7D1C                  mov edi, dword ptr [ebp+1C]
+:00434CC1 83FFFF                  cmp edi, FFFFFFFF
+:00434CC4 8BD9                    mov ebx, ecx
+:00434CC6 0F84F4000000            je 00434DC0
+:00434CCC 8BF7                    mov esi, edi
+:00434CCE A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434CD3 69F6C8550000            imul esi, 000055C8
+:00434CD9 03C6                    add eax, esi
+:00434CDB F6802001000006          test byte ptr [eax+00000120], 06
+:00434CE2 0F85D8000000            jne 00434DC0					terminate if flag=2 or flag=4
+:00434CE8 0FBE88B8010000          movsx ecx, byte ptr [eax+000001B8]
+:00434CEF C1E106                  shl ecx, 06
+:00434CF2 398898010000            cmp dword ptr [eax+00000198], ecx
+:00434CF8 0F8EC2000000            jle 00434DC0					terminate if life < clvl
+:00434CFE BA20030000              mov edx, 00000320
+:00434D03 B9B3020000              mov ecx, 000002B3
+:00434D08 6A16                    push 00000016
+:00434D0A 8955E8                  mov dword ptr [ebp-18], edx
+:00434D0D 894DEC                  mov dword ptr [ebp-14], ecx
+:00434D10 B84C020000              mov eax, 0000024C
+:00434D15 894DF8                  mov dword ptr [ebp-08], ecx
+:00434D18 8955FC                  mov dword ptr [ebp-04], edx
+:00434D1B 5A                      pop edx
+:00434D1C 8BCF                    mov ecx, edi
+:00434D1E 8945F0                  mov dword ptr [ebp-10], eax
+:00434D21 8945F4                  mov dword ptr [ebp-0C], eax
+:00434D24 E8D3720300              call 0046BFFC					substract mana/charge for spell 16h
+:00434D29 8BC3                    mov eax, ebx
+:00434D2B 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00434D31 69C0B0000000            imul eax, 000000B0
+:00434D37 03CE                    add ecx, esi
+:00434D39 89B8E87A6900            mov dword ptr [eax+00697AE8], edi
+:00434D3F 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]
+:00434D46 80892001000002          or byte ptr [ecx+00000120], 02		set flag=2
+:00434D4D 33C9                    xor ecx, ecx
+:00434D4F 8D1452                  lea edx, dword ptr [edx+2*edx]		edx = 3*clvl
+:00434D52 C1E207                  shl edx, 07
+:00434D55 85FF                    test edi, edi
+:00434D57 0F9FC1                  setg cl
+:00434D5A D1E1                    shl ecx, 1
+:00434D5C 8990EC7A6900            mov dword ptr [eax+00697AEC], edx		store 64*6*clvl
+:00434D62 7410                    je 00434D74
+:00434D64 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00434D6A 0FBE9431B8010000        movsx edx, byte ptr [ecx+esi+000001B8]	edx=clvl
+:00434D72 EB03                    jmp 00434D77
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434D62(C)
+|
+:00434D74 6A01                    push 00000001
+:00434D76 5A                      pop edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434D72(U)
+|
+:00434D77 E8CE960000              call 0043E44A					ecx = extra slvls
+:00434D7C 90                      nop
+:00434D7D 6A01                    push 00000001
+:00434D7F 8D0C91                  lea ecx, dword ptr [ecx+4*edx]		ecx = 4*clvl + slvls
+:00434D82 8D8C4A00030000          lea ecx, dword ptr [edx+2*ecx+00000300]	ecx = 9*clvl + 2*slvls + 300h
+:00434D89 5A                      pop edx
+:00434D8A 8988C87A6900            mov dword ptr [eax+00697AC8], ecx		set duration to ecx
+:00434D90 8BCF                    mov ecx, edi
+:00434D92 E8CEEBFEFF              call 00423965					process char equipment
+:00434D97 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434D9C C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:00434DA6 03C6                    add eax, esi
+:00434DA8 FF703C                  push [eax+3C]
+:00434DAB 8B5038                  mov edx, dword ptr [eax+38]
+:00434DAE 0FBE8060010000          movsx eax, byte ptr [eax+00000160]
+:00434DB5 8B4C85E8                mov ecx, dword ptr [ebp+4*eax-18]
+:00434DB9 E80639FEFF              call 004186C4					play sound
+:00434DBE EB10                    jmp 00434DD0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00434CC6(C), :00434CE2(C), :00434CF8(C)
+|
+:00434DC0 69DBB0000000            imul ebx, 000000B0
+:00434DC6 C7838C7A690001000000    mov dword ptr [ebx+00697A8C], 00000001
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434DBE(U)
+|
+:00434DD0 5F                      pop edi
+:00434DD1 5E                      pop esi
+:00434DD2 5B                      pop ebx
+:00434DD3 C9                      leave
+:00434DD4 C21C00                  ret 001C
+
+
+Secondary Spelleffect:
+
+:00439992 55                      push ebp
+:00439993 8BEC                    mov ebp, esp
+:00439995 83EC20                  sub esp, 00000020
+:00439998 53                      push ebx
+:00439999 56                      push esi
+:0043999A 57                      push edi
+:0043999B 8BF9                    mov edi, ecx
+:0043999D 69FFB0000000            imul edi, 000000B0
+:004399A3 FF8FC87A6900            dec dword ptr [edi+00697AC8]
+:004399A9 0F85B1010000            jne 00439B60
+:004399AF 8BB7E87A6900            mov esi, dword ptr [edi+00697AE8]
+:004399B5 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004399BA 8975F8                  mov dword ptr [ebp-08], esi
+:004399BD 69F6C8550000            imul esi, 000055C8
+:004399C3 8A8C3020010000          mov cl, byte ptr [eax+esi+00000120]
+:004399CA 8D843020010000          lea eax, dword ptr [eax+esi+00000120]
+:004399D1 884DFF                  mov byte ptr [ebp-01], cl
+:004399D4 80E102                  and cl, 02
+:004399D7 80F902                  cmp cl, 02
+:004399DA B922030000              mov ecx, 00000322
+:004399DF 0F85DC000000            jne 00439AC1
+:004399E5 894DE0                  mov dword ptr [ebp-20], ecx
+:004399E8 894DF4                  mov dword ptr [ebp-0C], ecx
+:004399EB 8A4DFF                  mov cl, byte ptr [ebp-01]
+:004399EE BA4E020000              mov edx, 0000024E
+:004399F3 80E1FD                  and cl, FD
+:004399F6 BBB5020000              mov ebx, 000002B5
+:004399FB 8808                    mov byte ptr [eax], cl
+:004399FD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A02 808C302001000004        or byte ptr [eax+esi+00000120], 04
+:00439A0A 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00439A10 8D843020010000          lea eax, dword ptr [eax+esi+00000120]
+:00439A17 6A01                    push 00000001
+:00439A19 33C0                    xor eax, eax
+:00439A1B 8955E8                  mov dword ptr [ebp-18], edx
+:00439A1E 3945F8                  cmp dword ptr [ebp-08], eax
+:00439A21 8955EC                  mov dword ptr [ebp-14], edx
+:00439A24 895DE4                  mov dword ptr [ebp-1C], ebx
+:00439A27 895DF0                  mov dword ptr [ebp-10], ebx
+:00439A2A 0F9FC0                  setg al
+:00439A2D D1E0                    shl eax, 1
+:00439A2F 5A                      pop edx
+:00439A30 740A                    je 00439A3C
+:00439A32 0FBE9C31B8010000        movsx ebx, byte ptr [ecx+esi+000001B8]
+:00439A3A EB02                    jmp 00439A3E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439A30(C)
+|
+:00439A3C 8BDA                    mov ebx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439A3A(U)
+|
+:00439A3E 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00439A44 8D0480                  lea eax, dword ptr [eax+4*eax]
+:00439A47 8D8443F5000000          lea eax, dword ptr [ebx+2*eax+000000F5]
+:00439A4E 8997C87A6900            mov dword ptr [edi+00697AC8], edx		<- duration set to 1
+:00439A54 8BBC319C010000          mov edi, dword ptr [ecx+esi+0000019C]
+:00439A5B 2BBC3198010000          sub edi, dword ptr [ecx+esi+00000198]
+:00439A62 8D0431                  lea eax, dword ptr [ecx+esi]
+:00439A65 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00439A68 E8F89EFEFF              call 00423965
+:00439A6D A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A72 29BC3098010000          sub dword ptr [eax+esi+00000198], edi
+:00439A79 6A40                    push 00000040
+:00439A7B 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:00439A82 59                      pop ecx
+:00439A83 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A88 398C3098010000          cmp dword ptr [eax+esi+00000198], ecx
+:00439A8F 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:00439A96 7D02                    jge 00439A9A
+:00439A98 8908                    mov dword ptr [eax], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439A96(C)
+|
+:00439A9A A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439A9F C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:00439AA9 03C6                    add eax, esi
+:00439AAB FF703C                  push [eax+3C]
+:00439AAE 8B5038                  mov edx, dword ptr [eax+38]
+:00439AB1 0FBE8060010000          movsx eax, byte ptr [eax+00000160]
+:00439AB8 8B4C85E0                mov ecx, dword ptr [ebp+4*eax-20]
+:00439ABC E99A000000              jmp 00439B5B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004399DF(C)
+|
+:00439AC1 BA4E020000              mov edx, 0000024E
+:00439AC6 6A01                    push 00000001
+:00439AC8 8955E8                  mov dword ptr [ebp-18], edx
+:00439ACB 8955EC                  mov dword ptr [ebp-14], edx
+:00439ACE 5A                      pop edx
+:00439ACF BBB5020000              mov ebx, 000002B5
+:00439AD4 89978C7A6900            mov dword ptr [edi+00697A8C], edx
+:00439ADA 8020FB                  and byte ptr [eax], FB
+:00439ADD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439AE2 895DE4                  mov dword ptr [ebp-1C], ebx
+:00439AE5 03C6                    add eax, esi
+:00439AE7 895DF0                  mov dword ptr [ebp-10], ebx
+:00439AEA 894DE0                  mov dword ptr [ebp-20], ecx
+:00439AED 894DF4                  mov dword ptr [ebp-0C], ecx
+:00439AF0 8B989C010000            mov ebx, dword ptr [eax+0000019C]
+:00439AF6 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00439AF9 2B9898010000            sub ebx, dword ptr [eax+00000198]
+:00439AFF E8619EFEFF              call 00423965
+:00439B04 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439B09 8B8FEC7A6900            mov ecx, dword ptr [edi+00697AEC]
+:00439B0F 33C9                    xor ecx, ecx
+:00439B11 6A40                    push 00000040
+:00439B13 298C3098010000          sub dword ptr [eax+esi+00000198], ecx
+:00439B1A 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:00439B21 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439B26 59                      pop ecx
+:00439B27 398C3098010000          cmp dword ptr [eax+esi+00000198], ecx
+:00439B2E 8D843098010000          lea eax, dword ptr [eax+esi+00000198]
+:00439B35 7D02                    jge 00439B39
+:00439B37 8908                    mov dword ptr [eax], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439B35(C)
+|
+:00439B39 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00439B3E C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+:00439B48 03C6                    add eax, esi
+:00439B4A FF703C                  push [eax+3C]
+:00439B4D 8B5038                  mov edx, dword ptr [eax+38]
+:00439B50 0FBE8060010000          movsx eax, byte ptr [eax+00000160]
+:00439B57 8B4C85E0                mov ecx, dword ptr [ebp+4*eax-20]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439ABC(U)
+|
+:00439B5B E864EBFDFF              call 004186C4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004399A9(C)
+|
+:00439B60 5F                      pop edi
+:00439B61 5E                      pop esi
+:00439B62 5B                      pop ebx
+:00439B63 C9                      leave
+:00439B64 C3                      ret
+
+
+
+
+Part of equipment processing:
+
+:00423B71 8A8320010000            mov al, byte ptr [ebx+00000120]
+:00423B77 8AC8                    mov cl, al
+:00423B79 8845FF                  mov byte ptr [ebp-01], al
+:00423B7C 80E102                  and cl, 02
+:00423B7F 80F902                  cmp cl, 02
+:00423B82 7521                    jne 00423BA5
+:00423B84 0FBEBBB8010000          movsx edi, byte ptr [ebx+000001B8]
+:00423B8B 8BC7                    mov eax, edi
+:00423B8D 99                      cdq
+:00423B8E 2BC2                    sub eax, edx
+:00423B90 8D0C3F                  lea ecx, dword ptr [edi+edi]
+:00423B93 014DEC                  add dword ptr [ebp-14], ecx		is later added to Str
+:00423B96 014DF8                  add dword ptr [ebp-08], ecx		is later added to Vit and used for Life
+:00423B99 D1F8                    sar eax, 1
+:00423B9B 03C7                    add eax, edi
+:00423B9D 0145E8                  add dword ptr [ebp-18], eax		is later added to Dex
+:00423BA0 8A45FF                  mov al, byte ptr [ebp-01]
+:00423BA3 33D2                    xor edx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423B82(C)
+|
+:00423BA5 2404                    and al, 04
+:00423BA7 3C04                    cmp al, 04
+:00423BA9 7520                    jne 00423BCB
+:00423BAB 0FBE8BB8010000          movsx ecx, byte ptr [ebx+000001B8]
+:00423BB2 8BC1                    mov eax, ecx
+:00423BB4 99                      cdq
+:00423BB5 2BC2                    sub eax, edx
+:00423BB7 8D3C09                  lea edi, dword ptr [ecx+ecx]
+:00423BBA 297DEC                  sub dword ptr [ebp-14], edi		is later added to Str
+:00423BBD 297DF8                  sub dword ptr [ebp-08], edi		is later added to Vit and used for Life
+:00423BC0 D1F8                    sar eax, 1
+:00423BC2 F7D9                    neg ecx
+:00423BC4 2BC8                    sub ecx, eax
+:00423BC6 014DE8                  add dword ptr [ebp-18], ecx		is later added to Dex
+:00423BC9 33D2                    xor edx, edx
+
+To adjust Magic, [ebp-30] would have to be altered
+
+
+Extra life loss:
+
+:00424074 8A9820010000            mov bl, byte ptr [eax+00000120]
+:0042407A 80E304                  and bl, 04
+:0042407D 80FB04                  cmp bl, 04
+:00424080 750E                    jne 00424090
+:00424082 0FBEB8B8010000          movsx edi, byte ptr [eax+000001B8]
+:00424089 2BCF                    sub ecx, edi
+:0042408B 2BD7                    sub edx, edi
+:0042408D 297DE4                  sub dword ptr [ebp-1C], edi		resistance changed?

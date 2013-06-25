@@ -1,0 +1,14 @@
+Adding 100% piercing against monsters for Abyss trap
+
+This affects all missiles originating from Traps, and also from other monsters (although this can only be charmed spitters AFAIK). A more precise solution would require many jumps and extra code, with very little better effect.
+
+File Offset 0002E673
+
+:0042F273 6A01                    push 00000001
+wordt
+:0042F273 6A00                    push 00000000
+
+
+The following obsolete code is executed for Player-Missile vs Monster (not traps) and can be used to make another spell effect 100% piercing like Bone Spirit is.
+
+:004094A1 837D1433                cmp dword ptr [ebp+14], 00000033

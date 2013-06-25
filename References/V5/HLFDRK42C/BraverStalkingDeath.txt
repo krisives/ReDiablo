@@ -1,0 +1,118 @@
+Braver Stalking Death
+
+
+Moving the diagonal retreat pattern from Unseen to Stalking Death:
+
+file offset 0003FD76
+
+:00440976 83381F                  cmp dword ptr [eax], 0000001F
+changed into
+:00440976 83381B                  cmp dword ptr [eax], 0000001B
+
+
+Modifying Baron Sludge because we now have more fixed Hidden bosses, and to use the code at Hidden AI.
+
+ 53 Baron Sludge    Mud Man       15 Hidden           2   3Y     8      16       14   520   25- 34  RRR    -    -
+                                   1 Overlord         1          7
+
+000AF920 3400 0000 D817 4B00 841B 4B00 0800 0802 4.....K...K.....
+000AF930 0F02 1922 0700 0300 4B00 0000 0000 0000 ..."....K.......
+changed into
+000AF92C 0700                                    ..
+000AF930 0101                                    ..
+
+
+Allowing (immune) retreat mode for Stalking Death only if they are damaged for half their Hp or more.
+
+file offset 00079535
+
+:0047A135 740F                    je 0047A146
+:0047A137 83F834                  cmp eax, 00000034
+:0047A13A 740A                    je 0047A146
+:0047A13C 83660C00                and dword ptr [esi+0C], 00000000
+:0047A140 C6460802                mov [esi+08], 02
+:0047A144 33C0                    xor eax, eax
+:0047A146 85C0                    test eax, eax
+:0047A148 C3                      ret
+* Referenced by a CALL at Address:004445CC   
+:0047A149 8A8020DD6900            mov al, byte ptr [eax+0069DD20]
+:0047A14F 3C15                    cmp al, 15
+:0047A151 0F8503A3FCFF            jne 0044445A
+:0047A157 C3                      ret
+:0047A158 90                      nop
+:0047A159 90                      nop
+:0047A15A 90                      nop
+:0047A15B 90                      nop
+:0047A15C 90                      nop
+:0047A15D 90                      nop
+:0047A15E 90                      nop
+:0047A15F 90                      nop
+changed into
+:0047A135 7417                    je 0047A14E
+:0047A137 83F81B                  cmp eax, 0000001B
+:0047A13A 0F84E21BFCFF            je 0043BD22
+:0047A140 90909090                4*nop
+:0047A144 83660C00                and dword ptr [esi+0C], 00000000
+:0047A148 C6460802                mov [esi+08], 02
+:0047A14C 33C0                    xor eax, eax
+:0047A14E 85C0                    test eax, eax
+:0047A150 C3                      ret
+:0047A151 8A8020DD6900            mov al, byte ptr [eax+0069DD20]
+:0047A157 3C15                    cmp al, 15
+:0047A159 0F85FBA2FCFF            jne 0044445A
+:0047A15F C3                      ret
+
+
+Using free space from full Hp for bosses in SP:
+
+file offset 0003B122
+
+:0043BD22 90                      nop
+:0043BD23 90                      nop
+:0043BD24 90                      nop
+:0043BD25 90                      nop
+:0043BD26 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043BD2D 7515                    jne 0043BD44
+:0043BD2F 6A40                    push 00000040
+:0043BD31 D1F8                    sar eax, 1
+:0043BD33 59                      pop ecx
+:0043BD34 898690000000            mov dword ptr [esi+00000090], eax
+:0043BD3A 3BC1                    cmp eax, ecx
+:0043BD3C 7D06                    jge 0043BD44
+changed into
+:0043BD22 8B8690000000            mov eax, dword ptr [esi+00000090]
+:0043BD28 D1F8                    sar eax, 1
+:0043BD2A 3B8694000000            cmp eax, dword ptr [esi+00000094]
+:0043BD30 0F8C18E40300            jl 0047A14E
+:0043BD36 E909E40300              jmp 0047A144
+:0043BD3B 909090                  3*nop
+
+
+Correcting call at 004445CC
+
+file offset 000439CC
+
+:004445CC E8785B0300              call 0047A149
+changed into
+:004445CC E8805B0300              call 0047A151
+
+
+
+Previous check on brave Ghostwarriors and Mudmen:
+
+:004408E3 E842980300              call 0047A12A
+:004408E8 7503                    jne 004408ED
+:004408EA 90                      nop
+:004408EB EB2E                    jmp 0044091B
+
+:0047A12A 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:0047A130 8B00                    mov eax, dword ptr [eax]
+:0047A132 83F835                  cmp eax, 00000035
+:0047A135 740F                    je 0047A146
+:0047A137 83F834                  cmp eax, 00000034
+:0047A13A 740A                    je 0047A146
+:0047A13C 83660C00                and dword ptr [esi+0C], 00000000
+:0047A140 C6460802                mov [esi+08], 02
+:0047A144 33C0                    xor eax, eax
+:0047A146 85C0                    test eax, eax
+:0047A148 C3                      ret

@@ -1,0 +1,451 @@
+Spells in The Dark
+
+
+
+-Get Spell level tijdens spell-code (waarbij ecx gegeven is, =caster-id?)
+
+:0043033F 8BF1                    mov esi, ecx
+:
+:00430349 8BC6                    mov eax, esi
+:
+:0043034C 69C0B0000000            imul eax, 000000B0
+:00430352 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+
+Redelijk simpel dus toch.
+
+
+
+-Correctie Jester:
+
+-80  *5  ->  -80  *3  ??
+moet zijn    -67  *3
+
+Andere naam?
+
+
+-Lightning damage for monsters (damage := damage/16 ipv. damage/32, hit 10 times)
+
+Nu:
+
+:0043710D 69C0E4000000            imul eax, 000000E4
+:00437113 B150                    mov cl, 50
+:00437115 0FB6904EDD6900          movzx edx, byte ptr [eax+0069DD4E]	edx := max damage
+:0043711C 8DA84DDD6900            lea ebp, dword ptr [eax+0069DD4D]	ebp := min damage
+:00437122 0FB6804DDD6900          movzx eax, byte ptr [eax+0069DD4D]
+:00437129 2BD0                    sub edx, eax
+:0043712B 42                      inc edx
+:0043712C E8292EFEFF              call 00419F5A
+:00437131 8BF8                    mov edi, eax
+:00437133 0FB64500                movzx eax, byte ptr [ebp+00]
+:00437137 03F8                    add edi, eax
+:00437139 D1E7                    shl edi, 1
+:0043713B EB18                    jmp 00437155
+
+Moet worden:
+
+:
+:00437122 0FB64500                movzx eax, byte ptr [ebp+00]
+:         2BD0                    sub edx, eax
+:         42                      inc edx
+:         E8292EFEFF              call 00419F5A
+:         8BF8                    mov edi, eax
+:         0FB64500                movzx eax, byte ptr [ebp+00]
+:         03F8                    add edi, eax
+:         C1E702                  shl edi, 2
+:         90			  nop
+:         90	                  nop
+:0043713B EB18			  jmp 00437155
+
+-Lightning van traps, damage = dlvl+rnd[dlvl] -> 2*(dlvl+rnd[dlvl])
+
+:0043713D 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]	edx := dlvl
+:00437144 B151                    mov cl, 51
+:00437146 E80F2EFEFF              call 00419F5A				eax := rnd[dlvl]
+:0043714B 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]	ecx := dlvl
+:00437152 8D3C48                  lea edi, dword ptr [eax+2*ecx]	
+
+voorstel:
+
+:0043713D 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]	edx := dlvl
+:00437144 52			  push edx
+:00437145 B151                    mov cl, 51
+:00437147 E80F2EFEFF              call 00419F5A				eax := rnd[dlvl]
+:0043714C 59			  pop ecx				ecx := dlvl
+:0043714D D1E0			  shl eax, 1				eax := eax*2
+:0043714F D1E1			  shl ecx, 1				ecx := ecx*2
+:00437151 8D3C48                  lea edi, dword ptr [eax+2*ecx]	
+:00437154 90			  nop
+
+Voorstel, waarbij dlvl voor Difficulty is aangepast:
+
+:0043713D E8721A0500		  call 00488BB4		GET_MOD_DLVL 	edx := diff(dlvl)
+:00437142 90			  nop
+:00437143 90			  nop
+
+
+
+-Bloodstar speed (20 ipv 16) 
+
+Gaat ook voor Witches gelden, waarschijnlijk!
+4e push voor CALL 00430661 is altijd Speed.
+
+:00433781 6A10                    push 00000010 
+
+wordt:
+
+:00433781 6A14                    push 00000014
+
+
+-Reflect duration
+
+Helaas te weinig ruimte om de duur in te korten (# of hits = clvl*slvl). Ik stel voor om manakosten te verhogen. 
+
+:0043034C 69C0B0000000            imul eax, 000000B0
+:00430352 8B80887A6900            mov eax, dword ptr [eax+00697A88]	eax := slvl
+:00430358 85C0                    test eax, eax				
+:0043035A 7404                    je 00430360				als slvl=0
+:0043035C 8BD0                    mov edx, eax
+:0043035E EB03                    jmp 00430363
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: :0043035A(C)
+:00430360 6A02                    push 00000002
+:00430362 5A                      pop edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address: :0043035E(U)
+:00430363 8BC1                    mov eax, ecx
+:00430365 8B3D14AE6E00            mov edi, dword ptr [006EAE14]
+:0043036B 69C0C8550000            imul eax, 000055C8
+:00430371 03C7                    add eax, edi
+:00430373 6A2B                    push 0000002B
+:00430375 660FBEB8B8010000        movsx di, byte ptr [eax+000001B8]	di(?) := clvl
+:0043037D 0FAFFA                  imul edi, edx				
+:00430380 6601B870550000          add word ptr [eax+00005570], di	store # of hits
+
+-Getting hit with Reflect
+
+:0043E30B 668B8C3070550000        mov cx, word ptr [eax+esi+00005570]	get # of hits left
+:0043E313 8D843070550000          lea eax, dword ptr [eax+esi+00005570]	again
+:0043E31A 6685C9                  test cx, cx				check if zero
+:0043E31D 0F86DB030000            jbe 0043E6FE				?
+:
+:0043E32B 49                      dec ecx				substract 1
+:
+:0043E32D 668908                  mov word ptr [eax], cx		store again
+:
+:0043E35E 6A0A                    push 0000000A
+:0043E360 B164                    mov cl, 64
+:0043E362 5A                      pop edx
+:0043E363 E8F2BBFDFF              call 00419F5A				eax := 0..9
+:0043E368 83C014                  add eax, 00000014			eax := 20..29
+:0043E36B 894510                  mov dword ptr [ebp+10], eax		store reduction
+
+Voorstel:
+
+:0043E368 83C00A                  add eax, 0000000A			eax := 10..19
+
+Ook op:
+
+:0043E524 83C00A                  add eax, 0000000A
+
+
+
+-Nova damage increase for traps
+
+before : itt[3,rnd[3]] + dlvl/2
+after  : itt[3,rnd[3]] + dlvl
+
+:00434C93 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]	eax := dlvl
+:00434C9A D1E8                    shr eax, 1				eax := eax/2
+:00434C9C 03F8                    add edi, eax
+:00434C9E 89BED47A6900            mov dword ptr [esi+00697AD4], edi	store damage
+
+Oud Voorstel:
+
+:00434C9A 9090                    nopnop				
+
+Voorstel, waarbij dlvl voor Difficulty is aangepast:
+
+:00434C93 52			  push edx				store edx
+:00434C94 E81B3f0500		  call 00488bb4		GET_MOD_DLVL	edx := diff(dlvl)
+:00434C99 8BC2                    mov eax, edx				
+:00434C9B 5A			  pop edx				get edx
+
+
+
+-Bloodstar damage = 3*slvl + [mag/2] - [mag/8] = 3*(slvl + mag/8)	volgens JG
+
+:004361C2 69FFC8550000            imul edi, 000055C8
+:004361C8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004361CD 8BBC076C010000          mov edi, dword ptr [edi+eax+0000016C]	edi := mag
+:004361D4 8B86887A6900            mov eax, dword ptr [esi+00697A88]	eax := slvl
+:004361DA 8BCF                    mov ecx, edi				ecx := mag
+:004361DC 8D0480                  lea eax, dword ptr [eax+4*eax] ????	eax := slvl*5
+:004361DF D1E0                    shl eax, 1				eax := slvl*10
+:004361E1 03C1                    add eax, ecx				eax := slvl*10 + mag
+:004361E3 C1FF01                  sar edi, 01				edi := mag/2
+:004361E6 2BC7                    sub eax, edi			eax := slvl*10 + mag/2
+:004361E8 EB75                    jmp 0043625F
+
+V&K aanpassingen dus.
+
+
+-Firebolt damage van traps
+
+:00436241 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]	edx := dlvl
+:00436248 D1E2                    shl edx, 1				edx := dlvl*2
+:0043624A B14E                    mov cl, 4E
+:0043624C E8093DFEFF              call 00419F5A				eax := 0..(dlvl*2-1)
+:00436251 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]	ecx := dlvl
+
+Voorstel:
+
+:00436241 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]	edx := dlvl
+:00436248 D1E2                    shl edx, 1				edx := dlvl*2
+:0043624A 52			  push edx				store dlvl*2
+:0043624B B14E                    mov cl, 4E
+:0043624D E8093DFEFF              call 00419F5A				eax := 0..(dlvl*2-1)
+:00436252 D1E0			  shl eax, 1				eax := eax*2
+:00436254 59			  pop ecx				ecx := dlvl*2 
+:00436255 909090		  nopnopnop				3 bytes over!
+
+Voorstel, waarbij dlvl voor Difficulty is aangepast:
+
+:00436241 E86E290500		  call 00488bb4		GET_MOD_DLVL	edx := diff(dlvl)
+:00436246 90			  nop
+:00436247 90			  nop
+
+
+-Het blijkt dat routine 004360E8 voor Bloodstar, Firebolt en andere dingen gebruikt wordt.
+
+
+-Spell-projectile, check on monster=caster :
+
+:00436191 33DB                    xor ebx, ebx				ebx := 0
+:00436193 83FFFF                  cmp edi, FFFFFFFF			?
+:00436196 0F84A5000000            je 00436241				?
+:0043619C 399ED07A6900            cmp dword ptr [esi+00697AD0], ebx
+:004361A2 7572                    jne 00436216				jump if monster
+
+
+
+-GET_MOD_DLVL
+
+out:    edx = dlvl, 2*dlvl, 4*dlvl 
+	for Normal, Nightmare, Hell difficulties
+
+:00488BB4 51                      push ecx
+:00488BB5 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]	edx := dlvl
+:00488BBC 8B0DC0706000            mov ecx, dword ptr [006070C0]		ecx := diff
+:00488BC2 85C9                    test ecx, ecx
+:00488BC4 7409                    je 00488BCF
+:00488BC6 D1E2                    shl edx, 1
+:00488BC8 83F901                  cmp ecx, 00000001
+:00488BCB 7402                    je 00488BCF
+:00488BCD D1E2                    shl edx, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00488BC4(C), :00488BCB(C)
+|
+:00488BCF 59                      pop ecx
+:00488BD0 C3                      ret
+
+
+-Fire arrow  spell effect 1Bh (ook op 38h ?)
+
+-Fire arrow Speed:
+
+Rogue   : 32 + clvl/4
+Warrior : 32 + clvl/8
+Bard    : 32 + clvl/8
+Magic   : +1, +2, +4, +8
+Others  : 32
+
+:00430BB6 807D1800                cmp byte ptr [ebp+18], 00
+:00430BBA 6A20                    push 00000020				trap speed
+:00430BBC 757B                    jne 00430C39
+:00430BBE 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:00430BC1 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00430BC7 69C9C8550000            imul ecx, 000055C8
+:00430BCD 03CA                    add ecx, edx
+:00430BCF 58                      pop eax				eax := 32
+:00430BD0 8A9160010000            mov dl, byte ptr [ecx+00000160]	dl := class
+:00430BD6 80FA01                  cmp dl, 01
+:00430BD9 750C                    jne 00430BE7				jmp if not rogue
+:00430BDB 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]	eax := clvl
+:00430BE2 C1F802                  sar eax, 02				eax := clvl/4
+:00430BE5 EB13                    jmp 00430BFA				for rogue
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430BD9(C)
+|
+:00430BE7 84D2                    test dl, dl				
+:00430BE9 7405                    je 00430BF0				jmp if warrior
+:00430BEB 80FA04                  cmp dl, 04
+:00430BEE 750D                    jne 00430BFD				jmp if not bard
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430BE9(C)
+|
+:00430BF0 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]	
+:00430BF7 C1F803                  sar eax, 03				eax := clvl/8
+									for warrior, bard
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430BE5(U)
+|
+:00430BFA 83C020                  add eax, 00000020	add 32 if rogue, warrior, bard
+							already done for other classes
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430BEE(C)
+|
+:00430BFD 8B8940550000            mov ecx, dword ptr [ecx+00005540]
+:00430C03 F7C100000200            test ecx, 00020000			
+:00430C09 7401                    je 00430C0C				jmp if no speed
+:00430C0B 40                      inc eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430C09(C)
+|
+:00430C0C F7C100000400            test ecx, 00040000
+:00430C12 7402                    je 00430C16
+:00430C14 40                      inc eax
+:00430C15 40                      inc eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430C12(C)
+|
+:00430C16 F7C100000800            test ecx, 00080000
+:00430C1C 7403                    je 00430C21
+:00430C1E 83C004                  add eax, 00000004
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430C1C(C)
+|
+:00430C21 F7C100001000            test ecx, 00100000
+:00430C27 7403                    je 00430C2C
+:00430C29 83C008                  add eax, 00000008
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430C27(C)
+|
+:00430C2C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00430C2F 50                      push eax
+:00430C30 57                      push edi
+:00430C31 56                      push esi
+:00430C32 FF7508                  push [ebp+08]
+:00430C35 8BD3                    mov edx, ebx
+:00430C37 EB07                    jmp 00430C40
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430BBC(C)
+|
+:00430C39 57                      push edi
+:00430C3A 56                      push esi
+:00430C3B FF7508                  push [ebp+08]
+:00430C3E 8BD3                    mov edx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430C37(U)
+|
+:00430C40 E81CFAFFFF              call 00430661
+
+
+-Fire arrow, damage from traps
+
+:00435D81 6A0A                    push 0000000A
+:00435D83 B144                    mov cl, 44
+:00435D85 5A                      pop edx
+:00435D86 E8CF41FEFF              call 00419F5A				eax := 0..9
+:00435D8B 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]	ecx := dlvl
+:00435D92 6A0A                    push 0000000A
+:00435D94 8D440801                lea eax, dword ptr [eax+ecx+01]	eax := dlvl+1..10
+:00435D98 5A                      pop edx
+:00435D99 B144                    mov cl, 44
+:00435D9B 8945F8                  mov dword ptr [ebp-08], eax		store min.damage
+:00435D9E E8B741FEFF              call 00419F5A				eax := 0..9
+:00435DA3 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]	ecx := dlvl
+:00435DAA 8D7C4801                lea edi, dword ptr [eax+2*ecx+01]	edi := 2*dlvl+1..10
+
+Voorstel voor diff(dlvl) :
+
+:00435D8B E8242E0500		  call 00488BB4				GET_MOD_DLVL			
+:00435D90 8BCA                    mov ecx, edx				ecx := diff(dlvl)
+
+:00435DA3 E80C2E0500		  call 00488BB4 			GET_MOD_DLVL
+:00435DA8 8BCA                    mov ecx, edx				ecx := diff(dlvl)
+
+
+
+-Ring of Fire trap
+
+Damage = rnd[10] + rnd[10] + dlvl + 2
+
+:00438D88 EB05                    jmp 00438D8F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438D74(C)
+|
+:00438D8A A0D8B16000              mov al, byte ptr [0060B1D8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438D88(U)
+|
+:00438D8F 6A0A                    push 0000000A
+:00438D91 B135                    mov cl, 35
+:00438D93 5A                      pop edx
+:00438D94 8845FF                  mov byte ptr [ebp-01], al
+:00438D97 E8BE11FEFF              call 00419F5A
+:00438D9C B135                    mov cl, 35
+:00438D9E 8BD8                    mov ebx, eax
+:00438DA0 6A0A                    push 0000000A
+:00438DA2 5A                      pop edx
+:00438DA3 E8B211FEFF              call 00419F5A
+:00438DA8 03D8                    add ebx, eax
+:00438DAA 0FB645FF                movzx eax, byte ptr [ebp-01]
+:00438DAE 8D440302                lea eax, dword ptr [ebx+eax+02]
+
+Voorstel:
+
+Damage = rnd[20] + diff(dlvl) + 1
+
+:00438D88 EB0A                    jmp 00438D94
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438D74(C)
+|
+:00438D8A E825FE0400              call 00488BB4				 GET_MOD_DLVL
+:00438D8F 8A02                    mov al, byte ptr [edx]
+:00438D91 90                      nop
+:00438D92 90                      nop
+:00438D93 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438D88(U)
+|
+:00438D94 8845FF                  mov byte ptr [ebp-01], al
+:00438D97 90                      nop
+:00438D98 90                      nop
+:00438D99 90                      nop
+:00438D9A 90                      nop
+:00438D9B 90                      nop
+:00438D9C B135                    mov cl, 35
+:00438D9E 90                      nop
+:00438D9F 90                      nop
+:00438DA0 6A14                    push 00000014
+:00438DA2 5A                      pop edx
+:00438DA3 E8B211FEFF              call 00419F5A
+:00438DA8 8BD8                    mov ebx, eax
+:00438DAA 0FB645FF                movzx eax, byte ptr [ebp-01]
+:00438DAE 8D440302                lea eax, dword ptr [ebx+eax+02]
+
+-Spell effect 00h Doom serpent 
+
+init code = arrow speeds ! (incl. clvl, random arrow speed, and haste effects)
+update code = invalid pointer
+
+
+-To add:
+
+fireballs from monsters: speed = (mlvl - 24)*2 + 20
+bloodstars : speed = 16 + slvl or 16 + (mlvl - 24)
+

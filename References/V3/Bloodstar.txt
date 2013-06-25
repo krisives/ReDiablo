@@ -1,0 +1,20 @@
+()Bloodstar - Enable original spelleffect slot
+
+:004361AD 83E81B                  sub eax, 0000001B
+wordt
+:004361AD 83E817                  sub eax, 00000017
+
+:004361B2 83E823                  sub eax, 00000023
+wordt
+:004361B2 83E827                  sub eax, 00000027
+
+
+()Bloodstar - Disable life loss when casting
+
+Easy fix, geen ruimte gewonnen.
+
+:004337DE BAC0FEFFFF              mov edx, FFFFFEC0
+wordt
+:004337DE BA00000000              mov edx, 00000000
+
+

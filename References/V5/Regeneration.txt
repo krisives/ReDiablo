@@ -1,0 +1,54 @@
+***************************
+
+Regeneration
+
+
+:00443846 83BE8CDC69000F          cmp dword ptr [esi+0069DC8C], 0000000F
+:0044384D 7437                    je 00443886
+:0044384F 8B861CDD6900            mov eax, dword ptr [esi+0069DD1C]
+:00443855 83F848                  cmp eax, 00000048
+:00443858 7E2C                    jle 00443886
+:0044385A 80BE20DD690015          cmp byte ptr [esi+0069DD20], 15
+:00443861 7417                    je 0044387A
+:00443863 3B8618DD6900            cmp eax, dword ptr [esi+0069DD18]
+:00443869 7D1B                    jge 00443886
+:0044386B 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:00443871 52                      push edx
+:00443872 E8D29BFFFF              call 0043D449
+:00443877 5A                      pop edx
+:00443878 EB04                    jmp 0044387E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00443861(C)
+|
+:0044387A 6AF7                    push FFFFFFF7
+:0044387C 59                      pop ecx
+:0044387D 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00443878(U)
+|
+:0044387E 03C1                    add eax, ecx
+:00443880 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+:00443886 
+
+
+* Referenced by a CALL at Address:00443872   
+|
+:0043D449 0FB65172                movzx edx, byte ptr [ecx+72]
+:0043D44D 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:0043D453 0FB6C9                  movzx ecx, cl
+:0043D456 4A                      dec edx
+:0043D457 7408                    je 0043D461
+:0043D459 4A                      dec edx
+:0043D45A 7403                    je 0043D45F
+:0043D45C C1E902                  shr ecx, 02
+:0043D45F D1E9                    shr ecx, 1
+:0043D461 D1E9                    shr ecx, 1
+:0043D463 6A28                    push 00000028
+:0043D465 5A                      pop edx
+:0043D466 3BCA                    cmp ecx, edx
+:0043D468 7E02                    jle 0043D46C
+:0043D46A 8BCA                    mov ecx, edx
+:0043D46C C3                      ret
+
+

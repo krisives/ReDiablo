@@ -1,0 +1,188 @@
+Greatly increasing duration of Seeing to a fixed amount (a little over 10 minutes), which will benefit the non-spellcasting classes most.
+
+
+file offset 00033EF8
+
+:00434AF8 C781C87A690000100000    mov dword ptr [ebx+00697AC8], 00001000
+:00434B02 E838990000              call 0043E43F
+:00434B07 90                      nop
+:00434B08 85C0                    test eax, eax
+:00434B0A 7E18                    jle 00434B24
+:00434B0C 8BD0                    mov edx, eax
+:00434B0E 8B81C87A6900            mov eax, dword ptr [ecx+00697AC8]
+:00434B14 8BF0                    mov esi, eax
+:00434B16 C1FE03                  sar esi, 03
+:00434B19 03F0                    add esi, eax
+:00434B1B 4A                      dec edx
+:00434B1C 89B1C87A6900            mov dword ptr [ecx+00697AC8], esi
+:00434B22 75EA                    jne 00434B0E
+:00434B24 8B54241C                mov edx, dword ptr [esp+1C]
+:00434B28 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00434B2E 69D2C8550000            imul edx, 000055C8
+:00434B34 8D81C87A6900            lea eax, dword ptr [ecx+00697AC8]
+:00434B3A 8B94324C550000          mov edx, dword ptr [edx+esi+0000554C]
+:00434B41 8B08                    mov ecx, dword ptr [eax]
+:00434B43 0FAFD1                  imul edx, ecx
+:00434B46 C1FA07                  sar edx, 07
+:00434B49 03D1                    add edx, ecx
+
+changed into
+
+:00434AF8 8D81C87A6900            lea eax, dword ptr [ecx+00697AC8]
+:00434AFE BA00300000              mov edx, 00003000
+:00434B03 EB46                    jmp 00434B4B
+:00434B05 9090                    2*nop
+...
+
+Now free space here.
+
+
+Adding sound to termination of spelleffect.
+
+file offset 00038621
+
+:00439221 8B0E                    mov ecx, dword ptr [esi]
+:00439223 E83DA7FEFF              call 00423965				
+changed into
+:00439221 8BC7                    mov eax, edi
+:00439223 E9DDB8FFFF              jmp 00434B05
+
+Using free space from longer duration above:
+
+file offset 00033F05
+
+:00434B05 9090                    2*nop
+:00434B07 90                      nop
+:00434B08 85C0                    test eax, eax
+:00434B0A 7E18                    jle 00434B24
+:00434B0C 8BD0                    mov edx, eax
+:00434B0E 8B81C87A6900            mov eax, dword ptr [ecx+00697AC8]
+:00434B14 8BF0                    mov esi, eax
+:00434B16 C1FE03                  sar esi, 03
+:00434B19 03F0                    add esi, eax
+:00434B1B 4A                      dec edx
+:00434B1C 89B1C87A6900            mov dword ptr [ecx+00697AC8], esi
+:00434B22 75EA                    jne 00434B0E
+
+changed into
+
+:00434B05 03C3                    add eax, ebx
+:00434B07 50                      push eax
+:00434B08 8B0E                    mov ecx, dword ptr [esi]
+:00434B0A E856EEFEFF              call 00423965				
+:00434B0F 58                      pop eax
+:00434B10 FF703C                  push [eax+3C]
+:00434B13 8B5038                  mov edx, dword ptr [eax+38]
+:00434B16 6A7B                    push 0000007B
+:00434B18 59                      pop ecx
+:00434B19 E8A63BFEFF              call 004186C4				play sound
+:00434B1E E905470000              jmp 00439228
+:00434B23 90                      nop
+
+
+Free space left from 00434B23 to 00434B4B (40 bytes).
+
+Original code follows.
+
+
+Primary Infravision:
+
+:00434AF1 69C9B0000000            imul ecx, 000000B0
+:00434AF7 56                      push esi
+:00434AF8 C781C87A690000100000    mov dword ptr [ebx+00697AC8], 00001000
+:00434B02 E838990000              call 0043E43F
+:00434B07 90                      nop
+:00434B08 85C0                    test eax, eax
+:00434B0A 7E18                    jle 00434B24
+:00434B0C 8BD0                    mov edx, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434B22(C)
+|
+:00434B0E 8B81C87A6900            mov eax, dword ptr [ecx+00697AC8]
+:00434B14 8BF0                    mov esi, eax
+:00434B16 C1FE03                  sar esi, 03
+:00434B19 03F0                    add esi, eax
+:00434B1B 4A                      dec edx
+:00434B1C 89B1C87A6900            mov dword ptr [ecx+00697AC8], esi
+:00434B22 75EA                    jne 00434B0E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434B0A(C)
+|
+:00434B24 8B54241C                mov edx, dword ptr [esp+1C]
+:00434B28 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00434B2E 69D2C8550000            imul edx, 000055C8
+:00434B34 8D81C87A6900            lea eax, dword ptr [ecx+00697AC8]
+:00434B3A 8B94324C550000          mov edx, dword ptr [edx+esi+0000554C]
+:00434B41 8B08                    mov ecx, dword ptr [eax]
+:00434B43 0FAFD1                  imul edx, ecx
+:00434B46 C1FA07                  sar edx, 07
+:00434B49 03D1                    add edx, ecx
+:00434B4B 807C241800              cmp byte ptr [esp+18], 00
+:00434B50 8910                    mov dword ptr [eax], edx
+:00434B52 750C                    jne 00434B60
+:00434B54 8B4C241C                mov ecx, dword ptr [esp+1C]
+:00434B58 6A09                    push 00000009
+:00434B5A 5A                      pop edx
+:00434B5B E89C740300              call 0046BFFC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434B52(C)
+|
+:00434B60 5E                      pop esi
+:00434B61 C21C00                  ret 001C
+
+
+Secondary Infravision:
+
+:004391E3 69C9B0000000            imul ecx, 000000B0
+:004391E9 FF89C87A6900            dec dword ptr [ecx+00697AC8]
+:004391EF 53                      push ebx
+:004391F0 56                      push esi
+:004391F1 8D81C87A6900            lea eax, dword ptr [ecx+00697AC8]
+:004391F7 8DB1CC7A6900            lea esi, dword ptr [ecx+00697ACC]
+:004391FD 57                      push edi
+:004391FE 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00439204 6A01                    push 00000001
+:00439206 8B3E                    mov edi, dword ptr [esi]
+:00439208 5A                      pop edx
+:00439209 69FFC8550000            imul edi, 000055C8
+:0043920F 89941FD0010000          mov dword ptr [edi+ebx+000001D0], edx
+:00439216 833800                  cmp dword ptr [eax], 00000000
+:00439219 750D                    jne 00439228
+:0043921B 89918C7A6900            mov dword ptr [ecx+00697A8C], edx
+:00439221 8B0E                    mov ecx, dword ptr [esi]
+:00439223 E83DA7FEFF              call 00423965				
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00439219(C)
+|
+:00439228 5F                      pop edi
+:00439229 5E                      pop esi
+:0043922A 5B                      pop ebx
+:0043922B C3                      ret
+
+
+Secondary search:
+
+:00438FE3 69C9B0000000            imul ecx, 000000B0
+:00438FE9 FF89C87A6900            dec dword ptr [ecx+00697AC8]
+:00438FEF 7533                    jne 00439024
+:00438FF1 C7818C7A690001000000    mov dword ptr [ebx+00697A8C], 00000001
+:00438FFB 8B81E87A6900            mov eax, dword ptr [ecx+00697AE8]
+:00439001 69C0C8550000            imul eax, 000055C8
+:00439007 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043900D 03C1                    add eax, ecx
+:0043900F FF703C                  push [eax+3C]
+:00439012 8B5038                  mov edx, dword ptr [eax+38]
+:00439015 6A57                    push 00000057
+:00439017 59                      pop ecx
+:00439018 E8A7F6FDFF              call 004186C4				play sound
+:0043901D 802538E76E0000          and byte ptr [006EE738], 00
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438FEF(C)
+|
+:00439024 C3                      ret
+

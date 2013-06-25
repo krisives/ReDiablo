@@ -1,0 +1,41 @@
+Multi-arrows for Rage
+
+file offset 0022F82
+
+:00423B82 7521                    jne 00423BA5
+:00423B84 
+changed into
+:00423B82 7529                    jne 00423BAD
+:00423B84 
+
+
+file offset 0022FA5
+
+:00423BA5 2404                    and al, 04
+:00423BA7 3C04                    cmp al, 04
+:00423BA9 EB20                    jmp 00423BCB
+:00423BAB 0FBE8BB8010000          movsx ecx, byte ptr [ebx+000001B8]
+:00423BB2 8BC1                    mov eax, ecx
+:00423BB4 99                      cdq
+:00423BB5 2BC2                    sub eax, edx
+:00423BB7 8D3C09                  lea edi, dword ptr [ecx+ecx]
+:00423BBA 297DEC                  sub dword ptr [ebp-14], edi
+:00423BBD 297DF8                  sub dword ptr [ebp-08], edi
+:00423BC0 D1F8                    sar eax, 1
+:00423BC2 F7D9                    neg ecx
+:00423BC4 2BC8                    sub ecx, eax
+:00423BC6 014DE8                  add dword ptr [ebp-18], ecx
+:00423BC9 33D2                    xor edx, edx
+:00423BCB
+changed into
+:00423BA5 B900020000              mov ecx, 00000200
+:00423BAA 094DCC                  or dword ptr [ebp-34], ecx
+:00423BAD 2404                    and al, 04
+:00423BAF 3C04                    cmp al, 04
+:00423BB1 7518                    jne 00423BCB
+:00423BB3 68FFFDFFFF              push FFFFFDFF
+:00423BB8 58                      pop eax
+:00423BB9 2145CC                  and dword ptr [ebp-34], eax
+:00423BBC EB0D                    jmp 00423BCB
+:00423BBE 9090                    2*nop
+

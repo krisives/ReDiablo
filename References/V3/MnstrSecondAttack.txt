@@ -1,0 +1,46 @@
+Changing 2 Damage penalty to bonus for second attack of Magma Demons:
+
+File Offset 0003D42C
+
+:0043E02C 48                      dec eax
+:0043E02D 8B96D4DC6900            mov edx, dword ptr [esi+0069DCD4]
+:0043E033 48                      dec eax
+:0043E034 8BCF                    mov ecx, edi
+:0043E036 50                      push eax
+:0043E037 0FB6864DDD6900          movzx eax, byte ptr [esi+0069DD4D]
+:0043E03E 48                      dec eax
+:0043E03F 48                      dec eax
+wordt
+:0043E02C 40                      inc eax
+:0043E02D 8B96D4DC6900            mov edx, dword ptr [esi+0069DCD4]
+:0043E033 40                      inc eax
+:0043E034 8BCF                    mov ecx, edi
+:0043E036 50                      push eax
+:0043E037 0FB6864DDD6900          movzx eax, byte ptr [esi+0069DD4D]
+:0043E03E 40                      inc eax
+:0043E03F 40                      inc eax
+
+
+Fixing support for Lightning Demons:
+
+File Offset 0003D462
+
+:0043E062 83F84C                  cmp eax, 0000004C
+wordt
+:0043E062 83F84B                  cmp eax, 0000004B
+
+File Offset 0003D467
+
+:0043E067 83F84F                  cmp eax, 0000004F
+wordt
+:0043E067 83F850                  cmp eax, 00000050
+
+
+
+Removing 20% ToHit penalty for second attack of Lightning Demons:
+
+File Offset 0003D49A
+
+:0043E09A 83E814                  sub eax, 00000014
+wordt
+:0043E09A 909090                  3*nop

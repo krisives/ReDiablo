@@ -1,0 +1,116 @@
+()Extra AC vs. Demons : 40 -> 20
+
+:0043E1E9 83C028                  add eax, 00000028			add 40 to AC
+wordt
+:0043E1E9 83C014                  add eax, 00000014			add 20 to AC
+
+
+
+()Manashield level 0 telt als level 1
+Nu is level 0 beter als level 1.
+
+:00437B57 7E12                    jle 00437B6B
+wordt
+:00437B57 9090                    2*nop
+
+
+
+()Manashield - Getting stunned
+
+Potentieel probleem is hier dat de verrekening van life en MS pas in de update fase gebeurt, waardoor er local-char problemen kunnen optreden. Damage als zodanig is ook niet bekend, wel berekenbaar uit huidige life en 'onthouden' life. Toch maar proberen denk ik.
+
+Onderstaande code zou precies moeten passen in het stuk nopjes van MS. Als dit niet klopt is er in de buurt nog wel onnodige code.
+
+:00437B57 ????                    zie hierboven
+wordt
+:00437B57 53			  push ebx     		store damage before adjustment
+:00437B58 50			  push eax              store life before adjustment
+
+:00437BB3 7E2D                    jle 00437BE2
+wordt
+:00437BB3 7E46                    jle 00437BFB
+
+:00437BDD E999000000              jmp 00437C7B
+:00437BE2 9090909090              5*nop
+wordt
+:00437BDD E805000000              call 00437BE7		call CHECK_STUN
+:00437BE2 E994000000              jmp 00437C7B
+
+* Referenced by a CALL at Addresses:
+|:00437BDD   , :00437BFB   
+|
+:00437BE7 58                      pop eax	        start CHECK_STUN
+:00437BE8 5B                      pop ebx
+:00437BE9 83F800                  cmp eax, 00000000
+:00437BEC 7F0B                    jg 00437BF9		jmp return if no 'death'
+:00437BEE 8BCF                    mov ecx, edi		ecx = charnr.
+:00437BF0 6A00                    push 00000000
+:00437BF2 8BD3                    mov edx, ebx		edx = damage
+:00437BF4 E84F220200              call 00459E48		do stun
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437BEC(C)
+|
+:00437BF9 C3                      ret
+:00437BFA 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437BB3(C)
+|
+:00437BFB E8E7FFFFFF              call 00437BE7		call CHECK_STUN
+
+
+Nieuw:
+:00437B57 53			  push ebx     		store damage before adjustment
+:00437B58 50			  push eax              store life before adjustment
+
+:00437B7F 6A01                    push 00000001
+:00437B81 58                      pop eax
+:00437B82 A30C114D00              mov dword ptr [004D110C], eax
+:00437B87 A3400E4D00              mov dword ptr [004D0E40], eax
+:00437B8C 8B96E87A6900            mov edx, dword ptr [esi+00697AE8]
+:00437B92 899198010000            mov dword ptr [ecx+00000198], edx
+:00437B98 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00437B9E 8B8EEC7A6900            mov ecx, dword ptr [esi+00697AEC]
+:00437BA4 898C3A90010000          mov dword ptr [edx+edi+00000190], ecx
+:00437BAB 58                      pop eax
+:00437BAC 5A                      pop edx
+:00437BAD 83F800                  cmp eax, 00000000
+:00437BB0 7F0A                    jg 00437BBC
+:00437BB2 90                      nop
+:00437BB3 8BCF                    mov ecx, edi
+:00437BB5 6A00                    push 00000000
+:00437BB7 E88C220200              call 00459E48
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437BB0(C)
+|
+:00437BBC 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437BC2 8B9439AC010000          mov edx, dword ptr [ecx+edi+000001AC]
+:00437BC9 3BD3                    cmp edx, ebx
+:00437BCB 7E2E                    jle 00437BFB
+:00437BCD 299C39AC010000          sub dword ptr [ecx+edi+000001AC], ebx
+:00437BD4 8D8C39AC010000          lea ecx, dword ptr [ecx+edi+000001AC]
+:00437BDB 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437BE1 299C39A4010000          sub dword ptr [ecx+edi+000001A4], ebx
+:00437BE8 8D8C39A4010000          lea ecx, dword ptr [ecx+edi+000001A4]
+:00437BEF E987000000              jmp 00437C7B
+:00437BF4 90                      nop
+:00437BF5 90                      nop
+:00437BF6 90                      nop
+:00437BF7 90                      nop
+:00437BF8 90                      nop
+:00437BF9 90                      nop
+:00437BFA 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00437BCB(C)
+|
+:00437BFB 90                      nop
+:00437BFC 90                      nop
+:00437BFD 90                      nop
+:00437BFE 90                      nop
+:00437BFF 90                      nop
+:00437C00 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00437C06 33D2                    xor edx, edx
+:00437C08 899439AC010000          mov dword ptr [ecx+edi+000001AC], edx

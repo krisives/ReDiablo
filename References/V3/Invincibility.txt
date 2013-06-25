@@ -1,0 +1,17 @@
+()Invincibility
+
+Casting costs 1 Dexterity (variable cost is mogelijk, maar kost meer ruimte). 
+Disables mana cost.
+
+:00433CF7 750C                    jne 00433D05				jmp if no spell
+wordt
+:00433CF7 7500                    jne 00433CF9				jmp never
+
+
+:00433CFD 6A19                    push 00000019
+:00433CFF 5A                      pop edx
+:00433D00 E8F7820300              call 0046BFFC				substract mana
+wordt
+:00433CFD 83CAFF                  or edx, FFFFFFFF			edx := -1
+:00433D00 E81DAB0200              call 0045E822				adjust Dex
+

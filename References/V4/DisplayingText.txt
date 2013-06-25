@@ -1,0 +1,5 @@
+Displaying text
+
+Used by shrines and other things
+
+:00453048 E8721AFDFF              call 00424ABF

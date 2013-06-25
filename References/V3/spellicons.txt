@@ -1,0 +1,79 @@
+at (000829C8) there is a list of icon numbers.
+
+xxxx xxxx xxxx xxxx 0101 0203 0405 0607
+0809 1C0D 2112 100E 2311 0B14 0F15 1718
+1916 1A1D 2526 272A 2928 0A24 xxxx xxxx
+
+And in Hellfire, the icon data starts at offset 93610. there is also the new icons for Jester, Search, Ring of fire, etc in addition to the Diablo ones. 
+
+The spells are as listed here:
+
+http://retribution.igg.net/magic.htm
+
+You can ignore the first byte since that 'spell' (spell #0) is a normal arrow. Bows actually 'cast' this 'spell' to create arrows.
+
+The icon list was supplied by CaliberX (I converted it into it's appropriate hex value and added some at the end of the list) and is as follows:
+
+01 Firebolt
+02 Healing
+03 Lightning
+04 Flash
+05 Identify
+06 Firewall
+07 Town Portal
+08 Stone Curse
+09 Infravision
+0A Heal Other
+0B Nova
+0C Fireball
+0D Mana Shield
+0E Flame Wave
+0F Inferno
+10 Chain Lightning
+11 "Eye with a fireball going into it" UNUSED
+12 Gaurdian
+13 Blood Ritual
+14 Invisibility
+15 Golem
+16 Etherealize
+17 Blood Boil
+18 Teleport
+19 Apocolypse
+1A Item Repair
+1B "Blank square" UNUSED (but pointless)
+1C Phasing
+1D Staff Recharge
+1E Bone Spirit
+1F "Burning skull - red" UNUSED
+20 "Star with a ring through it - red" UNUSED
+21 "Fire going at an angle - red" UNUSED
+22 "Bull skull - red" UNUSED
+23 "Star - red" UNUSED
+24 Blood Star
+25 Trap Disarm
+26 Elemental
+27 Charged Bolt
+28 Telekinesis
+29 Resurrect
+2A Holy Bolt
+2B Warp
+2C Search
+2D Reflect
+2E Lightning Wall
+2F Immolation
+30 Berserk
+31 Ring of Fire
+32 Jester
+33 Mana
+
+Diablo Overlay values (don't use)
+2B Blank
+2C Scroll
+2D Staff
+2E Skill
+2F Spell
+30 F5 Overlay
+31 F6 Overlay
+32 F7 Overlay
+33 F8 Overlay
+Hellfire probably 34 - 3C (never checked)

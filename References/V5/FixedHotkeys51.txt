@@ -1,0 +1,12 @@
+Not implemented!
+
+Fixed hotkeys now take additional spell levels into account:
+
+file offset 00052070
+
+:00452C70 7E0F                    jle 00452C81				skip if Base Slvl < 1
+changed into
+:00452C70 7E00                    jle 00452C72				disabled
+
+
+This allows all spells with +slvl!

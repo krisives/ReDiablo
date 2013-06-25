@@ -1,0 +1,9 @@
+Magical Shrine fix
+
+Doing a Barrier spell costs mana (Manashield didn't ?). Giving full mana to cover up.
+
+File Offset 000510D6
+
+:00451CD6 E9860E0000              jmp 00452B61
+wordt
+:00451CD6 E9CB110000              jmp 00452EA6

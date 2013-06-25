@@ -1,0 +1,363 @@
+Shrines
+
+Dynamic addresses, starting at [4*ecx+00453073]
+
+file offset 00052473
+
+          offset	name		msgnr		 dlvl	shared	effect
+
+:00453073 0043B24A	Mysterious	0C		 1-24	-	free stat point
+:00453077 0045190C	Hidden		0D		 1-24	-	increase durability
+:0045307B 00451A7D	Gloomy		0E		 1-24	+	increase AC
+:0045307F 00451BD9	Weird		0F		 1-24	+	increase damage
+:00453083 00451C8B	Magical-1	10		16-24	-	full mana and do Invincibility
+:00453087 00451CDB	Stone		11		 1-24	+	recharge all items
+:0045308B 00451D90	Religious	12		 1-24	+	repair all items
+:0045308F 00451E2C	Enchanted	13		 1-24	+	change slvls
+:00453093 00451F57	Thaumaturgic	14		 1- 6	-	refill chests
+:00453097 00451FDB	Fascinating	15		 1-24	-	add spell
+:0045309B 0045210F	Cryptic		16		11-24	-	full mana and do Immolation
+:0045309F 00451C8B	Magical-2	10		16-24	SP	full mana and do Invincibility
+:004530A3 00452185	Eldritch	18		 1-24	+	change small into full potions
+:004530A7 004523D5	Eerie		19		 1-24	-	add Mag
+:004530AB 00452404	Divine		1A		 1-24	SP	create potions
+:004530AF 004524D7	Holy		1B		 1-24	+	Warp
+:004530B3 0045259D	Sacred		1C		 1-24	-	add spell
+:004530B7 004526D1	Spiritual	1D		 1-24	+	add gold
+:004530BB 004527D9	Spooky		1E/1F		 1-24	-	Mendicant, others full mana and life
+:004530BF 00452867	Abandoned	20		 1-24	-	add Dex
+:004530C3 004528A2	Creepy		21		 1-24	-	add Str
+:004530C7 004528DD	Quiet		22		 1-24	-	add Vit
+:004530CB 00452918	Secluded	23		 1-24	SP	reveal map
+:004530CF 00452950	Ornate		24		 1-24	-	add spell
+:004530D3 00452A84	Glimmering	25		 1-24	+	identify all items
+:004530D7 00452B4C	Tainted		26/27		11-24	-	nothing, others have stats changed
+:004530DB 00452BEA	Oily		2C		11-24	-	add stats and do Arcane Flames
+:004530DF 00452CB6	Glowing		2D		 1-24	SP	change Xp
+:004530E3 00452D43	Mendicant	2E		 1-24	SP	add Xp, take gold
+:004530E7 00452D9F	Sparkling	2F		 1-24	SP	add Xp and do Flash
+:004530EB 00452E34	Town		30		 1-24	-	add spell
+:004530EF 00452E8D	Shimmering	31		 1-11	+	full mana and life
+:004530F3 00452EE1	Solar		32/33/34/35	 1-24	SP	add stats
+:004530F7 00452F8E	Murphy		36		11-24	-	break item or take gold
+
+changed into
+
+:00453077 0045190C	Hidden		0D		11-24	-	increase durability
+:0045308F 00451E2C	Enchanted	13		 5-24	+	change slvls
+:00453093 00451F57	Thaumaturgic	14		 1-24	SP	refill chests
+:0045309F 00451C8B	Magical-2	10		11-24	SP	full mana and do Invincibility
+:004530EF 00452E8D	Shimmering	31		 1- 4	+	full mana and life
+:004530AB 00452404	Divine		1A		 5-24	+	full mana and life and create potions
+
+
+
+Changing SP/MP and dungeonlevels to appear:
+
+0008F1F8 0101 0101 1001 0101 0101 0B10 0101 0101 ................
+0008F208 0101 0101 0101 0101 010B 0B01 0101 0101 ................
+0008F218 010B 0000 0000 0000 1818 1818 1818 1818 ................
+0008F228 0618 1818 1818 1818 1818 1818 1818 1818 ................
+0008F238 1818 1818 1818 180B 1818                ..........
+changed into
+0008F1F9 0B                                      .
+0008F1FF 05                                      .
+0008F203 0B                                      .
+0008F206 05                                      .
+0008F228 18                                      .
+0008F23F 04                                      .
+0008F250 01                                      .
+0008F256 00                                      .
+
+
+Obscuring Shrine names:
+
+file offset 00053BA0
+
+:004547A0 8B8718E66D00            mov eax, dword ptr [edi+006DE618]
+:004547A6 FF348570014900          push dword ptr [4*eax+00490170]
+* Possible StringData Ref from Data Obj ->"%s Shrine"
+:004547AD 6824594B00              push 004B5924
+:004547B2 53                      push ebx
+:004547B3 E808530200              call 00479AC0
+:004547B8 83C40C                  add esp, 0000000C
+:004547BB 53                      push ebx
+:004547BC E98E000000              jmp 0045484F
+changed into
+:004547A0 6827594B00              push 004B5927
+:004547A5 EB1F                    jmp 004547C6
+:004547A7 909090909090            6*nop
+:004547AD ...
+
+Now 26 bytes free space from 004547A7 to 004547C1
+
+
+Fixing Divine Shrine to work correctly in MP:
+
+file offset 00051811
+
+:00452411 3B1DE8AD6E00            cmp ebx, dword ptr [006EADE8]
+:00452417 0F854F0C0000            jne 0045306C
+changed into
+:00452411 12*90                   12*nop
+
+
+Improving Divine Shrine to give either Full Rejuvenation potions (up to Hell) or Elixirs of Magic and Vitality (This shrine may no longer appear on levels 1-3 or it will crash the game): 
+
+file offset 00051826
+
+:00452426 83F807                  cmp eax, 00000007			
+changed into
+:00452426 83F81A                  cmp eax, 0000001A
+
+file offset 0005183A
+
+:0045243A 6A07                    push 00000007				Full Mana potion
+changed into
+:0045243A 6A13                    push 00000013				Full Rejuvenation potion
+
+file offset 00051846
+
+:00452446 6A02                    push 00000002				Full Healing potion
+changed into
+:00452446 6A13                    push 00000013				Full Rejuvenation potion
+
+file offset 00051856
+
+:00452456 6A13                    push 00000013				Full Rejuvenation potion
+changed into
+:00452456 6A0B                    push 0000000B				Elixir of Magic
+
+file offset 00051862
+
+:00452462 6A13                    push 00000013				Full Rejuvenation potion
+changed into
+:00452462 6A0D                    push 0000000D				Elixir of Vitality
+
+
+Longer duration (slvl 15) for Arcane Flames from Oily Shrine, and disabling the damage calculation:
+
+file offset 0005209F
+
+:00452C9F 57                      push edi
+:00452CA0 E80F5F0300              call 00488BB4
+:00452CA5 8BCA                    mov ecx, edx
+:00452CA7 8D4C0902                lea ecx, dword ptr [ecx+ecx+02]
+:00452CAB 51                      push ecx
+changed into
+:00452C9F 6A0F                    push 0000000F
+:00452CA1 90909090909090909090    10*nop
+:00452CAB 57                      push edi
+
+
+Gloomy shrine adds 2, 3 or 4 to AC of all items, depending on Difficulty, but does not lower any damage:
+
+file offset 00050E85
+
+:00451A85 90                      nop
+:00451A86 90                      nop
+:00451A87 90                      nop
+:00451A88 90                      nop
+:00451A89 90                      nop
+:00451A8A 90                      nop
+:00451A8B 90                      nop
+:00451A8C 90                      nop
+:00451A8D 90                      nop
+:00451A8E 90                      nop
+:00451A8F A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00451A94 69C0C8550000            imul eax, 000055C8
+:00451A9A 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451AA0 83CEFF                  or esi, FFFFFFFF
+:00451AA3 03C8                    add ecx, eax
+:00451AA5 6A04                    push 00000004
+:00451AA7 5F                      pop edi
+changed into
+:00451A85 8B3DC0706000            mov edi, dword ptr [006070C0]
+:00451A8B 47                      inc edi
+:00451A8C ...
+:00451AA5 47                      inc edi
+:00451AA6 9090                    2*nop
+
+file offset 00050EE1
+
+:00451AE1 7508                    jne 00451AEB
+changed into
+:00451AE1 7529                    jne 00451B0C
+:00451AE3 
+
+file offset 00050F21
+
+:00451B21 7508                    jne 00451B2B
+changed into
+:00451B21 7529                    jne 00451B4C
+:00451B23 
+
+file offset 00050F7B
+
+:00451B7B 85D2                    test edx, edx
+:00451B7D 7E3A                    jle 00451BB9
+:00451B7F 83FA04                  cmp edx, 00000004
+:00451B82 7E15                    jle 00451B99
+:00451B84 83FA09                  cmp edx, 00000009
+:00451B87 7E07                    jle 00451B90
+:00451B89 83FA0A                  cmp edx, 0000000A
+:00451B8C 740B                    je 00451B99
+:00451B8E EB29                    jmp 00451BB9
+:00451B90 83818C0E000002          add dword ptr [ecx+00000E8C], 00000002	
+changed into
+:00451B7B 83FA04                  cmp edx, 00000004
+:00451B7E 7E39                    jle 00451BB9
+:00451B80 83FA09                  cmp edx, 00000009
+:00451B83 7F34                    jg 00451BB9
+:00451B85 90909090                4*nop
+:00451B89 8B15C0706000            mov edx, dword ptr [006070C0]
+:00451B8F 42                      inc edx
+:00451B90 42                      inc edx
+:00451B91 01918C0E0000            add dword ptr [ecx+00000E8C], edx
+
+Now free space:
+
+:00451AEB FF892C0A0000            dec dword ptr [ecx+00000A2C]		
+:00451AF1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451AF7 8D1401                  lea edx, dword ptr [ecx+eax]
+:00451AFA 8D8A2C0A0000            lea ecx, dword ptr [edx+00000A2C]
+:00451B00 8B92280A0000            mov edx, dword ptr [edx+00000A28]
+:00451B06 3911                    cmp dword ptr [ecx], edx
+:00451B08 7D02                    jge 00451B0C
+:00451B0A 8911                    mov dword ptr [ecx], edx
+
+Now free space:
+
+:00451B2B FF89A00B0000            dec dword ptr [ecx+00000BA0]		
+:00451B31 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451B37 8D1401                  lea edx, dword ptr [ecx+eax]
+:00451B3A 8D8AA00B0000            lea ecx, dword ptr [edx+00000BA0]
+:00451B40 8B929C0B0000            mov edx, dword ptr [edx+00000B9C]
+:00451B46 3911                    cmp dword ptr [ecx], edx
+:00451B48 7D02                    jge 00451B4C
+:00451B4A 8911                    mov dword ptr [ecx], edx
+
+Now free space:
+
+:00451B99 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451B9F 03CE                    add ecx, esi
+:00451BA1 FF09                    dec dword ptr [ecx]					
+:00451BA3 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00451BA9 8D0C32                  lea ecx, dword ptr [edx+esi]
+:00451BAC 8B941A840E0000          mov edx, dword ptr [edx+ebx+00000E84]
+:00451BB3 3911                    cmp dword ptr [ecx], edx
+:00451BB5 7D02                    jge 00451BB9
+:00451BB7 8911                    mov dword ptr [ecx], edx
+
+
+Weird shrine adds 1, 2 or 3 to maximum damage of all weapons, depending on Difficulty:
+
+file offset 00051007
+
+:00451C07 FF822C0A0000            inc dword ptr [edx+00000A2C]
+:00451C0D FF822C0A0000            inc dword ptr [edx+00000A2C]
+changed into
+:00451C07 8D822C0A0000            lea eax, dword ptr [edx+00000A2C]
+:00451C0D E831A30100              call 0046BF43
+:00451C12 90                      nop
+
+file offset 00051027
+
+:00451C27 FF82A00B0000            inc dword ptr [edx+00000BA0]
+:00451C2D FF82A00B0000            inc dword ptr [edx+00000BA0]
+changed into
+:00451C27 8D82A00B0000            lea eax, dword ptr [edx+00000BA0]
+:00451C2D E811A30100              call 0046BF43
+:00451C32 90                      nop
+
+file offset 0005106E
+
+:00451C6E FF00                    inc dword ptr [eax]
+:00451C70 E875000000              call 00451CEA
+changed into
+:00451C6E 9090                    2*nop
+:00451C70 E8CEA20100              call 0046BF43
+:00451C75
+
+Using free space from disable fixed manacost for Resurrect:
+
+file offset 0006B343
+
+:0046BF43 90                      nop
+:0046BF44 90                      nop
+:0046BF45 90                      nop
+:0046BF46 85C0                    test eax, eax
+:0046BF48 7E0D                    jle 0046BF57
+:0046BF4A 0FB63DE97C4B00          movzx edi, byte ptr [004B7CE9]
+:0046BF51 C1EF03                  shr edi, 03
+:0046BF54 0FAFF8                  imul edi, eax
+changed into
+:0046BF43 52                      push edx
+:0046BF44 8B15C0706000            mov edx, dword ptr [006070C0]
+:0046BF4A 42                      inc edx
+:0046BF4B 0110                    add dword ptr [eax], edx
+:0046BF4D 5A                      pop edx
+:0046BF4E A114AE6E00              mov eax, dword ptr [006EAE14]
+:0046BF53 C3                      ret
+:0046BF54 909090                  3*nop
+
+Now free space:
+
+:00451CEA FF00                    inc dword ptr [eax]
+:00451CEC A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451CF1 C3                      ret
+
+
+Slvl for Cryptic's Immolation determined by Dlvl and Difficulty:
+
+file offset 0005151F
+
+:0045211F 0FB61DD4B16000          movzx ebx, byte ptr [0060B1D4]
+changed into
+:0045211F E86A73FDFF              call 0042948E
+:00452124 D1EA                    shr edx, 1
+
+file offset 0005152E
+
+:0045212E D1E3                    shl ebx, 1
+changed into
+:0045212E 8BDA                    mov ebx, edx
+
+file offset 0002888E
+
+:0042948E 90                      nop
+:0042948F 90                      nop
+:00429490 90                      nop
+:00429491 90                      nop
+:00429492 90                      nop
+:00429493 90                      nop
+:00429494 90                      nop
+:00429495 90                      nop
+:00429496 90                      nop
+changed into
+:0042948E E821F70500              call 00488BB4
+:00429493 D1EA                    shr edx, 1
+:00429495 4A                      dec edx
+:00429496 C3                      ret
+
+
+Hidden Shrine will no longer lower item durability:
+
+file offset 00050D69
+
+:00451969 81FBF5000000            cmp ebx, 000000F5
+changed into
+:00451969 81FBF0000000            cmp ebx, 000000F0
+
+file offset 00050E18
+
+:00451A18 83840178040000EC        add dword ptr [ecx+eax+00000478], FFFFFFEC
+changed into
+:00451A18 83840178040000F6        add dword ptr [ecx+eax+00000478], FFFFFFF6
+
+file offset 00050E2D
+
+:00451A2D 8384017C040000EC        add dword ptr [ecx+eax+0000047C], FFFFFFEC
+changed into
+:00451A2D 8384017C040000F6        add dword ptr [ecx+eax+0000047C], FFFFFFF6
+

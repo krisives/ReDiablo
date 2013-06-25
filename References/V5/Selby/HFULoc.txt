@@ -1,0 +1,113 @@
+Unique item locations for Hellfire v1.01, 84 bytes between
+note: the first 10 items are quest items and should not be changed
+
+0 - 8cb00 - The Butcher's Cleaver
+8cb54 - The Undead Crown
+8cba8 - Empyrean Band
+8cbfc - Optic Amulet
+8cc50 - Ring of Truth
+8cca4 - Harlequin Crest
+8ccf8 - Veil of Steel
+8cd4c - Arkaine's Valor
+8cda0 - Griswold's Edge
+8cdf4 - Bovine Plate
+10 - 8ce48 - The Rift Bow
+8ce9c - The Needler
+12 - 8cef0 - Windforce
+8cf44 - Deadly Hunter
+8cf98 - Bow of the Dead
+8cfec - The Blackoak Bow
+8d040 - Flamedart
+8d094 - Fleshstinger
+8d0e8 - Windforce
+8d13c - Eaglehorn
+8d190 - Gonnagal's Dirk
+20 - 8d1e4 - The Defender
+8d238 - Gryphons Claw
+8d28c - Black Razor
+8d2e0 - Gibbous Moon
+8d334 - Ice Shank
+8d388 - The Executioner's Blade
+8d3dc - The Bonesaw
+8d430 - Shadowhawk
+8d484 - Wizardspike
+8d4d8 - Lightsabre
+30 - 8d52c - The Falcon's Talon
+8d580 - Inferno
+8d5d4 - Doombringer
+8d628 - The Grizzly
+8d67c - The Grandfather
+8d6d0 - The Mangler
+8d724 - Sharp Beak
+8d778 - BloodSlayer
+8d7cc - The Celestial Axe
+8d820 - Wicked Axe
+40 - 8d874 - Stonecleaver
+8d8c8 - Aguinara's Hatchet
+8d91c - Hellslayer
+43 - 8d970 - Messerschmidt's Reaver
+8d9c4 - Crackrust
+8da18 - Hammer of Jholm
+8da6c - Civerb's Cudgel
+8dac0 - The Celestial Star
+8db14 - Baranar's Star
+8db68 - Gnarled Root
+50 - 8dbbc - The Cranium Basher
+8dc10 - Schaefer's Hammer
+8dc64 - Dreamflange
+8dcb8 - Staff of Shadows
+8dd0c - Immolator
+8dd60 - Storm Spire
+8ddb4 - Gleamsong
+8de08 - Thundercall
+8de5c - The Protector
+8deb0 - Naj's Puzzler
+60 - 8df04 - Mindcry
+8df58 - Rod of Onan
+8dfac - Helm of Sprits
+8e000 - Thinking Cap
+8e054 - OverLord's Helm
+8e0a8 - Fool's Crest
+8e0fc - Gotterdamerung
+8e150 - Royal Circlet
+8e1a4 - Torn Flesh of Souls
+8e1f8 - The Gladiator's Bane
+70 - 8e24c - The Rainbow Cloak
+8e2a0 - Leather of Aut
+8e2f4 - Wisdom's Wrap
+8e348 - Sparking Mail
+8e39c - Scavenger Carapace
+8e3f0 - Nightscape
+8e444 - Naj's Light Plate
+8e498 - Demonspike Coat
+8e4ec - The Deflector
+8e540 - Split Skull Shield
+80 - 8e594 - Dragon's Breach
+8e5e8 - Blackoak Shield
+8e63c - Holy Defender
+8e690 - Stormshield
+8e6e4 - Bramble
+8e738 - Ring of Regha
+8e78c - The Bleeder
+8e7e0 - Constricting Ring
+8e834 - Ring of Engagement
+8e888 - Giant's Knuckle
+90 - 8e8dc - Mercurial Ring
+8e930 - Xorine's Ring
+8e984 - Karik's Ring
+8e9d8 - Ring of Magma
+8ea2c - Ring of the Mystics
+8ea80 - Ring of Thunder
+8ead4 - Amulet of Warding
+8eb28 - Gnat Sting
+8eb7c - Flambeau
+8ebd0 - Armor of Gloom
+100 - 8ec24 - Blitzen
+8ec78 - Thunderclap
+8eccc - Shirotachi
+8ed20 - Eater of Souls
+8ed74 - Diamondedge
+8edc8 - Bone Chain Armor
+8ee1c - Demon Plate Armor
+8ee70 - Acolyte's Amulet
+108 - 8eec4 - Gladiator's Ring

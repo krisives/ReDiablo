@@ -1,0 +1,11 @@
+HLFDRKWTEST
+
+
+
+Divine Rune test:
+
+file offset 00029403
+
+:0042A003 6A2F                    push 0000002F
+changed into
+:0042A003 6A26                    push 00000026

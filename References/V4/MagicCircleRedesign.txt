@@ -1,0 +1,64 @@
+Magic Circle: gives full Live and Mana, new sound (bldboil)
+
+File Offset 00052958
+
+:00453558 0FB635D4B16000          movzx esi, byte ptr [0060B1D4]
+:0045355F 8BC7                    mov eax, edi
+:00453561 8D0D14AE6E00            lea ecx, dword ptr [006EAE14]
+:00453567 69C0C8550000            imul eax, 000055C8
+:0045356D D1E6                    shl esi, 1
+:0045356F 8B54083C                mov edx, dword ptr [eax+ecx+3C]
+:00453573 56                      push esi
+:00453574 53                      push ebx
+:00453575 57                      push edi
+:00453576 03C1                    add eax, ecx
+:00453578 6AFF                    push FFFFFFFF
+:0045357A 6A22                    push 00000022
+:0045357C FF7070                  push [eax+70]
+:0045357F 8B4838                  mov ecx, dword ptr [eax+38]
+:00453582 52                      push edx
+:00453583 51                      push ecx
+:00453584 E8A621FEFF              call 0043572F
+:00453589 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:0045358F 0F8513020000            jne 004537A8
+:00453595 8BCF                    mov ecx, edi
+:00453597 6A01                    push 00000001
+:00453599 5A                      pop edx
+:0045359A E883B20000              call 0045E822
+:0045359F E904020000              jmp 004537A8
+:004535A4 6A01                    push 00000001
+wordt
+:00453558 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:0045355E 0F85BA010000            jne 0045371E
+:00453564 8BC7                    mov eax, edi
+:00453566 69C0C8550000            imul eax, 000055C8
+:0045356C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00453572 03C1                    add eax, ecx
+:00453574 8B88B0010000            mov ecx, dword ptr [eax+000001B0]
+:0045357A 8988AC010000            mov dword ptr [eax+000001AC], ecx
+:00453580 8B88A8010000            mov ecx, dword ptr [eax+000001A8]
+:00453586 8988A4010000            mov dword ptr [eax+000001A4], ecx
+:0045358C 8B889C010000            mov ecx, dword ptr [eax+0000019C]
+:00453592 898898010000            mov dword ptr [eax+00000198], ecx
+:00453598 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:0045359E 898890010000            mov dword ptr [eax+00000190], ecx
+:004535A4 EB49                    jmp 004535EF
+
+File Offset 000529FB
+
+:004535FB 6A73                    push 00000073
+wordt
+:004535FB 6A60                    push 00000060
+
+File Offset 00052A03
+
+:00453603 90                      nop
+:00453604 90                      nop
+:00453605 90                      nop
+:00453606 90                      nop
+:00453607 90                      nop
+wordt
+:00453603 E9A0010000              jmp 004537A8
+
+
+Now free space from 004535A6 to 004535EF.

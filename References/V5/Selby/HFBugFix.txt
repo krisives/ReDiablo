@@ -1,0 +1,31 @@
+Address Description               Byte Fix
+
+5ACB9   Adjacent Attack Penalty D7
+
+5B852   Adjacent Attack Penalty D1
+
+5B8D4   Adjacent Attack Penalty D1
+
+8987    Allow Commands                53
+
+2E584   Monster AC                    B6
+
+2E7AB   Monster AC                    B6
+
+5AD1F   Monster AC                    B6
+
+2ECCA   No Block if Resistance  90E9 A292 0500
+
+87F72   No Block if Resistance  837D F400 0F8F 956D FAFF 8B45 0839 45F8 E949 6DFA FF
+
+Other possible fixes
+
+42C6A   Monster Regeneration    83FB 03
+
+42C71   Monster Regeneration    14 508B C18A 0DC0 7060 00D3 E059
+
+1AABC   MP Jog Mode                   00 <Grin>
+
+2D888   MP Jog Mode                   01 <Grin>
+
+24B12   MP Oils                             00 <Grin>

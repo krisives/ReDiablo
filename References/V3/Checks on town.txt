@@ -1,0 +1,131 @@
+1 - Check for level display
+
+:00403126 A0D8B16000              mov al, byte ptr [0060B1D8]
+:0040312B 84C0                    test al, al
+:0040312D 7457                    je 00403186
+
+2 - 
+
+:00403C61 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:00403C68 7515                    jne 00403C7F
+:00403C6A 80FB04                  cmp bl, 04
+:00403C6D 7410                    je 00403C7F
+:00403C6F 8BC5                    mov eax, ebp
+:00403C71 6BC038                  imul eax, 00000038
+:00403C74 83B800764B0000          cmp dword ptr [eax+004B7600], 00000000
+:00403C7B 7502                    jne 00403C7F
+:00403C7D B304                    mov bl, 04
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00403C68(C), :00403C6D(C), :00403C7B(C)
+|
+:00403C7F 69FFC8550000            imul edi, 000055C8
+
+3 - 
+
+:00403E70 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:00403E77 7515                    jne 00403E8E
+:00403E79 8BC3                    mov eax, ebx
+:00403E7B 6BC038                  imul eax, 00000038
+:00403E7E 83B800764B0000          cmp dword ptr [eax+004B7600], 00000000
+:00403E85 7507                    jne 00403E8E
+:00403E87 B104                    mov cl, 04
+:00403E89 E848FCFFFF              call 00403AD6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00403E77(C), :00403E85(C)
+|
+:00403E8E 0FBE83104C4900          movsx eax, byte ptr [ebx+00494C10]
+
+4 -
+
+:0040506E 33C0                    xor eax, eax
+:00405070 3805D8B16000            cmp byte ptr [0060B1D8], al
+:00405076 750F                    jne 00405087
+:00405078 B101                    mov cl, 01
+:0040507A 380DC8DF6D00            cmp byte ptr [006DDFC8], cl		
+:00405080 7505                    jne 00405087
+:00405082 E91A5A0100              jmp 0041AAA1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00405076(C), :00405080(C)
+|
+:00405087 3905A8074D00            cmp dword ptr [004D07A8], eax
+
+5 - 
+
+# - 4B5D28 bevat de grafische loop afstand van de char in de dungeon (default 8)
+           (is niet de wekelijke verplaatsing)
+
+:0045B140 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045B147 6A08                    push 00000008
+:0045B149 59                      pop ecx
+:0045B14A 741D                    je 0045B169
+:0045B14C 8BC3                    mov eax, ebx
+:0045B14E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045B154 69C0C8550000            imul eax, 000055C8
+:0045B15A 0FBE840860010000        movsx eax, byte ptr [eax+ecx+00000160]
+:0045B162 8B0C85285D4B00          mov ecx, dword ptr [4*eax+004B5D28]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045B14A(C)
+|
+:0045B169 8BF3                    mov esi, ebx
+:0045B16B A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B170 69F6C8550000            imul esi, 000055C8
+:0045B176 03C6                    add eax, esi
+:0045B178 3988F0010000            cmp dword ptr [eax+000001F0], ecx
+:0045B17E 0F8CF7000000            jl 0045B27B
+
+
+# - 4B5D28 bevat de grafische loop afstand van de char in de dungeon (default 8)
+           (is niet de wekelijke verplaatsing)
+
+
+:0045B4BF 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045B4C6 6A08                    push 00000008
+:0045B4C8 59                      pop ecx
+:0045B4C9 741D                    je 0045B4E8
+:0045B4CB 8BC3                    mov eax, ebx
+:0045B4CD 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045B4D3 69C0C8550000            imul eax, 000055C8
+:0045B4D9 0FBE840860010000        movsx eax, byte ptr [eax+ecx+00000160]
+:0045B4E1 8B0C85285D4B00          mov ecx, dword ptr [4*eax+004B5D28]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045B4C9(C)
+|
+:0045B4E8 8BF3                    mov esi, ebx
+:0045B4EA A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045B4EF 69F6C8550000            imul esi, 000055C8
+:0045B4F5 03C6                    add eax, esi
+:0045B4F7 3988F0010000            cmp dword ptr [eax+000001F0], ecx
+
+
+
+
+# - 4B5CE# bevatten char waardes die de loop snelheid in 3(?) richtingen beinvloeden
+
+
+:0045CE22 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045CE29 7427                    je 0045CE52
+:0045CE2B A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045CE30 0FBE843060010000        movsx eax, byte ptr [eax+esi+00000160]
+:0045CE38 8D0440                  lea eax, dword ptr [eax+2*eax]
+:0045CE3B C1E002                  shl eax, 02
+:0045CE3E 8B88E05C4B00            mov ecx, dword ptr [eax+004B5CE0]
+:0045CE44 8B90E45C4B00            mov edx, dword ptr [eax+004B5CE4]
+:0045CE4A 8B80E85C4B00            mov eax, dword ptr [eax+004B5CE8]
+:0045CE50 EB0F                    jmp 0045CE61
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045CE29(C)
+|
+:0045CE52 B900080000              mov ecx, 00000800
+:0045CE57 BA00040000              mov edx, 00000400
+:0045CE5C B800020000              mov eax, 00000200
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045CE50(U)
+|
+:0045CE61 8B3D14AE6E00            mov edi, dword ptr [006EAE14]

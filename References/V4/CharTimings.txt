@@ -1,0 +1,446 @@
+Character timings
+
+Disabling high attack speed for Clubs (item code 6 and 7) for Barbarians:
+
+File Offset 00057024
+
+:00457C24 751D                    jne 00457C43
+wordt
+:00457C24 752D                    jne 00457C53
+
+
+Improving Bow speed for Warriors by using free space from Barbarian change:
+
+File Offset 00057041
+
+:00457C41 EB10                    jmp 00457C53
+:00457C43 83FA06                  cmp edx, 00000006
+:00457C46 7405                    je 00457C4D
+:00457C48 83FA07                  cmp edx, 00000007
+:00457C4B 7506                    jne 00457C53
+:00457C4D 89B1A4020000            mov dword ptr [ecx+000002A4], esi
+wordt
+:00457C41 9090                    2*nop
+:00457C43 83FA04                  cmp edx, 00000004
+:00457C46 750B                    jne 00457C53
+:00457C48 85FF                    test edi, edi
+:00457C4A 0F84AFFDFFFF            je 004579FF
+:00457C50 909090                  3*nop
+
+
+
+
+
+Byte 	Effect					W	R	M	M	B	B		  
+0 	Idle frameset in the dungeon 		0A	08	08	08	08	0A
+1 	Attacking frameset 			10	12	10	10	12	10
+2 	Walking frameset in dungeon 		08	08	08	08	08	08
+3 	Blocking speed 				02	05	06	03	04	02
+4 	Death frameset 				14	14	14	14	14	14
+5 	Frameset for magic casting 		14	10	0D	10	0E	14
+6 	Hit recovery speed 			06	06	08	06	07	06
+7 	Idle frameset in town 			14	14	14	14	14	14
+8 	Walking frameset in town 		08	08	08	08	08	08
+9 	Single handed weapon attack speed	09	0A	0C	0C	0A	09
+10 	Spell casting speed 			0E	0C	0A	0C	0B	13
+
+
+Addr 	Effect					Warrior	Axe	Bow
+	  
+24C 	Idle frameset in the dungeon 		0A		08
+29C 	Attacking frameset 			10	14
+274 	Walking frameset in dungeon 		08
+384 	Blocking speed 				02
+35C 	Death frameset 				14
+308 	Frameset for magic casting 		14
+334 	Hit recovery speed 			06
+ 	Idle frameset in town 			14
+ 	Walking frameset in town 		08
+2A4 	Single handed weapon attack speed	09	0A	0B
+310 	Spell casting speed 			0E
+
+
+Addr 	Effect					Barb	Axe	Bow	Club
+	  
+24C 	Idle frameset in the dungeon 		0A		08
+29C 	Attacking frameset 			10	14
+274 	Walking frameset in dungeon 		08
+384 	Blocking speed 				02
+35C 	Death frameset 				14
+308 	Frameset for magic casting 		14
+334 	Hit recovery speed 			06
+ 	Idle frameset in town 			14
+ 	Walking frameset in town 		08
+2A4 	Single handed weapon attack speed	09	08	0B	08
+310 	Spell casting speed 			13
+
+
+
+Full code:
+
+* Referenced by a CALL at Addresses:
+|:00421006   , :004244EF   , :0045870E   , :0045A1A6   , :0045E570   
+|
+:004577C1 53                      push ebx
+:004577C2 55                      push ebp
+:004577C3 56                      push esi
+:004577C4 8BF1                    mov esi, ecx
+:004577C6 83FE04                  cmp esi, 00000004
+:004577C9 57                      push edi
+:004577CA 720D                    jb 004577D9
+:004577CC 56                      push esi
+
+* Possible StringData Ref from Data Obj ->"SetPlrAnims: illegal player %d"
+                                  |
+:004577CD 6868604B00              push 004B6068
+:004577D2 E88EA1FAFF              call 00401965
+:004577D7 59                      pop ecx
+:004577D8 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004577CA(C)
+|
+:004577D9 8BC6                    mov eax, esi
+:004577DB 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004577E1 69C0C8550000            imul eax, 000055C8
+:004577E7 6A60                    push 00000060
+:004577E9 BD80000000              mov ebp, 00000080
+:004577EE 5E                      pop esi
+:004577EF 89B40150020000          mov dword ptr [ecx+eax+00000250], esi
+:004577F6 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004577FC 89B40178020000          mov dword ptr [ecx+eax+00000278], esi
+:00457803 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457809 89AC01A0020000          mov dword ptr [ecx+eax+000002A0], ebp
+:00457810 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457816 89B40138030000          mov dword ptr [ecx+eax+00000338], esi
+:0045781D 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457823 89B4010C030000          mov dword ptr [ecx+eax+0000030C], esi
+:0045782A 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457830 89AC0160030000          mov dword ptr [ecx+eax+00000360], ebp
+:00457837 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045783D 89B40188030000          mov dword ptr [ecx+eax+00000388], esi
+:00457844 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045784A 803DD4B1600000          cmp byte ptr [0060B1D4], 00
+:00457851 0FBEBC0160010000        movsx edi, byte ptr [ecx+eax+00000160]
+:00457859 8D1401                  lea edx, dword ptr [ecx+eax]
+:0045785C 8BCF                    mov ecx, edi
+:0045785E 7551                    jne 004578B1
+:00457860 6BC90B                  imul ecx, 0000000B
+:00457863 0FBE999F5C4B00          movsx ebx, byte ptr [ecx+004B5C9F]
+:0045786A 899A4C020000            mov dword ptr [edx+0000024C], ebx
+:00457870 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00457876 0FBE91A05C4B00          movsx edx, byte ptr [ecx+004B5CA0]
+:0045787D 89940374020000          mov dword ptr [ebx+eax+00000274], edx
+:00457884 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:0045788A 0FBE919C5C4B00          movsx edx, byte ptr [ecx+004B5C9C]
+:00457891 8994035C030000          mov dword ptr [ebx+eax+0000035C], edx
+:00457898 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:0045789E 0FBE919D5C4B00          movsx edx, byte ptr [ecx+004B5C9D]
+:004578A5 89940308030000          mov dword ptr [ebx+eax+00000308], edx
+:004578AC E99C000000              jmp 0045794D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045785E(C)
+|
+:004578B1 6BC90B                  imul ecx, 0000000B
+:004578B4 0FBE99985C4B00          movsx ebx, byte ptr [ecx+004B5C98]
+:004578BB 899A4C020000            mov dword ptr [edx+0000024C], ebx
+:004578C1 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:004578C7 0FBE919A5C4B00          movsx edx, byte ptr [ecx+004B5C9A]
+:004578CE 89940374020000          mov dword ptr [ebx+eax+00000274], edx
+:004578D5 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:004578DB 0FBE91995C4B00          movsx edx, byte ptr [ecx+004B5C99]
+:004578E2 8994039C020000          mov dword ptr [ebx+eax+0000029C], edx
+:004578E9 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:004578EF 0FBE919E5C4B00          movsx edx, byte ptr [ecx+004B5C9E]
+:004578F6 89940334030000          mov dword ptr [ebx+eax+00000334], edx
+:004578FD 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00457903 0FBE919D5C4B00          movsx edx, byte ptr [ecx+004B5C9D]
+:0045790A 89940308030000          mov dword ptr [ebx+eax+00000308], edx
+:00457911 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00457917 0FBE919C5C4B00          movsx edx, byte ptr [ecx+004B5C9C]
+:0045791E 8994035C030000          mov dword ptr [ebx+eax+0000035C], edx
+:00457925 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:0045792B 0FBE919B5C4B00          movsx edx, byte ptr [ecx+004B5C9B]
+:00457932 89940384030000          mov dword ptr [ebx+eax+00000384], edx
+:00457939 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:0045793F 0FBE91A15C4B00          movsx edx, byte ptr [ecx+004B5CA1]
+:00457946 899403A4020000          mov dword ptr [ebx+eax+000002A4], edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004578AC(U)
+|
+:0045794D 0FBE89A25C4B00          movsx ecx, byte ptr [ecx+004B5CA2]
+:00457954 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0045795A 898C0210030000          mov dword ptr [edx+eax+00000310], ecx
+:00457961 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457967 03C8                    add ecx, eax
+:00457969 8B5178                  mov edx, dword ptr [ecx+78]
+:0045796C 83E20F                  and edx, 0000000F
+:0045796F 85FF                    test edi, edi
+:00457971 752E                    jne 004579A1
+:00457973 83FA04                  cmp edx, 00000004
+:00457976 0F8481020000            je 00457BFD
+:0045797C 83FA05                  cmp edx, 00000005
+:0045797F 7542                    jne 004579C3
+:00457981 C7819C02000014000000    mov dword ptr [ebx+0000029C], 00000014
+:0045798B 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457991 C78401A40200000A000000  mov dword ptr [ecx+eax+000002A4], 0000000A
+:0045799C E9B2020000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457971(C)
+|
+:004579A1 83FF01                  cmp edi, 00000001
+:004579A4 752B                    jne 004579D1
+:004579A6 83FA05                  cmp edx, 00000005
+:004579A9 0F84CD010000            je 00457B7C
+:004579AF 83FA04                  cmp edx, 00000004
+:004579B2 750F                    jne 004579C3
+:004579B4 C7819C0200000C000000    mov dword ptr [ebx+0000029C], 0000000C
+:004579BE E999010000              jmp 00457B5C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045797F(C), :004579B2(C)
+|
+:004579C3 83FA08                  cmp edx, 00000008
+:004579C6 0F8E87020000            jle 00457C53
+:004579CC E955020000              jmp 00457C26
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004579A4(C)
+|
+:004579D1 83FF02                  cmp edi, 00000002
+:004579D4 0F8583000000            jne 00457A5D
+:004579DA 85D2                    test edx, edx
+:004579DC 89A90C030000            mov dword ptr [ecx+0000030C], ebp
+:004579E2 7516                    jne 004579FA
+:004579E4 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004579EA C784019C02000014000000  mov dword ptr [ecx+eax+0000029C], 00000014
+:004579F5 E959020000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004579E2(C)
+|
+:004579FA 83FA01                  cmp edx, 00000001
+:004579FD 7516                    jne 00457A15
+:004579FF 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457A05 C78401A402000009000000  mov dword ptr [ecx+eax+000002A4], 00000009
+:00457A10 E93E020000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004579FD(C)
+|
+:00457A15 83FA04                  cmp edx, 00000004
+:00457A18 7513                    jne 00457A2D
+:00457A1A 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457A20 C784019C02000014000000  mov dword ptr [ecx+eax+0000029C], 00000014
+:00457A2B EB1A                    jmp 00457A47
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457A18(C)
+|
+:00457A2D 83FA05                  cmp edx, 00000005
+:00457A30 0F851D020000            jne 00457C53
+:00457A36 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457A3C C784019C02000018000000  mov dword ptr [ecx+eax+0000029C], 00000018
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457A2B(U)
+|
+:00457A47 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457A4D C78401A402000010000000  mov dword ptr [ecx+eax+000002A4], 00000010
+:00457A58 E9F6010000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004579D4(C)
+|
+:00457A5D 83FF03                  cmp edi, 00000003
+:00457A60 0F850C010000            jne 00457B72
+
+* Possible Reference to Dialog: DialogID_0070 
+                                  |
+:00457A66 6A70                    push 00000070
+:00457A68 5E                      pop esi
+:00457A69 89B150020000            mov dword ptr [ecx+00000250], esi
+:00457A6F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457A75 6A62                    push 00000062
+:00457A77 89B40178020000          mov dword ptr [ecx+eax+00000278], esi
+:00457A7E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457A84 85D2                    test edx, edx
+:00457A86 C78401A002000082000000  mov dword ptr [ecx+eax+000002A0], 00000082
+:00457A91 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00457A97 59                      pop ecx
+:00457A98 898C0638030000          mov dword ptr [esi+eax+00000338], ecx
+:00457A9F 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00457AA5 C784060C03000072000000  mov dword ptr [esi+eax+0000030C], 00000072
+:00457AB0 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00457AB6 C7840660030000A0000000  mov dword ptr [esi+eax+00000360], 000000A0
+:00457AC1 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00457AC7 898C0688030000          mov dword ptr [esi+eax+00000388], ecx
+:00457ACE 0F8C7F010000            jl 00457C53
+:00457AD4 83FA01                  cmp edx, 00000001
+:00457AD7 7E72                    jle 00457B4B
+:00457AD9 83FA04                  cmp edx, 00000004
+:00457ADC 7446                    je 00457B24
+:00457ADE 83FA05                  cmp edx, 00000005
+:00457AE1 742E                    je 00457B11
+:00457AE3 6A08                    push 00000008
+:00457AE5 5E                      pop esi
+:00457AE6 3BD6                    cmp edx, esi
+:00457AE8 0F8565010000            jne 00457C53
+:00457AEE 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457AF4 C784019C0200000D000000  mov dword ptr [ecx+eax+0000029C], 0000000D
+:00457AFF 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B05 89B401A4020000          mov dword ptr [ecx+eax+000002A4], esi
+:00457B0C E942010000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457AE1(C)
+|
+:00457B11 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B17 C784019C02000017000000  mov dword ptr [ecx+eax+0000029C], 00000017
+:00457B22 EB11                    jmp 00457B35
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457ADC(C)
+|
+:00457B24 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B2A C784019C02000014000000  mov dword ptr [ecx+eax+0000029C], 00000014
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457B22(U)
+|
+:00457B35 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B3B C78401A40200000E000000  mov dword ptr [ecx+eax+000002A4], 0000000E
+:00457B46 E908010000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457AD7(C)
+|
+:00457B4B 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B51 C784019C0200000C000000  mov dword ptr [ecx+eax+0000029C], 0000000C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004579BE(U)
+|
+:00457B5C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B62 C78401A402000007000000  mov dword ptr [ecx+eax+000002A4], 00000007
+:00457B6D E9E1000000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457A60(C)
+|
+:00457B72 83FF04                  cmp edi, 00000004
+:00457B75 755B                    jne 00457BD2
+:00457B77 83FA05                  cmp edx, 00000005
+:00457B7A 7520                    jne 00457B9C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004579A9(C)
+|
+:00457B7C C7819C02000016000000    mov dword ptr [ebx+0000029C], 00000016
+:00457B86 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457B8C C78401A40200000D000000  mov dword ptr [ecx+eax+000002A4], 0000000D
+:00457B97 E9B7000000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457B7A(C)
+|
+:00457B9C 83FA04                  cmp edx, 00000004
+:00457B9F 750F                    jne 00457BB0
+:00457BA1 C7819C0200000C000000    mov dword ptr [ebx+0000029C], 0000000C
+:00457BAB E980000000              jmp 00457C30
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457B9F(C)
+|
+:00457BB0 83FA08                  cmp edx, 00000008
+:00457BB3 7471                    je 00457C26
+:00457BB5 83FA03                  cmp edx, 00000003
+:00457BB8 7409                    je 00457BC3
+:00457BBA 83FA02                  cmp edx, 00000002
+:00457BBD 0F8590000000            jne 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457BB8(C)
+|
+:00457BC3 C781A40200000A000000    mov dword ptr [ebx+000002A4], 0000000A
+:00457BCD E981000000              jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457B75(C)
+|
+:00457BD2 83FF05                  cmp edi, 00000005
+:00457BD5 757C                    jne 00457C53
+:00457BD7 3BD7                    cmp edx, edi
+:00457BD9 751D                    jne 00457BF8
+:00457BDB C7819C02000014000000    mov dword ptr [ebx+0000029C], 00000014
+:00457BE5 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457BEB C78401A402000008000000  mov dword ptr [ecx+eax+000002A4], 00000008
+:00457BF6 EB5B                    jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457BD9(C)
+|
+:00457BF8 83FA04                  cmp edx, 00000004
+:00457BFB 7522                    jne 00457C1F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457976(C)
+|
+:00457BFD 803DD4B1600000          cmp byte ptr [0060B1D4], 00
+:00457C04 740A                    je 00457C10
+:00457C06 C7814C02000008000000    mov dword ptr [ebx+0000024C], 00000008
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457C04(C)
+|
+:00457C10 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457C16 89B401A0020000          mov dword ptr [ecx+eax+000002A0], esi
+:00457C1D EB11                    jmp 00457C30
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457BFB(C)
+|
+:00457C1F 6A08                    push 00000008
+:00457C21 5E                      pop esi
+:00457C22 3BD6                    cmp edx, esi
+:00457C24 751D                    jne 00457C43
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004579CC(U), :00457BB3(C)
+|
+:00457C26 C7819C02000010000000    mov dword ptr [ebx+0000029C], 00000010
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00457BAB(U), :00457C1D(U)
+|
+:00457C30 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00457C36 C78401A40200000B000000  mov dword ptr [ecx+eax+000002A4], 0000000B
+:00457C41 EB10                    jmp 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457C24(C)
+|
+:00457C43 83FA06                  cmp edx, 00000006
+:00457C46 7405                    je 00457C4D
+:00457C48 83FA07                  cmp edx, 00000007
+:00457C4B 7506                    jne 00457C53
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00457C46(C)
+|
+:00457C4D 89B1A4020000            mov dword ptr [ecx+000002A4], esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045799C(U), :004579C6(C), :004579F5(U), :00457A10(U), :00457A30(C)
+|:00457A58(U), :00457ACE(C), :00457AE8(C), :00457B0C(U), :00457B46(U)
+|:00457B6D(U), :00457B97(U), :00457BBD(C), :00457BCD(U), :00457BD5(C)
+|:00457BF6(U), :00457C41(U), :00457C4B(C)
+|
+:00457C53 5F                      pop edi
+:00457C54 5E                      pop esi
+:00457C55 5D                      pop ebp
+:00457C56 5B                      pop ebx
+:00457C57 C3                      ret

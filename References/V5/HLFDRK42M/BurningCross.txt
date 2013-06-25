@@ -1,0 +1,247 @@
+Transforming one of the empty crucifix types in Hell into a burning cross. This will also create one burning cross in Butchers room.
+
+000B2E84 0109 0D10 00FF 0600 0000 0000 0F00 0000 ................
+000B2E94 0000 0000 6000 0000 0100 0000 0000 0000 ....`...........
+000B2EA4 0100 0000 0000 0000 0000 0000           ............
+changed into
+000B2E84 0111 0D10 00FF 0600 0100 0000 0000 0000 ................
+000B2E94 0A00 0000 A000 0000 0100 0000 0000 0000 ................
+000B2EA4 0000 0000 0000 0000 0000 0000           ............
+
+Changing the orientation of the other empty crucifix for more diversity:
+
+000B2EDC 010A 0D10 0006 0600 0000 0000 0F00 0000 ................
+000B2EEC 0000 0000 6000 0000 0100 0000 0000 0000 ....`...........
+000B2EFC 0100 0000 0000 0000 0000 0000           ............
+changed into
+000B2EDD 09                                      .
+
+
+Adding damage effect to object number 1Dh:
+
+file offset 0004E00F
+
+:0044EC0F 0F8CAE000000            jl 0044ECC3
+change into
+:0044EC0F 0F8CD4D0FEFF            jl 0043BCE9
+
+Using free space from adjusted Boss MLVLs:
+
+file offset 0003B0E9
+
+:0043BCE9 90                      nop
+:0043BCEA 84C0                    test al, al
+:0043BCEC 740A                    je 0043BCF8
+:0043BCEE D0E0                    shl al, 1
+:0043BCF0 8886C0000000            mov byte ptr [esi+000000C0], al
+:0043BCF6 EB07                    jmp 0043BCFF
+change into
+:0043BCE9 83F81D                  cmp eax, 0000001D
+:0043BCEC 0F85D12F0100            jne 0044ECC3
+:0043BCF2 E99D2F0100              jmp 0044EC94
+:0043BCF7 90                      nop 
+
+
+Adjusting damage of Burning Crosses to Dlvl*2^(Diff+1) per game turn:
+
+file offset 0004E1C3
+
+:0044EDC3 C745E806000000          mov [ebp-18], 00000006
+:0044EDCA 3906                    cmp dword ptr [esi], eax
+:0044EDCC 8945EC                  mov dword ptr [ebp-14], eax
+:0044EDCF C745F00A000000          mov [ebp-10], 0000000A
+:0044EDD6 C745F40C000000          mov [ebp-0C], 0000000C
+:0044EDDD 0F8413010000            je 0044EEF6
+:0044EDE3 0FBE86CA010000          movsx eax, byte ptr [esi+000001CA]
+:0044EDEA 8A1DD4B16000            mov bl, byte ptr [0060B1D4]
+changed into
+:0044EDC3 3906                    cmp dword ptr [esi], eax
+:0044EDC5 0F842B010000            je 0044EEF6
+:0044EDCB 52                      push edx
+:0044EDCC E8E39D0300              call 00488BB4				edx = Dlvl * 2^Diff
+:0044EDD1 8BDA                    mov ebx, edx
+:0044EDD3 5A                      pop edx
+:0044EDD4 D1E3                    shl ebx, 1
+:0044EDD6 90                      nop					ebx = Dlvl * 2^(Diff+1)
+:0044EDD7 0FBE86CA010000          movsx eax, byte ptr [esi+000001CA]
+:0044EDDE 85C0                    test eax, eax
+:0044EDE0 7E30                    jle 0044EE12
+:0044EDE2 0FAFC3                  imul eax, ebx
+:0044EDE5 6A64                    push 00000064
+:0044EDE7 59                      pop ecx
+:0044EDE8 99                      cdq
+:0044EDE9 F7F9                    idiv ecx
+:0044EDEB 2BD8                    sub ebx, eax				modify for Fire resistance
+:0044EDED EB23                    jmp 0044EE12
+:0044EDEF 90                      nop
+
+Now 35 bytes free space from 0044EDED to 0044EE12.
+
+file offset 0004E237
+
+:0044EE37 0FB6C3                  movzx eax, bl
+:0044EE3A 6A01                    push 00000001
+:0044EE3C 8B4485E4                mov eax, dword ptr [ebp+4*eax-1C]
+:0044EE40 5B                      pop ebx
+changed into
+:0044EE37 8BC3                    mov eax, ebx
+:0044EE39 9090909090909090        8*nop
+
+file offset 0004E25F
+
+:0044EE5F 0FB60DD4B16000          movzx ecx, byte ptr [0060B1D4]
+:0044EE66 8B4C8DE4                mov ecx, dword ptr [ebp+4*ecx-1C]
+changed into
+:0044EE5F 8BCB                    mov ecx, ebx
+:0044EE61 6A01                    push 00000001
+:0044EE63 5B                      pop ebx
+:0044EE64 909090909090            6*nop
+
+
+
+Original Burning Cross damage routing:
+
+* Referenced by a CALL at Address:
+|:0044ECA0   
+|
+:0044ED9F 55                      push ebp
+:0044EDA0 8BEC                    mov ebp, esp
+:0044EDA2 83EC18                  sub esp, 00000018
+:0044EDA5 894DF8                  mov dword ptr [ebp-08], ecx
+:0044EDA8 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044EDAE 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0044EDB4 53                      push ebx
+:0044EDB5 69C9C8550000            imul ecx, 000055C8
+:0044EDBB 56                      push esi
+:0044EDBC 57                      push edi
+:0044EDBD 6A08                    push 00000008
+:0044EDBF 8D3411                  lea esi, dword ptr [ecx+edx]
+:0044EDC2 58                      pop eax
+:0044EDC3 C745E806000000          mov [ebp-18], 00000006
+:0044EDCA 3906                    cmp dword ptr [esi], eax
+:0044EDCC 8945EC                  mov dword ptr [ebp-14], eax
+:0044EDCF C745F00A000000          mov [ebp-10], 0000000A
+:0044EDD6 C745F40C000000          mov [ebp-0C], 0000000C
+:0044EDDD 0F8413010000            je 0044EEF6
+:0044EDE3 0FBE86CA010000          movsx eax, byte ptr [esi+000001CA]
+:0044EDEA 8A1DD4B16000            mov bl, byte ptr [0060B1D4]
+:0044EDF0 85C0                    test eax, eax
+:0044EDF2 7E1E                    jle 0044EE12
+:0044EDF4 0FB6CB                  movzx ecx, bl
+:0044EDF7 8B7C8DE4                mov edi, dword ptr [ebp+4*ecx-1C]
+:0044EDFB 6A64                    push 00000064
+:0044EDFD 8D4C8DE4                lea ecx, dword ptr [ebp+4*ecx-1C]
+:0044EE01 0FAFC7                  imul eax, edi
+:0044EE04 894DFC                  mov dword ptr [ebp-04], ecx
+:0044EE07 59                      pop ecx
+:0044EE08 99                      cdq
+:0044EE09 F7F9                    idiv ecx
+:0044EE0B 2BF8                    sub edi, eax
+:0044EE0D 8B45FC                  mov eax, dword ptr [ebp-04]
+:0044EE10 8938                    mov dword ptr [eax], edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EDF2(C)
+|
+:0044EE12 8B45F8                  mov eax, dword ptr [ebp-08]
+:0044EE15 8B4E38                  mov ecx, dword ptr [esi+38]
+:0044EE18 6BC078                  imul eax, 00000078
+:0044EE1B 3B88C4E56D00            cmp ecx, dword ptr [eax+006DE5C4]
+:0044EE21 0F85CF000000            jne 0044EEF6
+:0044EE27 8B80C8E56D00            mov eax, dword ptr [eax+006DE5C8]
+:0044EE2D 48                      dec eax
+:0044EE2E 39463C                  cmp dword ptr [esi+3C], eax
+:0044EE31 0F85BF000000            jne 0044EEF6
+:0044EE37 0FB6C3                  movzx eax, bl
+:0044EE3A 6A01                    push 00000001
+:0044EE3C 8B4485E4                mov eax, dword ptr [ebp+4*eax-1C]
+:0044EE40 5B                      pop ebx
+:0044EE41 298698010000            sub dword ptr [esi+00000198], eax
+:0044EE47 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044EE4C 69C0C8550000            imul eax, 000055C8
+:0044EE52 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044EE58 8D840890010000          lea eax, dword ptr [eax+ecx+00000190]
+:0044EE5F 0FB60DD4B16000          movzx ecx, byte ptr [0060B1D4]
+:0044EE66 8B4C8DE4                mov ecx, dword ptr [ebp+4*ecx-1C]
+:0044EE6A 2908                    sub dword ptr [eax], ecx
+:0044EE6C 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0044EE72 8BC1                    mov eax, ecx
+:0044EE74 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044EE7A 69C0C8550000            imul eax, 000055C8
+:0044EE80 03C2                    add eax, edx
+:0044EE82 F78098010000C0FFFFFF    test dword ptr [ebx+00000198], FFFFFFC0
+:0044EE8C 7F09                    jg 0044EE97
+:0044EE8E 33D2                    xor edx, edx
+:0044EE90 E842BD0000              call 0045ABD7
+:0044EE95 EB59                    jmp 0044EEF0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EE8C(C)
+|
+:0044EE97 8A8860010000            mov cl, byte ptr [eax+00000160]
+:0044EE9D 84C9                    test cl, cl
+:0044EE9F 743F                    je 0044EEE0
+:0044EEA1 3ACB                    cmp cl, bl
+:0044EEA3 7429                    je 0044EECE
+:0044EEA5 80F902                  cmp cl, 02
+:0044EEA8 750D                    jne 0044EEB7
+:0044EEAA FF703C                  push [eax+3C]
+:0044EEAD 8B5038                  mov edx, dword ptr [eax+38]
+:0044EEB0 B949020000              mov ecx, 00000249
+:0044EEB5 EB34                    jmp 0044EEEB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EEA8(C)
+|
+:0044EEB7 80F903                  cmp cl, 03
+:0044EEBA 750D                    jne 0044EEC9
+:0044EEBC FF703C                  push [eax+3C]
+:0044EEBF 8B5038                  mov edx, dword ptr [eax+38]
+:0044EEC2 B989030000              mov ecx, 00000389
+:0044EEC7 EB22                    jmp 0044EEEB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EEBA(C)
+|
+:0044EEC9 80F904                  cmp cl, 04
+:0044EECC 750D                    jne 0044EEDB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EEA3(C)
+|
+:0044EECE FF703C                  push [eax+3C]
+:0044EED1 8B5038                  mov edx, dword ptr [eax+38]
+:0044EED4 B9B0020000              mov ecx, 000002B0
+:0044EED9 EB10                    jmp 0044EEEB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EECC(C)
+|
+:0044EEDB 80F905                  cmp cl, 05
+:0044EEDE 7510                    jne 0044EEF0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044EE9F(C)
+|
+:0044EEE0 FF703C                  push [eax+3C]
+:0044EEE3 8B5038                  mov edx, dword ptr [eax+38]
+:0044EEE6 B91D030000              mov ecx, 0000031D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044EEB5(U), :0044EEC7(U), :0044EED9(U)
+|
+:0044EEEB E8D497FCFF              call 004186C4
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044EE95(U), :0044EEDE(C)
+|
+:0044EEF0 891D400E4D00            mov dword ptr [004D0E40], ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044EDDD(C), :0044EE21(C), :0044EE31(C)
+|
+:0044EEF6 5F                      pop edi
+:0044EEF7 5E                      pop esi
+:0044EEF8 5B                      pop ebx
+:0044EEF9 C9                      leave
+:0044EEFA C3                      ret

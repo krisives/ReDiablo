@@ -1,0 +1,104 @@
+()Phasing -> "Blink", skill for Barbarian, spell for others.
+
+
+
+()Berserk, Rage, Jester en misschien Ring of Fire - Available as scrolls
+
+Berserk -> Scroll of Charm
+Jester  -> Faulty Scroll (of zoiets?)
+
+
+
+()Guardian - Display in Spellbook
+
+Doet evenveel damage als Firebolt, maar geeft wat anders aan.
+
+:0042EAAE 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]	Begin Guardian
+wordt
+:0042EAAE E9EEFDFFFF              jmp 0042E89C				jmp to Firebolt
+
+Dit wordt beter bereikt door aanpassing bepaalde data.
+
+
+
+
+()Rage
+
+Disable bugged life-loss.
+Niet helemaal zeker: klein experiment.
+
+Geeft crash!
+
+:00439B0F 03CB                    add ecx, ebx
+wordt
+:00439B0F 8BCB                    mov ecx, ebx
+
+
+
+()Doom Serpents
+
+Min. mana required = 100
+
+Om de mooie grafics beter te kunnen zien (en voor balans?) mag de vliegsnelheid lager:
+
+:00452631 6A10                    push 00000010
+wordt
+:00452631 6A08                    push 00000008		of iets sneller
+
+
+
+()Etherealize
+
+Disable slvl-increase (om misbruik tegen te gaan).
+Casting costs 1-3 Dexterity.
+
+:00433C9E 8B88887A6900            mov ecx, dword ptr [eax+00697A88]	ecx := slvl
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE				jmp if slvl=0
+:00433CA8 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]
+:00433CAE 8BFE                    mov edi, esi
+:00433CB0 C1FF03                  sar edi, 03				edi := clvl
+:00433CB3 03FE                    add edi, esi				edi := clvl*9/8 
+:00433CB5 49                      dec ecx				ecx := ecx - 1
+:00433CB6 89B8C87A6900            mov dword ptr [eax+00697AC8], edi
+:00433CBC 75EA                    jne 00433CA8				loop thru slvl
+:00433CBE 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]	esi := clvl*8
+:00433CC4 8BBA4C550000            mov edi, dword ptr [edx+0000554C]	?
+:00433CCA 8D88C87A6900            lea ecx, dword ptr [eax+00697AC8]	ecx := clvl*8
+:00433CD0 0FAFFE                  imul edi, esi
+:00433CD3 C1FF08                  sar edi, 08
+:00433CD6 03FE                    add edi, esi
+:00433CD8 807C241C00              cmp byte ptr [esp+1C], 00
+:00433CDD 8939                    mov dword ptr [ecx], edi
+:00433CDF 8B8A98010000            mov ecx, dword ptr [edx+00000198]
+:00433CE5 8988E87A6900            mov dword ptr [eax+00697AE8], ecx
+:00433CEB 8B8A90010000            mov ecx, dword ptr [edx+00000190]
+:00433CF1 8988EC7A6900            mov dword ptr [eax+00697AEC], ecx
+wordt
+:00433C9E 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]
+:00433CA4 8BBA4C550000            mov edi, dword ptr [edx+0000554C]
+:00433CAA 8D88C87A6900            lea ecx, dword ptr [eax+00697AC8]
+:00433CB0 0FAFFE                  imul edi, esi
+:00433CB3 C1FF08                  sar edi, 08
+:00433CB6 03FE                    add edi, esi
+:00433CB8 8939                    mov dword ptr [ecx], edi
+:00433CBA 8B8A98010000            mov ecx, dword ptr [edx+00000198]
+:00433CC0 8988E87A6900            mov dword ptr [eax+00697AE8], ecx	
+:00433CC6 8B8A90010000            mov ecx, dword ptr [edx+00000190]
+:00433CCC 8988EC7A6900            mov dword ptr [eax+00697AEC], ecx	
+:00433CD2 50                      push eax
+:00433CD3 E86EA60000 (?)          call 0043E341				call RND100
+:00433CD8 83CAFF                  or edx, FFFFFFFF			-1 dex
+:00433CDB 83F821                  cmp eax, 00000021
+:00433CDE 7E07                    jle 00433CE7
+:00433CE0 4A                      dec edx				-2 dex
+:00433CE1 83F843                  cmp eax, 00000043
+:00433CE4 7E01                    jle 00433CE7
+:00433CE6 4A                      dec edx				-3 dex
+:00433CE7 8B4C2418                mov ecx, dword ptr [esp+18]
+:00433CEB E837AB0200  (?)         call 0045E822				adjust Dex
+:00433CF0 58                      pop eax
+:00433CF1 807C241C00              cmp byte ptr [esp+1C], 00
+:00433CF6 90                      nop
+
+

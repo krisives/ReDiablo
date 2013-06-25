@@ -1,0 +1,21 @@
+Spell To Hit
+
+:0042F38C 80BB78794A0000          cmp byte ptr [ebx+004A7978], 00
+
+ToHitByMagic-formule wordt gebruikt als byte op 004A7978 (A6378), voor spelleffect #00, ongelijk aan 00 is. Dit komt overeen met eerste byte van kolom F in het SpellEffects.XLS bestand.
+
+
+Het is dus gemakkelijk een LightningArrow Spell (of wat dan ook) te maken, als er een apart spelleffect slot voor wordt gebruikt. Helaas kan ik niet eens de normale LightningArrow vinden. Verder alleen een kwestie van ManaCost routine aanroepen met het goede spell-nummer.
+
+
+
+()Spell To Hit bonus for Bard 20% -> 25%
+
+:0042F3F1 83C714                  add edi, 00000014
+wordt
+:0042F3F1 83C719                  add edi, 00000019
+
+
+
+
+

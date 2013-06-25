@@ -1,0 +1,5 @@
+()Cathedral Map
+
+Ground appearance as Reconstructed note. Dit geeft misschien ook de mooie drop-animation.
+
+Zie GroundGrafics.TXT

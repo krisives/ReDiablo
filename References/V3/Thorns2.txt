@@ -1,0 +1,64 @@
+Thorns in HLFDRK31:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E4FF(C)
+|
+:0043E596 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E59B F684304355000004        test byte ptr [eax+esi+00005543], 04
+:0043E5A3 7437                    je 0043E5DC
+:0043E5A5 8B8430B8010000          mov eax, dword ptr [eax+esi+000001B8]
+:0043E5AC C1E802                  shr eax, 02
+:0043E5AF 40                      inc eax
+:0043E5B0 8D8F1CDD6900            lea ecx, dword ptr [edi+0069DD1C]
+:0043E5B6 C1E006                  shl eax, 06
+:0043E5B9 2901                    sub dword ptr [ecx], eax
+:0043E5BB F701C0FFFFFF            test dword ptr [ecx], FFFFFFC0
+:0043E5C1 7F0D                    jg 0043E5D0
+:0043E5C3 8B55FC                  mov edx, dword ptr [ebp-04]
+:0043E5C6 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0043E5C9 E8BEEAFFFF              call 0043D08C
+:0043E5CE EB0C                    jmp 0043E5DC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E5C1(C)
+|
+:0043E5D0 8B55FC                  mov edx, dword ptr [ebp-04]
+:0043E5D3 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:0043E5D6 50                      push eax
+:0043E5D7 E8D3E8FFFF              call 0043CEAF
+
+
+Fixes in HLFDRK32:
+
+Deze lijken na een aantal testen te helpen.
+
+
+Attacker takes (1+clvl/4) damage.
+
+File Offset = 3D9A5
+
+:0043E5A5 8B8430B8010000          mov eax, dword ptr [eax+esi+000001B8]
+:0043E5AC C1E802                  shr eax, 02
+:0043E5AF 40                      inc eax
+wordt
+:0043E5A5 0FBE8430B8010000        movsx eax, byte ptr [eax+esi+000001B8]
+:0043E5AD 83C004                  add eax, 00000004
+
+en 
+
+File Offset = 3D9B6
+
+:0043E5B6 C1E006                  shl eax, 06
+wordt
+:0043E5B6 C1E004                  shl eax, 04
+
+
+Also, subroutine for Barrier, fixing same bug:
+
+File Offset = 3D764
+
+:0043E364 8B9430B8010000          mov edx, dword ptr [eax+esi+000001B8]
+:0043E36B C1EA01                  shr edx, 01
+wordt
+:0043E364 0FBE9430B8010000        movsx edx, dword ptr [eax+esi+000001B8]
+:0043E36C D1EA                    shr edx, 1

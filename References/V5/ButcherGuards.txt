@@ -1,0 +1,35 @@
+Butcher with minions
+
+file offset 0003B473
+
+:0043C073 6A00                    push 00000000		minion amount
+:0043C075 6A09                    push 00000009
+:0043C077 33D2                    xor edx, edx		minion type
+:0043C079 59                      pop ecx
+changed into
+:0043C073 6A03                    push 00000003
+:0043C075 5A                      pop edx		minion type
+:0043C076 6A09                    push 00000009
+:0043C078 59                      pop ecx
+:0043C079 51                      push ecx		minion amount
+
+
+
+No effect!
+
+
+distance to boss?:
+
+:0043C47F 83F804                  cmp eax, 00000004		-> 8
+:0043C482 59                      pop ecx
+:0043C483 0F8DE1000000            jnl 0043C56A
+:0043C489 8BC6                    mov eax, esi
+:0043C48B 2B45F0                  sub eax, dword ptr [ebp-10]
+:0043C48E 50                      push eax
+:0043C48F E83CE70300              call 0047ABD0
+:0043C494 83F804                  cmp eax, 00000004
+:0043C497 59                      pop ecx
+:0043C498 0F8DCC000000            jnl 0043C56A
+
+
+No effect!

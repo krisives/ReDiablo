@@ -1,0 +1,9 @@
+Increased duration of Seeing, from about 10 minutes to 13 minutes
+
+
+file offset 00033EFE
+
+:00434AFE BA00300000              mov edx, 00003000
+changed into
+:00434AFE BA00400000              mov edx, 00004000
+

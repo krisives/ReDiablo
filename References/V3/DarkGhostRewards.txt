@@ -1,0 +1,79 @@
+Drop magic item at monster's death
+
+:0043D59C 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:0043D5A2 8B00                    mov eax, dword ptr [eax]
+:0043D5A4 83F875                  cmp eax, 00000075
+:0043D5A7 0F84A4000000            je 0043D651		no item if HorkSpawn
+:0043D5AD 3D89000000              cmp eax, 00000089
+:0043D5B2 0F8586000000            jne 0043D63E		jmp if not DarkGhost
+
+
+Drop APO book:
+
+:0043D62D 8B5624                  mov edx, dword ptr [esi+24]
+:0043D630 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D633 57                      push edi
+:0043D634 53                      push ebx
+:0043D635 6A18                    push 00000018
+:0043D637 E8E7E0FEFF              call 0042B723
+:0043D63C EB13                    jmp 0043D651
+
+Drop Random item:
+
+:0043D63E 83FF03                  cmp edi, 00000003
+:0043D641 7E0E                    jle 0043D651
+:0043D643 8B5620                  mov edx, dword ptr [esi+20]
+:0043D646 53                      push ebx
+:0043D647 FF7624                  push [esi+24]
+:0043D64A 8BCF                    mov ecx, edi
+:0043D64C E8DD9DFEFF              call 0042742E
+
+
+
+Voorstellen:
+
+
+(3F) Enable Drop for Horkspawn and set DarkGhost to RandomItem+ApoBook :
+
+Getest en werkt.
+
+Offset 3C9A4
+
+:0043D5A4 83F875                  cmp eax, 00000075
+:0043D5A7 0F84A4000000            je 0043D651		no item if HorkSpawn
+:0043D5AD 3D89000000              cmp eax, 00000089
+:0043D5B2 0F8586000000            jne 0043D63E		jmp if not DarkGhost
+wordt
+:0043D5A4 3D89000000              cmp eax, 00000089
+:0043D5A9 0F858F000000            jne 0043D63E		jmp if not DarkGhost
+:0043D5AF 57                      push edi
+:0043D5B0 9090909090909090        8*nop
+
+Offset 3C9F8
+
+:0043D5F8 8B5624                  mov edx, dword ptr [esi+24]
+:0043D5FB 8B4E20                  mov ecx, dword ptr [esi+20]
+wordt
+:0043D5F8 E930000000              jmp 0043D62D
+:0043D5FD 90                      nop			nu vrije ruimte tm. 0043D628
+
+Offset 3CA3C
+
+:0043D63C EB13                    jmp 0043D651
+wordt
+:0043D63C 5F                      pop edi
+:0043D63D 90                      nop
+
+
+
+Enable sound at DarkGhost's death (klein gokje):
+
+Dit blijkt geen effect te hebben, helaas.
+
+Offset 3C9D0
+
+:0043D5D0 7405                    je 0043D5D7
+wordt
+:0043D5D0 7400                    je 0043D5D2
+
+

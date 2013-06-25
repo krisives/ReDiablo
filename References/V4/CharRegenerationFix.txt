@@ -1,0 +1,31 @@
+Disabling regeneration for dead characters:
+
+File Offset 0005CFE3
+
+:0045DBE3 E8BE59FFFF              call 004535A6
+wordt
+:0045DBE3 E82A47FFFF              call 00452312
+:0045DBE8 
+
+Using free space from Eldritch Shrine:
+
+File Offset 00051712
+
+:00452312 8D8C18A4530000          lea ecx, dword ptr [eax+ebx+000053A4]
+:00452319 E8FD28FDFF              call 00424C1B
+:0045231E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452323 8B4D08                  mov ecx, dword ptr [ebp+08]
+wordt
+:00452312 F7843098010000C0FFFFFF  test dword ptr [eax+esi+00000198], FFFFFFC0
+:0045231D 0F8F83120000            jg 004535A6
+:00452323 C3                      ret
+:00452324 9090                    2*nop
+
+
+Lower regeneration in town:
+
+File Offset 00052BA1
+
+:004537A1 C1E302                  shl ebx, 02
+wordt
+:004537A1 C1E301                  shl ebx, 01

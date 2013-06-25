@@ -1,0 +1,28 @@
+Character timings
+
+Disabling Barbarian's attack speed bonus for Clubs (item code 6 and 7):
+
+File Offset 00057024
+
+:00457C24 751D                    jne 00457C43
+wordt
+:00457C24 752D                    jne 00457C53
+
+
+Improving Bow speed for Warriors (0.55 -> 0.45) by using free space from Barbarian change above:
+
+File Offset 00057041
+
+:00457C41 EB10                    jmp 00457C53
+:00457C43 83FA06                  cmp edx, 00000006
+:00457C46 7405                    je 00457C4D
+:00457C48 83FA07                  cmp edx, 00000007
+:00457C4B 7506                    jne 00457C53
+:00457C4D 89B1A4020000            mov dword ptr [ecx+000002A4], esi
+wordt
+:00457C41 9090                    2*nop
+:00457C43 83FA04                  cmp edx, 00000004
+:00457C46 750B                    jne 00457C53
+:00457C48 85FF                    test edi, edi
+:00457C4A 0F84AFFDFFFF            je 004579FF
+:00457C50 909090                  3*nop

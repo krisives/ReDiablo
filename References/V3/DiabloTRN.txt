@@ -1,0 +1,14 @@
+Diablo - TRN
+
+The game uses the TRN from boss 11-RedHorror for Diablo. Perhaps because that boss got placed just before.
+
+
+GENERAL -> BHKA for RedHorror and DarkLord:
+
+000AF3E8 841B 4B00                               ..K.
+wordt
+000AF3E8 281B 4B00                               ..K.
+
+
+
+

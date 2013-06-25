@@ -1,0 +1,353 @@
+Setup cursor:
+
+:00407AED E9D8FFFFFF              jmp 00407ACA
+
+:00407ACA 0FB68128964800          movzx eax, byte ptr [ecx+00489628]
+:00407AD1 890D5C164D00            mov dword ptr [004D165C], ecx
+:00407AD7 A324164D00              mov dword ptr [004D1624], eax
+:00407ADC 0FB681E8994800          movzx eax, byte ptr [ecx+004899E8]
+:00407AE3 A31C164D00              mov dword ptr [004D161C], eax
+:00407AE8 E9A9FFFFFF              jmp 00407A96
+
+
+Values for [004D165C] are:
+
+01	normal 'hand' cursor
+02	identify
+03	repair
+04      recharge
+05	trap disarm
+06	oil
+07	telekinesis
+08      resurrect
+09      normal crosshair cursor (scrolls and runes, spellnumber is stored at [Char+000000AC])
+0A      heal other 
+0B	hourglass
+ 
+
+
+
+
+
+Holding item in cursor:
+
+
+* Referenced by a CALL at Addresses:
+|:0044811F   , :004482FA   
+|
+:004217DB 51                      push ecx
+:004217DC 51                      push ecx
+:004217DD 53                      push ebx
+:004217DE 55                      push ebp
+:004217DF 56                      push esi
+:004217E0 33F6                    xor esi, esi
+:004217E2 3935440E4D00            cmp dword ptr [004D0E44], esi
+:004217E8 8BEA                    mov ebp, edx
+:004217EA 57                      push edi
+:004217EB 896C2414                mov dword ptr [esp+14], ebp
+:004217EF 894C2410                mov dword ptr [esp+10], ecx
+:004217F3 740C                    je 00421801
+:004217F5 8935440E4D00            mov dword ptr [004D0E44], esi
+:004217FB 893508114D00            mov dword ptr [004D1108], esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004217F3(C)
+|
+:00421801 69ED74010000            imul ebp, 00000174
+:00421807 8B858C626800            mov eax, dword ptr [ebp+0068628C]
+:0042180D 8B9590626800            mov edx, dword ptr [ebp+00686290]
+:00421813 6BC070                  imul eax, 00000070
+:00421816 80BC10009A610000        cmp byte ptr [eax+edx+00619A00], 00
+:0042181E 0F844D010000            je 00421971
+:00421824 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00421829 3BC1                    cmp eax, ecx
+:0042182B 7529                    jne 00421856
+:0042182D 833D5C164D000C          cmp dword ptr [004D165C], 0000000C
+:00421834 7C20                    jl 00421856					jmp if special cursor
+:00421836 69C0C8550000            imul eax, 000055C8
+:0042183C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00421842 B25E                    mov dl, 5E
+:00421844 03C1                    add eax, ecx
+:00421846 8A483C                  mov cl, byte ptr [eax+3C]
+:00421849 8A4038                  mov al, byte ptr [eax+38]
+:0042184C 51                      push ecx
+:0042184D 50                      push eax
+:0042184E 6A01                    push 00000001
+:00421850 59                      pop ecx
+:00421851 E87F590200              call 004471D5					drop item (?)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042182B(C), :00421834(C)
+|
+:00421856 39B5B4636800            cmp dword ptr [ebp+006863B4], esi
+:0042185C 7409                    je 00421867
+:0042185E 6681A584626800FF7F      and word ptr [ebp+00686284], 7FFF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042185C(C)
+|
+:00421867 8B5C2410                mov ebx, dword ptr [esp+10]
+:0042186B A114AE6E00              mov eax, dword ptr [006EAE14]
+:00421870 69DBC8550000            imul ebx, 000055C8
+:00421876 6A5D                    push 0000005D
+:00421878 8DB580626800            lea esi, dword ptr [ebp+00686280]
+:0042187E 8DBC18A4530000          lea edi, dword ptr [eax+ebx+000053A4]
+:00421885 59                      pop ecx
+:00421886 F3                      repz
+:00421887 A5                      movsd
+:00421888 8B4C2410                mov ecx, dword ptr [esp+10]
+:0042188C E851FAFFFF              call 004212E2						speeches and such
+:00421891 8B742410                mov esi, dword ptr [esp+10]
+:00421895 8BCE                    mov ecx, esi
+:00421897 E88FF9FFFF              call 0042122B
+:0042189C 8BCE                    mov ecx, esi
+:0042189E E83BF9FFFF              call 004211DE
+:004218A3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004218A8 33FF                    xor edi, edi
+:004218AA 83BC18AC5300000B        cmp dword ptr [eax+ebx+000053AC], 0000000B
+:004218B2 750E                    jne 004218C2						
+:004218B4 8BCE                    mov ecx, esi						auto-store gold
+:004218B6 E810DEFFFF              call 0041F6CB
+:004218BB 85C0                    test eax, eax
+:004218BD 7403                    je 004218C2
+:004218BF 6A01                    push 00000001
+:004218C1 5F                      pop edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004218B2(C), :004218BD(C)
+|
+:004218C2 8B858C626800            mov eax, dword ptr [ebp+0068628C]
+:004218C8 8BAD90626800            mov ebp, dword ptr [ebp+00686290]
+:004218CE 8BC8                    mov ecx, eax
+:004218D0 6BC970                  imul ecx, 00000070
+:004218D3 80A429009A610000        and byte ptr [ecx+ebp+00619A00], 00
+:004218DB 803DD8B1600015          cmp byte ptr [0060B1D8], 15
+:004218E2 7545                    jne 00421929
+:004218E4 3B05A81C6900            cmp eax, dword ptr [00691CA8]
+:004218EA 753D                    jne 00421929
+:004218EC 3B2DAC1C6900            cmp ebp, dword ptr [00691CAC]
+:004218F2 7535                    jne 00421929
+:004218F4 830D1C1E6900FF          or dword ptr [00691E1C], FFFFFFFF
+:004218FB 33D2                    xor edx, edx
+:004218FD 2015E41C6900            and byte ptr [00691CE4], dl
+:00421903 8915BC1C6900            mov dword ptr [00691CBC], edx
+:00421909 8915C01C6900            mov dword ptr [00691CC0], edx
+:0042190F 8915C41C6900            mov dword ptr [00691CC4], edx
+:00421915 8915C81C6900            mov dword ptr [00691CC8], edx
+:0042191B 8915EC1C6900            mov dword ptr [00691CEC], edx
+:00421921 8915E81C6900            mov dword ptr [00691CE8], edx
+:00421927 EB02                    jmp 0042192B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004218E2(C), :004218EA(C), :004218F2(C)
+|
+:00421929 33D2                    xor edx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00421927(U)
+|
+:0042192B 3915DC206900            cmp dword ptr [006920DC], edx
+:00421931 7E1F                    jle 00421952
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00421950(C)
+|
+:00421933 8B0C9518556800          mov ecx, dword ptr [4*edx+00685518]
+:0042193A 3B4C2414                cmp ecx, dword ptr [esp+14]
+:0042193E 7509                    jne 00421949
+:00421940 E823660000              call 00427F68
+:00421945 33D2                    xor edx, edx
+:00421947 EB01                    jmp 0042194A
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042193E(C)
+|
+:00421949 42                      inc edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00421947(U)
+|
+:0042194A 3B15DC206900            cmp edx, dword ptr [006920DC]
+:00421950 7CE1                    jl 00421933
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00421931(C)
+|
+:00421952 800D44164D00FF          or byte ptr [004D1644], FF
+:00421959 85FF                    test edi, edi
+:0042195B 7514                    jne 00421971					jmp if stored or gone
+:0042195D A114AE6E00              mov eax, dword ptr [006EAE14]
+:00421962 8B8C1864540000          mov ecx, dword ptr [eax+ebx+00005464]		gfx number
+:00421969 83C10C                  add ecx, 0000000C
+:0042196C E87C61FEFF              call 00407AED					create cursor shape
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042181E(C), :0042195B(C)
+|
+:00421971 5F                      pop edi
+:00421972 5E                      pop esi
+:00421973 5D                      pop ebp
+:00421974 5B                      pop ebx
+:00421975 59                      pop ecx
+:00421976 59                      pop ecx
+:00421977 C3                      ret
+
+
+Set item at cursor:
+
+:00443D8A 0FB69230694A00          movzx edx, byte ptr [edx+004A6930]	base item number
+:00443D91 8BC6                    mov eax, esi
+:00443D93 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00443D99 69C0C8550000            imul eax, 000055C8
+:00443D9F 03C1                    add eax, ecx
+:00443DA1 8BF8                    mov edi, eax
+:00443DA3 8D8FA4530000            lea ecx, dword ptr [edi+000053A4]
+:00443DA9 E8690DFEFF              call 00424B17
+:00443DAE 8BCE                    mov ecx, esi
+:00443DB0 8D97A4530000            lea edx, dword ptr [edi+000053A4]
+:00443DB6 E86C0EFEFF              call 00424C27
+:00443DBB C7870855000001000000    mov dword ptr [edi+00005508], 00000001
+:00443DC5 8B8F64540000            mov ecx, dword ptr [edi+00005464]
+:00443DCB 83C10C                  add ecx, 0000000C
+:00443DCE E81A3DFCFF              call 00407AED
+
+
+Set gold image at cursor:
+
+* Referenced by a CALL at Addresses:
+|:00407436   , :0041F816   
+|
+:0040745A 69C9C8550000            imul ecx, 000055C8
+:00407460 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00407465 03C1                    add eax, ecx
+:00407467 8B9068540000            mov edx, dword ptr [eax+00005468]
+:0040746D 81FAC4090000            cmp edx, 000009C4
+:00407473 7C0C                    jl 00407481
+:00407475 C7806454000006000000    mov dword ptr [ebx+00005464], 00000006
+:0040747F EB1E                    jmp 0040749F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00407473(C)
+|
+:00407481 81FAE8030000            cmp edx, 000003E8
+:00407487 7F0C                    jg 00407495
+:00407489 C7806454000004000000    mov dword ptr [ebx+00005464], 00000004
+:00407493 EB0A                    jmp 0040749F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00407487(C)
+|
+:00407495 C7806454000005000000    mov dword ptr [ebx+00005464], 00000005
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0040747F(U), :00407493(U)
+|
+:0040749F A114AE6E00              mov eax, dword ptr [006EAE14]
+:004074A4 8B8C0864540000          mov ecx, dword ptr [eax+ecx+00005464]
+:004074AB 83C10C                  add ecx, 0000000C
+:004074AE E93A060000              jmp 00407AED
+
+
+
+
+:0041F801 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0041F806 8D8C28A4530000          lea ecx, dword ptr [eax+ebp+000053A4]
+:0041F80D E809540000              call 00424C1B					retrieve a seed
+:0041F812 8B4C2414                mov ecx, dword ptr [esp+14]
+:0041F816 E83F7CFEFF              call 0040745A					set cursor image
+:0041F81B 8B4C2414                mov ecx, dword ptr [esp+14]
+:0041F81F E81B390000              call 0042313F					count gold
+:0041F824 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0041F82A 898429CC010000          mov dword ptr [ecx+ebp+000001CC], eax
+
+
+
+
+Split gold code:
+
+* Referenced by a CALL at Address:
+|:0040728F   
+|
+:00407346 53                      push ebx
+:00407347 56                      push esi
+:00407348 57                      push edi
+:00407349 83FA2E                  cmp edx, 0000002E
+:0040734C 8BF9                    mov edi, ecx
+:0040734E 7F4F                    jg 0040739F
+:00407350 83C2F9                  add edx, FFFFFFF9
+:00407353 8BF7                    mov esi, edi
+:00407355 8BC2                    mov eax, edx
+:00407357 69F6C8550000            imul esi, 000055C8
+:0040735D 69C074010000            imul eax, 00000174
+:00407363 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00407369 8B1D08114D00            mov ebx, dword ptr [004D1108]
+:0040736F 03C6                    add eax, esi
+:00407371 299C017C0E0000          sub dword ptr [ecx+eax+00000E7C], ebx
+:00407378 8D8C017C0E0000          lea ecx, dword ptr [ecx+eax+00000E7C]
+:0040737F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00407385 83BC017C0E000000        cmp dword ptr [ecx+eax+00000E7C], 00000000
+:0040738D 8BCF                    mov ecx, edi
+:0040738F 7E07                    jle 00407398
+:00407391 E8FD840600              call 0046F893					set gold image
+:00407396 EB54                    jmp 004073EC
+:00407398 E8E29A0100              call 00420E7F					delete item if gold depleted
+:0040739D EB4D                    jmp 004073EC
+...
+:004073EC A114AE6E00              mov eax, dword ptr [006EAE14]
+:004073F1 33D2                    xor edx, edx
+:004073F3 8D8C30A4530000          lea ecx, dword ptr [eax+esi+000053A4]
+:004073FA E818D70100              call 00424B17					setup item data
+:004073FF A114AE6E00              mov eax, dword ptr [006EAE14]
+:00407404 8BCF                    mov ecx, edi
+:00407406 8D9430A4530000          lea edx, dword ptr [eax+esi+000053A4]
+:0040740D E815D80100              call 00424C27					provide seed
+:00407412 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00407417 8B0D08114D00            mov ecx, dword ptr [004D1108]
+:0040741D 898C3068540000          mov dword ptr [eax+esi+00005468], ecx		set gold value
+:00407424 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00407429 8BCF                    mov ecx, edi
+:0040742B C784300855000001000000  mov dword ptr [eax+esi+00005508], 00000001	set requirements
+:00407436 E81F000000              call 0040745A					set gold image at cursor
+:0040743B 8BCF                    mov ecx, edi
+:0040743D E8FDBC0100              call 0042313F					count gold
+:00407442 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00407448 5F                      pop edi
+:00407449 898431CC010000          mov dword ptr [ecx+esi+000001CC], eax		
+:00407450 832508114D0000          and dword ptr [004D1108], 00000000
+:00407457 5E                      pop esi
+:00407458 5B                      pop ebx
+:00407459 C3                      ret
+
+
+
+Drop halfplayersgold:
+
+:0045A5B8 3BF8                    cmp edi, eax
+:0045A5BA 7D6A                    jge 0045A626					jmp if pile too small
+:0045A5BC 8B55FC                  mov edx, dword ptr [ebp-04]
+:0045A5BF 2BC7                    sub eax, edi
+:0045A5C1 8901                    mov dword ptr [ecx], eax
+:0045A5C3 8BCB                    mov ecx, ebx					character number
+:0045A5C5 E816530100              call 0046F8E0					set new pile image		
+:0045A5CA A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A5CF 33D2                    xor edx, edx					base item number
+:0045A5D1 8D8C30A4530000          lea ecx, dword ptr [eax+esi+000053A4]
+:0045A5D8 E83AA5FCFF              call 00424B17					setup item data
+:0045A5DD A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A5E2 8BCB                    mov ecx, ebx
+:0045A5E4 8D9430A4530000          lea edx, dword ptr [eax+esi+000053A4]
+:0045A5EB E837A6FCFF              call 00424C27					provide seed
+:0045A5F0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A5F5 8D8C30A4530000          lea ecx, dword ptr [eax+esi+000053A4]
+:0045A5FC E8AFA6FCFF              call 00424CB0					set created pile image
+:0045A601 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A606 8BCB                    mov ecx, ebx
+:0045A608 89BC3068540000          mov dword ptr [eax+esi+00005468], edi
+:0045A60F A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045A614 33FF                    xor edi, edi
+:0045A616 57                      push edi
+:0045A617 57                      push edi
+:0045A618 8D9430A4530000          lea edx, dword ptr [eax+esi+000053A4]
+:0045A61F E803FEFFFF              call 0045A427					plrdeaditem routine
+:0045A624 EB74                    jmp 0045A69A
+

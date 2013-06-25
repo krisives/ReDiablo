@@ -1,0 +1,81 @@
+Magic Missile changes
+
+
+Image: arrow -> krull
+
+000A651E 00	Deze wijziging heeft geen effect
+wordt
+000A651E 19
+en
+000A6F2E 00	Oude impact van lich wordt gebruikt voor graphics
+wordt
+000A6F2E 19
+
+Sound: grdlanch -> golumded
+
+000A6520 78
+wordt
+000A6520 75
+
+
+Real Damage:
+
+min: 2 + SLVL + CLVL/2  -> 2
+max: 4 + 2*SLVL + CLVL  -> 2 + 2*SLVL + CLVL
+
+File Offset 0002F9A7
+
+:004305A7 0FBE90B8010000          movsx edx, byte ptr [eax+000001B8]
+:004305AE D1FA                    sar edx, 1
+:004305B0 42                      inc edx
+:004305B1 42                      inc edx
+:004305B2 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004305B8 03D0                    add edx, eax
+:004305BA 8BC2                    mov eax, edx
+:004305BC D1E0                    shl eax, 1
+:004305BE C3                      ret
+wordt
+:004305B0 0FBE90B8010000          movsx edx, byte ptr [eax+000001B8]
+:004305A7 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004305AD 40                      inc eax
+:004305AE D1E0                    shl eax, 1
+:004305B7 03C2                    add eax, edx
+:004305B9 6A02                    push 00000002
+:004305BB 5A                      pop edx
+:004305BC C3                      ret
+:004305BD 9090                    2*nop
+
+
+Spellbook Damage:
+
+File Offset 0002DFDA
+
+:0042EBDA D1F8                    sar eax, 1
+:0042EBDC 40                      inc eax
+:0042EBDD 40                      inc eax
+:0042EBDE 03C6                    add eax, esi
+:0042EBE0 E91CFEFFFF              jmp 0042EA01
+wordt
+:0042EBDA 03C6                    add eax, esi
+:0042EBDC 90                      nop
+:0042EBDD 90                      nop
+:0042EBDE 03C6                    add eax, esi
+:0042EBE0 E963010000              jmp 0042ED48
+
+File Offset 0002E145
+
+:0042ED45 890A                    mov dword ptr [edx], ecx
+:0042ED47 03C1                    add eax, ecx
+:0042ED49 90                      nop
+:0042ED4A 90                      nop
+:0042ED4B 90                      nop
+:0042ED4C 90                      nop
+:0042ED4D 90                      nop
+:0042ED4E 90                      nop
+wordt
+:0042ED45 EB04                    jmp 0042ED4B
+:0042ED47 90                      nop
+:0042ED48 6A02                    push 00000002
+:0042ED4A 59                      pop ecx
+:0042ED4B 890A                    mov dword ptr [edx], ecx
+:0042ED4D 03C1                    add eax, ecx

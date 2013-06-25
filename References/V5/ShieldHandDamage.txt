@@ -1,0 +1,40 @@
+Shield and Hand damage:
+
+
+:00423B15 83BB6409000005          cmp dword ptr [ebx+00000964], 00000005
+:00423B1C 6A01                    push 00000001
+:00423B1E 5F                      pop edi
+:00423B1F 897DDC                  mov dword ptr [ebp-24], edi
+:00423B22 897DF4                  mov dword ptr [ebp-0C], edi
+:00423B25 750F                    jne 00423B36
+:00423B27 3993C00A0000            cmp dword ptr [ebx+00000AC0], edx
+:00423B2D 7407                    je 00423B36
+:00423B2F C745F403000000          mov [ebp-0C], 00000003
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00423B25(C), :00423B2D(C)
+|
+:00423B36 83BBD80A000005          cmp dword ptr [ebx+00000AD8], 00000005
+:00423B3D 750F                    jne 00423B4E
+:00423B3F 3993340C0000            cmp dword ptr [ebx+00000C34], edx
+:00423B45 7407                    je 00423B4E
+:00423B47 C745F403000000          mov [ebp-0C], 00000003
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00423B3D(C), :00423B45(C)
+|
+:00423B4E 80BB6001000003          cmp byte ptr [ebx+00000160], 03
+:00423B55 751A                    jne 00423B71
+:00423B57 0FBE83B8010000          movsx eax, byte ptr [ebx+000001B8]
+:00423B5E 8BC8                    mov ecx, eax
+:00423B60 D1F9                    sar ecx, 1
+:00423B62 3BCF                    cmp ecx, edi
+:00423B64 7C03                    jl 00423B69
+:00423B66 894DDC                  mov dword ptr [ebp-24], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423B64(C)
+|
+:00423B69 3945F4                  cmp dword ptr [ebp-0C], eax
+:00423B6C 7F03                    jg 00423B71
+:00423B6E 8945F4                  mov dword ptr [ebp-0C], eax

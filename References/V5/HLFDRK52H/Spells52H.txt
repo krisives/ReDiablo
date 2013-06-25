@@ -1,0 +1,145 @@
+Sanctuary is made to affect all Undead and Demons, regardless their immunitities. Retreating Stalking Death will still be able to cross it, but no longer be immune to Holy Bolt:
+
+File offset 0002E6AC
+
+:0042F2AC 7425                    je 0042F2D3
+:0042F2AE 90                      nop
+:0042F2AF 90                      nop
+:0042F2B0 90                      nop
+:0042F2B1 90                      nop
+:0042F2B2 90                      nop
+:0042F2B3 90                      nop
+:0042F2B4 8B5D14                  mov ebx, dword ptr [ebp+14]				
+:0042F2B7 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:0042F2BD 83FB35                  cmp ebx, 00000035
+:0042F2C0 7506                    jne 0042F2C8						jump if not Holy Bolt
+:0042F2C2 80787200                cmp byte ptr [eax+72], 00
+:0042F2C6 750B                    jne 0042F2D3						exit if not Undead
+:0042F2C8 83FB3F                  cmp ebx, 0000003F
+:0042F2CB 750B                    jne 0042F2D8						jump if not Bone Spirit
+:0042F2CD 80787200                cmp byte ptr [eax+72], 00
+:0042F2D1 7505                    jne 0042F2D8						jump if not Undead
+:0042F2D3 E9F3020000              jmp 0042F5CB						exit
+:0042F2D8 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]			
+:0042F2DE 8B38                    mov edi, dword ptr [eax]
+:0042F2E0 83FF1B                  cmp edi, 0000001B
+:0042F2E3 750D                    jne 0042F2F2						jump if not Stalking Death
+:0042F2E5 80BE90DC690002          cmp byte ptr [esi+0069DC90], 02
+:0042F2EC 0F84D9020000            je 0042F5CB						exit if retreating
+:0042F2F2 83BE8CDC69000E          cmp dword ptr [esi+0069DC8C], 0000000E
+:0042F2F9 0F84CC020000            je 0042F5CB						exit if charging or phasing
+changed into
+:0042F2AC 7433                    je 0042F2E1
+:0042F2AE 83BE8CDC69000E          cmp dword ptr [esi+0069DC8C], 0000000E
+:0042F2B5 742A                    je 0042F2E1						exit if charging or phasing
+:0042F2B7 8B8668DD6900            mov eax, dword ptr [esi+0069DD68]
+:0042F2BD 8B5D14                  mov ebx, dword ptr [ebp+14]				
+:0042F2C0 83FB3F                  cmp ebx, 0000003F
+:0042F2C3 7506                    jne 0042F2CB						jump if not Bone Spirit
+:0042F2C5 80787200                cmp byte ptr [eax+72], 00
+:0042F2C9 7416                    je 0042F2E1						exit if Undead
+:0042F2CB 83FB11                  cmp ebx, 00000011
+:0042F2CE 7506                    jne 0042F2D6						jump if not Sanctuary
+:0042F2D0 80787202                cmp byte ptr [eax+72], 02
+:0042F2D4 740B                    je 0042F2E1						exit if Animal
+:0042F2D6 83FB35                  cmp ebx, 00000035
+:0042F2D9 750B                    jne 0042F2E6						jump if not Holy Bolt
+:0042F2DB 80787200                cmp byte ptr [eax+72], 00
+:0042F2DF 741E                    je 0042F2FF						jump if Undead
+:0042F2E1 E9E5020000              jmp 0042F5CB						exit
+:0042F2E6 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]			
+:0042F2EC 8B38                    mov edi, dword ptr [eax]
+:0042F2EE 83FF1B                  cmp edi, 0000001B
+:0042F2F1 750C                    jne 0042F2FF						jump if not Stalking Death
+:0042F2F3 80BE90DC690002          cmp byte ptr [esi+0069DC90], 02
+:0042F2FA 74E5                    je 0042F2E1						exit if retreating
+:0042F2FC 909090                  3*nop
+
+
+Setting Sanctuary spell effect to 'physical' damage:
+
+000A6544 1100 0000 E01C 4300 6166 4300 0100 0000 ......C.afC.....
+000A6554 0103 1B00 9100 0000 6200 0000           ........b...
+changed into
+000A6555 00                                      .
+
+
+Tohit for Monster/Trap spells against Monsters is now always 90%
+
+File offset 0002E583
+
+:0042F183 0FB68652DD6900          movzx eax, byte ptr [esi+0069DD52]		AC
+:0042F18A 6A5A                    push 0000005A
+:0042F18C 5F                      pop edi
+:0042F18D 2BF8                    sub edi, eax
+:0042F18F 2B7D0C                  sub edi, dword ptr [ebp+0C]			Tohit = 90 - AC - Distance
+:0042F192 83FF05                  cmp edi, 00000005
+:0042F195 7D03                    jge 0042F19A
+:0042F197 6A05                    push 00000005
+:0042F199 5F                      pop edi
+:0042F19A 83FF5F                  cmp edi, 0000005F
+:0042F19D 7E03                    jle 0042F1A2
+:0042F19F 6A5F                    push 0000005F
+changed into
+:0042F183 EB1A                    jmp 0042F19F
+:0042F185 9090909090              5*nop
+:0042F18A ...
+:0042F19F 6A5A                    push 0000005A					Tohit = 90
+
+Now 26 bytes free space from 0042F185 to 0042F19F
+
+
+The following code prevents non-immune monsters to walk into Fire or Lightning Walls. Note that, originally, Diablo is kept from entering either wall, regardless immunities. Changes are made so that the Defiler, summoned Golems and Fallen Rogues (and one other possible monster) will ignore Fire and Lightning Walls, regardless their resistances or immunities.
+
+File offset 00043E30
+
+:00444A30 807D0B00                cmp byte ptr [ebp+0B], 00
+:00444A34 742E                    je 00444A64					jump if not Fire Wall
+:00444A36 8BC3                    mov eax, ebx
+:00444A38 69C0E4000000            imul eax, 000000E4
+:00444A3E F68054DD690010          test byte ptr [eax+0069DD54], 10
+:00444A45 7419                    je 00444A60					jump if not Fire immune
+:00444A47 807D0B00                cmp byte ptr [ebp+0B], 00
+:00444A4B 7417                    je 00444A64					jump if not Fire Wall
+:00444A4D 8BC3                    mov eax, ebx
+:00444A4F 69C0E4000000            imul eax, 000000E4
+:00444A55 8B8064DD6900            mov eax, dword ptr [eax+0069DD64]
+:00444A5B 83386E                  cmp dword ptr [eax], 0000006E
+:00444A5E 7504                    jne 00444A64					jump if not Diablo
+:00444A60 8065FE00                and byte ptr [ebp-02], 00			clear flag so that monster will stop
+:00444A64 807DFF00                cmp byte ptr [ebp-01], 00
+:00444A68 742C                    je 00444A96					jump if not Lightning Wall
+:00444A6A 8BC3                    mov eax, ebx
+:00444A6C 69C0E4000000            imul eax, 000000E4
+:00444A72 F68054DD690020          test byte ptr [eax+0069DD54], 20
+:00444A79 7417                    je 00444A92					jump if not Lightning immune
+:00444A7B 807DFF00                cmp byte ptr [ebp-01], 00
+:00444A7F 7415                    je 00444A96					jump if not Lightning Wall
+:00444A81 69DBE4000000            imul ebx, 000000E4
+:00444A87 8B8364DD6900            mov eax, dword ptr [ebx+0069DD64]
+:00444A8D 83386E                  cmp dword ptr [eax], 0000006E
+:00444A90 7504                    jne 00444A96					jump if not Diablo
+changed into
+:00444A30 8BC3                    mov eax, ebx
+:00444A32 69C0E4000000            imul eax, 000000E4
+:00444A38 807D0B00                cmp byte ptr [ebp+0B], 00
+:00444A3C 7409                    je 00444A47					jump if not Fire Wall
+:00444A3E F68054DD690010          test byte ptr [eax+0069DD54], 10
+:00444A45 740F                    je 00444A56					jump if not Fire immune
+:00444A47 807DFF00                cmp byte ptr [ebp-01], 00
+:00444A4B 7449                    je 00444A96					skip if not Lightning Wall
+:00444A4D F68054DD690020          test byte ptr [eax+0069DD54], 20
+:00444A54 7540                    jne 00444A96					skip if Lightning immune
+:00444A56 8B8064DD6900            mov eax, dword ptr [eax+0069DD64]
+:00444A5C 83386D                  cmp dword ptr [eax], 0000006D
+:00444A5F 7435                    je 00444A96					skip if Golem
+:00444A61 83386B                  cmp dword ptr [eax], 0000006B
+:00444A64 7430                    je 00444A96					skip if Fallen Rogue
+:00444A66 83386B                  cmp dword ptr [eax], 0000006B
+:00444A69 742B                    je 00444A96					skip if Fallen Rogue (spare)
+:00444A6B 83387C                  cmp dword ptr [eax], 0000007C
+:00444A6E 7426                    je 00444A96					skip if Defiler
+:00444A70 EB20                    jmp 00444A92					jump to clear flag so that monster will stop
+:00444A72 ...
+
+Now 32 bytes free space from 00444A72 to 00444A92

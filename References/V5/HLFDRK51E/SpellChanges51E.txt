@@ -1,0 +1,11 @@
+Restore damage for Inferno and Guardian from change in 51B:
+
+Damage = 1 + (RND[clvl]+RND[4*clvl])/4, for each attack (20 attacks per second)
+      -> 1 + (RND[clvl]+RND[5*clvl])/4, also for each attack (again)
+
+file offset 00034451
+
+:00435051 C1E202                  shl edx, 02
+changed into
+:00435051 6BD205                  imul edx, 00000005
+

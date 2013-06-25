@@ -1,0 +1,71 @@
+()Disable Monk AC bonus if wearing unique plate or non-unique mail : clvl/2 -> 0
+
+Anders klopt ons uitgangspunt van 300-330 AC voor Monk niet meer.
+
+:0042445C D1FA                    sar edx, 1
+wordt
+:0042445C 33D2                    xor edx, edx
+
+:00424493 D1FA                    sar edx, 1
+wordt
+:00424493 33D2                    xor edx, edx
+
+
+
+()"penetrates target's armor"  -> "increased chance to hit"
+
+IMO betere beschrijving, maar ook omdat de oude tekst verschijnt bij (unieke) bogen.
+
+
+
+()Disable Doppelgangers
+
+Uit veiligheid, en om ruimte te krijgen voor "Extra damage vs. Demons".
+
+:0045BB3A 742B                    je 0045BB67	
+wordt
+:0045BB3A EB2B                    jmp 0045BB67	
+
+
+
+()"Double Damage vs. Demons" -> "Extra Damage vs. Demons"
+
+Damage*3 vs. Demons if Monk
+Damage*2 vs. Demons if other char. (als nu)
+
+:0045BB07 80FB01                  cmp bl, 01
+:0045BB0A 7503                    jne 0045BB0F
+:0045BB0C C1E701                  shl edi, 01
+wordt
+:0045BB07 E835000000              call 0045BB3C		call DEMONDAMAGE
+:0045BB0C 909090                  3*nop
+
+DEMONDAMAGE
+
+Plaatsing over oude Doppelganger-code.
+
+:0045BB3C 8B55FC                  mov edx, dword ptr [ebp-04]
+:0045BB3F 8B9268DD6900            mov edx, dword ptr [edx+0069DD68]
+:0045BB45 807A7201                cmp byte ptr [edx+72], 01
+:0045BB49 750F                    jne 0045BB5A		jmp ret if no Demon
+:0045BB4B 8BD7                    mov edx, edi
+:0045BB4D 03FA                    add edi, edx
+:0045BB4F 80B86001000003          cmp byte ptr [eax+00000160], 03
+:0045BB56 7502                    jne 0045BB5A		jmp ret if no Monk
+:0045BB58 03FA                    add edi, edx
+:0045BB5A C3                      ret
+:0045BB5B 9090                    2*nop
+
+
+
+()Reflect/Barrier : 10-19 % -> 15-29 %  (was 20-29 % met evenveel Damage to Monsters)
+
+:0043E517 6A0A                    push 0000000A
+wordt
+:0043E517 6A0F                    push 0000000F
+
+:0043E524 83C00A                  add eax, 0000000A
+wordt
+:0043E524 83C00F                  add eax, 0000000F
+
+

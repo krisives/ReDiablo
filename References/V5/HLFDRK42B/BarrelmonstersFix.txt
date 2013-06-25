@@ -1,0 +1,28 @@
+Specially selected monsters will no longer count toward the size total for a level, allowing for more different types appearing again.
+
+file offset 00039DAF
+
+:0043A9AF 010590B76A00            add dword ptr [006AB790], eax
+changed into
+:0043A9AF E87B110200              call 0045BB2F
+:0043A9B4 90                      nop
+
+Using free space from old Dopplegangers check:
+
+file offset 0005AF2A
+
+:0045BB2A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BB2F 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0045BB32 F684308855000010        test byte ptr [eax+esi+00005588], 10
+:0045BB3A EB2B                    jmp 0045BB67
+changed into
+:0045BB2A 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0045BB2D EB38                    jmp 0045BB67
+:0045BB2F 80FB04                  cmp bl, 04
+:0045BB32 7406                    je 0045BB3A
+:0045BB34 010590B76A00            add dword ptr [006AB790], eax
+:0045BB3A C3                      ret
+:0045BB3B 90                      nop
+
+
+

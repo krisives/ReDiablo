@@ -1,0 +1,68 @@
+Avoiding Knockback for Characters
+
+
+Following will give Barbarians and Warriors 40 % chance to avoid the Knockback effect of a melee attack. 
+
+Knockback door Missiles wordt door game (nog) niet ondersteund.
+
+
+File Offset 0003DA67
+
+:0043E667 F68724DD690080          test byte ptr [edi+0069DD24], 80
+wordt
+:0043E667 E843EEFFFF              call 0043D4AF		Check Knockback
+:0043E66C 85C0                    test eax, eax
+
+
+Check Knockback routine op allerlaatste restje DiabloDeath, na MonsterStunAvoid routine :
+
+File Offset 0003C8AF
+
+:0043D4AF 90                      nop
+:0043D4B0 8B8F04DD6900            mov ecx, dword ptr [edi+0069DD04]
+:0043D4B6 898708DD6900            mov dword ptr [edi+0069DD08], eax
+:0043D4BC 8B87ACDC6900            mov eax, dword ptr [edi+0069DCAC]
+:0043D4C2 C1E010                  shl eax, 10
+:0043D4C5 2BC8                    sub ecx, eax
+:0043D4C7 894DF4                  mov dword ptr [ebp-0C], ecx
+:0043D4CA DB45F4                  fild dword ptr [ebp-0C]
+:0043D4CD D8F1                    fdiv st(0), st(1)
+:0043D4CF E89CD00300              call 0047A570
+:0043D4D4 89870CDD6900            mov dword ptr [edi+0069DD0C], eax
+:0043D4DA 5F                      pop edi
+:0043D4DB 5E                      pop esi
+:0043D4DC 5B                      pop ebx
+:0043D4DD DDD8                    fstp st(0)
+wordt
+:0043D4AF F68724DD690080          test byte ptr [edi+0069DD24], 80
+:0043D4B6 7424                    je 0043D4DC
+:0043D4B8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043D4BD 8A843060010000          mov al, byte ptr [eax+esi+00000160]
+:0043D4C4 84C0                    test al, al
+:0043D4C6 7404                    je 0043D4CC
+:0043D4C8 3C05                    cmp al, 05
+:0043D4CA 750C                    jne 0043D4D8
+:0043D4CC 51                      push ecx
+:0043D4CD E86F0E0000              call 0043E341			call RND100
+:0043D4D2 59                      pop ecx
+:0043D4D3 83F828                  cmp eax, 00000028		40%
+:0043D4D6 7C04                    jl 0043D4DC
+:0043D4D8 6A01                    push 00000001
+:0043D4DA 58                      pop eax
+:0043D4DB C3                      ret
+:0043D4DC 33C0                    xor eax, eax
+:0043D4DE C3                      ret
+
+
+
+Nog over aan vrije ruimte (41 byte) op:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E3BD(C)
+|
+:0043E492 90                      nop
+:0043E493 90                      nop
+:0043E494 90                      nop
+:0043E495 90                      nop
+:0043E496 90                      nop
+enz.

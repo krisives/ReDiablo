@@ -1,0 +1,46 @@
+Just some notes regarding redundant pointers and a list.
+by Dr. Zed
+
+It sounds like you did the right thing. I just wanted to point out some of the pointers too look out for. Below is a list of addresses and what they point to.
+
+The 'dangerous' ones are the ones that point to areas that are used for multiple instances (e.g. you will probably never edit the data where "FBttleBB" is stored, but the data where "Axe" is stored might get changed).
+
+You will note that 'cleaver' is on the list.
+
+00091B28: Armor2
+00091B2C: Axe 91439
+00091B30: FBttle
+00091B34: Bow 91347
+00091B38: GoldFlip
+00091B3C: Helmut
+00091B40: Mace 913D5
+00091B44: Shield
+00091B48: SwrdFlip
+00091B4C: Rock
+00091B50: Cleaver
+00091B54: Staff 912F6
+00091B58: Ring 912EB
+00091B5C: CrownF
+00091B60: LArmor
+00091B64: WShield
+00091B68: Scroll
+00091B6C: FPlateAr
+00091B70: FBook
+00091B74: Food
+00091B78: FBttleBB
+00091B7C: FBttleDY
+00091B80: FBttleOR
+00091B84: FBttleBR
+00091B88: FBttleBL
+00091B8C: FBttleBY
+00091B90: FBttleWH
+00091B94: FBttleDB
+00091B98: FEar
+00091B9C: FBrain
+00091BA0: FMush
+00091BA4: Innsign
+00091BA8: Bldstn
+00091BAC: Fanvil
+00091BB0: FLazStaf
+
+

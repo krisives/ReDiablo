@@ -1,0 +1,87 @@
+Knockback for Flamewave, Doomserpents and Arcane Star
+
+
+Adding to the Spell-Knockback routine:
+
+file offset 0003D892
+
+:0043E492 807D1300                cmp byte ptr [ebp+13], 00		non-spell missile attack
+:0043E496 7414                    je 0043E4AC
+:0043E498 837D1435                cmp dword ptr [ebp+14], 00000035	Holy Bolt
+:0043E49C 7417                    je 0043E4B5
+:0043E49E 837D143D                cmp dword ptr [ebp+14], 0000003D	Elemental
+:0043E4A2 7411                    je 0043E4B5
+:0043E4A4 837D1464                cmp dword ptr [ebp+14], 00000064	Lightning Blast
+:0043E4A8 740B                    je 0043E4B5
+:0043E4AA EB06                    jmp 0043E4B2
+:0043E4AC F6400108                test [eax+01], 08			Bear effect
+:0043E4B0 7503                    jne 0043E4B5
+:0043E4B2 33C0                    xor eax, eax
+:0043E4B4 C3                      ret
+:0043E4B5 6A01                    push 00000001
+:0043E4B7 58                      pop eax
+:0043E4B8 C3                      ret
+changed into
+:0043E492 807D1300                cmp byte ptr [ebp+13], 00		non-spell missile attack
+:0043E496 7405                    je 00??????
+:0043E498 E9A0FDFFFF              jmp 0043E23D
+:0043E49D F6400108                test [eax+01], 08			Bear effect
+:0043E4A1 7503                    jne 00??????
+:0043E4A3 33C0                    xor eax, eax
+:0043E4A5 C3                      ret
+:0043E4A6 6A01                    push 00000001
+:0043E4A8 58                      pop eax
+:0043E4A9 C3                      ret
+:0043E4AA 9090                    2*nop
+
+Now free space from :0043E4AA to :0043E4B9 (15 bytes)
+
+
+Using free space from simplified 20% Autohit:
+
+file offset 0003D63D
+
+:0043E23D C1E103                  shl ecx, 03					
+:0043E240 03C1                    add eax, ecx					
+:0043E242 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]		
+:0043E249 52                      push edx
+:0043E24A D1EA                    shr edx, 1					
+:0043E24C 03C2                    add eax, edx					
+:0043E24E 5A                      pop edx
+:0043E24F 3BC2                    cmp eax, edx
+:0043E251 7D02                    jge 0043E255
+:0043E253 8BC2                    mov eax, edx
+:0043E255 3BD8                    cmp ebx, eax
+:0043E257 7D02                    jge 0043E25B
+:0043E259 8BD8                    mov ebx, eax
+:0043E25B 5A                      pop edx
+:0043E25C 58                      pop eax
+:0043E25D C3                      ret
+:0043E25E 90                      nop
+:0043E25F 90                      nop
+:0043E260 90                      nop
+:0043E261 90                      nop
+:0043E262 90                      nop
+:0043E263 90                      nop
+:0043E264 90                      nop
+changed into
+:0043E23D 8A4514                  mov al, byte ptr [ebp+14]
+:0043E240 3C0E                    cmp al, 0E				Flame Wave
+:0043E242 7417                    je 00??????
+:0043E244 3C10                    cmp al, 10				Doom Serpents
+:0043E246 7413                    je 00??????
+:0043E248 3C20                    cmp al, 20				Arcane Star
+:0043E24A 740F                    je 00??????
+:0043E24C 3C35                    cmp al, 35				Holy Bolt
+:0043E24E 740B                    je 00??????
+:0043E250 3C3D                    cmp al, 3D				Elemental
+:0043E252 7407                    je 00??????
+:0043E254 3C64                    cmp al, 64				Lightning Blast
+:0043E256 7403                    je 00??????
+:0043E258 33C0                    xor eax, eax
+:0043E25A C3                      ret
+:0043E25B 6A01                    push 00000001
+:0043E25D 58                      pop eax
+:0043E25E C3                      ret
+
+6 bytes left for future additions.

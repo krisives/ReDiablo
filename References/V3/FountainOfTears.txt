@@ -1,0 +1,243 @@
+Fountain of Tears made into (permanent usable) 'Magic Circle'
+
+
+Implemented Warp spell, but still looking for better ideas.
+
+
+Name change:
+
+000B4260 6400 0000 4D61 6769 6320 4369 7263 6C65 d...Magic Circle
+
+
+Graphics 'TFountn' changed to 'Mcirl':
+
+03320000000EFF00010000000200000004000000800000000100000001000000010000000003000000000000 
+must be
+03340000000EFF00010000000400000002000000600000000100000001000000010000000003000000000000 
+
+000B37A0 0332 0000 000E FF00 0100 0000 0200 0000 .2..............
+000B37B0 0400 0000 8000 0000 0100 0000 0100 0000 ................
+000B37C0 0100 0000 0003 0000 0000 0000           ............
+wordt
+000B37A0 0334 0000 000E FF00 0100 0000 0400 0000 .4..............
+000B37B0 0200 0000 6000 0000 0100 0000 0100 0000 ....`...........
+000B37C0 0100 0000 0003 0000 0000 0000           ............
+
+
+Bloodfnt (Blood Fountain):
+032900000007FF0001000000020000000A000000600000000100000001000000010000000003000000000000 
+
+TFountn (Fountian of Tears):
+03320000000EFF00010000000200000004000000800000000100000001000000010000000003000000000000 
+
+Mcirl:
+0134000001FF0F00000000000100000000000000600000000000000001000000010000000000000000000000 0134000001FF0F00000000000100000000000000600000000000000001000000010000000000000000000000
+
+
+File Offset 00052901
+
+:00453501 389E00E66D00            cmp byte ptr [esi+006DE600], bl
+:00453507 0F84A4020000            je 004537B1
+:0045350D 33C0                    xor eax, eax
+:0045350F 83CBFF                  or ebx, FFFFFFFF
+wordt
+:00453501 33C0                    xor eax, eax
+:00453503 33DB                    xor ebx, ebx
+:00453505 EB38                    jmp 0045353F
+:00453507 90...                   11*nop
+
+
+File Offset 00052958
+
+:00453558 6A04                    push 00000004
+:0045355A 32C9                    xor cl, cl
+:0045355C 5A                      pop edx
+:0045355D E8F869FCFF              call 00419F5A
+:00453562 8BF0                    mov esi, eax
+:00453564 3BF3                    cmp esi, ebx
+:00453566 7441                    je 004535A9
+:00453568 83E800                  sub eax, 00000000
+:0045356B 742A                    je 00453597
+:0045356D 48                      dec eax
+:0045356E 741C                    je 0045358C
+:00453570 48                      dec eax
+:00453571 740E                    je 00453581
+:00453573 48                      dec eax
+:00453574 752A                    jne 004535A0
+:00453576 8BD5                    mov edx, ebp
+:00453578 8BCF                    mov ecx, edi
+:0045357A E83BB30000              call 0045E8BA
+:0045357F EB1F                    jmp 004535A0
+:00453581 8BD5                    mov edx, ebp
+:00453583 8BCF                    mov ecx, edi
+:00453585 E898B20000              call 0045E822
+:0045358A EB14                    jmp 004535A0
+:0045358C 8BD5                    mov edx, ebp
+
+wordt
+
+:00453558 0FB635D4B16000          movzx esi, byte ptr [0060B1D4]
+:0045355F 8BC7                    mov eax, edi
+:00453561 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00453567 69C0C8550000            imul eax, 000055C8
+:0045356D D1E6                    shl esi, 1
+:0045356F 8B54083C                mov edx, dword ptr [eax+ecx+3C]
+:00453573 56                      push esi
+:00453574 53                      push ebx
+:00453575 57                      push edi
+:00453576 03C1                    add eax, ecx
+:00453578 6AFF                    push FFFFFFFF
+:0045357A 6A4E                    push 0000004E			<- Warp
+:0045357C FF7070                  push [eax+70]
+:0045357F 8B4838                  mov ecx, dword ptr [eax+38]
+:00453582 52                      push edx
+:00453583 51                      push ecx
+:00453584 E8A621FEFF              call 0043572F
+:00453589 E91A020000              jmp 004537A8
+:0045358E
+
+
+
+
+Now free code:
+
+:00453507 90                      nop
+:00453508 90                      nop
+:00453509 90                      nop
+:0045350A 90                      nop
+:0045350B 90                      nop
+:0045350C 90                      nop
+:0045350D 90                      nop
+:0045350E 90                      nop
+:0045350F 90                      nop
+:00453510 90                      nop
+:00453511 90                      nop
+:00453512 390510AB6D00            cmp dword ptr [006DAB10], eax
+:00453518 8BEB                    mov ebp, ebx
+:0045351A 89442414                mov dword ptr [esp+14], eax
+:0045351E 89442410                mov dword ptr [esp+10], eax
+:00453522 7514                    jne 00453538
+:00453524 FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:0045352A 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:00453530 6A73                    push 00000073
+:00453532 59                      pop ecx
+:00453533 E88C51FCFF              call 004186C4
+:00453538 90                      nop
+:00453539 90                      nop
+:0045353A 90                      nop
+:0045353B 90                      nop
+:0045353C 90                      nop
+:0045353D 90                      nop
+:0045353E 90                      nop
+
+And:
+:0045364C 90                      nop
+:0045364D B301                    mov bl, 01
+:0045364F 0F855C010000            jne 004537B1
+:00453655 55                      push ebp
+:00453656 B22D                    mov dl, 2D
+:00453658 33C9                    xor ecx, ecx
+:0045365A E85738FFFF              call 00446EB6
+:0045365F E94D010000              jmp 004537B1
+
+And (reserved for effect changes to Magic Circle):
+:0045358E 8BCF                    mov ecx, edi
+:00453590 E88FB10000              call 0045E724
+:00453595 EB09                    jmp 004535A0
+:00453597 8BD5                    mov edx, ebp
+:00453599 8BCF                    mov ecx, edi
+:0045359B E8ECB00000              call 0045E68C
+:004535A0 FF442410                inc [esp+10]
+:004535A4 6A01                    push 00000001
+:004535A6 8BDE                    mov ebx, esi
+:004535A8 5D                      pop ebp
+:004535A9 6A01                    push 00000001
+:004535AB 58                      pop eax
+:004535AC 39442410                cmp dword ptr [esp+10], eax
+:004535B0 7E04                    jle 004535B6
+:004535B2 89442414                mov dword ptr [esp+14], eax
+:004535B6 837C241400              cmp dword ptr [esp+14], 00000000
+:004535BB 749B                    je 00453558
+:004535BD 8BCF                    mov ecx, edi
+:004535BF E8BAAF0000              call 0045E57E
+:004535C4 E9DF010000              jmp 004537A8
+:004535C9 90                      nop
+:004535CA B301                    mov bl, 01
+:004535CC 0F85DF010000            jne 004537B1
+:004535D2 FF742418                push [esp+18]
+:004535D6 EB7E                    jmp 00453656
+
+More free code starts here, shared by 'Murky Pool'.
+
+
+
+
+Full original Fountain of Tears code:
+
+:00453501 389E00E66D00            cmp byte ptr [esi+006DE600], bl
+:00453507 0F84A4020000            je 004537B1
+:0045350D 33C0                    xor eax, eax
+:0045350F 83CBFF                  or ebx, FFFFFFFF
+:00453512 390510AB6D00            cmp dword ptr [006DAB10], eax
+:00453518 8BEB                    mov ebp, ebx
+:0045351A 89442414                mov dword ptr [esp+14], eax
+:0045351E 89442410                mov dword ptr [esp+10], eax
+:00453522 7514                    jne 00453538
+:00453524 FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:0045352A 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:00453530 6A73                    push 00000073
+:00453532 59                      pop ecx
+:00453533 E88C51FCFF              call 004186C4
+:00453538 80A600E66D0000          and byte ptr [esi+006DE600], 00
+:0045353F 833D10AB6D0000          cmp dword ptr [006DAB10], 00000000
+:00453546 0F85D2010000            jne 0045371E
+:0045354C 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00453552 0F85C6010000            jne 0045371E
+:00453558 6A04                    push 00000004
+:0045355A 32C9                    xor cl, cl
+:0045355C 5A                      pop edx
+:0045355D E8F869FCFF              call 00419F5A
+:00453562 8BF0                    mov esi, eax
+:00453564 3BF3                    cmp esi, ebx
+:00453566 7441                    je 004535A9
+:00453568 83E800                  sub eax, 00000000
+:0045356B 742A                    je 00453597
+:0045356D 48                      dec eax
+:0045356E 741C                    je 0045358C
+:00453570 48                      dec eax
+:00453571 740E                    je 00453581
+:00453573 48                      dec eax
+:00453574 752A                    jne 004535A0
+:00453576 8BD5                    mov edx, ebp
+:00453578 8BCF                    mov ecx, edi
+:0045357A E83BB30000              call 0045E8BA
+:0045357F EB1F                    jmp 004535A0
+:00453581 8BD5                    mov edx, ebp
+:00453583 8BCF                    mov ecx, edi
+:00453585 E898B20000              call 0045E822
+:0045358A EB14                    jmp 004535A0
+:0045358C 8BD5                    mov edx, ebp
+:0045358E 8BCF                    mov ecx, edi
+:00453590 E88FB10000              call 0045E724
+:00453595 EB09                    jmp 004535A0
+:00453597 8BD5                    mov edx, ebp
+:00453599 8BCF                    mov ecx, edi
+:0045359B E8ECB00000              call 0045E68C
+:004535A0 FF442410                inc [esp+10]
+:004535A4 6A01                    push 00000001
+:004535A6 8BDE                    mov ebx, esi
+:004535A8 5D                      pop ebp
+:004535A9 6A01                    push 00000001
+:004535AB 58                      pop eax
+:004535AC 39442410                cmp dword ptr [esp+10], eax
+:004535B0 7E04                    jle 004535B6
+:004535B2 89442414                mov dword ptr [esp+14], eax
+:004535B6 837C241400              cmp dword ptr [esp+14], 00000000
+:004535BB 749B                    je 00453558
+:004535BD 8BCF                    mov ecx, edi
+:004535BF E8BAAF0000              call 0045E57E
+:004535C4 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:004535CA B301                    mov bl, 01
+:004535CC 0F85DF010000            jne 004537B1
+:004535D2 FF742418                push [esp+18]
+:004535D6 EB7E                    jmp 00453656

@@ -1,0 +1,88 @@
+All Swords and Clubs become 1-handed for Warrior and Barbarian:
+
+File Offset 0001E075
+
+:0041EC75 80B86001000005          cmp byte ptr [eax+00000160], 05
+wordt
+:0041EC75 50                      push eax
+:0041EC76 E88C180100              call 00430507
+:0041EC7B 58                      pop eax
+
+File Offset 0001F01F
+
+:0041FC1F 80BC1F6001000005        cmp byte ptr [edi+ebx+00000160], 05
+wordt
+:0041FC1F 50                      push eax
+:0041FC20 E8E2080100              call 00430507
+:0041FC25 58                      pop eax
+:0041FC26 90                      nop
+
+File Offset 0001FC08
+
+:00420808 80BF6001000005          cmp byte ptr [edi+00000160], 05
+wordt
+:00420808 50                      push eax
+:00420809 E8F9FC0000              call 00430507
+:0042080E 58                      pop eax
+
+File Offset 00021DF1
+
+:004229F1 80BE6001000005          cmp byte ptr [esi+00000160], 05
+wordt
+:004229F1 50                      push eax
+:004229F2 E810DB0000              call 00430507
+:004229F7 58                      pop eax
+
+
+Routine that checks for (local) Warrior or Barbarian on free space from Charm spell:
+
+File Offset 0002F907
+
+:00430507 90                      nop
+:00430508 90                      nop
+:00430509 90                      nop
+:0043050A 90                      nop
+:0043050B 8BD3                    mov edx, ebx
+:0043050D B191                    mov cl, 91
+:0043050F 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+:00430515 E8409AFEFF              call 00419F5A
+:0043051A 03C7                    add eax, edi
+wordt
+:00430507 E85A3F0100              call 00444466
+:0043050C 8A8060010000            mov al, byte ptr [eax+00000160]
+:00430512 3C05                    cmp al, 05
+:00430514 7502                    jne 00430518
+:00430516 33C0                    xor eax, eax
+:00430518 84C0                    test al, al
+:0043051A C3                      ret
+:0043051B 90                      nop
+
+
+Removing 'One Handed' from unique great sword The Grandfather:
+
+0008D67C 6013 4A00 101E 0500 400D 0300 4B00 0000 `.J.....@...K...
+0008D68C 1E00 0000 1E00 0000 3900 0000 0300 0000 ........9.......
+0008D69C 0300 0000 3A00 0000 0400 0000 0400 0000 ....:...........
+0008D6AC 1100 0000 0300 0000 1E00 0000 2C00 0000 ............,...
+0008D6BC A100 0000 0000 0000 0000 0000 0000 0000 ................
+0008D6CC 0000 0000                               ....
+
+
+Setting Maul to 2-handed again:
+
+000A2FF5 02                                      .
+
+
+Removing AC bonus from 'Two Handed Sword':
+
+000A2BF0 0000 0000 0000 0000                     ........
+
+
+Removing AC bonus from 'Great Sword':
+
+000A2C3C 0000 0000 0000 0000                     ........
+
+
+Changing name 'Two-Handed Sword' into 'Battle Sword':
+
+000A3924 4261 7474 6C65 2053 776F 7264 0000 0000 Battle Sword....

@@ -1,0 +1,33 @@
+Golem could still crash the game when attacking unactivated monsters outside visual range, because one of the changes planned in 42D didn't get implemented. Doing it now.
+
+
+file offset 0003CFB6
+
+:0043DBB6 E8F7CD0300              call 0047A9B2
+:0043DBBB 90                      nop
+changed into
+:0043DBB6 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+
+
+Now free space (again):
+
+* Referenced by a CALL at Address:0043DBB6   
+:0047A9B2 808E28DD6900FF          or byte ptr [esi+0069DD28], FF
+:0047A9B9 39BE8CDC6900            cmp dword ptr [esi+0069DC8C], edi
+:0047A9BF C3                      ret
+
+
+Also, restoring the target detection range for monsters vs. Golem and Charmed monsters. This will lower the decoy value of 'helpers':
+
+file offset 0003BEB1
+
+:0043CAB1 83F803                  cmp eax, 00000003
+changed into
+:0043CAB1 83F802                  cmp eax, 00000002
+
+file offset 0003BEC6
+
+:0043CAC6 83F803                  cmp eax, 00000003
+changed into
+:0043CAC6 83F802                  cmp eax, 00000002
+

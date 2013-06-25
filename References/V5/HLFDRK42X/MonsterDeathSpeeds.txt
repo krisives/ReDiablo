@@ -1,0 +1,46 @@
+Some monsters have a slower Death animation as in regular HF (old changes by V&K and ourselves) which could contribute to 'double deaths'. Restored to original values.
+
+
+pos name                     type      attacktype        sub     playback speed
+
+  3 Devil Kin Brute          animal   24 Viper            2      0   0   0   0   2   2
+                                                                                 0
+000AAAB8 0200 0000                               ....
+changed into
+000AAAB8 0000 0000                               ....
+
+ 37 Warp Demon               demon     2 Skeleton         2      2   0   0   0   1   -
+                                                                                 0
+000ABBB8 0100 0000                               ....
+changed into
+000ABBB8 0000 0000                               ....
+
+ 45 Acidspider               animal   19 Spit             3      2   1   2   0   1   0
+                                                                                 0
+000ABFB8 0100 0000                               ....
+changed into
+000ABFB8 0000 0000                               ....
+
+110 The Dark Lord            demon    27 Diablo           5      0   0   0   0   2   0
+                                                                                 1
+000AE038 0200 0000                               ....
+changed into
+000AE038 0100 0000                               ....
+
+114 Scowler                  animal   37 Psychorb         2      2   0   1   0   3   -
+                                                                                 0
+000AE238 0300 0000                               ....
+changed into
+000AE238 0000 0000                               ....
+
+120 Doom Spider              animal   20 Fast Spit        1      2   1   2   0   1   0
+                                                                                 0
+000AE538 0100 0000                               ....
+changed into
+000AE538 0000 0000                               ....
+
+137 The Dark Ghost           demon    27 Diablo           6      4   0   0   0   2   0
+                                                                                 1
+000AEDB8 0200 0000                               ....
+changed into
+000AEDB8 0100 0000                               ....

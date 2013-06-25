@@ -1,0 +1,160 @@
+The Autohit of monsters (minimal chance ToHit, regardless of targets AC) is 8 - 36, depending on dlvl and difficulty. Unfortunately, this high Autohit negates the benefit of having high AC when playing in the deeper levels.
+
+Example for clvl=40
+
+FinalToHit = ToHit - AC + 9*(mlvl-clvl)
+
+AC = 255 - FTH + 9*(60-40) = 435 - FTH
+
+suppose Monster Autohit => 20 for all levels
+
+FTH = Autohit = 36 ->  useful AC = 399
+FTH = Autohit = 20 ->  useful AC = 415
+
+max useful AC = 120 + BaseTH - 20 - 9*40 + 9*mlvl
+min useful AC = 120 + BaseTH - 85 - 9*40 + 9*mlvl (65 lower)
+
+Hell/Abyss Champion Knights
+clvl 35, mlvl 32, TH 135   -> max AC = 120 + 135 - 20 - 315 + 558 = 478 (min AC = 413)
+clvl 40, mlvl 32, TH 135   -> max AC = 120 + 135 - 20 - 360 + 558 = 433 (min AC = 368)
+clvl 45, mlvl 32, TH 135   -> max AC = 120 + 135 - 20 - 405 + 558 = 388 (min AC = 324)
+
+Hell/Abyss Doom Tails
+clvl 35, mlvl 27, TH 100   -> max AC = 120 + 100 - 20 - 315 + 513 = 398 (min AC = 333)
+clvl 40, mlvl 27, TH 100   -> max AC = 120 + 100 - 20 - 360 + 513 = 353 (min AC = 288)
+clvl 45, mlvl 27, TH 100   -> max AC = 120 + 100 - 20 - 405 + 513 = 308 (min AC = 244)
+
+Hell/Hell Stalking Death
+clvl 35, mlvl 21, TH 95    -> max AC = 120 +  95 - 20 - 405 + 459 = 339 (min AC = 274)
+clvl 40, mlvl 21, TH 95    -> max AC = 120 +  95 - 20 - 360 + 459 = 294 (min AC = 229)
+clvl 45, mlvl 21, TH 95    -> max AC = 120 +  95 - 20 - 405 + 459 = 249 (min AC = 185)
+
+Hell/Church Skeletons
+clvl 40, mlvl 1, TH 20     -> max AC = 120 +  20 - 20 - 360 + 279 =  39
+
+
+Setting Autohit to 20% for all dlvls, setting Automiss to 95 - clvl/4
+
+file offset 0002EB23
+
+:0042F723 51                      push ecx
+:0042F724 8D0C3E                  lea ecx, dword ptr [esi+edi]
+:0042F727 E803000000              call 0042F72F
+:0042F72C 59                      pop ecx
+:0042F72D EB25                    jmp 0042F754
+:0042F72F 50                      push eax
+:0042F730 52                      push edx
+:0042F731 0FB681B8010000          movzx eax, byte ptr [ecx+000001B8]		clvl
+:0042F738 C1E802                  shr eax, 02					clvl/4
+:0042F73B 6A64                    push 00000064
+:0042F73D 5A                      pop edx
+:0042F73E 2BD0                    sub edx, eax					100 - clvl/4
+:0042F740 3BD3                    cmp edx, ebx
+:0042F742 7D02                    jge 0042F746
+:0042F744 8BDA                    mov ebx, edx
+:0042F746 6A08                    push 00000008
+:0042F748 58                      pop eax
+:0042F749 8B0DC0706000            mov ecx, dword ptr [006070C0]			difficulty
+:0042F74F E9E9EA0000              jmp 0043E23D
+changed into
+...
+:0042F73B 6A5F                    push 0000005F
+...
+:0042F746 6A14                    push 00000014
+...
+:0042F749 3BD8                    cmp ebx, eax
+:0042F74B 7D02                    jge 0042F74F
+:0042F74D 8BD8                    mov ebx, eax
+:0042F74F 5A                      pop edx
+:0042F750 58                      pop eax
+:0042F751 C3                      ret
+:0042F752 9090                    2*nop
+
+
+Now available as free space (Autohit):
+
+file offset 0003D63D
+
+:0043E23D C1E103                  shl ecx, 03					8*difficulty
+:0043E240 03C1                    add eax, ecx					8 + 8*difficulty
+:0043E242 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]		dlvl
+:0043E249 52                      push edx
+:0043E24A D1EA                    shr edx, 1					dlvl/2
+:0043E24C 03C2                    add eax, edx					dlvl/2 + 8 + 8*difficulty
+:0043E24E 5A                      pop edx
+:0043E24F 3BC2                    cmp eax, edx
+:0043E251 7D02                    jge 0043E255
+:0043E253 8BC2                    mov eax, edx
+:0043E255 3BD8                    cmp ebx, eax
+:0043E257 7D02                    jge 0043E25B
+:0043E259 8BD8                    mov ebx, eax
+:0043E25B 5A                      pop edx
+:0043E25C 58                      pop eax
+:0043E25D C3                      ret
+:0043E25E 90                      nop
+:0043E25F 90                      nop
+:0043E260 90                      nop
+:0043E261 90                      nop
+:0043E262 90                      nop
+:0043E263 90                      nop
+:0043E264 90                      nop
+
+
+Original Hellfire:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:0042F6EF(U), :0042F71E(U)
+:0042F723 83FB0A                  cmp ebx, 0000000A
+:0042F726 7D03                    jge 0042F72B
+:0042F728 6A0A                    push 0000000A
+:0042F72A 5B                      pop ebx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0042F726(C)
+:0042F72B A0D8B16000              mov al, byte ptr [0060B1D8]
+:0042F730 3C0E                    cmp al, 0E
+:0042F732 7508                    jne 0042F73C
+:0042F734 83FB14                  cmp ebx, 00000014
+:0042F737 7D03                    jge 0042F73C
+:0042F739 6A14                    push 00000014
+:0042F73B 5B                      pop ebx
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:0042F732(C), :0042F737(C)
+:0042F73C 3C0F                    cmp al, 0F
+:0042F73E 7508                    jne 0042F748
+:0042F740 83FB19                  cmp ebx, 00000019
+:0042F743 7D03                    jge 0042F748
+:0042F745 6A19                    push 00000019
+:0042F747 5B                      pop ebx
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:0042F73E(C), :0042F743(C)
+:0042F748 3C10                    cmp al, 10
+:0042F74A 7508                    jne 0042F754
+:0042F74C 83FB1E                  cmp ebx, 0000001E
+:0042F74F 7D03                    jge 0042F754
+:0042F751 6A1E                    push 0000001E
+:0042F753 5B                      pop ebx
+
+and:
+
+:0043E234 83FB0F                  cmp ebx, 0000000F
+:0043E237 7D03                    jge 0043E23C
+:0043E239 6A0F                    push 0000000F
+:0043E23B 5B                      pop ebx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:0043E237(C)
+:0043E23C A0D8B16000              mov al, byte ptr [0060B1D8]
+:0043E241 3C0E                    cmp al, 0E
+:0043E243 7508                    jne 0043E24D
+:0043E245 83FB14                  cmp ebx, 00000014
+:0043E248 7D03                    jge 0043E24D
+:0043E24A 6A14                    push 00000014
+:0043E24C 5B                      pop ebx
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:0043E243(C), :0043E248(C)
+:0043E24D 3C0F                    cmp al, 0F
+:0043E24F 7508                    jne 0043E259
+:0043E251 83FB19                  cmp ebx, 00000019
+:0043E254 7D03                    jge 0043E259
+:0043E256 6A19                    push 00000019
+:0043E258 5B                      pop ebx
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:0043E24F(C), :0043E254(C)
+:0043E259 3C10                    cmp al, 10
+:0043E25B 7508                    jne 0043E265
+:0043E25D 83FB1E                  cmp ebx, 0000001E
+:0043E260 7D03                    jge 0043E265
+:0043E262 6A1E                    push 0000001E
+:0043E264 5B                      pop ebx

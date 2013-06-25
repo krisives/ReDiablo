@@ -1,0 +1,17 @@
+Making Search duration less dependent on SLVL
+
+File Offset 00033E73
+
+:00434A73 8D04C0                  lea eax, dword ptr [eax+8*eax]
+wordt
+:00434A73 8D0480                  lea eax, dword ptr [eax+4*eax]
+
+
+Increasing duration
+
+File Offset 00033E76
+
+:00434A76 8D844158020000          lea eax, dword ptr [ecx+2*eax+00000258]
+wordt
+:00434A76 8D8441E8030000          lea eax, dword ptr [ecx+2*eax+000003E8]
+

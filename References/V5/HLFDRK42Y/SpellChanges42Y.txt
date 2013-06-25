@@ -1,0 +1,399 @@
+Improved durations for Sanctuary and illusionary elemental Walls:
+
+Lightning Wall:
+
+file offset 00031096
+
+:00431C96 90                      nop
+:00431C97 90                      nop
+changed into
+:00431C96 48                      dec eax
+:00431C97 48                      dec eax
+
+Fire Wall, Sanctuary:
+
+file offset 00031162
+
+:00431D62 90                      nop
+:00431D63 90                      nop
+changed into
+:00431D62 48                      dec eax
+:00431D63 48                      dec eax
+
+Sanctuary, Fire Wall, Lightning Wall:
+
+file offset 000506D8
+
+:004512D8 83F80A                  cmp eax, 0000000A
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A0A                    push 0000000A
+:004512DF 58                      pop eax
+:004512E0 83F803                  cmp eax, 00000003
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A03                    push 00000003
+changed into
+:004512D8 83F810                  cmp eax, 00000010
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A10                    push 00000010
+:004512DF 58                      pop eax
+:004512E0 83F806                  cmp eax, 00000006
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A06                    push 00000006
+
+
+Improved duration for Guardian:
+
+Old duration: 2*slvl/10 + clvl/10 seconds (maximum 24 seconds, minimum 1.5 seconds)
+New duration: 16*(slvl+1)/10 + clvl/20 seconds (maximum 32 seconds, minimum 4.0 seconds)
+
+file offset 00032804
+
+:00433404 6A1E                    push 0000001E
+:00433406 8D0C38                  lea ecx, dword ptr [eax+edi]
+:00433409 0FBE8438B8010000        movsx eax, byte ptr [eax+edi+000001B8]	clvl
+:00433411 D1F8                    sar eax, 1
+:00433413 03C2                    add eax, edx					slvl + clvl/2
+:00433415 8986C87A6900            mov dword ptr [esi+00697AC8], eax		unneeded line of code
+:0043341B 8B894C550000            mov ecx, dword ptr [ecx+0000554C]		
+:00433421 0FAFC8                  imul ecx, eax
+:00433424 C1F907                  sar ecx, 07
+:00433427 03C1                    add eax, ecx
+:00433429 59                      pop ecx
+:0043342A 3BC1                    cmp eax, ecx
+:0043342C 8986C87A6900            mov dword ptr [esi+00697AC8], eax		slvl + clvl/2 
+:00433432 7E06                    jle 0043343A
+:00433434 898EC87A6900            mov dword ptr [esi+00697AC8], ecx		max = 30
+:0043343A C1A6C87A690004          shl dword ptr [esi+00697AC8], 04		16*slvl + 8*clvl
+changed into
+:00433404 6A50                    push 00000050
+:00433406 8D0C38                  lea ecx, dword ptr [eax+edi]
+:00433409 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]		
+:00433410 42                      inc edx
+:00433411 C1E803                  shr eax, 03
+:00433414 C1E202                  shl edx, 02
+:00433417 03C2                    add eax, edx					
+:00433419 9090                    2*nop
+:0043341B ...
+:0043343A C1A6C87A690003          shl dword ptr [esi+00697AC8], 03		
+
+
+Fixed duration for Invincibility:
+
+It was too short for young characters, while it was too efficient for sorcerers and high level characters.
+
+file offset 0003308C
+
+:00433C8C 0FBE8AB8010000          movsx ecx, byte ptr [edx+000001B8]
+:00433C93 41                      inc ecx
+:00433C94 41                      inc ecx
+:00433C95 C1E103                  shl ecx, 03
+:00433C98 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+:00433C9E E8A7A70000              call 0043E44A
+:00433CA3 41                      inc ecx
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE
+:00433CA8 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]
+:00433CAE 8BFE                    mov edi, esi
+:00433CB0 C1FF03                  sar edi, 03
+:00433CB3 03FE                    add edi, esi
+:00433CB5 49                      dec ecx
+:00433CB6 89B8C87A6900            mov dword ptr [eax+00697AC8], edi
+:00433CBC 75EA                    jne 00433CA8
+:00433CBE 
+changed into
+:00433C8C B940010000              mov ecx, 00000140
+:00433C91 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+:00433C97 EB25                    jmp 00433CBE
+:00433C99 9090909090              5*nop
+:00433C9E ...
+
+Now 37 bytes free space from 00433C99 to 00433CBE.
+
+
+Shorter, no longer determined by slvl and less determined by clvl, duration for Rage:
+
+file offset 00034177
+
+:00434D77 E8CE960000              call 0043E44A
+:00434D7C 90                      nop
+:00434D7D 6A01                    push 00000001
+:00434D7F 8D0C91                  lea ecx, dword ptr [ecx+4*edx]
+changed into
+:00434D77 8BCA                    mov ecx, edx
+:00434D79 90909090                4*nop
+:00434D7D 6A01                    push 00000001
+:00434D7F 909090                  3*nop
+
+
+New Golem statistics, mostly to prevent negative/overflow values
+
+MinDamage (min = 1)   : 8 + 2*Slvl                   -> 4 + Slvl   
+MaxDamage (max = 127) : 24 + 3*Slvl + Clvl           -> 4*(Slvl+4) + Clvl/2    
+Tohit (always < 128)  : 6*(Slvl+8) + 2*Clvl          -> 64 + 2*slvl 
+Hitpoints             : MaxMana*2/3 + 20*(Slvl+Clvl) -> 4*Magic + 16*(Slvl+Clvl)
+
+file offset 000443D4
+
+:00444FD4 8D80887A6900            lea eax, dword ptr [eax+00697A88]
+:00444FDA 894508                  mov dword ptr [ebp+08], eax			Slvl
+:00444FDD 8B83B0010000            mov eax, dword ptr [ebx+000001B0]		MaxMana
+:00444FE3 99                      cdq
+:00444FE4 F7F9                    idiv ecx					MaxMana/3
+:00444FE6 E8D5A8FEFF              call 0042F8C0					ecx = Slvl + Clvl
+:00444FEB 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:00444FEE C1E107                  shl ecx, 07					2*5*(slvl+clvl) [*64]
+:00444FF1 03C1                    add eax, ecx					MaxMana/3 + 2*5*(slvl+clvl) [*64]
+:00444FF3 8A0A                    mov cl, byte ptr [edx]			Slvl
+:00444FF5 D1E0                    shl eax, 1					MaxMana*2/3 + 20*(slvl+clvl)
+:00444FF7 898618DD6900            mov dword ptr [esi+0069DD18], eax
+:00444FFD 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+:00445003 8AC1                    mov al, cl
+:00445005 C68652DD690019          mov byte ptr [esi+0069DD52], 19
+:0044500C 8A93B8010000            mov dl, byte ptr [ebx+000001B8]		clvl
+:00445012 0408                    add al, 08					slvl + 8
+:00445014 B306                    mov bl, 06
+:00445016 88450B                  mov byte ptr [ebp+0B], al
+:00445019 F6EB                    imul bl					6*(slvl+8)
+:0044501B D0E2                    shl dl, 1					2*clvl
+:0044501D 02D0                    add dl, al					6*(slvl+8) + 2*clvl
+:0044501F 8AC2                    mov al, dl
+:00445021 90                      nop
+:00445022 80C104                  add cl, 04					slvl+4
+:00445025 88964CDD6900            mov byte ptr [esi+0069DD4C], dl
+:0044502B D0E1                    shl cl, 1					2*(slvl+4)
+:0044502D D0E8                    shr al, 1					24 + clvl + 3*slvl
+:0044502F 888E4DDD6900            mov byte ptr [esi+0069DD4D], cl
+:00445035 88864EDD6900            mov byte ptr [esi+0069DD4E], al
+
+changed into
+
+:00444FD4 8B80887A6900            mov eax, dword ptr [eax+00697A88]		Slvl
+:00444FDA 50                      push eax
+:00444FDB 9090                    2*nop		
+:00444FDD 0403                    add al, 03
+:00444FDF 84C0                    test al, al
+:00444FE1 7D02                    jge 00444FE5
+:00444FE3 33C0                    xor eax, eax
+:00444FE5 40                      inc eax
+:00444FE6 88864DDD6900            mov byte ptr [esi+0069DD4D], al		Min. Damage
+:00444FEC D0E0                    shl al, 1
+:00444FEE 8BC8                    mov ecx, eax
+:00444FF0 0438                    add al, 38
+:00444FF2 88864CDD6900            mov byte ptr [esi+0069DD4C], al		Tohit
+:00444FF8 8A93B8010000            mov dl, byte ptr [ebx+000001B8]		Clvl
+:00444FFE 8AC2                    mov al, dl
+:00445000 D0E8                    shr al, 1
+:00445002 D0E1                    shl cl, 1
+:00445004 02C1                    add al, cl
+:00445006 B17F                    mov cl, 7F
+:00445008 3AC8                    cmp cl, al
+:0044500A 7D02                    jge 0044500E
+:0044500C 8AC1                    mov al, cl
+:0044500E 88864EDD6900            mov byte ptr [esi+0069DD4E], al		Max. Damage
+:00445014 58                      pop eax
+:00445015 9090                    2*nop		
+:00445017 02C2                    add al, dl
+:00445019 C1E002                  shl eax, 02
+:0044501C 8B936C010000            mov edx, dword ptr [ebx+0000016C]		Current Magic
+:00445022 03C2                    add eax, edx
+:00445024 C1E008                  shl eax, 08
+:00445027 C68652DD690019          mov byte ptr [esi+0069DD52], 19
+:0044502E 90                      nop
+:0044502F 898618DD6900            mov dword ptr [esi+0069DD18], eax		Min. Life
+:00445035 89861CDD6900            mov dword ptr [esi+0069DD1C], eax		Max. Life
+
+Now 18 bytes free space from 0042F8C0 to 0042F8D2:
+
+:0042F8C0 8B5508                  mov edx, dword ptr [ebp+08]
+:0042F8C3 8B0A                    mov ecx, dword ptr [edx]
+:0042F8C5 57                      push edi
+:0042F8C6 0FBEBBB8010000          movsx edi, byte ptr [ebx+000001B8]
+:0042F8CD 03CF                    add ecx, edi
+:0042F8CF 5F                      pop edi
+:0042F8D0 C3                      ret
+:0042F8D1 90                      nop
+
+Golem Damage in Spellbook:
+
+file offset 0002E003
+
+:0042EC03 56                      push esi					esi = Slvl
+:0042EC04 83C604                  add esi, 00000004
+:0042EC07 C1E601                  shl esi, 01
+:0042EC0A 8932                    mov dword ptr [edx], esi			8 + 2*Slvl
+:0042EC0C 5E                      pop esi
+:0042EC0D 0332                    add esi, dword ptr [edx]
+:0042EC0F 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0042EC15 E86D9F0500              call 00488B87					edx = Clvl
+:0042EC1A 03F2                    add esi, edx					8 + 3*Slvl + Clvl
+:0042EC1C 83C610                  add esi, 00000010				24 + 3*Slvl + Clvl
+changed into
+:0042EC03 83C604                  add esi, 00000004				4 + Slvl
+:0042EC06 8932                    mov dword ptr [edx], esi		
+:0042EC08 C1E602                  shl esi, 02					16 + 4*Slvl
+:0042EC0B 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0042EC11 E8719F0500              call 00488B87					edx = Clvl
+:0042EC16 D1EA                    shr edx, 1
+:0042EC18 03F2                    add esi, edx					16 + 4*Slvl + Clvl/2
+:0042EC1A 9090909090              5*nop
+
+
+Increased damage for Firebolt and Guardian
+
+Previous damage   : Rnd[10] + slvl + Mag/4 + 1
+
+Now for Clvl < 16 : Rnd[16] + 2*slvl + Mag/4
+Now for Clvl > 16 : Rnd[16] + 2*slvl + Mag/4 + 2*(Clvl-16)
+
+Real damage:
+
+file offset 000355EA
+
+:004361EA 6A0A                    push 0000000A
+:004361EC B14B                    mov cl, 4B
+:004361EE 5A                      pop edx
+:004361EF E8663DFEFF              call 00419F5A
+:004361F4 69FFC8550000            imul edi, 000055C8
+:004361FA 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00436200 0386887A6900            add eax, dword ptr [esi+00697A88]
+:00436206 8B8C0F6C010000          mov ecx, dword ptr [edi+ecx+0000016C]
+:0043620D C1F902                  sar ecx, 02
+:00436210 8D440801                lea eax, dword ptr [eax+ecx+01]
+:00436214 EB49                    jmp 0043625F
+changed into
+:004361EA 6A10                    push 00000010
+:004361EC ...
+:004361F4 50                      push eax
+:004361F5 8BC7                    mov eax, edi
+:004361F7 8B8E887A6900            mov ecx, dword ptr [esi+00697A88]
+:004361FD E897DAFFFF              call 00433C99
+:00436202 59                      pop ecx
+:00436203 03C1                    add eax, ecx
+:00436205 EB58                    jmp 0043625F
+:00436207 909090909090            6*nop
+
+Now 15 bytes free space from 00436207 to 00436216
+
+Spell book damage:
+
+file offset 0002DC9C
+
+:0042E89C 8B806C010000            mov eax, dword ptr [eax+0000016C]
+:0042E8A2 C1F802                  sar eax, 02
+:0042E8A5 8D443001                lea eax, dword ptr [eax+esi+01]
+:0042E8A9 8902                    mov dword ptr [edx], eax
+:0042E8AB A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042E8B0 69C0C8550000            imul eax, 000055C8
+:0042E8B6 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042E8BC 8B84086C010000          mov eax, dword ptr [eax+ecx+0000016C]
+:0042E8C3 C1F802                  sar eax, 02
+:0042E8C6 8D44300A                lea eax, dword ptr [eax+esi+0A]
+:0042E8CA E980040000              jmp 0042ED4F
+changed into
+:0042E89C 8BCE                    mov ecx, esi
+:0042E89E A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0042E8A3 E8F1530000              call 00433C99
+:0042E8A8 8902                    mov dword ptr [edx], eax
+:0042E8AA 83C010                  add eax, 00000010
+:0042E8AD E99D040000              jmp 0042ED4F
+:0042E8B2 90909090                4*nop
+
+Now 29 bytes free space from 0042E8B2 to 0042E8CF
+
+file offset 00033099
+
+:00433C99 90                      nop
+:00433C9A 90                      nop
+:00433C9B 90                      nop
+:00433C9C 90                      nop
+:00433C9D 90                      nop
+:00433C9E E8A7A70000              call 0043E44A
+:00433CA3 41                      inc ecx
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE
+:00433CA8 8BB0C87A6900            mov esi, dword ptr [eax+00697AC8]
+:00433CAE 8BFE                    mov edi, esi
+:00433CB0 C1FF03                  sar edi, 03
+:00433CB3 03FE                    add edi, esi
+:00433CB5 49                      dec ecx
+:00433CB6 89B8C87A6900            mov dword ptr [eax+00697AC8], edi
+:00433CBC 75EA                    jne 00433CA8
+changed into
+:00433C99 51                      push ecx
+:00433C9A 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00433CA0 69C0C8550000            imul eax, 000055C8
+:00433CA6 03C1                    add eax, ecx
+:00433CA8 0FBE88B8010000          movsx ecx, byte ptr [eax+000001B8]		Clvl
+:00433CAF 8B806C010000            mov eax, dword ptr [eax+0000016C]		Magic
+:00433CB5 83E910                  sub ecx, 00000010
+:00433CB8 E9E6A50300              jmp 0046E2A3
+:00433CBD 90                      nop
+
+file offset 0006D6A3
+
+:0046E2A3 90                      nop
+:0046E2A4 8BD0                    mov edx, eax
+:0046E2A6 33FF                    xor edi, edi
+:0046E2A8 69D2C8550000            imul edx, 000055C8
+:0046E2AE 39BC0AD8470000          cmp dword ptr [edx+ecx+000047D8], edi
+changed into
+:0046E2A3 7D02                    jge 0046E2A7
+:0046E2A5 33C9                    xor ecx, ecx
+:0046E2A7 C1E802                  shr eax, 02
+:0046E2AA D1E1                    shl ecx, 1
+:0046E2AC 03C1                    add eax, ecx
+:0046E2AE 59                      pop ecx					Slvl
+:0046E2AF D1E1                    shl ecx, 1
+:0046E2B1 90                      nop
+:0046E2B2 03C1                    add eax, ecx					(Clvl-16)*2 + Slvl*2 + Mag/4
+:0046E2B4 C3                      ret
+
+
+Using CLVL/4 as replacement for SLVL in 'rune' spells (SLVL would always be 0). Extra (or less) spell levels from items or character class are still added. This affects Nova, Immolation and Arcane Runes, and also Bottles of Fury (but with lesser effect).
+
+file offset 0002E46A
+
+:0042F06A 03D6                    add edx, esi
+:0042F06C 0FBE840AC1000000        movsx eax, byte ptr [edx+ecx+000000C1]
+changed into
+:0042F06A 8BC2                    mov eax, edx
+:0042F06C 03D6                    add edx, esi
+:0042F06E E9F2E40000              jmp 0043D565
+:0042F073 90                      nop
+
+Using free space from monster death rewards:
+
+file offset 0003C939
+
+:0043D539 752A                    jne 0043D565
+changed into
+:0043D539 7561                    jne 0043D59C
+:0043D53B 
+
+file offset 0003C965
+
+:0043D565 3B05C4094B00            cmp eax, dword ptr [004B09C4]
+:0043D56B EB2F                    jmp 0043D59C
+:0043D56D 33DB                    xor ebx, ebx
+:0043D56F 381DD4535700            cmp byte ptr [005753D4], bl
+:0043D575 7410                    je 0043D587
+:0043D577 8B5624                  mov edx, dword ptr [esi+24]
+:0043D57A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D57D E8FBA8FEFF              call 00427E7D
+:0043D582 E9CA000000              jmp 0043D651
+:0043D587 8B5624                  mov edx, dword ptr [esi+24]
+:0043D58A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D58D 6A01                    push 00000001
+:0043D58F 53                      push ebx
+:0043D590 6A0D                    push 0000000D
+:0043D592 E845E3FEFF              call 0042B8DC
+:0043D597 E9B5000000              jmp 0043D651
+changed into
+:0043D565 83F82F                  cmp eax, 0000002F
+:0043D568 7D0A                    jge 0043D574
+:0043D56A 0FBE840AC1000000        movsx eax, byte ptr [edx+ecx+000000C1]
+:0043D572 EB0B                    jmp 0043D57F
+:0043D574 0FBE8431B8010000        movsx eax, byte ptr [ecx+esi+000001B8]
+:0043D57C C1E802                  shr eax, 02
+:0043D57F E9F01AFFFF              jmp 0042F074
+:0043D584 909090                  3*nop

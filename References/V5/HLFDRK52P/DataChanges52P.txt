@@ -1,0 +1,53 @@
+Restoring Vile Crawlers to their original colour (this frees D\5.TRN for other purposes):
+
+116 Vile Crawler           2 Skeleton         2   3- 6    10    60-  90   10   50   12- 16	D\5.TRN
+												
+000AE308 0100 0000 AA17 4B00                     ......K.
+changed into
+000AE308 0000 0000 0000 0000                     ........
+
+
+Higher price for Wyrm Blood:
+
+pos name                         magic name   item type         item group          equip     qlvl  dur   str mag dex  price
+
+161 Wyrm Blood                   Rune         3 pot/scr/jewl     0 other            7 not      14     0    0   0   0     800
+                                                                                                                        1000
+000A35D8 2003 0000 2003 0000                      ... ...
+changed into
+000A35D8 E803 0000 E803 0000                     ........
+
+
+Lower AC for Splint and Heavy Mail:
+
+pos name                         magic name   item type         item group          equip     qlvl  dur   damage    AC    str mag dex  price  
+
+ 28 Splint Mail                  Mail         2 armor/shield     8 medium armor     3 body     20    50    0- 0   30-40   50   0   0    3200  
+                                                                                                                  31-35
+000A0E40 1E00 0000 2800 0000                     ....(...
+changed into
+000A0E40 1F00 0000 2300 0000                     ....#...
+
+ 63 Heavy Mail                   Mail         2 armor/shield     8 medium armor     3 body     36    60    0- 0   40-50   60   0   0    4800  
+                                                                                                                  36-40
+000A18A4 2800 0000 3200 0000                     (...2...
+changed into
+000A18A4 2400 0000 2800 0000                     $...(...
+
+
+More Fire damage for Fire Song:
+
+pos name                    type                                   qlvl  price  eff (range/value, description)
+
+  8 Fire Song               66 War Blade                            30  200000   6   15- 30  + fire hit damage
+                                                                                     30- 60  + fire hit damage
+0008CDA0 4054 4A00 421E 0600 400D 0300 3900 0000 @TJ.B...@...9...
+0008CDB0 0300 0000 0300 0000 5400 0000 0000 0000 ........T.......
+0008CDC0 0000 0000 3A00 0000 0400 0000 0400 0000 ....:...........
+0008CDD0 1000 0000 0F00 0000 1E00 0000 1B00 0000 ................
+0008CDE0 0F00 0000 0F00 0000 2C00 0000 4900 0000 ........,...I...
+0008CDF0 0000 0000                               ....
+changed into
+0008CDD0 1000 0000 1E00 0000 3C00 0000           ........<...
+
+

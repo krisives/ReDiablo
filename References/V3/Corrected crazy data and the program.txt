@@ -1,0 +1,626 @@
+
+Having gone through the program and cleaned it up I of course 
+found several errors. Thus the table posted previosuly was as I 
+said not completely correct, below is what I currently thing is a 
+correct such table and then follows the program. As before, I 
+don't guarantee the correctness of these numbers in any way. Way 
+to many bugs may still exist.
+
+name                   type             norm night  hell
+Lightforge             Mace            impos impos impos
+The Rift Bow           Short Bow         470   470   470
+The Needler            Short Bow          10    10    10
+The Celestial Bow      Long Bow        impos   350   350
+Deadly Hunter          Composite Bow   impos   740   740
+Bow of the Dead        Composite Bow      10    10    10
+The Blackoak Bow       Long Bow           30    30    30
+Flamedart              Hunter's Bow       10    20    20
+Fleshstinger           Long Bow           20    20    20
+Windforce              Long War Bow       30    30    30
+Eaglehorn              Long Battle Bow    50    50    50
+Gonnagal's Dirk        Dagger          impos impos impos
+The Defender           Sabre              20    20    30
+Gryphons Claw          Falchion          620   270   270
+Black Razor            Dagger             20    30    30
+Gibbous Moon           Broad Sword     impos    50    50
+Ice Shank              Long Sword         20    20    20
+The Executioner's Blad Falchion           10    10    10
+The Bonesaw            Claymore           10    10    10
+Shadowhawk             Broad Sword        10    10    10
+Wizardspike            Dagger             20    20    20
+Lightsabre             Sabre              20    20    20
+The Falcon's Talon     Scimitar           20    20    20
+Inferno                Long Sword         20    30    30
+Doombringer            Bastard Sword      30    30    30
+The Grizzly            Two-Handed Swor    40    40    40
+The Grandfather        Great Sword        50    50    50
+The Mangler            Large Axe       impos impos impos
+Sharp Beak             Large Axe       impos   350   350
+BloodSlayer            Broad Axe       impos    60    70
+The Celestial Axe      Battle Axe         70    20    20
+Wicked Axe             Large Axe          10    10    10
+Stonecleaver           Broad Axe          10    10    10
+Aguinara's Hatchet     Small Axe          20    20    20
+Hellslayer             Battle Axe         20    20    20
+Messerschmidt's Reaver Great Axe          40    40    40
+Crackrust              Mace            impos impos impos
+Hammer of Jholm        Maul              220    30    30
+Civerb's Cudgel        Mace               10    10    10
+The Celestial Star     Flail              10    10    10
+Baranar's Star         Morning Star       10    10    10
+Gnarled Root           Spiked Club        10    20    20
+                       Club               10    20    20
+The Cranium Basher     Maul               20    20    20
+Schaefer's Hammer      War Hammer         20    20    20
+Dreamflange            Mace               50    50    50
+Staff of Shadows       Long Staff      impos   490   490
+Immolator              Long Staff         20    20    20
+Storm Spire            War Staff          40    20    20
+Gleamsong              Short Staff        30    40    40
+Thundercall            Composite Staff    20    20    20
+The Protector          Short Staff        20    20    20
+Naj's Puzzler          Long Staff         30    30    30
+Mindcry                Quarter Staff      30    30    30
+Rod of Onan            War Staff          40    40    40
+Helm of Sprits         Helm            impos    50    50
+Thinking Cap           Skull Cap          10    10    10
+OverLord's Helm        Helm               80    60    60
+Fool's Crest           Helm               20    20    20
+Gotterdamerung         Great Helm         30    30    30
+Royal Circlet          Crown              50    50    50
+Torn Flesh of Souls    Rags               10    10    10
+The Gladiator's Bane   Studded Leather    20    10    10
+The Rainbow Cloak      Cloak              10    10    10
+Leather of Aut         Leather Armor      10    10    10
+Wisdom's Wrap          Robe               10    10    10
+Sparking Mail          Chain Mail         20    20    20
+Scavenger Carapace     Breast Plate       20    20    20
+Nightscape             Cape               20    20    20
+Naj's Light Plate      Plate Mail         30    30    30
+Demonspike Coat        Full Plate Mail    50    40    40
+The Deflector          Buckler         impos impos impos
+Split Skull Shield     Buckler            10    10    10
+Dragon's Breach        Kite Shield        20    10    10
+Blackoak Shield        Small Shield       10    10    10
+Holy Defender          Large Shield       20    20    20
+Stormshield            Tower Shield       40    40    40
+                       Gothic Shield      40    40    40
+Bramble                Ring            impos impos impos
+                       Ring            impos impos impos
+                       Ring            impos impos impos
+Ring of Regha          Ring            impos    60    60
+                       Ring            impos    60    60
+                       Ring            impos    60    60
+The Bleeder            Ring            impos    50    50
+                       Ring            impos    50    50
+                       Ring            impos    50    50
+Constricting Ring      Ring               30    20    20
+                       Ring              290    20    20
+                       Ring            impos    20    20
+Ring of Engagement     Ring               10    10    10
+                       Ring               10    10    10
+                       Ring               20    10    10
+
+
+Below is the program used with some explanation. Sorry if it is 
+not structered to well or have cryptic variable names. It is sort 
+of based on other programs I have made including Dview. I have 
+added some out of the program explanations either with a starting 
+* or if much surrounded by *****
+
+Hope it is of any use to those who wanted to take a look at it.
+
+program prob;
+
+{$M 16384, 190000, 655360}
+
+uses
+  dglobal,dstats,dfile;
+
+*****
+These are units that handle loading data from the proper version 
+of the diablo or hellfire exe-file, it also handles the result 
+files in regard to things like name and opening and closing. The 
+important thing here is the data structures used below. They are:
+
+udata, idata, mdata and bdata
+
+Each is an array (matrix) [entry,data] where entry goes from 0 to 
+the last of its type, for example for monsters it satrt with 
+zombies as 0, then rottinc carcass and so on up to the disabled 
+Arch-Lich Malignus at 111. Data goes from 0 to the size of the 
+data for that matrix. For monsters it is for example 128 bytes 
+(so 0-127). Basically it is all statical data used by the game. 
+For anyone interested in the layout I sugest consulting some mod 
+page with a workshop. All the above data is loaded in the 
+"getdata" procedure at the end of this program (where a 
+Pascal program will start). It will also process the data and 
+among other things also load the names of uniques, base items, 
+monsters and bosses (and of course other data not used in this 
+specific program) into 4 other data structures:
+
+uname, iname, mname and bname
+
+It should be obvious how this work.
+
+I won’t include any of the above units here as they are quite 
+lengthy and uninteresting for this case. They are the same ones I 
+used for my Dview program and about any other program I want to 
+write to do something specific as they have everything set up and 
+data read.
+*****
+
+
+type
+  gamestype    = array[0..lastgame] of byte;
+
+const
+  games          : gamestype = 
+(0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+                               {0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1 1 
+1 1 1 2 2 2 2 2}
+                               {                    0 1 2 3 4 5 6 
+7 8 9 0 1 2 3 4}
+
+*****
+Tells what games the program will process. Each gametype has its 
+own proper file names for any type of report I want to generate. 
+Typically it is the "other" type and thus uses report 0. 
+Again, this is just some support and have nothing to do with the 
+probability, game 7 is Diablo v1.07 by the way.
+*****
+
+var
+  game    : byte;
+  ok      : boolean;
+  found   : boolean;
+
+const
+  startunique    =   9; { lightforge     }
+  startitem      =  48; { equipstart     }
+  monstersondlvl = 185; { monsters/level }
+  totmprobpos    = 138; { slot for total }
+
+var
+  mprob                   : array[0..138,1..24] of word;
+  uslot,islot,dlvl,diff   : word;
+  qlvli,qlvlumin,qlvlumax : word;
+
+
+procedure writename(var f:text;s:string;x,blank:byte);
+var
+  i : word;
+begin
+  while x>0 do begin
+    write(f,' ');
+    dec(x);
+  end;
+  write(f,s);
+  if blank<>0 then
+    for i:=length(s) to 25 do
+      write(target,' ');
+end;  { writename }
+
+*****
+To facilitate the calculations I created a file with the values 
+frokm my Guide regarding how probable it is for a monster to 
+appear on a specific table. The procedure below simply loads this 
+data (it uses 137 slots so that data for Hellfire monsters fit in 
+too). So mprob[monsterslot,dlvl] tells how probable it is for the 
+monster type in slot "monsterslot" to appear on level 
+"dlvl". The last slot, 138, is simply the sum of all 
+probabilities on the level, used to facilitate some calcualtions 
+below.
+*****
+
+procedure readmprob(filename:string);
+var
+  mprobfile  : text;
+  mprobdata  : real;
+  dlvl,mslot : word;
+begin
+  assign(mprobfile,filename);
+  reset(mprobfile);
+  for dlvl:=1 to 24 do begin
+    mprob[totmprobpos,dlvl]:=0;
+    for mslot:=0 to 137 do begin
+      read(mprobfile,mprobdata);
+      mprob[mslot,dlvl]:=round(mprobdata);
+      
+mprob[totmprobpos,dlvl]:=mprob[totmprobpos,dlvl]+mprob[mslot,dlvl]
+;
+    end;
+    readln(mprobfile);
+  end;
+  close(mprobfile);
+end;  { readmprob }
+
+*****
+The three functions below will calculate how many base items that 
+has a qlvl above the passed variable "lvl" and is of the 
+correct type. There are three different cases, monsters, bosses 
+and other and it differs in what base items are possible.
+*****
+
+function ipossiblemonster(lvl:word):word;
+var
+  i        : word;
+  possible : word;
+begin
+  possible:=0;
+  for i:=0 to ilast do begin
+    if lvl>=idata^[i,24] then
+      possible:=possible+idata^[i,0];
+
+*****
+The above makes sure bows are counted twice. Idata^[i,0] that is 
+the first byte of each base item data, has the value of 1 for all 
+items dropable by monsters except for bows which has the value 2.
+*****
+
+  end;
+  ipossiblemonster:=possible;
+end;  { ipossiblemonster }
+
+
+function ipossibleboss(lvl:word):word;
+var
+  i        : word;
+  possible : word;
+begin
+  possible:=0;
+  for i:=0 to ilast do begin
+    if (lvl>=idata^[i,24]) and (idata^[i,56] in [0,23..26]) 
+then
+      inc(possible);
+
+*****
+For bosses only base items with the value of 0, and 23-26 (23-26 
+is staves, books, rings and amulets) as I don’t bother with a 
+huge chunk of items at the satrt of the list that will never drop 
+for other reasons the above works as the scrolls, potions and 
+such will be filtered away as not having the value 0 above, only 
+equipable items have. In the part of items NOT checked other 
+items have the value 0 but are not dropped for other reasons. The 
+game chekcs this slightly different (but also check ALL items) 
+but the end result is the same.
+*****
+
+
+  end;
+  ipossibleboss:=possible;
+end;  { ipossibleboss }
+
+
+function ipossibleother(lvl:word):word;
+var
+  i        : word;
+  possible : word;
+begin
+  possible:=0;
+  for i:=0 to ilast do begin
+    if (lvl>=idata^[i,24]) and (idata^[i,0]>0) then
+      inc(possible);
+
+*****
+Basically the same as for monsters but bows only counts once.
+*****
+
+  end;
+  ipossibleother:=possible;
+end;  { ipossibleother }
+
+*****
+As you notice, I made the variable handling the unique item and 
+the base item (uslot and islot) global, this was to not have to 
+pass a whole bunch of data between procedures. Not that 
+structured but I am lazy.
+
+qlvli is the qlvl of the base item currently being checked for
+qlvlumin is the qlvl of the unique item currently being checked 
+for
+qlvlumax is the qlvl of any possible unique item of the same type 
+with a higher qlvl as it will in that case be dropped instead
+
+******
+
+procedure domonsters(var xprob:real);
+var
+  tprob1,tprob2 : real;
+  lvl,mslot     : word;
+  ipossible     : word;
+begin
+  tprob2:=0;
+  for mslot:=0 to 137 do begin
+    if (mprob[mslot,dlvl]>0) and (not (mslot in [38..41])) 
+then begin
+
+* checks if the monster can occur on the level and is not a 
+winged fiend type
+
+      lvl:=mdata^[mslot,86];
+      ipossible:=ipossiblemonster(lvl);
+      if ((lvl+diff*15)>=qlvli) and (lvl>=qlvlumin) and 
+(lvl<qlvlumax) then begin
+
+* checks if the monster has an mlvl (here called lvl) high enough 
+to drop the item but not high enough to drop a better unique of 
+the same type if available
+
+        if idata^[islot,56] in [25,26] then
+          tprob1:=41/100*26/100*1/ipossible*2/100
+        else
+          
+tprob1:=41/100*26/100*1/ipossible*(11+0.89*(lvl+1))/100*2/100;
+
+*****
+Calculate the probability, 41/100 is for droping at all, 26/100 
+is the chance of being an item and not gold, next comes the 
+chance of it being of the base item type in question and then. 
+Next comes the chance of the item being unique 
+((11+0.89*(lvl+1))/100) but as jewlery are always magical it is 
+skipped for them (when byte 56 is 25 or 26). To be honest, this 
+does NOT take into account for satves, will fix it later) they 
+are now treated as any othr item. Finally the 2/100 is the chance 
+of it being unique.
+*****
+
+        
+tprob2:=tprob2+tprob1*mprob[mslot,dlvl]/mprob[totmprobpos,dlvl];
+
+* add it to the sum of probability for each monster type a 
+specific monster can be, this sume will be an average probability 
+of the unique for a generic monster that take into account all 
+possible monster types and their cahnces to appear on the dlvl. 
+This is actually the probability of the monster DROPPING the 
+unique
+
+      end;
+    end;
+   end;
+   xprob:=xprob*pot(1-tprob2,monstersondlvl);
+
+* We have 185 monster on the level, so calculate the probability 
+of NONE of them dropiing the unique.
+
+end;  { domonsters }
+
+
+procedure dobosses(var xprob:real);
+var
+  tprob           : real;
+  bossok          : boolean;
+  lvl1,lvl2,bslot : word;
+  ipossible       : word;
+begin
+  for bslot:=0 to blast do begin
+    bossok:=false;
+    if (bslot>lastspboss) and 
+(mprob[bdata^[bslot,0],dlvl]>0) then begin
+      bossok:=true;
+      lvl1:=2*dlvl+diff*15;
+    end;
+
+* Checks if the monstertype of the boss is on the level and 
+disregard the special quest bosses at the start of the list.
+
+    if ((dlvl=2) and (bslot=9)) or ((dlvl=3) and (bslot=1)) or 
+((dlvl=15) and (bslot in [4..6])) then begin
+      bossok:=true;
+      lvl1:=mdata^[bdata^[bslot,0],86]+5+2*diff*15;
+    end;
+
+* Some quest bosses are always presnt in MP so count for them too.
+
+    if bossok then begin
+
+* if the boss appears on the level, calculate the cahnce of him 
+dropping the unique
+
+      lvl2:=mdata^[bdata^[bslot,0],86]+4;
+      ipossible:=ipossibleboss(lvl1);
+      if ((lvl1)>=qlvli) and (lvl2>=qlvlumin) and 
+(lvl2<qlvlumax) then begin
+        tprob:=1/ipossible*16/100*mprob[bdata^[bslot,0]/100,dlvl];
+
+* Like for monsters check if he can drop the unique and if so 
+calculate the probability including the probability of him 
+actually ebing on the level.
+
+        xprob:=xprob*(1-tprob);
+
+* finally calculate the odds of him not dropping it and add it to 
+the over all tally.
+
+      end;
+    end;
+  end;
+end;  { dobosses }
+
+
+procedure doother(var xprob:real);
+var
+  tprob        : real;
+  lvl          : word;
+  itemsonlevel : word;
+  ipossible    : word;
+begin
+  tprob:=0;
+  lvl:=2*dlvl;
+  ipossible:=ipossibleother(lvl);
+  if (lvl>=qlvli) and (lvl>=qlvlumin) and 
+(lvl<qlvlumax) then begin
+    if idata^[islot,56] in [25,26] then
+      tprob:=41/100*26/100*1/ipossible*2/100
+    else
+      
+tprob:=41/100*26/100*1/ipossible*(11+0.89*(lvl+1))/100*2/100;
+  end;
+
+* Well, the same as above for an item not from a monster so the 
+lvl is 2*dlvl. The above is the chance for a "hot" item 
+to be of the unique type. A "hot" item is an item that 
+could be unique and thus disregards the special drops that can at 
+times be found form some sources.
+
+
+
+  itemsonlevel:=3;                { chest        }
+  itemsonlevel:=itemsonlevel+1;   { barrel       }
+  if dlvl in [1..4] then
+    itemsonlevel:=itemsonlevel+1; { sarchophagus }
+  if dlvl in [13..15] then
+    itemsonlevel:=itemsonlevel+1; { decapitated  }
+  if dlvl in [1..4,9..15] then
+    itemsonlevel:=itemsonlevel+1; { on ground    }
+
+* The above is an estimate on how many "hot" items on 
+average form each source will be on a level. I won’t go into 
+details here. For those interested I made upon request a repost 
+of the perfect obszod probability post of mine from last summer 
+in the Diablo 2 suggestions forum just recently.
+
+
+  if dlvl<>16 then
+    xprob:=xprob*pot(1-tprob,itemsonlevel);
+
+Again, calculate the probability of none of those sources 
+dropping the unique and remember that on level 16 there are no 
+such sources at all so skip that level.
+
+end;  { doother }
+
+
+* below folls the main loop
+
+
+procedure douniqueprob;
+var
+  xprob  : real;
+  many   : boolean;
+  i      : word;
+
+begin
+  readmprob(getpath+'mprob.txt');
+  writeln(target);
+  writeln(target,'Unique Item Probability');
+  writeln(target,'pos name                       type             
+               norm     night      hell');
+
+  for uslot:=startunique to ulast do begin
+    write(target,uslot:3);
+    writename(target,uname^[uslot],1,1);
+    qlvlumin:=udata^[uslot,5];
+    qlvlumax:=60;
+    for i:=startunique to ulast do begin
+      if (udata^[i,4]=udata^[uslot,4]) and 
+(udata^[i,5]<qlvlumax) then
+        if (udata^[i,5]>qlvlumin) or ((i>uslot) and 
+(udata^[i,5]=qlvlumin)) then
+          qlvlumax:=udata^[i,5];
+    end;
+
+******
+Goes through each of the unique (skipping the first quest uniques 
+and calculating the qlvls described above.
+******
+
+    many:=false;
+
+    for islot:=startitem to ilast do begin
+      if idata^[islot,13]=udata^[uslot,4] then begin
+        if many then
+          for i:=0 to 29 do
+            write(target,' ');
+        writename(target,iname1^[islot],1,1);
+        qlvli:=idata^[islot,24];
+        many:=true;
+
+*****
+Goes through each base item and see if it matches the unique item 
+currently checked and if so sets the qlvli and goes on.
+*****
+
+        for diff:=0 to 2 do begin
+
+* Check each of the three difficulty levels
+
+          xprob:=1;
+
+          for dlvl:=1 to 16 do begin
+
+* Go through each dlvl and for each call the three routines for 
+each of the three type of sources, monsters, bosses and other.
+
+
+            domonsters(xprob);
+            dobosses(xprob);
+            doother(xprob);
+
+          end;
+          if xprob<1 then
+            write(target,round(1/(1-xprob)/10)*10:10)
+          else
+            write(target,'     impos');
+
+* Write the probability
+
+        end;
+        writeln(target);
+      end;
+    end;
+  end;
+end;  { douniqueprob }
+
+
+begin
+  writeln;
+  writeln(version);
+  writeln;
+  found:=false;
+  for game:=0 to lastgame do begin
+    if games[game]=1 then begin
+      setsourcename(game);
+      setstats(game,ok);
+      if gamename<>'' then
+        writeln(gamename);
+      if ok then
+        getdata(ok);
+      if ok then begin
+        found:=true;
+        settargetname(0);
+        opentargetfile(1);
+        douniqueprob;
+        closetargetfile;
+      end;
+      writeln;
+    end;
+  end;
+  if not found then begin
+    writeln('No Diablo or Hellfire game found');
+    writeln;
+  end;
+  writeln('Program finnished. Press any key to continue.');
+  readkey;
+end.
+
+
+
+                      
+                    Message thread:
+
+                      Corrected crazy data and the program - Jarulf Fri Dec 3 
+                      07:54:55 
+                        Jarulf-- Sort of a silly question . - Maaloch Fri Dec 3 
+                        10:47:08 
+                          Its simple - Drasca Fri Dec 3 12:02:06 
+
+
+
+
+
+
+
+
+
+

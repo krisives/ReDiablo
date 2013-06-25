@@ -1,0 +1,36 @@
+Spell Shrines: no loss if slvl is already 15
+
+Fascinating Shrine:
+
+File Offset 00051422
+
+:00452022 7D04                    jge 00452028
+wordt
+:00452022 7D15                    jge 00452039
+
+
+Sacred Shrine:
+
+File Offset 000519E4
+
+:004525E4 7D04                    jge 004525EA
+wordt
+:004525E4 7D15                    jge 004525FB
+
+
+Ornate Shrine: 
+
+File Offset 00051D97
+
+:00452997 7D04                    jge 0045299D
+wordt
+:00452997 7D15                    jge 004529AE
+
+
+Town Shrine:
+
+File Offset 00051E34
+
+:00452A34 7D04                    jge 00452A3A
+wordt
+:00452A34 7D15                    jge 00452A4B

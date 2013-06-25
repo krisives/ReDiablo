@@ -1,0 +1,73 @@
+Show traps if Rogue, with Seeing or when CLVL>2*(DLVL+1)
+
+
+File Offset 00053C57
+
+:00454857 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045485C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00454862 69C0C8550000            imul eax, 000055C8
+:00454868 80BC086001000001        cmp byte ptr [eax+ecx+00000160], 01
+:00454870 7528                    jne 0045489A
+:00454872 83BF08E66D0000          cmp dword ptr [edi+006DE608], 00000000
+wordt
+:00454857 83BF08E66D0000          cmp dword ptr [edi+006DE608], 00000000
+:0045485E 743A                    je 0045489A
+:00454860 E801FCFEFF              call 00444466
+:00454865 80B86001000001          cmp byte ptr [eax+00000160], 01
+:0045486C 740D                    je 0045487B
+:0045486E E8343CFDFF              call 004284A7
+:00454873 85C9                    test ecx, ecx
+:00454875 90909090                4*nop
+
+
+Routine to check Seeing and DLVL vs. CLVL on free space from Oil of Skill:
+
+File Offset 000278A7
+
+:004284A7 32DB                    xor bl, bl
+:004284A9 3BF8                    cmp edi, eax
+:004284AB 7E06                    jle 004284B3
+:004284AD 2AC8                    sub cl, al
+:004284AF 880A                    mov byte ptr [edx], cl
+:004284B1 EB02                    jmp 004284B5
+:004284B3 881A                    mov byte ptr [edx], bl
+:004284B5 8A8E61010000            mov cl, byte ptr [esi+00000161]
+:004284BB 8D9661010000            lea edx, dword ptr [esi+00000161]
+:004284C1 0FB6F9                  movzx edi, cl
+:004284C4 3BF8                    cmp edi, eax
+:004284C6 7E06                    jle 004284CE
+wordt
+:004284A7 52                      push edx
+:004284A8 8B88D0010000            mov ecx, dword ptr [eax+000001D0]
+:004284AE 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:004284B5 42                      inc edx
+:004284B6 D1E2                    shl edx, 1
+:004284B8 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:004284BF 3BD0                    cmp edx, eax
+:004284C1 7D02                    jge 004284C5
+:004284C3 8BC8                    mov ecx, eax
+:004284C5 5A                      pop edx
+:004284C6 C3                      ret
+:004284C7 90                      nop
+
+
+
+
+Trap Disarm Skill for all characters:
+
+This has no effect for old or new characters and is NOT implemented in 36P !
+
+
+File Offset 00057553
+
+:00458153 A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:00458153 E8BEB3FFFF              call 00453516
+:00458158
+
+:00453516 51                      push ecx
+:00453517 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045351C B900000008              mov ecx, 08000000
+:00453521 098C3010010000          or dword ptr [eax+esi+00000110], ecx
+:00453528 59                      pop ecx
+:00453529 C3                      ret

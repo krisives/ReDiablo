@@ -1,0 +1,37 @@
+Adding a maximum to the Less Damage from Enemies effect: max[-DFE] = (clvl+1)/2
+
+file offset 0002304E
+
+:00423C4E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00423C53 8B4DA8                  mov ecx, dword ptr [ebp-58]
+changed into
+:00423C4E 8B4DA8                  mov ecx, dword ptr [ebp-58]
+:00423C51 E995DE0200              jmp 00451AEB
+:00423C56 
+
+Using free space from Gloomy Shrine:
+
+file offset 00050EEB
+
+:00451AEB FF892C0A0000            dec dword ptr [ecx+00000A2C]
+:00451AF1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451AF7 8D1401                  lea edx, dword ptr [ecx+eax]
+:00451AFA 8D8A2C0A0000            lea ecx, dword ptr [edx+00000A2C]
+:00451B00 8B92280A0000            mov edx, dword ptr [edx+00000A28]
+:00451B06 3911                    cmp dword ptr [ecx], edx
+:00451B08 7D02                    jge 00451B0C
+:00451B0A 8911                    mov dword ptr [ecx], edx
+changed into
+:00451AEB 85C9                    test ecx, ecx
+:00451AED 7D13                    jge 00451B02
+:00451AEF 0FBE8430B8010000        movsx eax, byte ptr [eax+esi+000001B8]
+:00451AF7 40                      inc eax
+:00451AF8 D1E8                    shr eax, 1
+:00451AFA F7D8                    neg eax
+:00451AFC 3BC1                    cmp eax, ecx
+:00451AFE 7E02                    jle 00451B02
+:00451B00 8BC8                    mov ecx, eax
+:00451B02 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451B07 E94A21FDFF              jmp 00423C56
+:00451B0C
+

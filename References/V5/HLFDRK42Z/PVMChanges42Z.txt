@@ -1,0 +1,835 @@
+Adjustments to Melee Attack PVM code:
+
+
+file offset 0005AC4B
+
+:0045B84B 83EC20                  sub esp, 00000020
+changed into
+:0045B84B 83EC28                  sub esp, 00000028			make room for 2 more temporary variables
+
+
+Penetrating bonus for Axes, not for being a Barbarian:
+
+file offset 0005AD3F
+
+:0045B93F 80BF6001000005          cmp byte ptr [edi+00000160], 05
+:0045B946 7407                    je 0045B94F
+changed into
+:0045B93F 8B4778                  mov eax, dword ptr [edi+78]
+:0045B942 A805                    test al, 05
+:0045B944 8BC3                    mov eax, ebx
+:0045B946 7507                    jne 0045B94F
+
+
+file offset 0005AE34
+
+:0045BA34 42                      inc edx
+:0045BA35 B105                    mov cl, 05
+:0045BA37 E81EE5FBFF              call 00419F5A
+changed into
+:0045BA34 52                      push edx
+:0045BA35 B105                    mov cl, 05
+:0045BA37 E9C6010000              jmp 0045BC02				RND(200) stored at [EBP-24]
+:0045BA3C
+
+
+file offset 0005AE6D
+
+:0045BA6D 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0045BA74 8A8160010000            mov al, byte ptr [ecx+00000160]
+:0045BA7A 84C0                    test al, al
+:0045BA7C 740A                    je 0045BA88
+:0045BA7E 3C03                    cmp al, 03
+:0045BA80 7C10                    jl 0045BA92	
+:0045BA82 3C04                    cmp al, 04
+:0045BA84 7502                    jne 0045BA88
+:0045BA86 D1FB                    sar ebx, 1
+:0045BA88 E8A528FEFF              call 0043E332
+:0045BA8D 90                      nop
+:0045BA8E 90                      nop
+:0045BA8F 90                      nop
+:0045BA90 90                      nop
+:0045BA91 90                      nop
+changed into
+:0045BA6D 8A8160010000            mov al, byte ptr [ecx+00000160]
+:0045BA73 3C01                    cmp al, 01
+:0045BA75 7404                    je 0045BA7B
+:0045BA77 3C02                    cmp al, 02
+:0045BA79 7505                    jne 0045BA80
+:0045BA7B 6A40                    push 00000040			lower melee luck factor for rogues and sorcerors 
+:0045BA7D 5A                      pop edx			(this affects stun, knockback and critical damage)
+:0045BA7E EB05                    jmp 0045BA85
+:0045BA80 BA00080000              mov edx, 00000800		normal melee luck factor for all other classes
+:0045BA85 B106                    mov cl, 06
+:0045BA87 E8CEE4FBFF              call 00419F5A
+:0045BA8C 8945D8                  mov dword ptr [ebp-28], eax	RND(2048) stored at [EBP-28]
+:0045BA8F 90                      nop
+:0045BA90 90                      nop
+:0045BA91 90                      nop
+
+
+Demonslaying and Devastation:
+
+file offset 0005AEFE
+
+:0045BAFE F6804355000040          test byte ptr [eax+00005543], 40	
+:0045BB05 7408                    je 0045BB0F				
+:0045BB07 E830000000              call 0045BB3C				Demonslaying
+:0045BB0C 90                      nop
+:0045BB0D 90                      nop
+:0045BB0E 90                      nop
+:0045BB0F F6808855000001          test byte ptr [eax+00005588], 01	
+:0045BB16 7412                    je 0045BB2A
+:0045BB18 6A64                    push 00000064				Devastation
+:0045BB1A B106                    mov cl, 06
+:0045BB1C 5A                      pop edx
+:0045BB1D E838E4FBFF              call 00419F5A
+:0045BB22 83F80A                  cmp eax, 0000000A
+:0045BB25 7D03                    jge 0045BB2A
+:0045BB27 C1E701                  shl edi, 01
+:0045BB2A 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0045BB2D EB38                    jmp 0045BB67
+:0045BB2F 80FB04                  cmp bl, 04
+:0045BB32 7406                    je 0045BB3A
+:0045BB34 010590B76A00            add dword ptr [006AB790], eax
+:0045BB3A C3                      ret
+:0045BB3B 90                      nop
+changed into
+:0045BAFE 80FB01                  cmp bl, 01				check Demon
+:0045BB01 7520                    jne 0045BB23
+:0045BB03 8B55D8                  mov edx, dword ptr [ebp-28]
+:0045BB06 F6C201                  test dl, 01				check for even 'luck' factor
+:0045BB09 7518                    jne 0045BB23
+:0045BB0B 8BD7                    mov edx, edi
+:0045BB0D F6804355000040          test byte ptr [eax+00005543], 40	
+:0045BB14 7402                    je 0045BB18				Demonslaying
+:0045BB16 03FA                    add edi, edx				increase damage
+:0045BB18 80B86001000003          cmp byte ptr [eax+00000160], 03	
+:0045BB1F 7502                    jne 0045BB23				Monk
+:0045BB21 03FA                    add edi, edx				increase damage
+:0045BB23 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0045BB26 EB49                    jmp 0045BB71
+:0045BB28 80FB04                  cmp bl, 04
+:0045BB2B 7406                    je 0045BB33
+:0045BB2D 010590B76A00            add dword ptr [006AB790], eax
+:0045BB33 C3                      ret
+:0045BB34 90909090909090          7*nop
+
+
+file offset 00039DAF
+
+:0043A9AF E87B110200              call 0045BB2F
+changed into
+:0043A9AF E874110200              call 0045BB28
+:0043A9B4 
+
+
+file offset 0005AF5B
+
+:0045BB5B 83FF02                  cmp edi, 00000002
+:0045BB5E 7F01                    jg 0045BB61
+:0045BB60 42                      inc edx
+:0045BB61 E8F4E3FBFF              call 00419F5A
+:0045BB66 C3                      ret
+:0045BB67 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BB6C C1E706                  shl edi, 06
+:0045BB6F F684308855000008        test byte ptr [eax+esi+00005588], 08
+:0045BB77 7422                    je 0045BB9B
+:0045BB79 BAC9000000              mov edx, 000000C9
+:0045BB7E B106                    mov cl, 06
+:0045BB80 E8D5E3FBFF              call 00419F5A
+:0045BB85 83F864                  cmp eax, 00000064
+:0045BB88 7C06                    jl 0045BB90
+:0045BB8A 83C0BD                  add eax, FFFFFFBD
+:0045BB8D 8D0440                  lea eax, dword ptr [eax+2*eax]
+changed into
+:0045BB5B 90909090909090909090    10*nop
+:0045BB65 83FF02                  cmp edi, 00000002
+:0045BB68 7F01                    jg 0045BB6B
+:0045BB6A 42                      inc edx
+:0045BB6B E8EAE3FBFF              call 00419F5A
+:0045BB70 C3                      ret
+:0045BB71 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BB76 C1E706                  shl edi, 06
+:0045BB79 F684308855000008        test byte ptr [eax+esi+00005588], 08
+:0045BB81 7418                    je 0045BB9B
+:0045BB83 8B45DC                  mov eax, dword ptr [ebp-24]
+:0045BB86 83F864                  cmp eax, 00000064
+:0045BB89 7C05                    jl 0045BB90
+:0045BB8B 83E832                  sub eax, 00000032
+:0045BB8E D1E0                    shl eax, 1
+:0045BB90 
+
+
+file offset 000549A9
+
+:004555A9 E8AD650000              call 0045BB5B
+changed into
+:004555A9 E8B7650000              call 0045BB65
+:004555AE 
+
+
+file offset 00079F42
+
+:0047AB42 E97C10FEFF              jmp 0045BBC3
+changed into
+:0047AB42 E9DEFDFFFF              jmp 0047A925
+:0047AB47 
+
+file offset 00079D25
+
+:0047A925 90                      nop
+:0047A926 90                      nop
+:0047A927 90                      nop
+:0047A928 90                      nop
+:0047A929 90                      nop
+:0047A92A 90                      nop
+:0047A92B 90                      nop
+:0047A92C 90                      nop
+:0047A92D 90                      nop
+:0047A92E 90                      nop
+:0047A92F 90                      nop
+changed into
+:0047A925 8998D47A6900            mov dword ptr [eax+00697AD4], ebx
+:0047A92B E92D88FBFF              jmp 0043315D
+:0047A930
+
+
+Critical Damage and Devastation in Melee, using free space from obsolete Peril:
+
+file offset 0005AFA4
+
+:0045BBA4 8B45F8                  mov eax, dword ptr [ebp-08]
+:0045BBA7 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:0045BBAD 7571                    jne 0045BC20
+:0045BBAF A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BBB4 F684308855000004        test byte ptr [eax+esi+00005588], 04
+:0045BBBC 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0045BBBF 7459                    je 0045BC1A
+:0045BBC1 EB0C                    jmp 0045BBCF
+:0045BBC3 8998D47A6900            mov dword ptr [eax+00697AD4], ebx
+:0045BBC9 E98F75FDFF              jmp 0043315D
+:0045BBCE 90                      nop
+:0045BBCF 8B8198010000            mov eax, dword ptr [ecx+00000198]
+:0045BBD5 8D9198010000            lea edx, dword ptr [ecx+00000198]
+:0045BBDB 3B45F0                  cmp eax, dword ptr [ebp-10]
+:0045BBDE 7E1C                    jle 0045BBFC
+:0045BBE0 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:0045BBE3 2BC1                    sub eax, ecx
+:0045BBE5 8902                    mov dword ptr [edx], eax
+:0045BBE7 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BBEC 298C3090010000          sub dword ptr [eax+esi+00000190], ecx
+:0045BBF3 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:0045BBFA EB1C                    jmp 0045BC18
+:0045BBFC 6A40                    push 00000040
+:0045BBFE 5A                      pop edx
+:0045BBFF 8BDA                    mov ebx, edx
+:0045BC01 2BD8                    sub ebx, eax
+:0045BC03 019990010000            add dword ptr [ecx+00000190], ebx
+:0045BC09 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BC0E 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:0045BC11 89943098010000          mov dword ptr [eax+esi+00000198], edx
+:0045BC18 D1E7                    shl edi, 1
+changed into
+:0045BBA4 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045BBA9 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0045BBAC 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0045BBB3 F6818855000001          test byte ptr [ecx+00005588], 01
+:0045BBBA 7403                    je 0045BBBF
+:0045BBBC 83C310                  add ebx, 00000010
+:0045BBBF 8B45D8                  mov eax, dword ptr [ebp-28]
+:0045BBC2 E8556FFFFF              call 00452B1C
+:0045BBC7 8BC7                    mov eax, edi
+:0045BBC9 817DD860030000          cmp dword ptr [ebp-28], 00000360	
+:0045BBD0 E8BC6EFFFF              call 00452A91				set damage as 'lucky' indicator for stun
+:0045BBD5 8B45F8                  mov eax, dword ptr [ebp-08]
+:0045BBD8 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:0045BBDE 8B5DFC                  mov ebx, dword ptr [ebp-04]	
+:0045BBE1 7506                    jne 0045BBE9			
+:0045BBE3 29BB1CDD6900            sub dword ptr [ebx+0069DD1C], edi
+:0045BBE9 EB35                    jmp 0045BC20
+:0045BBEB 90                      nop
+
+
+Knockback avoid in Melee:
+
+file offset 0005B23D
+
+:0045BE3D E925D6FAFF              jmp 00409467
+changed into
+:0045BE3D E9A9FDFFFF              jmp 0045BBEB
+:0045BE42 
+
+file offset 0005AFEB
+
+:0045BBEB F6400108                test [eax+01], 08
+:0045BBEF 740C                    je 0045BBFD
+:0045BBF1 F7C701000000            test edi, 00000001
+:0045BBF7 0F8446020000            je 0045BE43
+:0045BBFD E949020000              jmp 0045BE4B
+
+RND(200) stored at [EBP-24]:
+
+:0045BC02 BAC9000000              mov edx, 000000C9
+:0045BC07 E84EE3FBFF              call 00419F5A
+:0045BC0C 5A                      pop edx
+:0045BC0D 8945DC                  mov dword ptr [ebp-24], eax		
+:0045BC10 0FAFC2                  imul eax, edx
+:0045BC13 B9C8000000              mov ecx, 000000C8
+:0045BC18 99                      cdq
+:0045BC19 F7F9                    idiv ecx
+:0045BC1B E91CFEFFFF              jmp 0045BA3C
+:0045BC20
+
+
+Adjustments to Missile Attack PVM code:
+
+
+file offset 0002E680
+
+:0042F280 83EC14                  sub esp, 00000014
+changed into
+:0042F280 83EC18                  sub esp, 00000018		make room for temporary variable at [ebp-18]
+
+file offset 0002E763
+
+:0042F363 E982A2FDFF              jmp 004095EA
+changed into
+:0042F363 E9B3110000              jmp 0043051B			determine and store 'luck' factor, see below
+:0042F368 90                      nop
+
+file offset 0002E7E0
+
+:0042F3E0 8D7C0A32                lea edi, dword ptr [edx+ecx+32]
+:0042F3E4 7F03                    jg 0042F3E9
+:0042F3E6 83C714                  add edi, 00000014
+:0042F3E9 EB22                    jmp 0042F40D
+:0042F3EB 7404                    je 0042F3F1
+changed into
+:0042F3E0 8D7C0A28                lea edi, dword ptr [edx+ecx+28]
+:0042F3E4 7F03                    jg 0042F3E9
+:0042F3E6 83C71E                  add edi, 0000001E
+:0042F3E9 EB1D                    jmp 0042F408
+:0042F3EB 9090                    2*nop
+
+file offset 0002902F
+
+:00429C2F E9E9570000              jmp 0042F41D
+changed into
+:00429C2F E9D4570000              jmp 0042F408
+:00429C34 
+
+file offset 0002E9FC
+
+:0042F5FC 83C728                  add edi, 00000028
+changed into
+:0042F5FC 83C71E                  add edi, 0000001E
+
+file offset 0002EA07
+
+:0042F607 83C714                  add edi, 00000014
+:0042F60A E9FEFDFFFF              jmp 0042F40D
+changed into
+:0042F607 83C720                  add edi, 00000020
+:0042F60A E9F9FDFFFF              jmp 0042F408
+:0042F60F 
+
+file offset 0002E7EF
+
+:0042F3EF 751C                    jne 0042F40D
+:0042F3F1 83C719                  add edi, 00000019
+:0042F3F4 EB17                    jmp 0042F40D
+:0042F3F6 6A4B                    push 0000004B
+:0042F3F8 B147                    mov cl, 47
+:0042F3FA 5A                      pop edx
+:0042F3FB E85AABFEFF              call 00419F5A
+:0042F400 8BF8                    mov edi, eax
+:0042F402 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0042F409 D1E0                    shl eax, 1
+:0042F40B 2BF8                    sub edi, eax
+changed into
+:0042F3EF 7517                    jne 0042F408
+:0042F3F1 83C720                  add edi, 00000020
+:0042F3F4 EB12                    jmp 0042F408
+:0042F3F6 8B7DE8                  mov edi, dword ptr [ebp-18]
+:0042F3F9 C1FF04                  sar edi, 04
+:0042F3FC 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0042F403 D1E0                    shl eax, 1
+:0042F405 2BF8                    sub edi, eax
+:0042F407 90                      nop
+:0042F408 E977E10000              jmp 0043D584
+:0042F40D 
+
+file offset 0003C984
+
+:0043D584 90                      nop
+:0043D585 90                      nop
+:0043D586 90                      nop
+:0043D587 8B5624                  mov edx, dword ptr [esi+24]
+:0043D58A 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D58D 6A01                    push 00000001
+:0043D58F 53                      push ebx
+:0043D590 6A0D                    push 0000000D
+:0043D592 E845E3FEFF              call 0042B8DC
+:0043D597 E9B5000000              jmp 0043D651
+changed into
+:0043D584 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]	
+:0043D58A 83386B                  cmp dword ptr [eax], 0000006B
+:0043D58D 7508                    jne 0043D597				
+:0043D58F 83FF32                  cmp edi, 00000032
+:0043D592 7E03                    jle 0043D597
+:0043D594 6A32                    push 00000032			Evasion for Fallen Rogues: max. 50% ToHit
+:0043D596 5F                      pop edi
+:0043D597 E9711EFFFF              jmp 0042F40D
+:0043D59C 
+
+file offset 0002E8BE
+
+:0042F4BE E85FEE0000              call 0043E322			old critical hits for arrows
+:0042F4C3 90                      nop
+:0042F4C4 90                      nop
+:0042F4C5 90                      nop
+changed into
+:0042F4BE 8B45E8                  mov eax, dword ptr [ebp-18]	retrieve 'luck' factor 
+:0042F4C1 E86B100000              call 00430531			new critical hits for arrows
+:0042F4C6 
+
+file offset 0002E8CF
+
+:0042F4CF 90                      nop
+:0042F4D0 90                      nop
+:0042F4D1 E8AFDF0000              call 0043D485	
+:0042F4D6 90                      nop
+:0042F4D7 90                      nop
+changed into
+:0042F4CF 8B45E8                  mov eax, dword ptr [ebp-18]	retrieve 'luck' factor
+:0042F4D2 E8AEDF0000              call 0043D485		
+:0042F4D7 90                      nop
+
+
+file offset 0003C897
+
+:0043D497 E8960E0000              call 0043E332				old critical hits for spells
+:0043D49C E893FFFFFF              call 0043D434				resistances
+:0043D4A1 C3                      ret
+:0043D4A2 E89A0E0000              call 0043E341				obsolete code
+:0043D4A7 83F81E                  cmp eax, 0000001E
+:0043D4AA 7D02                    jge 0043D4AE
+:0043D4AC 33ED                    xor ebp, ebp
+changed into
+:0043D497 E880560100              call 00452B1C				new critical hits for spells
+:0043D49C EB96                    jmp 0043D434				resistances
+:0043D49E 90909090                4*nop
+:0043D4A2 817DE860030000          cmp dword ptr [ebp-18], 00000360	
+:0043D4A9 E8E3550100              call 00452A91				set damage as 'lucky' indicator for stun
+:0043D4AE 
+
+
+
+file offset 0003C838
+
+:0043D438 740E                    je 0043D448
+:0043D43A 50                      push eax
+:0043D43B 51                      push ecx
+:0043D43C 8BC7                    mov eax, edi
+changed into
+:0043D438 8BC7                    mov eax, edi
+:0043D43A 740B                    je 0043D447
+:0043D43C 90                      nop
+:0043D43D 51                      push ecx
+
+file offset 0003C847
+
+:0043D447 58                      pop eax
+:0043D448 C3                      ret
+changed into
+:0043D447 EB59                    jmp 0043D4A2
+:0043D449 
+
+
+Disabled old check on maximum damage:
+
+file offset 0002E8E3
+
+:0042F4E3 E833100000              call 0043051B
+:0042F4E8 90                      nop
+changed into
+:0042F4E3 29BE1CDD6900            sub dword ptr [esi+0069DD1C], edi
+
+file offset 0002E916
+
+:0042F516 7F25                    jg 0042F53D
+changed into
+:0042F516 7F38                    jg 0042F550
+:0042F518 
+
+
+Piercing (25% chance to continue after hit):
+
+file offset 00027858
+
+:00428458 E93A10FEFF              jmp 00409497
+changed into
+:00428458 E969710000              jmp 0042F5C6
+:0042845D 
+
+file offset 00057A25
+
+:00458625 E86315FDFF              call 00429B8D
+changed into
+:00458625 E82CCAFDFF              call 00435056	
+:0045862A 
+
+file offset 00034456
+
+:00435056 90                      nop
+:00435057 90                      nop
+:00435058 90                      nop
+:00435059 90                      nop
+:0043505A 90                      nop
+:0043505B 90                      nop
+:0043505C 90                      nop
+:0043505D 90                      nop
+:0043505E 90                      nop
+:0043505F 90                      nop
+changed into
+:00435056 8B45E8                  mov eax, dword ptr [ebp-18]		retrieve 'luck' factor
+:00435059 83E003                  and eax, 00000003
+:0043505C 0F95C0                  setne al
+:0043505F C3                      ret
+:00435060
+
+
+Knockback avoid for arrows:
+
+file offset 0003D8A1
+
+:0043E4A1 7503                    jne 0043E4A6
+:0043E4A3 33C0                    xor eax, eax
+:0043E4A5 C3                      ret
+:0043E4A6 6A01                    push 00000001
+:0043E4A8 58                      pop eax
+changed into
+:0043E4A1 0F85F2490100            jne 00452E99
+:0043E4A7 33C0                    xor eax, eax
+
+file offset 00052299
+
+:00452E99 90                      nop
+:00452E9A 90                      nop
+:00452E9B 90                      nop
+:00452E9C E8F3FBFFFF              call 00452A94
+:00452EA1 8BCE                    mov ecx, esi
+:00452EA3 C3                      ret
+:00452EA4 B131                    mov cl, 31
+changed into
+:00452E99 33C0                    xor eax, eax
+:00452E9B 817DE860030000          cmp dword ptr [ebp-18], 00000360		42% Knockback avoid
+:00452EA2 7C01                    jl 00452EA5
+:00452EA4 40                      inc eax
+:00452EA5 C3                      ret
+
+
+Using free space from old checks on maximum damage:
+
+file offset 0002F91B
+
+:0043051B 51                      push ecx
+:0043051C 8BCB                    mov ecx, ebx
+:0043051E E819000000              call 0043053C
+:00430523 59                      pop ecx
+:00430524 29BE1CDD6900            sub dword ptr [esi+0069DD1C], edi
+:0043052A C3                      ret
+:0043052B 51                      push ecx
+:0043052C 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0043052F E815000000              call 00430549
+:00430534 59                      pop ecx
+:00430535 29BB1CDD6900            sub dword ptr [ebx+0069DD1C], edi
+:0043053B C3                      ret
+:0043053C 69C9C8550000            imul ecx, 000055C8
+:00430542 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00430547 03C8                    add ecx, eax
+:00430549 52                      push edx
+:0043054A 0FBE91B8010000          movsx edx, byte ptr [ecx+000001B8]
+:00430551 C1E20B                  shl edx, 0B
+:00430554 3BD7                    cmp edx, edi
+:00430556 7D02                    jge 0043055A
+:00430558 8BFA                    mov edi, edx
+:0043055A 5A                      pop edx
+:0043055B C3                      ret
+
+changed into
+
+Determine and store 'luck' factor RND[2048]:
+
+:0043051B 52                      push edx
+:0043051C B147                    mov cl, 47
+:0043051E BA00080000              mov edx, 00000800
+:00430523 E8329AFEFF              call 00419F5A
+:00430528 8945E8                  mov dword ptr [ebp-18], eax
+:0043052B 5A                      pop edx
+:0043052C E9B990FDFF              jmp 004095EA
+
+New Archery Critical Hit:
+
+:00430531 80B96001000001          cmp byte ptr [ecx+00000160], 01
+:00430538 7E01                    jle 0043053B				only for warriors and rogues
+:0043053A C3                      ret
+:0043053B 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]	
+:00430542 F6818855000001          test byte ptr [ecx+00005588], 01	
+:00430549 7403                    je 0043054E
+:0043054B 83C310                  add ebx, 00000010			Devastation for arrows
+:0043054E 8BCB                    mov ecx, ebx
+:00430550 C1E105                  shl ecx, 05				maximum damage is 32*CLVL
+:00430553 E9C9250200              jmp 00452B21				see below
+:00430558 90909090                4*nop
+
+
+New Critical Damage routine, with check on maximum: 
+
+Characters will have a (recurring) 6+2*CLVL/5 % chance for double damage.
+
+file offset 00051F1C
+
+:00452B1C 90                      nop
+:00452B1D 80BC084048000000        cmp byte ptr [eax+ecx+00004840], 00
+:00452B25 741C                    je 00452B43
+:00452B27 83BC083C48000000        cmp dword ptr [eax+ecx+0000483C], 00000000
+:00452B2F 8D94083C480000          lea edx, dword ptr [eax+ecx+0000483C]
+:00452B36 750B                    jne 00452B43
+:00452B38 C70201000000            mov dword ptr [edx], 00000001
+:00452B3E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00452B43 03CF                    add ecx, edi
+:00452B45 4E                      dec esi
+:00452B46 75D5                    jne 00452B1D
+:00452B48 B125                    mov cl, 25
+:00452B4A EB15                    jmp 00452B61
+changed into
+:00452B1C 8BCB                    mov ecx, ebx
+:00452B1E C1E10B                  shl ecx, 0B			maximum damage is 32*CLVL
+:00452B21 3BF9                    cmp edi, ecx
+:00452B23 7C01                    jl 00452B26
+:00452B25 C3                      ret
+:00452B26 F7D8                    neg eax
+:00452B28 0500080000              add eax, 00000800		inversed 'luck' factor
+:00452B2D 83C310                  add ebx, 00000010
+:00452B30 C1E303                  shl ebx, 03
+:00452B33 52                      push edx
+:00452B34 8BD3                    mov edx, ebx
+:00452B36 EB06                    jmp 00452B3E
+:00452B38 0FAFD3                  imul edx, ebx			scale down chance of success
+:00452B3B C1EA0B                  shr edx, 0B			(for repeat attempts)
+:00452B3E 3BD0                    cmp edx, eax
+:00452B40 7E08                    jle 00452B4A
+:00452B42 D1E7                    shl edi, 1			double damage
+:00452B44 3BF9                    cmp edi, ecx
+:00452B46 7CF0                    jl 00452B38			try again if not already maximum
+:00452B48 8BF9                    mov edi, ecx
+:00452B4A 5A                      pop edx
+:00452B4B C3                      ret
+
+
+Set damage as 'lucky' indicator for stun:
+
+file offset 00051E91
+
+:00452A91 90                      nop
+:00452A92 90                      nop
+:00452A93 90                      nop
+:00452A94 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:00452A9A C3                      ret
+changed into
+:00452A91 7C04                    jl 00452A97
+:00452A93 83E7FE                  and edi, FFFFFFFE
+:00452A96 C3                      ret
+:00452A97 83CF01                  or edi, 00000001
+:00452A9A C3                      ret
+
+
+Stun for Melee Player vs. Monster:
+
+file offset 0003C707
+
+:0043D307 E984FCFFFF              jmp 0043CF90
+changed into
+:0043D307 E98AFCFFFF              jmp 0043CF96
+:0043D30C 
+
+file offset 0003C390
+
+:0043CF90 83BE20DD690004          cmp dword ptr [esi+0069DD20], 00000004
+:0043CF97 90                      nop
+:0043CF98 90                      nop
+:0043CF99 90                      nop
+:0043CF9A 90                      nop
+:0043CF9B 90                      nop
+:0043CF9C 90                      nop
+changed into
+:0043CF90 E9C8000000              jmp 0043D05D
+:0043CF95 90                      nop
+:0043CF96 83BE20DD690004          cmp dword ptr [esi+0069DD20], 00000004
+
+file offset 0003C31A
+
+:0043CF1A 8B00                    mov eax, dword ptr [eax]
+:0043CF1C E8B9030000              call 0043D2DA
+:0043CF21 85C0                    test eax, eax
+:0043CF23 7505                    jne 0043CF2A
+:0043CF25 E8F5060000              call 0043D61F
+:0043CF2A 50                      push eax
+:0043CF2B 51                      push ecx
+:0043CF2C E871050000              call 0043D4A2
+:0043CF31 59                      pop ecx
+:0043CF32 58                      pop eax
+:0043CF33 3BE8                    cmp ebp, eax
+:0043CF35 0F8C22010000            jl 0043D05D
+changed into
+:0043CF1A E8B9030000              call 0043D2D8
+:0043CF1F 85C0                    test eax, eax
+:0043CF21 750A                    jne 0043CF2D
+:0043CF23 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043CF2A 83C003                  add eax, 00000003
+:0043CF2D 8BCD                    mov ecx, ebp
+:0043CF2F C1FD06                  sar ebp, 06
+:0043CF32 3BE8                    cmp ebp, eax
+:0043CF34 7C5A                    jl 0043CF90
+:0043CF36 F6C101                  test cl, 01
+:0043CF39 7555                    jne 0043CF90
+:0043CF3B
+
+file offset 0003C6D8
+
+:0043D2D8 90                      nop
+:0043D2D9 90                      nop
+changed into
+:0043D2D8 8B00                    mov eax, dword ptr [eax]
+
+
+Stun for Melee Monster vs. Monster:
+
+file offset 0003C71B
+
+:0043D31B E98F090000              jmp 0043DCAF
+changed into
+:0043D31B E995090000              jmp 0043DCB5
+:0043D320 
+
+file offset 0003D0AF
+
+:0043DCAF 83BE20DD690004          cmp dword ptr [esi+0069DD20], 00000004
+:0043DCB6 90                      nop
+:0043DCB7 90                      nop
+:0043DCB8 90                      nop
+:0043DCB9 90                      nop
+:0043DCBA 90                      nop
+:0043DCBB 90                      nop
+changed into
+:0043DCAF E9CF000000              jmp 0043DD83
+:0043DCB4 90                      nop
+:0043DCB5 83BE20DD690004          cmp dword ptr [esi+0069DD20], 00000004
+:0043DCBC
+
+file offset 0003D062
+
+:0043DC62 7516                    jne 0043DC7A
+:0043DC64 90                      nop
+:0043DC65 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043DC6C 83C003                  add eax, 00000003
+:0043DC6F C1FB06                  sar ebx, 06
+:0043DC72 3BD8                    cmp ebx, eax
+:0043DC74 0F8C09010000            jl 0043DD83
+changed into
+:0043DC62 750A                    jne 0043DC6E
+:0043DC64 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043DC6B 83C004                  add eax, 00000004
+:0043DC6E C1FB06                  sar ebx, 06
+:0043DC71 3BD8                    cmp ebx, eax
+:0043DC73 7C3A                    jl 0043DCAF
+:0043DC75 F6C303                  test bl, 03				25% stun avoid for Melee MvM
+:0043DC78 7435                    je 0043DCAF			
+:0043DC7A 
+
+
+Stun avoid for Revenge:
+
+file offset 0003D9B6
+
+:0043E5B6 83C040                  add eax, 00000040
+:0043E5B9 2901                    sub dword ptr [ecx], eax
+changed into
+:0043E5B6 E9A9FDFFFF              jmp 0043E364
+:0043E5BB 
+
+file offset 0003D764
+
+:0043E364 0FBE9430B8010000        movsx edx, byte ptr [eax+esi+000001B8]
+:0043E36C D1EA                    shr edx, 1
+:0043E36E B16A                    mov cl, 6A
+:0043E370 E8E5BBFDFF              call 00419F5A
+:0043E375 C3                      ret
+changed into
+:0043E364 57                      push edi
+:0043E365 8BF8                    mov edi, eax
+:0043E367 E8AD84FFFF              call 00436819
+:0043E36C 8BC7                    mov eax, edi
+:0043E36E 5F                      pop edi
+:0043E36F 2901                    sub dword ptr [ecx], eax
+:0043E371 E945020000              jmp 0043E5BB
+:0043E376
+
+file offset 00035C19
+
+:00436819 90                      nop
+:0043681A 90                      nop
+:0043681B 90                      nop
+:0043681C 90                      nop
+:0043681D 90                      nop
+:0043681E 90                      nop
+:0043681F 90                      nop
+:00436820 90                      nop
+:00436821 90                      nop
+changed into
+:00436819 837DEC1E                cmp dword ptr [ebp-14], 0000001E
+:0043681D E96FC20100              jmp 00452A91
+:00436822 
+
+
+
+Old critical hit routine:
+
+* Referenced by a CALL at Address:
+|:0042F4BE   
+|
+:0043E322 80B96001000001          cmp byte ptr [ecx+00000160], 01
+:0043E329 7F22                    jg 0043E34D
+:0043E32B 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+
+* Referenced by a CALL at Addresses:
+|:0043D497   , :0045BA88   
+|
+:0043E332 D1FB                    sar ebx, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E33F(U)
+|
+:0043E334 E808000000              call 0043E341
+:0043E339 3BC3                    cmp eax, ebx
+:0043E33B 7D10                    jge 0043E34D
+:0043E33D D1E7                    shl edi, 1
+:0043E33F EBF3                    jmp 0043E334
+
+* Referenced by a CALL at Addresses:
+|:00429B8E   , :0043D474   , :0043D4A2   , :0043E334   
+|
+:0043E341 52                      push edx
+:0043E342 6A64                    push 00000064
+:0043E344 B106                    mov cl, 06
+:0043E346 5A                      pop edx
+:0043E347 E80EBCFDFF              call 00419F5A
+:0043E34C 5A                      pop edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E329(C), :0043E33B(C)
+|
+:0043E34D C3                      ret
+

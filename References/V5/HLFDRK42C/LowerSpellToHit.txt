@@ -1,0 +1,11 @@
+Adjusting ToHit for spells
+
+Old Tohit = 50 + Mag + ClassBonus - 2*mlvl
+New Tohit = 40 + Mag + ClassBonus - 2*mlvl
+
+file offset 0002E9FC
+
+:0042F5FC 83C732                  add edi, 00000032
+changed into
+:0042F5FC 83C728                  add edi, 00000028
+

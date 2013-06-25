@@ -1,0 +1,27 @@
+()Sacred - Adds 1 level to Healing spell, decreases Vitality
+
+"Energy comes at the cost of Wisdom"
+-> 
+"Healing, but at a cost"
+
+
+()Ornate - Adds 1 level to Stone Curse spell, decreases Dexterity.
+
+"Salvation comes at the cost of Wisdom"
+-> 
+"Stone power, but at a cost"
+
+
+()Fascinating- Adds 1 level to Holy Bolt spell, decreases Magic
+
+"Intensity comes at the cost of Wisdom"
+-> 
+"Holy power, but at a cost"
+
+
+()Town - Adds 1 level to TownPortal spell, decreases Strength
+
+"There is no place like home"
+-> 
+"Travelling, but at a cost"
+

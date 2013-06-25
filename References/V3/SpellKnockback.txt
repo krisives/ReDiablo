@@ -1,0 +1,49 @@
+Knockback for Flash
+
+In plaats van Flash is er ruimte voor 2 andere spells.
+
+
+File Offset 0003D892
+
+:0043E492 807D1300                cmp byte ptr [ebp+13], 00
+:0043E496 7408                    je 0043E4A0
+:0043E498 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0043E49C 740B                    je 0043E4A9
+:0043E49E EB06                    jmp 0043E4A6
+:0043E4A0 F6400108                test [eax+01], 08
+:0043E4A4 7503                    jne 0043E4A9
+:0043E4A6 33C0                    xor eax, eax
+:0043E4A8 C3                      ret
+:0043E4A9 6A01                    push 00000001
+:0043E4AB 58                      pop eax
+:0043E4AC C3                      ret
+:0043E4AD 90                      nop
+:0043E4AE 90                      nop
+:0043E4AF 90                      nop
+:0043E4B0 90                      nop
+:0043E4B1 90                      nop
+:0043E4B2 90                      nop
+:0043E4B3 90                      nop
+:0043E4B4 90                      nop
+:0043E4B5 90                      nop
+:0043E4B6 90                      nop
+:0043E4B7 90                      nop
+:0043E4B8 90                      nop
+wordt
+:0043E492 807D1300                cmp byte ptr [ebp+13], 00
+:0043E496 7414                    je 0043E4AC
+:0043E498 837D143F                cmp dword ptr [ebp+14], 0000003F
+:0043E49C 7417                    je 0043E4B5
+:0043E49E 837D140B                cmp dword ptr [ebp+14], 0000000B
+:0043E4A2 7411                    je 0043E4B5
+:0043E4A4 837D140C                cmp dword ptr [ebp+14], 0000000C
+:0043E4A8 740B                    je 0043E4B5
+:0043E4AA EB06                    jmp 0043E4B2
+:0043E4AC F6400108                test [eax+01], 08
+:0043E4B0 7503                    jne 0043E4B5
+:0043E4B2 33C0                    xor eax, eax
+:0043E4B4 C3                      ret
+:0043E4B5 6A01                    push 00000001
+:0043E4B7 58                      pop eax
+:0043E4B8 C3                      ret
+

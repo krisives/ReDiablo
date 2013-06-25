@@ -1,0 +1,76 @@
+This is the first part of two letters. The letters didn't follow directly on each other. There were a couple of months between. Well...
+
+########### **MAIL 1** ################################################################
+Hi M:OK, here we go...
+First your BMP's MUST be in 256 colours NOTHING else will do.  Next you
+need to know the width of them (height is not necessary you'' understand
+in a moment so bear with me)
+You delete the header and the palatte.  That's all the info from 0 ->
+435 bytes (in hex) the best way to do that is to open the 256 colour bmp
+paint shop or some other picture editor that will tell you the width
+pixels.  Record this number (in hex of course) Now open the bmp in a hex
+editor and click on byte 0 and drag to byte 435.  This must be done in
+one operation 'cause if you don't it'll change the location of the end
+of the palatte and you MIGHT not be able to figure out where it went.
+Delete the highlighted area (0- 435)
+Add a 0C (13) byte header (just zero's for now)
+Change byte 0 to 01 (one picture - if there were 2 pics it would be 02
+and so on...)
+Change byte 4 to 0C (This is where the picture info starts - remember
+the 0C byte header?)Now the tricky part.  This must be done exactly.
+The width of the cel (the number you recorded) must be INSERTED at byte
+0C (where the pic info starts)
+Lets say for arguments sake that it's 1C (so I can describe what youneed to do)
+Insert 1C at byte 0C.  Jump ahead exactly 1C bytes and INSERT 1C (you
+don't want to overwrite anything)
+Keep this opperation up until you reach the end of the file.  It should
+end evenly.  I mean that the LAST jump to 1C should take you to the end
+of the file (ie not 2, 3, 4 etc... bytes before or after it)
+Now find the last byte of info in the file.  Record the number after it.
+Place this second recorded number at byte 8.
+Save this with the file extension ".CEL" (of course)
+Open the file in the cel viewer.  If you've done it right the picture
+should be square (or rectangular) and clean.  If not, this means that
+you've messed up the numbering some where.  Go back & check.
+If it's OK, then you have your CEL file.  Any number of cels can be
+grouped by simply adding to the info and header.
+The header for a multi frame cel goes like this byte 0-3 the number of
+frames in the cel.
+Byte 4-7 (and every 4 bytes thereafter) are the pointers to the start of
+the cel info.  You need to add a final 4 byte double word which points
+to the end of the file (well, the first byte AFTER the end of the file)
+The palattes, well -> I have no idea (YET) what to do there.  Your pics
+colours ARE going to be messed up.  If you figure this out, let me know(please)
+To make cels into BMP's you need to reverse the above proceedure.  I
+have yet to try this.  Though this may be the key to figuring outpalattes.
+I've enclosed a file I made from Balok's missing items page.  I included
+the page as well.  Se the colour problems?  It's the sword at the topleft...
+########### ** END MAIL 1** ############################################################
+
+In mail two I asked if Ted knew the fix for the color problem. And I got this one...
+=========== ** MAIL 2 ** ===============================================================
+Hi:
+
+Yes, to fix this you need to HEX EDIT the colours.  To do this, download some such hex editor like WINHEX.  This editor allows you to place as many lines of hex in a row as you want.  Make the hex editor have "1C" lines of width.  All the 1C's should run down the side to the left one under the other in a row.  Like this:
+
+1C 00 00 00 00 00 etc...
+
+1C 00 00 00 00 00 ...
+
+1C 00 00 00 00 00 ...
+
+(to do this you need to delete the cel file header temprarily)
+
+Then what you want to do is invert the 256 colour BMP of the amulet picture so that it is upside down.  (This is because the cel file reads bottom to top) if you don't have a BMP, then make a 256 colour BMP and add the 436 long header to the cel (instead of the cel header) I don't think you need to remove the width indicators (IE: the "1C's" for amulets)
+
+Then enlarge the BMP in paint shop pro (or paint, whatever) so that the individual pixels can be seen.
+
+Then you need to open the palatte in the cel viewer so that you can see the palatte colours.
+
+You replace the colours in the cel file by comparing the pixels in the BMP to the palatte in the cel viewer.  WINHEX has a search and replace command.
+
+When you're done, simply replace the header.  If you do this every once in a while you can monitor your progress.  Once you start it's really not too time consuming.
+
+T
+
+

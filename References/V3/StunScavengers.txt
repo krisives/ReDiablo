@@ -1,0 +1,23 @@
+Correcting check for Scavenging monsters, now supporting any slot:
+
+File Offset 0003C390
+
+:0043CF90 83F810                  cmp eax, 00000010
+:0043CF93 7C05                    jl 0043CF9A
+:0043CF95 83F813                  cmp eax, 00000013
+:0043CF98 7E05                    jle 0043CF9F
+:0043CF9A 83F87D                  cmp eax, 0000007D
+wordt
+:0043CF90 83BE20DD690004          cmp dword ptr [esi+0069DD20], 00000004
+:0043CF97 909090909090            6*nop
+
+File Offset 0003D0AF
+
+:0043DCAF 83F810                  cmp eax, 00000010
+:0043DCB2 7C05                    jl 0043DCB9
+:0043DCB4 83F813                  cmp eax, 00000013
+:0043DCB7 7E05                    jle 0043DCBE
+:0043DCB9 83F87D                  cmp eax, 0000007D
+wordt
+:0043DCAF 83BE20DD690004          cmp dword ptr [esi+0069DD20], 00000004
+:0043DCB6 909090909090            6*nop

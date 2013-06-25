@@ -1,0 +1,55 @@
+New Shielding spell, only available on scrolls as it would take 3 charges from a stave when cast, gives Mana Shield, Barrier and Healing. It should be useful in death trap situations at stairs and Townportals. The Mana Shield helps even for barbarian types, as it absorbs at least the full damage from one succesful hit.
+
+
+Replacing the Trap Disarm spell data slot:
+
+Spells
+pos nbr name        type        qlvl(bo) qlvl(st) ini  min  dec  req town  charges  effects    price(bo)  multiplier
+ 27  28 TrapDisarm  magic/other   255      255     0    0    0  255   0    40- 80  47: -: -         0          0
+        Shielding                                                                  13:79:37
+
+000B6608 1C00 0200 4C82 4B00 4C82 4B00 FFFF FFFF ....L.K.L.K.....
+000B6618 FFFF FFFF 0000 0000 0000 0000 FFFF FFFF ................
+000B6628 562F 0000 0000 0000 2800 0000 5000 0000 V/......(...P...
+000B6638 0000 0000 0000 0000                     ........
+changed into
+000B660C 5E1B 4A00 0000 0000                     ^.J.....
+000B6629 0D4F 25                                 .O%
+
+
+pos name                        qlvl  dur   damage    AC    str mag dex  price  pic  src  unique
+
+107 Scroll of Bone Spirit (T)    12     0    0- 0    0- 0    0  30   0     400    2    1    0
+    Scroll of Shielding                                         20         800    3
+
+000A258C 0100 0000 0307 0000 0200 0000 0000 0000 ................
+000A259C EC4F 4A00 0000 0000 0C00 0000 0000 0000 .OJ.............
+000A25AC 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A25BC 001E 0000 0000 0000 1500 0000 2700 0000 ............'...
+000A25CC 0100 0000 9001 0000 9001 0000           ............
+changed into
+000A2594 0300 0000                               ....
+000A259C 0250 4A00                               .PJ.
+000A25BD 14                                      .
+000A25C8 1C00 0000                               ....
+000A25D0 2003 0000 2003 0000                      ... ...
+
+
+Creating scroll name at 004A5002:
+
+000A3A01 0000 0000 0000 0000 5363 726F 6C6C 206F ........Scroll o
+000A3A11 6620 4775 6172 6469 616E 00             f Guardian.
+changed into
+000A3A01 0053 6372 6F6C 6C20 6F66 2053 6869 656C .Scroll of Shiel
+000A3A11 6469 6E67 0000 0000 0000 00             ding.......
+
+
+Correcting spell icon:
+
+00093610 1B01 0203 0405 0607 0809 200D 0C11 1021 ...............!
+00093620 300F 0B16 1C15 2218 1914 1A1D 2526 272A 0.....".....%&'*
+00093630 2928 0A24 1E31 1732 2E2F 2B2D 2312 3323 )(.$.1.2./+-#.3#
+00093640 2323 2323                               ####
+changed into
+0009362C 13                                      .
+

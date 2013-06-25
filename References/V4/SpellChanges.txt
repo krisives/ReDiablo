@@ -1,0 +1,97 @@
+Lowering maximum speed for Firebolt again:
+
+File Offset 00030CAE
+
+:004318AE 83F82F                  cmp eax, 0000002F
+:004318B1 7C0B                    jl 004318BE
+:004318B3 6A2F                    push 0000002F
+wordt
+:004318AE 83F828                  cmp eax, 00000028
+:004318B1 7C0B                    jl 004318BE
+:004318B3 6A28                    push 00000028
+
+
+Lowering maximum speed for Holybolt again:
+
+File Offset 0003474A
+
+:0043534A 83F82F                  cmp eax, 0000002F
+:0043534D 7C07                    jl 00435356
+:0043534F 6A2F                    push 0000002F
+wordt
+:0043534A 83F828                  cmp eax, 00000028
+:0043534D 7C07                    jl 00435356
+:0043534F 6A28                    push 00000028
+
+
+Lowering speed of Doom Serpent trap in Abyss:
+
+File Offset 00087F7F
+
+:00488B7F 6A0B                    push 0000000B
+wordt
+:00488B7F 6A0A                    push 0000000A
+
+
+Lowering speed of Magic Missile:
+
+File Offset 0000898D
+
+:0040958D 6A28                    push 00000028
+wordt
+:0040958D 6A20                    push 00000020
+
+
+Lowering base speed of Normal Arrow:
+
+File Offset 00008998
+
+:00409598 6A20                    push 00000020
+wordt
+:00409598 6A1C                    push 0000001C
+
+Disabling Normal Arrow speed bonus for bard, enabling for Barbarian:
+
+File Offset 000307AB
+
+:004313AB 80FA04                  cmp dl, 04
+wordt
+:004313AB 80FA05                  cmp dl, 05
+
+
+Lowering base speed of Fire/Lightning Arrow:
+
+File Offset 0002FFBA
+
+:00430BBA 6A20                    push 00000020
+wordt
+:00430BBA 6A1C                    push 0000001C
+
+Disabling Fire/Lightning Arrow speed bonus for bard, enabling for Barbarian:
+
+File Offset 0002FFEB
+
+:00430BEB 80FA04                  cmp dl, 04
+wordt
+:00430BEB 80FA05                  cmp dl, 05
+
+
+Lower damage for Bone Spirit (1/6 -> 1/8):
+
+File Offset 00031A21
+
+:00432621 6A06                    push 00000006
+wordt
+:00432621 6A08                    push 00000008
+
+File Offset 0002EC45
+
+:0042F845 6A06                    push 00000006
+wordt
+:0042F845 6A08                    push 00000008
+
+File Offset 0002E856
+
+:0042F456 6A06                    push 00000006
+wordt
+:0042F456 6A08                    push 00000008

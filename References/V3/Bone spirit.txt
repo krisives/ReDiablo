@@ -1,0 +1,302 @@
+Changes for Doom Serpent
+
+Old:
+:0043A485 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+New: (adaption for doom serpent)
+:0043A485 E8C93D0000              call 0043E253
+:0043A48A 90                      nop
+
+Extra part for doom serpent:
+
+* Referenced by a CALL at Address:
+|:0043A485   
+|
+:0043E253 83BED47A690000          cmp dword ptr [esi+00697AD4], 00000000
+:0043E25A 7506                    jne 0043E262
+:0043E25C 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E25A(C)
+|
+:0043E262 C3                      ret
+
+
+Complete procedures Bone spirit
+
+Initial procedure
+
+:0043554A 55                      push ebp
+:0043554B 8BEC                    mov ebp, esp
+:0043554D 51                      push ecx
+:0043554E 51                      push ecx
+:0043554F 53                      push ebx
+:00435550 8B5D0C                  mov ebx, dword ptr [ebp+0C]
+:00435553 56                      push esi
+:00435554 57                      push edi
+:00435555 8B7D10                  mov edi, dword ptr [ebp+10]
+:00435558 3BD3                    cmp edx, ebx
+:0043555A 8955FC                  mov dword ptr [ebp-04], edx
+:0043555D 894DF8                  mov dword ptr [ebp-08], ecx
+:00435560 7517                    jne 00435579
+:00435562 397D08                  cmp dword ptr [ebp+08], edi
+:00435565 7512                    jne 00435579
+:00435567 8B4514                  mov eax, dword ptr [ebp+14]
+:0043556A C1E002                  shl eax, 02
+:0043556D 039888BE4A00            add ebx, dword ptr [eax+004ABE88]
+:00435573 03B8A8BE4A00            add edi, dword ptr [eax+004ABEA8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00435560(C), :00435565(C)
+|
+:00435579 8BF1                    mov esi, ecx
+:0043557B 6A10                    push 00000010
+:0043557D 69F6B0000000            imul esi, 000000B0
+:00435583 57                      push edi
+:00435584 53                      push ebx
+:00435585 FF7508                  push [ebp+08]
+:00435588 83A6D47A690000          and dword ptr [esi+00697AD4], 00000000
+:0043558F E8CDB0FFFF              call 00430661
+:00435594 8B5508                  mov edx, dword ptr [ebp+08]
+:00435597 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043559A 57                      push edi
+:0043559B 53                      push ebx
+:0043559C E817ECFFFF              call 004341B8
+:004355A1 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:004355A4 8BD0                    mov edx, eax
+:004355A6 E8DBA4FFFF              call 0042FA86
+:004355AB 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004355AE 8B5508                  mov edx, dword ptr [ebp+08]
+:004355B1 C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:004355BB 898EE87A6900            mov dword ptr [esi+00697AE8], ecx
+:004355C1 8996EC7A6900            mov dword ptr [esi+00697AEC], edx
+:004355C7 83A6F07A690000          and dword ptr [esi+00697AF0], 00000000
+:004355CE 899EF47A6900            mov dword ptr [esi+00697AF4], ebx
+:004355D4 6A08                    push 00000008
+:004355D6 89BEF87A6900            mov dword ptr [esi+00697AF8], edi
+:004355DC E89372FFFF              call 0042C874
+:004355E1 807D1800                cmp byte ptr [ebp+18], 00
+:004355E5 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:004355EB 7565                    jne 00435652
+:004355ED 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004355F0 6A24                    push 00000024
+:004355F2 5A                      pop edx
+:004355F3 E8046A0300              call 0046BFFC
+:004355F8 8B451C                  mov eax, dword ptr [ebp+1C]
+:004355FB 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00435601 69C0C8550000            imul eax, 000055C8
+:00435607 BA80FEFFFF              mov edx, FFFFFE80
+:0043560C 01940198010000          add dword ptr [ecx+eax+00000198], edx
+:00435613 8D8C0198010000          lea ecx, dword ptr [ecx+eax+00000198]
+:0043561A 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00435620 01940190010000          add dword ptr [ecx+eax+00000190], edx
+:00435627 C705400E4D0001000000    mov dword ptr [004D0E40], 00000001
+:00435631 8D8C0190010000          lea ecx, dword ptr [ecx+eax+00000190]
+:00435638 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043563E 83BC019801000000        cmp dword ptr [ecx+eax+00000198], 00000000
+:00435646 7F0A                    jg 00435652
+:00435648 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:0043564B 33D2                    xor edx, edx
+:0043564D E885550200              call 0045ABD7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004355EB(C), :00435646(C)
+|
+:00435652 5F                      pop edi
+:00435653 5E                      pop esi
+:00435654 5B                      pop ebx
+:00435655 C9                      leave
+:00435656 C21C00                  ret 001C
+
+
+Update procedure
+
+:0043A357 55                      push ebp
+:0043A358 8BEC                    mov ebp, esp
+:0043A35A 83EC10                  sub esp, 00000010
+:0043A35D 53                      push ebx
+:0043A35E 8BD9                    mov ebx, ecx
+:0043A360 56                      push esi
+:0043A361 8BF3                    mov esi, ebx
+:0043A363 69F6B0000000            imul esi, 000000B0
+:0043A369 57                      push edi
+:0043A36A 895DFC                  mov dword ptr [ebp-04], ebx
+:0043A36D FF8EC87A6900            dec dword ptr [esi+00697AC8]
+:0043A373 8B86D47A6900            mov eax, dword ptr [esi+00697AD4]
+:0043A379 83BE847A690008          cmp dword ptr [esi+00697A84], 00000008
+:0043A380 8945F4                  mov dword ptr [ebp-0C], eax
+:0043A383 8B86CC7A6900            mov eax, dword ptr [esi+00697ACC]
+:0043A389 8945F0                  mov dword ptr [ebp-10], eax
+:0043A38C 7544                    jne 0043A3D2
+:0043A38E FFB6B47A6900            push dword ptr [esi+00697AB4]
+:0043A394 8B965C7A6900            mov edx, dword ptr [esi+00697A5C]
+:0043A39A 8B8EE07A6900            mov ecx, dword ptr [esi+00697AE0]
+:0043A3A0 8DBEE07A6900            lea edi, dword ptr [esi+00697AE0]
+:0043A3A6 FFB6607A6900            push dword ptr [esi+00697A60]
+:0043A3AC E85F26FFFF              call 0042CA10
+:0043A3B1 83BEC87A690000          cmp dword ptr [esi+00697AC8], 00000000
+:0043A3B8 7511                    jne 0043A3CB
+:0043A3BA C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:0043A3C4 8B0F                    mov ecx, dword ptr [edi]
+:0043A3C6 E81825FFFF              call 0042C8E3
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A3B8(C)
+|
+:0043A3CB 8BCB                    mov ecx, ebx
+:0043A3CD E97C010000              jmp 0043A54E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A38C(C)
+|
+:0043A3D2 8B866C7A6900            mov eax, dword ptr [esi+00697A6C]
+:0043A3D8 8BCB                    mov ecx, ebx
+:0043A3DA 01867C7A6900            add dword ptr [esi+00697A7C], eax
+:0043A3E0 8B86707A6900            mov eax, dword ptr [esi+00697A70]
+:0043A3E6 0186807A6900            add dword ptr [esi+00697A80], eax
+:0043A3EC E8C275FFFF              call 004319B3
+:0043A3F1 8BBE607A6900            mov edi, dword ptr [esi+00697A60]
+:0043A3F7 8B9E5C7A6900            mov ebx, dword ptr [esi+00697A5C]
+:0043A3FD 8B55F4                  mov edx, dword ptr [ebp-0C]
+:0043A400 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043A403 6A00                    push 00000000
+:0043A405 57                      push edi
+:0043A406 53                      push ebx
+:0043A407 6A00                    push 00000000
+:0043A409 52                      push edx
+:0043A40A 897DF8                  mov dword ptr [ebp-08], edi
+:0043A40D E8BC7CFFFF              call 004320CE
+:0043A412 83BEF07A690000          cmp dword ptr [esi+00697AF0], 00000000
+:0043A419 6A01                    push 00000001
+:0043A41B 58                      pop eax
+:0043A41C 7516                    jne 0043A434
+:0043A41E 3B9EF47A6900            cmp ebx, dword ptr [esi+00697AF4]
+:0043A424 750E                    jne 0043A434
+:0043A426 3BBEF87A6900            cmp edi, dword ptr [esi+00697AF8]
+:0043A42C 7506                    jne 0043A434
+:0043A42E 8986F07A6900            mov dword ptr [esi+00697AF0], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043A41C(C), :0043A424(C), :0043A42C(C)
+|
+:0043A434 3986F07A6900            cmp dword ptr [esi+00697AF0], eax
+:0043A43A 0F85BF000000            jne 0043A4FF
+:0043A440 C786F07A690002000000    mov dword ptr [esi+00697AF0], 00000002
+:0043A44A 6A13                    push 00000013
+:0043A44C 8BD7                    mov edx, edi
+:0043A44E 8BCB                    mov ecx, ebx
+:0043A450 C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:0043A45A E84C4BFFFF              call 0042EFAB
+:0043A45F 85C0                    test eax, eax
+:0043A461 7E57                    jle 0043A4BA
+:0043A463 8BF8                    mov edi, eax
+:0043A465 8B55F8                  mov edx, dword ptr [ebp-08]
+:0043A468 69FFE4000000            imul edi, 000000E4
+:0043A46E 8BCB                    mov ecx, ebx
+:0043A470 FFB7ACDC6900            push dword ptr [edi+0069DCAC]
+:0043A476 8B871CDD6900            mov eax, dword ptr [edi+0069DD1C]
+:0043A47C C1F807                  sar eax, 07
+:0043A47F FFB7A8DC6900            push dword ptr [edi+0069DCA8]
+Old:
+:0043A485 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+New: (adaption for doom serpent)
+:0043A485 E8C93D0000              call 0043E253
+:0043A48A 90                      nop
+
+:0043A48B E8289DFFFF              call 004341B8
+:0043A490 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043A493 8BD0                    mov edx, eax
+:0043A495 E8EC55FFFF              call 0042FA86
+:0043A49A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043A49D 8BD3                    mov edx, ebx
+:0043A49F 6A10                    push 00000010
+:0043A4A1 FFB7ACDC6900            push dword ptr [edi+0069DCAC]
+:0043A4A7 FFB7A8DC6900            push dword ptr [edi+0069DCA8]
+:0043A4AD FF75F8                  push [ebp-08]
+:0043A4B0 E8AC61FFFF              call 00430661
+:0043A4B5 8B7DF8                  mov edi, dword ptr [ebp-08]
+:0043A4B8 EB45                    jmp 0043A4FF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A461(C)
+|
+:0043A4BA 8B45F0                  mov eax, dword ptr [ebp-10]
+:0043A4BD 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0043A4C3 69C0C8550000            imul eax, 000055C8
+:0043A4C9 8B440870                mov eax, dword ptr [eax+ecx+70]
+:0043A4CD 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043A4D0 8BD0                    mov edx, eax
+:0043A4D2 8945F0                  mov dword ptr [ebp-10], eax
+:0043A4D5 E8AC55FFFF              call 0042FA86
+:0043A4DA 8B45F0                  mov eax, dword ptr [ebp-10]
+:0043A4DD 8BD3                    mov edx, ebx
+:0043A4DF C1E002                  shl eax, 02
+:0043A4E2 6A10                    push 00000010
+:0043A4E4 8B88A8BE4A00            mov ecx, dword ptr [eax+004ABEA8]
+:0043A4EA 8B8088BE4A00            mov eax, dword ptr [eax+004ABE88]
+:0043A4F0 03CF                    add ecx, edi
+:0043A4F2 03C3                    add eax, ebx
+:0043A4F4 51                      push ecx
+:0043A4F5 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043A4F8 50                      push eax
+:0043A4F9 57                      push edi
+:0043A4FA E86261FFFF              call 00430661
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043A43A(C), :0043A4B8(U)
+|
+:0043A4FF 3B9EE87A6900            cmp ebx, dword ptr [esi+00697AE8]
+:0043A505 8D86E87A6900            lea eax, dword ptr [esi+00697AE8]
+:0043A50B 7508                    jne 0043A515
+:0043A50D 3BBEEC7A6900            cmp edi, dword ptr [esi+00697AEC]
+:0043A513 7418                    je 0043A52D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A50B(C)
+|
+:0043A515 8918                    mov dword ptr [eax], ebx
+:0043A517 89BEEC7A6900            mov dword ptr [esi+00697AEC], edi
+:0043A51D 8B8EE07A6900            mov ecx, dword ptr [esi+00697AE0]
+:0043A523 6A08                    push 00000008
+:0043A525 57                      push edi
+:0043A526 8BD3                    mov edx, ebx
+:0043A528 E8E324FFFF              call 0042CA10
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A513(C)
+|
+:0043A52D 83BEC87A690000          cmp dword ptr [esi+00697AC8], 00000000
+:0043A534 7515                    jne 0043A54B
+:0043A536 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043A539 6A08                    push 00000008
+:0043A53B 5A                      pop edx
+:0043A53C E84555FFFF              call 0042FA86
+:0043A541 C786C87A690007000000    mov dword ptr [esi+00697AC8], 00000007
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A534(C)
+|
+:0043A54B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043A3CD(U)
+|
+:0043A54E E8A761FFFF              call 004306FA
+:0043A553 5F                      pop edi
+:0043A554 5E                      pop esi
+:0043A555 5B                      pop ebx
+:0043A556 C9                      leave
+:0043A557 C3                      ret
+
+Extra part for doom serpent:
+
+* Referenced by a CALL at Address:
+|:0043A485   
+|
+:0043E253 83BED47A690000          cmp dword ptr [esi+00697AD4], 00000000
+:0043E25A 7506                    jne 0043E262
+:0043E25C 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E25A(C)
+|
+:0043E262 C3                      ret

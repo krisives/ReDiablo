@@ -1,0 +1,21 @@
+by Jarulf 
+Well, I don't doubt its working, but you can't just change the number to alter the speed.
+
+The original instruction is:
+
+cmp dword ptr [esi+00687968], eax
+
+Here eax is fetched from right before the starting stats for characters and hapens to be 8 for all character classes. In town it is hard coded to 8 though (end result, always 8 :)
+
+687968 is used as a frame counter. Only Casting spells uses that for frame counting, for other actions another system is used (hmm, I wonder if that may be a reason for the haste bug, will have to check).
+
+IN Hellfire, the fast walk is done by every others frame (odd frame) increase the 687928 and also the normal frame counter (as I said, I have not looked much at it, but would guess one is a frame counter and one is a sort of distance walked counter).
+
+What is strange though, is that change you propose would change the instruction to:
+
+cmp dword ptr [eax+00687968], edi
+
+Which hardly makes sense. Did I miss somethng?
+
+Ohh, by the way, the last change is for death, not walk as far as I can see.
+

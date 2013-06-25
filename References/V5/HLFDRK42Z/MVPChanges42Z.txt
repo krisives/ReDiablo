@@ -1,0 +1,12 @@
+Fixed 75% chance for Warriors and Barbarians to avoid knockback from monsters:
+
+file offset 0003C8CE
+
+:0043D4CE E8BE100000              call 0043E591
+:0043D4D3 90                      nop
+:0043D4D4 3BC1                    cmp eax, ecx
+:0043D4D6 7C04                    jl 0043D4DC
+changed into
+:0043D4CE 837DEC10                cmp dword ptr [ebp-14], 00000010
+:0043D4D2 90909090                4*nop
+:0043D4D6 7F04                    jg 0043D4DC

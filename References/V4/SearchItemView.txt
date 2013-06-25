@@ -1,0 +1,30 @@
+Detailed itemview only with Search: 
+
+File Offset 0002754E
+
+:0042814E A2AC114D00              mov byte ptr [004D11AC], al
+wordt
+:0042814E E98DD6FDFF              jmp 004057E0
+
+Using free space from itemview on cursor:
+
+File Offset 00004BE0
+
+:004057E0 7407                    je 004057E9
+:004057E2 0521540000              add eax, 00005421
+:004057E7 EB05                    jmp 004057EE
+:004057E9 05E1530000              add eax, 000053E1
+:004057EE 50                      push eax
+:004057EF 68F0124D00              push 004D12F0
+:004057F4 E837450700              call 00479D30
+:004057F9 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:004057FE 59                      pop ecx
+:004057FF 69C0C8550000            imul eax, 000055C8
+wordt
+:004057E0 A2AC114D00              mov byte ptr [004D11AC], al
+:004057E5 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:004057EC 740D                    je 004057FB
+:004057EE 803D38E76E0000          cmp byte ptr [006EE738], 00
+:004057F5 0F8469290200            je 00428164
+:004057FB E953290200              jmp 00428153
+:00405800 9090909090              5*nop

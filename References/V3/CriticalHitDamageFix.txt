@@ -1,0 +1,45 @@
+Critical Hit Damage
+
+Changing CriticalHit damage to 'openended double damage'. At a succesfull CriticalHit, the same chance is checked again and again, each time doubling the damage, until the check is failed.
+
+ 
+
+
+File Offset 0003D73B
+
+:0043E33B 7D03                    jge 0043E340
+:0043E33D C1E702                  shl edi, 02
+:0043E340 C3                      ret
+wordt
+:0043E33B 7D10                    jge 0043E34D
+:0043E33D D1E7                    shl edi, 1
+:0043E33F EBF3                    jmp 0043E334
+
+
+
+Old code:
+
+* Referenced by a CALL at Addresses:
+|:0043D497   , :0045BA88   
+|
+:0043E332 D1FB                    sar ebx, 1
+:0043E334 E808000000              call 0043E341
+:0043E339 3BC3                    cmp eax, ebx
+:0043E33B 7D03                    jge 0043E340
+:0043E33D C1E702                  shl edi, 02
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E329(C), :0043E33B(C)
+|
+:0043E340 C3                      ret
+
+* Referenced by a CALL at Addresses:
+|:0043D4A2   , :0043D4CD   , :0043E334   , :0043E41F   , :00452E3A   
+|
+:0043E341 52                      push edx
+:0043E342 6A64                    push 00000064
+:0043E344 B106                    mov cl, 06
+:0043E346 5A                      pop edx
+:0043E347 E80EBCFDFF              call 00419F5A
+:0043E34C 5A                      pop edx
+:0043E34D C3                      ret

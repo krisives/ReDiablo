@@ -1,0 +1,22 @@
+If you want to know what is affected, well, about anything that is random is affected (hmm, an exception would be random shrines that does not get seeded correctly (hence the tendancy to hit CL and shield slot for exampl) until you get some other feature to "overwrite (actually pre-write :) its slot (visiting the caves first is a good way to ensure this)).
+
+If you are interested in the exact ways it works, it will be hard to figure it out with a clock freezer. Basically it works the following way:
+
+1. Calculate the number of seconds since 1/1 1970. This is adjusted according to time zone, summer time and such.
+
+2. Add a specific large number. You should now have a random number, which we call the "master seed" (MS).
+
+3. Take the master seed and with the pRNG, get the following 17 seeds, these are stored away and is each used for one of the dungeon levels, we call them the "dungenon level master seeds" (DLMS).
+
+4. When you create a dungeon level (and everything on it), we start out with the DLMS, that is, we set the pRNG to have th DLMS as the current seed. The game will then in a specific way create the dungeon. If we disregard stuff like initializing the graphics, reading in the nessesary one, fixing player stuff and such, the game do as one of the first things, pick monsters. This is directly based on the DLMS as no other random stuff are done before it, thus it is easy to simulate. Then the main layout of the dungeon is done, however, before this step (forgive me if I tell some slight errors here, this is from memory, but it should be more or less correct) the pRNG is _again_ resseded with the DLMS, this is in fact several times during the creation of the dungoen. This makes it easier to for example simulate a dungeon creation should on want to.
+
+Anyway, after some more time (including updateing the "scrollbar" that fills in as you load a level (this is done several times at various spots) the game start to actually add monsters at random (again, preceeded by the reseed. HOwever, and this would complicate matters for those that want to simulate it or precalculate items droped in a game knowing the specific time the game was created, one of the step is to PLACE the monster in the dungeon, and this is done by calculating a random spot in the dungoen, then checking if it happens to be an emplty space (that is not within walls and such) and to do this properly, one would need to simulate all of the dungeon creation as well, which is complicated. Otherwise it would be VERY simple to for example calculate all items from monsters within a game.
+
+Even more later on, random features such as chests and sarcophagus are placed and again, in the proces of findong free spaces, the dungeon layout is needed and thus complicate matters as far as figuring out where they will go and their content.
+
+For all features, monsters, chests, shrines and so on, when they get crated, the current seed at THAT time is stored with the feature (each monster, chest, door, and so on, has quite a few data set up for it in memory and the seed is one of those numbers stored with it). As doors, monsters, chests and so on are created one by one and for each, one step is to find a free spot (or something similar) the seed stored with it, IS dependant on the dungen layout. This fact is only important if one have the ambition to simulate the creation and be able to precalculate for examples, items that are going to be droped in a game, making it VERY complicated (some exceptions are Laz and his babes as they 1) are practically independant on dungen layout as they use an almost fixed position. Due to the way and order the game create such set stuff, they are created first in the sequences after a reseed, making it possible to relatively simply calculate the item droped by for example Laz (Crystallion even wrote an "Oracle" that calculated this long ago but never released it to the public due to people strongly objecting it for various reasons. He did mention at least once a time and a specific item (his program had some uncertanity though and only was correct 25% of the time I think). As he did not reveal some of the intircate facts about seed generation, the actual time, was probably wrong for most people although this was something no one really understood :)
+
+Don't know if this was what you asked for, but anyway, this was a very brief explanation on how it is done. 
+
+
+jarulf

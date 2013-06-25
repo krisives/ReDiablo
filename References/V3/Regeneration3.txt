@@ -1,0 +1,84 @@
+Monster Regeneration
+
+HLFDRK30:
+
+:00443846 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044384D 7537                    jne 00443886
+:0044384F 8B861CDD6900            mov eax, dword ptr [esi+0069DD1C]
+:00443855 3B8618DD6900            cmp eax, dword ptr [esi+0069DD18]
+:0044385B 7D29                    jge 00443886
+:0044385D A9C0FFFFFF              test eax, FFFFFFC0
+:00443862 7E22                    jle 00443886
+:00443864 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:0044386A 80797201                cmp byte ptr [ecx+72], 01
+:0044386E 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:00443874 0FB6C9                  movzx ecx, cl
+:00443877 7405                    je 0044387E
+:00443879 C1E901                  shr ecx, 01
+:0044387C 90                      nop
+:0044387D 90                      nop
+
+
+()Disable bugged 'Monster cannot Heal'
+
+File Offset = 42C4D
+
+:0044384D 7537                    jne 00443886
+wordt
+:0044384D 7500                    jne 0044384F
+
+
+()Regeneration
+
+Stops at Hp=1
+Demons : mlvl, Animal : mlvl/2, Undead : mlvl/8
+Golem : Negative regeneration
+
+File Offset = 42C55
+
+:00443855 3B8618DD6900            cmp eax, dword ptr [esi+0069DD18]
+:0044385B 7D29                    jge 00443886
+:0044385D A9C0FFFFFF              test eax, FFFFFFC0
+:00443862 7E22                    jle 00443886
+:00443864 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:0044386A 80797201                cmp byte ptr [ecx+72], 01
+:0044386E 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:00443874 0FB6C9                  movzx ecx, cl
+:00443877 7405                    je 0044387E
+:00443879 C1E901                  shr ecx, 01
+:0044387C 90                      nop
+:0044387D 90                      nop
+wordt
+:00443855 83F840                  cmp eax, 00000040
+:00443858 7E2C                    jle 00443886
+:0044385A 83BE64DD69006D          cmp dword ptr [esi+0069DD64], 0000006D
+:00443861 7417                    je 0044387A
+:00443863 3B8618DD6900            cmp eax, dword ptr [esi+0069DD18]
+:00443869 7D1B                    jge 00443886
+:0044386B 8B8E68DD6900            mov ecx, dword ptr [esi+0069DD68]
+:00443871 52                      push edx
+:00443872 E8D29BFFFF              call 0043D449
+:00443877 5A                      pop edx
+:00443878 EB04                    jmp 0044387E
+:0044387A 6AFF                    push FFFFFFFF
+:0044387C 59                      pop ecx
+:0044387D 90                      nop
+
+
+Regeneration routine after "MonsterResistance=1/6" routine on old DiabloDeath:
+
+File Offset = 3C849
+
+:0043D449 0FB65172                movzx edx, byte ptr [ecx+72]
+:0043D44D 8A8E48DD6900            mov cl, byte ptr [esi+0069DD48]
+:0043D453 0FB6C9                  movzx ecx, cl
+:0043D456 4A                      dec edx
+:0043D457 7409                    je 0043D462
+:0043D459 4A                      dec edx
+:0043D45A 7403                    je 0043D45F
+:0043D45C C1E902                  shr ecx, 02
+:0043D45F C1E901                  shr ecx, 01
+:0043D462 C3                      ret
+:0043D463 90                      nop
+
+

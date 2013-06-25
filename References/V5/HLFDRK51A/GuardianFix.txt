@@ -1,0 +1,8 @@
+Guardian did not have the intended fixed 90% tohit, and relied on Magic instead. This will correct this:
+
+file offset 0002E06C
+
+:0042EC6C 3C31                    cmp al, 31
+changed into
+:0042EC6C 3C30                    cmp al, 30
+

@@ -1,0 +1,46 @@
+
+There is no easy answer for that. For some specific monsters, like mages, the value is actualyl checked for and depending on the result a specific spell is picked to cast. So basically only 0-3 is possible, perhaps the last chekc is for "anything else" or something like that meaning some other value MIGHT work. Or it just call whatever effect it tells and then if the effetc don't handle monsters (some do some don't) it crashes. I can check of course.
+
+In most other cases, the subtype value is sued in calculations to determine the cause of action. For example, the monster is at a distance greater than 1, then the game might compare say rnd[100] with 4*subtypevalue. If it is less, cast spell, otherwise go on and walk closer. f course, most AI routines are a bit more complicated. It is also frequently used to deremine how long a delay for the monster is. Delays are for example, when a knight stop walking and stand still for some time. It typically has the look like, delay for say 8+2*subtypevalue frames.
+
+Depending on case, monster, and so on, at tiems the subtype value is used in various calculations, and asume you end up with negative values (for example 20-3*subtypevalue, you may be in for problems. Depedning on the actual AI, you may also end up with situations that monster don't work properly, that is, never cast spell as it is always going to walk closer if the choice is for example, cast spell if Rnd[100] greater than 40 + 5*subtypevalue and you set it so high it gets higher than 100.
+
+So one really have to look at each AI routine specifically to test. SOme AI types share code as well. A Balrog at a greater distance than 3 (out of Inferno range basically) will use the standard "skeleton" AI (it is basically used for all non spell casting monsters). That routine at above 1 range (non adjecent) basically have two options, walk towards target or delay. As the distance is always say 3+ for a balrgo, the part that handle melee attacks will not be used by the balrog (which at close range has its own AI which handle inferno, dancing arround and doing melee attacks.
+
+I hope this while not answering your question, show some of how the value is used. I can probably check some specific monster if you want.
+
+---
+
+Well, I woin't go through it all here (I think I made some post about thelife of an Overlord long time agoon DSF, it had some errors though. I picked it because it is one of the easier ones. Butcher is THE easiest, if not adjacentt, walk closer, if adjacent, attack :)
+
+First, it is worth noticing they have no ranged attacks. So at distances equal or greater than 2 tiles they will do (throughout "I" will be the subtype value):
+
+Calculate 36-4*I
+If Rnd[100] is below this value, they will delay for 15-2*I+Rnd[10] frames, otherwise walk closer.
+
+I never mentioned it, but monsters can't abort an action, only start a new one when their current action is completed.
+
+If adjacent they will instead do:
+
+Calculate 20+2*I
+If Rnd[100] is below this value, they will attack, otherwise delay 2*(5-I)+Rnd[10] frames
+
+Pretty simple huh? All tests are signed by the way.
+
+
+jarulf
+
+
+
+
+
+It seems the AI-stuff is too complicated for most modders to really mess up with:)
+
+We have Fallen Paladins with a "subtype" or better AI value of 7F. Now they just don't make pauses while walking or attacking. Other monsters caused crashes at higher values. Jarulf just explained why that may be so.
+We used Jarulf's info on that matter to make Doomfires mainly use their ranged attack and almost never the melee. We wanted to put more ranged attackers in the game but also liked the lava-demon's attacktype. By getting their AI to a higher value they are now have a smaller chance of using their second attack.
+
+Unfortunately, what we did was only trial and error and I really wouldn't recommend using this excessively.
+
+khan
+
+

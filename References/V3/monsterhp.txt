@@ -1,0 +1,20 @@
+The following will remove the 255 hit point limit from monsters and cause Diablo's hit points to be calculated like all other monsters (from the monster data).
+
+(00031AA8)
+xxxx xxxx xxxx xxxx 530F B61F C1E3 0781
+C3C8 8E49 008B 9304 0000 008B 032B D0B1
+5842 E8B0 55FE FF8B 0B03 C15B EB11 xxxx
+
+
+00031AA0)
+Before:
+FF40 8986 BCE6 6400 803F 6E75 116A 01B1
+585A E8C0 55FE FF05 8206 0000 EB21 0FB6
+9735 0100 000F B687 3401 0000 2BD0 B158
+
+After:
+FF40 8986 BCE6 6400 530F B61F C1E3 0781
+C3C8 8E49 008B 9304 0000 008B 032B D0B1
+5842 E8B0 55FE FF8B 0B03 C15B EB11 B158
+
+Dr. Zed 

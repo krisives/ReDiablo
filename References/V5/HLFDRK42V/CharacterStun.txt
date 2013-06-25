@@ -1,0 +1,34 @@
+Stunning characters at damage clvl*3/4 (Barbarians at clvl*3/2, as before)
+
+file offset 00059309
+
+:00459F09 80BC306001000005        cmp byte ptr [eax+esi+00000160], 05
+:00459F11 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00459F14 7522                    jne 00459F38
+:00459F16 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00459F1D 6A02                    push 00000002
+:00459F1F 99                      cdq
+:00459F20 5F                      pop edi
+:00459F21 F7FF                    idiv edi
+:00459F23 8BD0                    mov edx, eax
+:00459F25 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00459F2C 03D0                    add edx, eax
+:00459F2E 8B45FC                  mov eax, dword ptr [ebp-04]
+:00459F31 C1F806                  sar eax, 06
+:00459F34 3BC2                    cmp eax, edx
+:00459F36 EB0C                    jmp 00459F44
+:00459F38 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+changed into
+:00459F09 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00459F0C 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00459F13 8BD0                    mov edx, eax
+:00459F15 D1EA                    shr edx, 1
+:00459F17 03C2                    add eax, edx
+:00459F19 80B96001000005          cmp byte ptr [ecx+00000160], 05
+:00459F20 741D                    je 00459F3F
+:00459F22 D1E8                    shr eax, 1
+:00459F24 EB19                    jmp 00459F3F
+:00459F26 9090909090              6*nop
+
+Now 25 bytes free space from 00459F26 to 00459F3F
+

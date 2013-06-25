@@ -1,0 +1,46 @@
+:00438A10 55                      push ebp
+:00438A11 8BEC                    mov ebp, esp
+:00438A13 83EC14                  sub esp, 00000014
+:00438A16 53                      push ebx
+:00438A17 56                      push esi
+:00438A18 57                      push edi
+:00438A19 8BF9                    mov edi, ecx
+:00438A1B 897DF0                  mov dword ptr [ebp-10], edi
+:00438A1E E8908FFFFF              call 004319B3
+:00438A23 8BF7                    mov esi, edi
+:00438A25 8BCF                    mov ecx, edi
+:00438A27 69F6B0000000            imul esi, 000000B0
+:00438A2D 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:00438A33 8B9E5C7A6900            mov ebx, dword ptr [esi+00697A5C]
+:00438A39 8945FC                  mov dword ptr [ebp-04], eax
+:00438A3C 8B866C7A6900            mov eax, dword ptr [esi+00697A6C]
+:00438A42 01867C7A6900            add dword ptr [esi+00697A7C], eax
+:00438A48 8B86707A6900            mov eax, dword ptr [esi+00697A70]
+:00438A4E 0186807A6900            add dword ptr [esi+00697A80], eax
+:00438A54 E85A8FFFFF              call 004319B3
+:00438A59 8BBECC7A6900            mov edi, dword ptr [esi+00697ACC]
+:00438A5F 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:00438A65 69FFE4000000            imul edi, 000000E4
+:00438A6B 8B965C7A6900            mov edx, dword ptr [esi+00697A5C]
+:00438A71 8945F8                  mov dword ptr [ebp-08], eax
+:00438A74 F68724DD690010          test byte ptr [edi+0069DD24], 10
+:00438A7B 8B87D4DC6900            mov eax, dword ptr [edi+0069DCD4]
+:00438A81 8955F4                  mov dword ptr [ebp-0C], edx
+:00438A84 7516                    jne 00438A9C
+:00438A86 69C0C8550000            imul eax, 000055C8
+:00438A8C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00438A92 03C1                    add eax, ecx
+:00438A94 8B4838                  mov ecx, dword ptr [eax+38]
+:00438A97 8B403C                  mov eax, dword ptr [eax+3C]
+:00438A9A EB12                    jmp 00438AAE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438A84(C)
+|
+:00438A9C 69C0E4000000            imul eax, 000000E4
+:00438AA2 8B88A8DC6900            mov ecx, dword ptr [eax+0069DCA8]
+:00438AA8 8B80ACDC6900            mov eax, dword ptr [eax+0069DCAC]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00438A9A(U)
+|

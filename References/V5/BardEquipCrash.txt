@@ -1,0 +1,109 @@
+This crash appears sometimes when Bards change equipment, it seems to be connected to the changing display text.
+
+
+Exception code: C0000005 ACCESS_VIOLATION
+Fault address:	00404673 01:00003673 C:\GAMES\THEDARK\HLFDRK42Z.EXE
+
+Registers:
+EAX:000000CD
+EBX:00000000
+ECX:0000003B
+EDX:FFFFFF59
+ESI:033C3246
+EDI:0141C2B9
+CS:EIP:015F:00404673
+SS:ESP:0167:0093FBCC	EBP:0093FBDC
+DS:0167	ES:0167	FS:3367	GS:0000
+Flags:00010282
+
+Call stack:
+Address	Frame	 Logical addr	Module
+00404673	0093FBDC	0001:00003673 C:\GAMES\THEDARK\HLFDRK42Z.EXE
+00404718	0093FC00	0001:00003718 C:\GAMES\THEDARK\HLFDRK42Z.EXE
+
+
+
+
+
+* Referenced by a CALL at Addresses:
+|:00467AD7   , :00474FAA   
+|
+:0040468D 55                      push ebp
+:0040468E 8BEC                    mov ebp, esp
+:00404690 51                      push ecx
+:00404691 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00404696 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0040469C 69C0C8550000            imul eax, 000055C8
+:004046A2 56                      push esi
+:004046A3 57                      push edi
+:004046A4 8D3408                  lea esi, dword ptr [eax+ecx]
+:004046A7 8B84089C010000          mov eax, dword ptr [eax+ecx+0000019C]		max current life
+:004046AE 85C0                    test eax, eax
+:004046B0 8945FC                  mov dword ptr [ebp-04], eax
+:004046B3 7F04                    jg 004046B9
+:004046B5 D9EE                    fldz
+:004046B7 EB0F                    jmp 004046C8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004046B3(C)
+|
+:004046B9 DB8698010000            fild dword ptr [esi+00000198]			current life
+:004046BF DA75FC                  ffidiv dword ptr [ebp-04]
+:004046C2 DC0D20964800            fmul qword ptr [00489620]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004046B7(U)
+|
+:004046C8 E8A35E0700              call 0047A570
+:004046CD 8986A0010000            mov dword ptr [esi+000001A0], eax
+:004046D3 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:004046D8 69C0C8550000            imul eax, 000055C8
+:004046DE 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004046E4 6A50                    push 00000050
+:004046E6 5E                      pop esi
+:004046E7 2BB408A0010000          sub esi, dword ptr [eax+ecx+000001A0]
+:004046EE 83FE0B                  cmp esi, 0000000B
+:004046F1 7E03                    jle 004046F6
+:004046F3 6A0B                    push 0000000B
+:004046F5 5E                      pop esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004046F1(C)
+|
+:004046F6 46                      inc esi
+:004046F7 BFADD90500              mov edi, 0005D9AD
+:004046FC 46                      inc esi
+:004046FD 8B0D70114D00            mov ecx, dword ptr [004D1170]
+:00404703 56                      push esi
+:00404704 57                      push edi
+:00404705 FF35E0A15700            push dword ptr [0057A1E0]
+:0040470B 6815010000              push 00000115
+:00404710 6A58                    push 00000058
+:00404712 5A                      pop edx
+:00404713 E835FFFFFF              call 0040464D					<-
+:00404718 83FE0D                  cmp esi, 0000000D
+:0040471B 7431                    je 0040474E
+:0040471D 6A0D                    push 0000000D
+:0040471F 8B0D74114D00            mov ecx, dword ptr [004D1174]
+:00404725 58                      pop eax
+:00404726 BA80020000              mov edx, 00000280
+:0040472B 2BC6                    sub eax, esi
+:0040472D 50                      push eax
+:0040472E 8D0476                  lea eax, dword ptr [esi+2*esi]
+:00404731 C1E008                  shl eax, 08
+:00404734 03C7                    add eax, edi
+:00404736 50                      push eax
+:00404737 8D04B6                  lea eax, dword ptr [esi+4*esi]
+:0040473A FF35E0A15700            push dword ptr [0057A1E0]
+:00404740 C1E007                  shl eax, 07
+:00404743 05ED070000              add eax, 000007ED
+:00404748 50                      push eax
+:00404749 E8FFFEFFFF              call 0040464D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040471B(C)
+|
+:0040474E 5F                      pop edi
+:0040474F 5E                      pop esi
+:00404750 C9                      leave
+:00404751 C3                      ret

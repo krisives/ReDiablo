@@ -1,0 +1,27 @@
+All seeding sizes 1300 are lowered to 950, which will ensure at least 4 random selected types of monsters on any level, or 3 when one of the 'special' types appear (Blood Stone and Steel Lord).
+
+Other changes to seeding sizes:
+
+Monsters
+pos name                  type      attacktype        sub  dlvl   mlvl  size 
+ 61 Blood Stone           demon     9 Magma Demon      1   9- 9    14   2700  
+                                                                        1600
+
+ 95 Steel Lord            undead    2 Skeleton         4  15-16    29   2700 
+                                                                        1600
+
+108 Advocate              demon    28 Lazarus          3  16-16    30   1450 
+                                                                         700
+
+133 Lich                  undead   36 Arch lich        3  C3-C4    32   1450 
+                                                                        1400
+
+
+dec.   hex.    data
+1300 = 0514 -> 14050000
+0950 = 03B6 -> B6030000
+2700 = 0A8C -> 8C0A0000
+1600 = 0640 -> 40060000
+1450 = 05AA -> AA050000
+1400 = 0578 -> 78050000
+0700 = 02BC -> BC020000

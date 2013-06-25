@@ -1,0 +1,141 @@
+Splash damage did not occur if the attack area was out of sight of the caster. Because of a rather strict check, it also didn't occur past gratings and such. This modification allows splash for Fireball, Arcane Star and related spells (including the attack from Scowlers and Liches) to occur if both impact and attack area are in sight of the caster, or both out of sight (this only applies for Immolation and Arcane Destruction). This allows splash under most circumstances, except through walls.
+
+The (lesser) splash from Elemental and Doomserpents is not affected by this, and those will propably be removed in later revisions.
+
+
+Creating address space for extra variable [ebp-1C]:
+
+file offset 00035BD5
+
+:004367D5 83EC18                  sub esp, 00000018
+changed into
+:004367D5 83EC1C                  sub esp, 0000001C
+
+
+Using spell origin instead of casters location to be able to support Immolation and Arcane Destruction:
+
+file offset 00035C06
+
+:00436806 7519                    jne 00436821
+:00436808 69C0C8550000            imul eax, 000055C8
+:0043680E 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00436814 03C2                    add eax, edx
+:00436816 8B5038                  mov edx, dword ptr [eax+38]
+:00436819 8B403C                  mov eax, dword ptr [eax+3C]
+:0043681C 8955F4                  mov dword ptr [ebp-0C], edx
+:0043681F EB15                    jmp 00436836
+:00436821 E8792DFDFF              call 0040959F
+:00436826 90                      nop
+changed into
+:00436806 751A                    jne 00436822
+:00436808 8B86607A6900            mov eax, dword ptr [esi+00697A60]
+:0043680E 8B965C7A6900            mov edx, dword ptr [esi+00697A5C]
+:00436814 8955F4                  mov dword ptr [ebp-0C], edx
+:00436817 EB1D                    jmp 00436836
+:00436819 909090909090909090      9*nop
+:00436822 E8782DFDFF              call 0040959F
+:00436827
+
+Now 9 bytes free space from 00436819 to 00436822
+
+Storing result of LOS check between impact and caster:
+
+file offset 00035CED
+
+:004368ED E86086FFFF              call 0042EF52			strict LOS check
+:004368F2 85C0                    test eax, eax
+:004368F4 7512                    jne 00436908
+:004368F6 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004368F9 6A01                    push 00000001
+:004368FB FF75F0                  push [ebp-10]
+:004368FE 8BD3                    mov edx, ebx
+:00436900 57                      push edi
+:00436901 50                      push eax
+changed into
+:004368ED E8D5D60000              call 00443FC7			general LOS check
+:004368F2 8945E4                  mov dword ptr [ebp-1C], eax	store result
+:004368F5 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004368F8 6A01                    push 00000001
+:004368FA FF75F0                  push [ebp-10]
+:004368FD 8BD3                    mov edx, ebx
+:004368FF 57                      push edi
+:00436900 6A00                    push 00000000
+
+
+Results of LOS checks between impact and attack area are compared to stored result:
+
+file offset 00035D17
+
+:00436917 E83686FFFF              call 0042EF52
+changed into
+:00436917 E8ACC40100              call 00452DC8
+:0043691C 
+
+file offset 00035D41
+
+:00436941 E80C86FFFF              call 0042EF52
+changed into
+:00436941 E882C40100              call 00452DC8
+:00436946
+
+file offset 00035D69
+
+:00436969 E8E485FFFF              call 0042EF52
+changed into
+:00436969 E85AC40100              call 00452DC8
+:0043696E 
+
+file offset 00035D95
+
+:00436995 E8B885FFFF              call 0042EF52
+changed into
+:00436995 E82EC40100              call 00452DC8
+:0043699A 
+
+file offset 00035DC1
+
+:004369C1 E88C85FFFF              call 0042EF52
+changed into
+:004369C1 E802C40100              call 00452DC8
+:004369C6 
+
+file offset 00035DED
+
+:004369ED E86085FFFF              call 0042EF52
+changed into
+:004369ED E8D6C30100              call 00452DC8
+:004369F2 
+
+file offset 00035E19
+
+:00436A19 E83485FFFF              call 0042EF52
+changed into
+:00436A19 E8AAC30100              call 00452DC8
+:00436A1E 
+
+file offset 00035E45
+
+:00436A45 E80885FFFF              call 0042EF52
+changed into
+:00436A45 E87EC30100              call 00452DC8
+:00436A4A 
+
+Using free space from old Sparkling Shrine:
+
+file offset 000521C8
+
+:00452DC8 90                      nop
+:00452DC9 90                      nop
+:00452DCA 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:00452DD0 50                      push eax
+:00452DD1 8BC1                    mov eax, ecx
+:00452DD3 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00452DD9 69C0C8550000            imul eax, 000055C8
+changed into
+:00452DC8 FF742408                push [esp+08]
+:00452DCC FF742408                push [esp+08]
+:00452DD0 E8F211FFFF              call 00443FC7				general LOS check
+:00452DD5 3B45E4                  cmp eax, dword ptr [ebp-1C]
+:00452DD8 0F95C0                  setne al
+:00452DDB C20800                  ret 0008
+:00452DDE 90                      nop

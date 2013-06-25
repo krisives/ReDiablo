@@ -1,0 +1,26 @@
+Magic Circle gives Barrier and full mana
+
+
+File Offset 0005297A
+
+:0045357A 6A4E                    push 0000004E		Warp
+wordt
+:0045357A 6A4F                    push 0000004F		Barrier
+
+
+File Offset 00052989
+
+:00453589 E91A020000              jmp 004537A8
+:0045358E 8BCF                    mov ecx, edi
+:00453590 E88FB10000              call 0045E724
+:00453595 EB09                    jmp 004535A0
+:00453597 8BD5                    mov edx, ebp
+:00453599 8BCF                    mov ecx, edi
+:0045359B E8ECB00000              call 0045E68C
+wordt
+:00453589 8B3DE8AD6E00            mov edi, dword ptr [006EADE8]
+:0045358F 69FFC8550000            imul edi, 000055C8
+:00453595 53                      push ebx
+:00453596 BBFFFF0000              mov ebx, 0000FFFF	any large number will do here
+:0045359B E916010000              jmp 004536B6
+:004535A0

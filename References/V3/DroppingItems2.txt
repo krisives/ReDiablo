@@ -1,0 +1,35 @@
+Dropping Items when killed by monster - Check for incorrect revival
+
+()Dus:
+
+:0045A41D E89DA6FCFF              call 00424ABF		update character
+wordt
+:0045A41D E84E40FEFF              call 0043E470		check & update
+
+Nieuwe routine over nog ongebruikte BlackDeath code. Hierna nog steeds ruimte.
+
+:0043E470 90                      nop
+:0043E471 90                      nop
+:0043E472 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043E477 83843094010000C0        add dword ptr [eax+esi+00000194], FFFFFFC0
+:0043E47F 8D843094010000          lea eax, dword ptr [eax+esi+00000194]
+wordt
+:0043E470 56                      push esi
+:0043E471 E84966FEFF              call 00424ABF		update character
+:0043E476 5E                      pop esi
+:0043E477 90                      nop			ret = disabled
+:0043E478 C78698010000C0FFFFFF    mov dword ptr [esi+00000198], FFFFFFC0
+:0043E482 C3                      ret
+:0043E483 909090                  3*nop
+
+Dit lijkt bijna goed, want nu treedt het bug-effect elke keer op. Verkeerde Life-aantal gebruikt?
+
+
+()Tweede poging
+
+Als dit niet lukt, moeten beide life-aantallen worden bijgewerkt.
+
+:0043E478 C78698010000C0FFFFFF    mov dword ptr [esi+00000198], FFFFFFC0
+wordt
+:0043E478 C7869C010000C0FFFFFF    mov dword ptr [esi+0000019C], FFFFFFC0
+

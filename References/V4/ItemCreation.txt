@@ -1,0 +1,50 @@
+Item creation:
+
+
+:00424B63 8A4705                  mov al, byte ptr [edi+05]
+:00424B66 59                      pop ecx
+:00424B67 8886BD000000            mov byte ptr [esi+000000BD], al
+:00424B6D 8A4704                  mov al, byte ptr [edi+04]
+:00424B70 8886BE000000            mov byte ptr [esi+000000BE], al
+:00424B76 8B4720                  mov eax, dword ptr [edi+20]
+:00424B79 8986CC000000            mov dword ptr [esi+000000CC], eax
+:00424B7F 8B4724                  mov eax, dword ptr [edi+24]
+:00424B82 8986D0000000            mov dword ptr [esi+000000D0], eax
+:00424B88 8B4728                  mov eax, dword ptr [edi+28]
+:00424B8B 8986D4000000            mov dword ptr [esi+000000D4], eax
+:00424B91 8B4738                  mov eax, dword ptr [edi+38]
+:00424B94 8986DC000000            mov dword ptr [esi+000000DC], eax
+:00424B9A 8B473C                  mov eax, dword ptr [edi+3C]
+:00424B9D 8986E0000000            mov dword ptr [esi+000000E0], eax
+:00424BA3 837F3817                cmp dword ptr [edi+38], 00000017
+:00424BA7 59                      pop ecx
+:00424BA8 750A                    jne 00424BB4
+:00424BAA C786E400000012000000    mov dword ptr [esi+000000E4], 00000012
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00424BA8(C)
+|
+:00424BB4 8B86E4000000            mov eax, dword ptr [esi+000000E4]
+:00424BBA 8986E8000000            mov dword ptr [esi+000000E8], eax
+:00424BC0 8B471C                  mov eax, dword ptr [edi+1C]
+:00424BC3 8986EC000000            mov dword ptr [esi+000000EC], eax
+:00424BC9 8B471C                  mov eax, dword ptr [edi+1C]
+:00424BCC 8986F0000000            mov dword ptr [esi+000000F0], eax
+:00424BD2 8A4730                  mov al, byte ptr [edi+30]
+:00424BD5 888660010000            mov byte ptr [esi+00000160], al
+:00424BDB 8A4731                  mov al, byte ptr [edi+31]
+:00424BDE 888661010000            mov byte ptr [esi+00000161], al
+:00424BE4 8A4732                  mov al, byte ptr [edi+32]
+:00424BE7 888662010000            mov byte ptr [esi+00000162], al
+:00424BED 8B4744                  mov eax, dword ptr [edi+44]
+:00424BF0 8986C4000000            mov dword ptr [esi+000000C4], eax
+:00424BF6 8B4744                  mov eax, dword ptr [edi+44]
+:00424BF9 808E4C010000FF          or byte ptr [esi+0000014C], FF
+:00424C00 808E4D010000FF          or byte ptr [esi+0000014D], FF
+:00424C07 80663C00                and byte ptr [esi+3C], 00
+:00424C0B 8986C8000000            mov dword ptr [esi+000000C8], eax
+:00424C11 899E68010000            mov dword ptr [esi+00000168], ebx
+:00424C17 5F                      pop edi
+:00424C18 5E                      pop esi
+:00424C19 5B                      pop ebx
+:00424C1A C3                      ret

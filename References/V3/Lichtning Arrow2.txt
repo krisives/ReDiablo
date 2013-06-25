@@ -1,0 +1,76 @@
+Lightning arrow
+
+De genoemde Rinit-routine op 00430B89 hoort bij spelleffect 38h, maar ook bij 1Bh FireArrow.
+Hetzelfde geldt voor de Update-routine.
+
+Vereenvoudigde Init-routine, zonder Class-afhankelijkheden of Speedfactoren:
+
+:00430B89 55                      push ebp
+:00430B8A 8BEC                    mov ebp, esp
+:00430B8C 51                      push ecx
+:00430B8D 53                      push ebx
+:00430B8E 56                      push esi
+:00430B8F 8B750C                  mov esi, dword ptr [ebp+0C]
+:00430B92 8BDA                    mov ebx, edx
+:00430B94 57                      push edi
+:00430B95 8B7D10                  mov edi, dword ptr [ebp+10]
+:00430B98 3BDE                    cmp ebx, esi
+:00430B9A 894DFC                  mov dword ptr [ebp-04], ecx
+:00430B9D 7517                    jne 00430BB6
+:00430B9F 397D08                  cmp dword ptr [ebp+08], edi
+:00430BA2 7512                    jne 00430BB6
+:00430BA4 8B4514                  mov eax, dword ptr [ebp+14]
+:00430BA7 C1E002                  shl eax, 02
+:00430BAA 03B088BE4A00            add esi, dword ptr [eax+004ABE88]
+:00430BB0 03B8A8BE4A00            add edi, dword ptr [eax+004ABEA8]
+:00430BB6 6A24                    push 00000024
+:00430C39 57                      push edi
+:00430C3A 56                      push esi
+:00430C3B FF7508                  push [ebp+08]
+:00430C3E 8BD3                    mov edx, ebx
+:00430C40 E81CFAFFFF              call 00430661
+:00430C45 8BCB                    mov ecx, ebx
+:00430C47 57                      push edi
+:00430C48 8B7D08                  mov edi, dword ptr [ebp+08]
+:00430C4B 56                      push esi
+:00430C4C 8BD7                    mov edx, edi
+:00430C4E E840000000              call 00430C93
+:00430C53 8B75FC                  mov esi, dword ptr [ebp-04]
+:00430C56 8BD0                    mov edx, eax
+:00430C58 8BCE                    mov ecx, esi
+:00430C5A E827EEFFFF              call 0042FA86
+:00430C5F 69F6B0000000            imul esi, 000000B0
+:00430C65 6A05                    push 00000005
+:00430C67 8BD7                    mov edx, edi
+:00430C69 C786C87A690000010000    mov dword ptr [esi+00697AC8], 00000100
+:00430C73 899EE87A6900            mov dword ptr [esi+00697AE8], ebx
+:00430C79 8BCB                    mov ecx, ebx
+:00430C7B 89BEEC7A6900            mov dword ptr [esi+00697AEC], edi
+:00430C81 E8EEBBFFFF              call 0042C874
+:00430C86 8986E07A6900            mov dword ptr [esi+00697AE0], eax
+:00430C8C 5F                      pop edi
+:00430C8D 5E                      pop esi
+:00430C8E 5B                      pop ebx
+:00430C8F C9                      leave
+:00430C90 C21C00                  ret 001C
+
+Hier op het eind kan dan een aanroep naar de Manacost routine plaatsvinden:
+
+:00452A26 6A2C                    push 0000002C
+:00452A28 5A                      pop edx
+:00452A2F E8CE950100              call 0046BFFC				Manacost
+
+
+Wat de damage betreft, die wordt in de Update geregeld. Voor Fire- en Lightning-arrows is die damage gebaseerd op Fire/Lightning-damage van het character:
+
+:00435D57 8B8718550000            mov eax, dword ptr [edi+00005518]
+:00435D5D 8BBF1C550000            mov edi, dword ptr [edi+0000551C]
+
+Later bij het raken wordt gechecked op het eerder genoemde byte, om te zien of Magic of Dex based tohit gebruikt moet worden, maar ook om te zien of de normale character base damage meegenomen moet worden. Zonder verandering hierin zal de damage misschien NUL worden, maar ik zie zogauw geen oplossing hierin.
+
+Een betere oplossing is misschien het volgende:
+
+Magic Missile, gebaseerd op normale arrow grafic, zonder lightning of fire. Een simpele Init routine zoals je die eerst had kan dan worden gebruikt. Als update wordt gewoon die van HolyBolt genomen. Door de snelheid hoog te maken, bijv. 32h, wordt toch een wat ander effect verkregen. Damage kan physical of Magic-based zijn, in beide gevallen erg laag.
+
+
+

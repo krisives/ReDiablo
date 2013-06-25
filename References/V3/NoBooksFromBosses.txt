@@ -1,0 +1,15 @@
+Fix van Jarulf om er voor te zorgen dat bosses geen boeken meer laten vallen. Boek wordt niet meer opnieuw aan de lijst toegevoegd
+
+
+
+:00426E3F 7503                    jne 00426E44
+Wordt
+:00426E3F EB03                    jmp 00426E44
+
+
+Jarulf (Diablo):
+
+First, the easy part, how to disable books. There are various routines that pick base items, one is for unique monsters and it is found at 4225ee. The game builds in it a list of all possible base items based on the ilvl. It also remove certain types of items. ONe of those checks removes a bunch of base items INCLUDING books. The book is however then aded in as possible again. This is done starting at 42269b, so a change from jne to jmp bypass this:
+
+4226aa 75 eb -> dit klopt niet helemaal moet 42269F zijn, vergeleken met ME Mod
+

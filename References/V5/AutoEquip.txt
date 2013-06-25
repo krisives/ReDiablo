@@ -1,0 +1,118 @@
+Auto Equipping
+
+
+
+
+:00421A6E 8B4878                  mov ecx, dword ptr [eax+78]
+:00421A71 33F6                    xor esi, esi
+:00421A73 83E10F                  and ecx, 0000000F
+:00421A76 7418                    je 00421A90				nothing
+:00421A78 83F901                  cmp ecx, 00000001
+:00421A7B 7413                    je 00421A90				just shield
+:00421A7D 80B86001000004          cmp byte ptr [eax+00000160], 04
+:00421A84 7C38                    jl 00421ABE
+:00421A86 83F906                  cmp ecx, 00000006			just blunt
+:00421A89 7405                    je 00421A90
+:00421A8B 83F902                  cmp ecx, 00000002			just sword
+:00421A8E 752E                    jne 00421ABE
+
+:00421A90 833803                  cmp dword ptr [eax], 00000003
+:00421A93 7F29                    jg 00421ABE
+:00421A95 83B80855000000          cmp dword ptr [eax+00005508], 00000000
+:00421A9C 7420                    je 00421ABE
+:00421A9E 80B86254000001          cmp byte ptr [eax+00005462], 01
+:00421AA5 7517                    jne 00421ABE
+:00421AA7 8BCB                    mov ecx, ebx
+:00421AA9 E801DFFFFF              call 0041F9AF
+:00421AAE 8BF0                    mov esi, eax
+:00421AB0 85F6                    test esi, esi
+:00421AB2 7412                    je 00421AC6
+:00421AB4 6A01                    push 00000001
+:00421AB6 8BCB                    mov ecx, ebx
+:00421AB8 5A                      pop edx
+:00421AB9 E801300000              call 00424ABF
+
+
+
+* Referenced by a CALL at Address:						Auto Equip
+|:00421AA9   
+|
+:0041F9AF 53                      push ebx
+:0041F9B0 56                      push esi
+:0041F9B1 8BF1                    mov esi, ecx
+:0041F9B3 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0041F9B8 69F6C8550000            imul esi, 000055C8
+:0041F9BE 8A8C3060010000          mov cl, byte ptr [eax+esi+00000160]
+:0041F9C5 03C6                    add eax, esi
+:0041F9C7 80F903                  cmp cl, 03
+:0041F9CA 57                      push edi
+:0041F9CB 0F84C1000000            je 0041FA92					skip if Monk
+:0041F9D1 80B86154000002          cmp byte ptr [eax+00005461], 02
+:0041F9D8 6A01                    push 00000001
+:0041F9DA 5B                      pop ebx
+:0041F9DB 7530                    jne 0041FA0D					jmp if not 2-handed
+
+:0041F9DD 80F905                  cmp cl, 05
+:0041F9E0 750F                    jne 0041F9F1					jmp if not barbarian
+:0041F9E2 8B90AC530000            mov edx, dword ptr [eax+000053AC]
+:0041F9E8 3BD3                    cmp edx, ebx
+:0041F9EA 7421                    je 0041FA0D					jmp if 2-handed sword
+:0041F9EC 83FA04                  cmp edx, 00000004
+:0041F9EF 741C                    je 0041FA0D					jmp if 2-handed blunt
+
+:0041F9F1 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0041F9F8 0F8594000000            jne 0041FA92
+:0041F9FE 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0041FA05 0F8587000000            jne 0041FA92
+:0041FA0B EB30                    jmp 0041FA3D					jmp if barehanded
+
+:0041FA0D 80F904                  cmp cl, 04
+:0041FA10 7422                    je 0041FA34					jmp if bard
+:0041FA12 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0041FA19 7408                    je 0041FA23					
+:0041FA1B 38981A0A0000            cmp byte ptr [eax+00000A1A], bl
+:0041FA21 746F                    je 0041FA92
+
+:0041FA23 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0041FA2A 7408                    je 0041FA34
+:0041FA2C 38988E0B0000            cmp byte ptr [eax+00000B8E], bl
+:0041FA32 745E                    je 0041FA92
+
+:0041FA34 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0041FA3B 751E                    jne 0041FA5B
+
+:0041FA3D B204                    mov dl, 04					equip in primary hand
+:0041FA3F 8BCB                    mov ecx, ebx
+:0041FA41 E83C790200              call 00447382
+:0041FA46 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0041FA4B 03C6                    add eax, esi
+:0041FA4D 8DB0A4530000            lea esi, dword ptr [eax+000053A4]
+:0041FA53 8DB85C090000            lea edi, dword ptr [eax+0000095C]
+:0041FA59 EB2E                    jmp 0041FA89
+
+:0041FA5B 83B8D80A0000FF          cmp dword ptr [eax+00000AD8], FFFFFFFF
+:0041FA62 752E                    jne 0041FA92
+:0041FA64 80B8190A000002          cmp byte ptr [eax+00000A19], 02
+:0041FA6B 7425                    je 0041FA92
+
+:0041FA6D B205                    mov dl, 05					equip in secondary hand
+:0041FA6F 8BCB                    mov ecx, ebx
+:0041FA71 E80C790200              call 00447382
+:0041FA76 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0041FA7B 03C6                    add eax, esi
+:0041FA7D 8DB0A4530000            lea esi, dword ptr [eax+000053A4]
+:0041FA83 8DB8D00A0000            lea edi, dword ptr [eax+00000AD0]
+
+:0041FA89 6A5D                    push 0000005D
+:0041FA8B 8BC3                    mov eax, ebx
+:0041FA8D 59                      pop ecx
+:0041FA8E F3                      repz
+:0041FA8F A5                      movsd
+:0041FA90 EB02                    jmp 0041FA94
+
+:0041FA92 33C0                    xor eax, eax
+
+:0041FA94 5F                      pop edi
+:0041FA95 5E                      pop esi
+:0041FA96 5B                      pop ebx
+:0041FA97 C3                      ret

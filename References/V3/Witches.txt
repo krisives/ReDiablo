@@ -1,0 +1,53 @@
+Witches - Bloodstar colors
+
+:0043382B 8B451C                  mov eax, dword ptr [ebp+1C]
+:0043382E 85C0                    test eax, eax
+:00433830 7E64                    jle 00433896
+:00433832 69C0E4000000            imul eax, 000000E4
+:00433838 8B8864DD6900            mov ecx, dword ptr [eax+0069DD64]
+:0043383E 8D8064DD6900            lea eax, dword ptr [eax+0069DD64]
+:00433844 833965                  cmp dword ptr [ecx], 00000065
+:00433847 894518                  mov dword ptr [ebp+18], eax
+:0043384A 750E                    jne 0043385A			jmp if not monster 65h
+:0043384C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043384F 6A16                    push 00000016
+:00433851 5A                      pop edx
+:00433852 E849C2FFFF              call 0042FAA0
+:00433857 8B4518                  mov eax, dword ptr [ebp+18]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043384A(C)
+|
+:0043385A 8B08                    mov ecx, dword ptr [eax]
+:0043385C 833966                  cmp dword ptr [ecx], 00000066
+:0043385F 750E                    jne 0043386F			jmp if not monster 66h
+:00433861 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00433864 6A28                    push 00000028
+:00433866 5A                      pop edx
+:00433867 E834C2FFFF              call 0042FAA0
+:0043386C 8B4518                  mov eax, dword ptr [ebp+18]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043385F(C)
+|
+:0043386F 8B08                    mov ecx, dword ptr [eax]
+:00433871 833967                  cmp dword ptr [ecx], 00000067
+:00433874 750E                    jne 00433884			jmp if not monster 67h
+:00433876 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00433879 6A2C                    push 0000002C
+:0043387B 5A                      pop edx
+:0043387C E81FC2FFFF              call 0042FAA0
+:00433881 8B4518                  mov eax, dword ptr [ebp+18]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433874(C)
+|
+:00433884 8B00                    mov eax, dword ptr [eax]
+:00433886 833868                  cmp dword ptr [eax], 00000068
+:00433889 750B                    jne 00433896			jmp if not monster 68h
+:0043388B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043388E 6A2A                    push 0000002A
+:00433890 5A                      pop edx
+:00433891 E80AC2FFFF              call 0042FAA0
+
+

@@ -1,0 +1,12 @@
+Spiked Ball trap in Abyss
+
+
+Slightly faster flying speed for the missile:
+
+file offset 00087F7F
+
+:00488B7F 6A0E                    push 0000000E
+changed into
+:00488B7F 6A10                    push 00000010
+
+

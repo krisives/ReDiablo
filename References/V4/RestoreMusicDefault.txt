@@ -1,0 +1,8 @@
+Restoring default for Music in Nest and Abyss to original.
+
+File Offset 0002D882
+
+:0042E482 8325B0044A0000          and dword ptr [004A04B0], 00000000
+wordt
+:0042E482 8325B0044A0001          and dword ptr [004A04B0], 00000001
+

@@ -1,0 +1,154 @@
+Monster slots for Hellfire, v1.01 128 bytes between
+
+1   - aa8f0 - Zombie - Hellstorm
+2   - aa970 - Ghoul
+3   - aa9f0 - Rotting Carcass
+4   - aaa70 - Black Death - Zombie
+5   - aaaf0 - Fallen One - Thunder Lord
+6   - aab70 - Carver - Dark One
+7   - aabf0 - Devil Kin
+8   - aac70 - Dark One
+9   - aacf0 - Skeleton
+10  - aad70 - Corpse Axe
+11  - aadf0 - Burning Dead
+12  - aae70 - Horror
+13  - aaef0 - Fallen One
+14  - aaf70 - Carver
+15  - aaff0 - Devil Kin
+16  - ab070 - Dark One
+17  - ab0f0 - Scavenger
+18  - ab170 - Plague Eater
+19  - ab1f0 - Shadow Beast
+20  - ab270 - Bone Gasher
+21  - ab2f0 - Skeleton
+22  - ab370 - Corpse Bow
+23  - ab3f0 - Burning Dead
+24  - ab470 - Horror
+25  - ab4f0 - Skeleton Captain
+26  - ab570 - Corpse Captain
+27  - ab5f0 - Burning Dead Captain
+28  - ab670 - Horror Captain
+29  - ab6f0 - Invisible Lord
+30  - ab770 - Hidden
+31  - ab7f0 - Stalker
+32  - ab870 - Unseen
+33  - ab8f0 - Illusion Weaver
+34  - ab970 - Satyr Lord
+35  - ab9f0 - Flesh Clan
+36  - aba70 - Stone Clan
+37  - abaf0 - Fire Clan
+38  - abb70 - Night Clan
+39  - abbf0 - Fiend
+40  - abc70 - Blink
+41  - abcf0 - Gloom
+42  - abd70 - Familiar
+43  - abdf0 - Flesh Clan
+44  - abe70 - Stone Clan
+45  - abef0 - Fire Clan
+46  - abf70 - Night Clan
+47  - abff0 - Acid Beast
+48  - ac070 - Poison Spitter
+49  - ac0f0 - Pit Beast
+50  - ac170 - Lava Maw
+51  - ac1f0 - Skeleton King
+52  - ac270 - The Butcher
+53  - ac2f0 - Overlord
+54  - ac370 - Mud Man
+55  - ac3f0 - Toad Demon
+56  - ac470 - Flayed One
+57  - ac4f0 - Wyrm
+58  - ac570 - Cave Slug
+59  - ac5f0 - Devil Wyrm
+60  - ac670 - Devourer
+61  - ac6f0 - Magma Demon
+62  - ac770 - Blood Stone
+63  - ac7f0 - Hell Stone
+64  - ac870 - Lava Lord
+65  - ac8f0 - Horned Demon
+66  - ac970 - Mud Runner
+67  - ac9f0 - Frost Charger
+68  - aca70 - Obsidian Lord
+69  - acaf0 - oldboned
+70  - acb70 - Red Death
+71  - acbf0 - Litch Demon
+72  - acc70 - Undead Balrog
+73  - accf0 - Incinerator
+74  - acd70 - Flame Lord
+75  - acdf0 - Doom Fire
+76  - ace70 - Hell Burner
+77  - acef0 - Red Storm
+78  - acf70 - Storm Rider
+79  - acff0 - Storm Lord
+80  - ad070 - Maelstorm
+81  - ad0f0 - Devil Kin Brute
+82  - ad170 - Winged-Demon
+83  - ad1f0 - Gargoyle
+84  - ad270 - Blood Claw
+85  - ad2f0 - Death Wing
+86  - ad370 - Slayer
+87  - ad3f0 - Guardian
+88  - ad470 - Vortex Lord
+89  - ad4f0 - Balrog
+90  - ad570 - Cave Viper
+91  - ad5f0 - Fire Drake
+92  - ad670 - Gold Viper
+93  - ad6f0 - Azure Drake
+94  - ad770 - Black Knight
+95  - ad7f0 - Doom Guard
+96  - ad870 - Steel Lord
+97  - ad8f0 - Blood Knight
+98  - ad970 - The Shredded
+99  - ad9f0 - Hollow One
+100 - ada70 - Pain Master
+101 - adaf0 - Reality Weaver
+102 - adb70 - Succubus
+103 - adbf0 - Snow Witch
+104 - adc70 - Hell Spawn
+105 - adcf0 - Soul Burner
+106 - add70 - Counselor
+107 - addf0 - Magistrate
+108 - ade70 - Cabalist
+109 - adef0 - Advocate
+110 - adf70 - Golem
+111 - adff0 - The Dark Lord
+112 - ae070 - The Arch-Litch Malignus
+113 - ae0f0 - Hellboar
+114 - ae170 - Stinger
+115 - ae1f0 - Psychorb
+116 - ae270 - Arachnon
+117 - ae2f0 - Felltwin
+118 - ae370 - Hork Spawn
+119 - ae3f0 - Venomtail
+120 - ae470 - Necromorb
+121 - ae4f0 - Spider Lord
+122 - ae570 - Lashworm
+123 - ae5f0 - Torchant
+124 - ae670 - Hork Demon
+125 - ae6f0 - Hell Bug
+126 - ae770 - Gravedigger
+127 - ae7f0 - Tomb Rat
+128 - ae870 - Firebat
+129 - ae8f0 - Skullwing
+130 - ae970 - Lich
+131 - ae9f0 - Crypt Demon
+132 - aea70 - Hellbat
+133 - aeaf0 - Bone Demon
+134 - aeb70 - Arch Lich
+135 - aebf0 - Biclops
+136 - aec70 - Flesh Thing
+137 - aecf0 - Reaper
+138 - aed70 - Na-Krul
+
+
+
+Level of occurence for crypt and hive:
+20,21 - H1
+22,23 - H2
+24,25 - H3
+26,27 - H4
+28,29 - C1
+2a,2b - C2
+2c,2d - C3
+2e,2f - C4
+
+beginning at AF058, monster activity slots (00 - inactive, 01 - active)

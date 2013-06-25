@@ -1,0 +1,87 @@
+Disabling Spellbooks when maximum SLVL is reached, for faster deciding with reading or shopping at Adria.
+
+
+File Offset 00020602
+
+:00421202 0FB68805550000          movzx ecx, byte ptr [eax+00005505]
+wordt
+:00421202 56                      push esi
+:00421203 E89245FEFF              call 0040579A
+:00421208 5E                      pop esi
+
+File Offset 00023D2F
+
+:0042492F 0FB68261010000          movzx eax, byte ptr [edx+00000161]
+wordt
+:0042492F 51                      push ecx
+:00424930 E819CA0200              call 0045134E
+:00424935 59                      pop ecx
+
+File Offset 00029491
+
+:0042A091 0FB6B161010000          movzx esi, byte ptr [ecx+00000161]
+wordt
+:0042A091 90                      nop
+:0042A092 E8C3720200              call 0045135A
+:0042A097 90                      nop
+
+Using free space from Itemview on cursor:
+
+File Offset 00004B9A
+
+:0040579A 6838514900              push 00495138
+:0040579F 68F0124D00              push 004D12F0
+:004057A4 E817430700              call 00479AC0
+:004057A9 83C410                  add esp, 00000010
+wordt
+:0040579A 8BC8                    mov ecx, eax
+:0040579C 81C1A4530000            add ecx, 000053A4
+:004057A2 E8B3BB0400              call 0045135A
+:004057A7 8BCE                    mov ecx, esi
+:004057A9 C3                      ret
+:004057AA 9090                    2*nop
+
+Using free space from SlainHero Quest, skipping first part for new Monsteranimations:
+
+File Offset 0005074D
+
+:0045134D 80F905                  cmp cl, 05
+:00451350 753C                    jne 0045138E
+:00451352 8B88C4E56D00            mov ecx, dword ptr [eax+006DE5C4]
+:00451358 53                      push ebx
+:00451359 52                      push edx
+:0045135A 8B90C8E56D00            mov edx, dword ptr [eax+006DE5C8]
+:00451360 6A65                    push 00000065
+:00451362 6A02                    push 00000002
+:00451364 E83AA6FDFF              call 0042B9A3
+:00451369 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045136E 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00451374 69C0C8550000            imul eax, 000055C8
+:0045137A FF74083C                push [eax+ecx+3C]
+:0045137E 8B540838                mov edx, dword ptr [eax+ecx+38]
+:00451382 03C1                    add eax, ecx
+:00451384 B9DC020000              mov ecx, 000002DC
+:00451389 E83673FCFF              call 004186C4
+wordt
+:0045134D 90                      nop
+:0045134E 56                      push esi
+:0045134F 8BCA                    mov ecx, edx
+:00451351 E804000000              call 0045135A
+:00451356 8BC6                    mov eax, esi
+:00451358 5E                      pop esi
+:00451359 C3                      ret
+:0045135A 0FB6B161010000          movzx esi, byte ptr [ecx+00000161]
+:00451361 83B9DC00000018          cmp dword ptr [ecx+000000DC], 00000018
+:00451368 7523                    jne 0045138D
+:0045136A 50                      push eax
+:0045136B 52                      push edx
+:0045136C 8D91E0000000            lea edx, dword ptr [ecx+000000E0]
+:00451372 8B12                    mov edx, dword ptr [edx]
+:00451374 E8ED30FFFF              call 00444466
+:00451379 0FBE8410C1000000        movsx eax, byte ptr [eax+edx+000000C1]
+:00451381 83F80F                  cmp eax, 0000000F
+:00451384 7C05                    jl 0045138B
+:00451386 BEFFFF0000              mov esi, 0000FFFF
+:0045138B 5A                      pop edx
+:0045138C 58                      pop eax
+:0045138D C3                      ret

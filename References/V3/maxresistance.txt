@@ -1,0 +1,13 @@
+Diablo
+
+405a26 4b : magic res
+405a87 4b : fire res
+405ae3 4b : lightn res
+42009b 4b : overall limit
+
+Hellfire
+
+:00405ED9 3C4B                    cmp al, 4B		Magic res
+:00405F41 3C4B                    cmp al, 4B		Fire res
+:00405FA4 3C4B                    cmp al, 4B		Lightning res
+:004240A1 6A4B                    push 0000004B		Overall limit

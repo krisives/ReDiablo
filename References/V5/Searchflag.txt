@@ -1,0 +1,7 @@
+Search Flag [006EE738] is obsolete. Remaining code is propably only for initialisation:
+
+:0042FD17 802538E76E0000          and byte ptr [006EE738], 00
+:0043901D 802538E76E0000          and byte ptr [006EE738], 00
+
+
+

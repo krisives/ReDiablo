@@ -1,0 +1,60 @@
+Data Changes 51D
+
+
+New sound for Magic Missile spell ('dserpatt' replaced by unused 'sneaks2'):
+
+000A3A60 0000 0000 5363 726F 6C6C 206F 6620 5468 ....Scroll of Th
+000A3A70 6520 4A65 7374 6572 0000 0000           e Jester....
+changed into
+000A3A60 4D6F 6E73 7465 7273 5C53 6E65 616B 5C53 Monsters\Sneak\S
+000A3A70 6E65 616B 7332 2E77 6176 0000           neaks2.wav..
+
+000963E9 44EE 4900                               D.I.
+changed into
+000963E9 6050 4A00                               `PJ.
+
+
+Less pausing for Scorpions, by improving their subtype:
+
+pos name                  attacktype        sub  dlvl   
+
+126 Venom Tail            11 Winged Fiend    1   6- 8   
+                                             3
+000AE850 0B00 0000 0000 0000 01                  .........
+changed into
+000AE850 0B00 0000 0000 0000 03                  .........
+
+ 73 Hellstinger           11 Winged Fiend    2  13-15   
+                                             6
+000ACDD0 0B00 0000 0000 0000 02                  .........
+changed into
+000ACDD0 0B00 0000 0000 0000 06                  .........
+
+ 74 Doomtail              11 Winged Fiend    3  C1-C3   
+                                             9
+000ACE50 0B00 0000 0000 0000 03                  .........
+changed into
+000ACE50 0B00 0000 0000 0000 09                  .........
+
+
+Less pausing for Hork Spawns, by improving their subtype:
+
+pos name                  attacktype        sub  dlvl   
+
+ 56 Hork Spawn            11 Winged Fiend     3  H1-H4  
+                                             40 (never pauses)
+000AC550 0B00 0000 0000 0000 03                  .........
+changed into
+000AC550 0B00 0000 0000 0000 28                  ........(
+
+ 58 Hork Spawn            11 Winged Fiend     1  H1-H4   
+                                             20 (rarely pauses)
+000AC650 0B00 0000 0000 0000 01                  .........
+changed into
+000AC650 0B00 0000 0000 0000 14                  .........
+
+117 Hork Spawn            11 Winged Fiend     1  H1-H4*
+                                              2
+000AE3D0 0B00 0000 0000 0000 01                  .........
+changed into
+000AE3D0 0B00 0000 0000 0000 02                  .........

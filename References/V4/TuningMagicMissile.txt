@@ -1,0 +1,26 @@
+Tuning Magic Missile
+
+
+Initial Mana cost 11 -> 12
+
+000B6449 0C                                      .
+
+
+Minimum Mana cost 4 -> 8
+
+000B646D 08                                      .
+
+
+Reducing the Detection Range from 6 to 5:
+
+File Offset 000375D9
+
+:004381D9 83F806                  cmp eax, 00000006
+:004381DC 7E03                    jle 004381E1
+:004381DE 6A06                    push 00000006
+:004381E0 58                      pop eax
+wordt
+:004381D9 83F805                  cmp eax, 00000005
+:004381DC 7E03                    jle 004381E1
+:004381DE 6A05                    push 00000005
+:004381E0 58                      pop eax

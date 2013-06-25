@@ -1,0 +1,292 @@
+Golems attacking a monster outside visual range can crash the game. With chainactivation, this has become almost a certainty. This is now fixed by excluding Golems in all cases. The adaption to the MonsterVsMonster code will fix the remaining crashes. Also, redesigned scheme and rewrote all code for better performance.
+
+
+During periodic processing of monsters:
+
+if not in LR skip
+if already active skip
+	find a target
+	activate around this monster
+	check activation sounds
+
+
+Attacked by a character in Melee:
+
+if not already active
+	make active
+	find a target
+	activate around this monster
+
+
+Attacked by Missile from character:
+
+if hit
+   if not already active
+	set target
+	make active
+	activate around this monster
+
+
+Attacked by other monster in melee:
+
+if not already active 
+	make active
+	find a target
+	activate around this monster
+
+
+New "activate around monster" routine:
+
+if Golem or Charmed then Exit
+ecx = 2	(tuning possible here: ecx = 1..8, where 8 will ensure simultaneous activation of each group)
+set ebx to number of living monsters
+loop:   if active then next monster
+	if not close then next monster
+	if golem or charmed then next monster
+        if same then next monster
+	if in LR then next monster
+		copy target for current monster from central monster
+		make current monster active
+		recursive call: activate around this current monster
+		check activation sounds for current monster
+        	dec ecx
+        	if ecx < 1 then xor ebx,ebx
+next:   dec ebx
+	if ebx > 0 then jmp loop
+
+
+
+
+First, relocating retreat check for Stalking Death for better use of available space:
+
+file offset 0007953A
+
+:0047A13A 0F84E21BFCFF            je 0043BD22
+:0047A140 
+changed into
+:0047A13A 0F8424C4FFFF            je 00476564
+:0047A140 
+
+Using old codespace for loading of Celia's animation:
+
+file offset 00075964
+
+:00476564 E86563FCFF              call 0043C8CE					
+:00476569 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:00476570 0F8497D3FCFF            je 0044390D				
+:00476576 E997D3FCFF              jmp 00443912				
+:0047657B 909090                  3*nop
+changed into
+:00476564 8B8690000000            mov eax, dword ptr [esi+00000090]
+:0047656A D1F8                    sar eax, 1
+:0047656C 3B8694000000            cmp eax, dword ptr [esi+00000094]
+:00476572 0F8CD63B0000            jl 0047A14E
+:00476578 E9C73B0000              jmp 0047A144
+:0047657D 90                      nop
+
+
+- During periodic processing of monsters
+
+file offset 00042C95
+
+:00443895 8DBC0800696100          lea edi, dword ptr [eax+ecx+00616900]
+:0044389C F60702                  test byte ptr [edi], 02
+:0044389F 0F84A62B0300            je 0047644B
+:004438A5 8BCB                    mov ecx, ebx
+:004438A7 E9B82C0300              jmp 00476564
+:004438AC 90                      nop
+:004438AD 90                      nop
+:004438AE 90                      nop
+changed into
+:00443895 8DBC0800696100          lea edi, dword ptr [eax+ecx+00616900]
+:0044389C F60702                  test byte ptr [edi], 02
+:0044389F 7471                    je 00443912					jmp if no player in range
+:004438A1 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:004438A8 7568                    jne 00443912					jmp if already active
+:004438AA E9D04BFEFF              jmp 0042847F					
+:004438AF
+
+file offset 0002787F
+
+:0042847F 90                      nop
+:00428480 90                      nop
+:00428481 90                      nop
+:00428482 90                      nop
+:00428483 90                      nop
+:00428484 90                      nop
+:00428485 90                      nop
+:00428486 90                      nop
+:00428487 90                      nop
+:00428488 90                      nop
+:00428489 90                      nop
+:0042848A 90                      nop
+changed into
+:0042847F E8C7DF0400              call 0047644B			find a target and activate around this monster
+:00428484 E984B40100              jmp 0044390D			jmp to check sounds 
+:00428489 90                      nop
+:0042848A 90                      nop
+
+
+- Attacked by a character in Melee
+
+Using free space from a debug check that can only be used to crash games:
+
+file offset 0005ACF0
+
+:0045B8F0 83FF04                  cmp edi, 00000004
+:0045B8F3 720D                    jb 0045B902
+:0045B8F5 57                      push edi
+:0045B8F6 6888644B00              push 004B6488
+:0045B8FB E86560FAFF              call 00401965
+:0045B900 59                      pop ecx
+:0045B901 59                      pop ecx
+changed into
+:0045B8F0 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:0045B8F7 7508                    jne 0045B902			jmp if already active
+:0045B8F9 8B4DF4                  mov ecx, dword ptr [ebp-0C]
+:0045B8FC E84EAB0100              call 0047644F			find a target, activate monster and around it
+:0045B901 90                      nop
+
+
+- Attacked by Missile from character
+
+file offset 0002E9C0
+
+:0042F5C0 898634DD6900            mov dword ptr [esi+0069DD34], eax
+changed into
+:0042F5C0 E9888EFFFF              jmp 0042844D
+:0042F5C5 90                      nop
+
+Using 16 bytes free space from Improved Oils:
+
+file offset 0002784D
+
+:0042844D 90                      nop
+:0042844E 90                      nop
+:0042844F 0F8D56010000            jnl 004285AB
+:00428455 41                      inc ecx
+:00428456 8908                    mov dword ptr [eax], ecx
+:00428458 E94E010000              jmp 004285AB
+changed into
+:0042844D 898634DD6900            mov dword ptr [esi+0069DD34], eax
+:00428453 E803E00400              call 0047645B				activate around this monster
+:00428458 E93A10FEFF              jmp 00409497					
+
+
+- Attacked by other monster in melee
+
+file offset 0003CF60
+
+:0043DB60 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043DB63 8D55F4                  lea edx, dword ptr [ebp-0C]
+changed into
+:0043DB60 E9BDE1FFFF              jmp 0043BD22
+:0043DB65 90                      nop
+
+Using now free space from full Hp for bosses in SP:
+
+file offset 0003B122
+
+:0043BD22 8B8690000000            mov eax, dword ptr [esi+00000090]
+:0043BD28 D1F8                    sar eax, 1
+:0043BD2A 3B8694000000            cmp eax, dword ptr [esi+00000094]
+:0043BD30 0F8C18E40300            jl 0047A14E
+:0043BD36 E909E40300              jmp 0047A144
+:0043BD3B 909090                  3*nop
+changed into
+:0043BD22 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:0043BD29 7508                    jne 0043BD33			jmp if already active
+:0043BD2B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043BD2E E81CA70300              call 0047644F			find a target, activate monster and around it
+:0043BD33 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043BD36 8D55F4                  lea edx, dword ptr [ebp-0C]
+:0043BD39 E9281E0000              jmp 0043DB66
+
+
+- New "activate around monster" routine
+
+file offset 0007584B
+
+:0047644B 8BCB                    mov ecx, ebx
+:0047644D EB07                    jmp 00476456					
+:0047644F 808E28DD6900FF          or byte ptr [esi+0069DD28], FF	activate monster
+:00476456 E87364FCFF              call 0043C8CE				find a target
+
+:0047645B F68624DD690020          test byte ptr [esi+0069DD24], 20
+:00476462 75E6                    jne 0047644A				exit if Golem or Charmed
+:00476464 A180DC6900              mov eax, dword ptr [0069DC80]
+:00476469 83E804                  sub eax, 00000004
+:0047646C 85C0                    test eax, eax
+:0047646E 7EDA                    jle 0047644A				exit if no remaining monsters
+:00476470 51                      push ecx
+:00476471 6A02                    push 00000002				tuning: ecx = 1..8
+:00476473 59                      pop ecx
+:00476474 52                      push edx
+:00476475 53                      push ebx
+:00476476 57                      push edi
+:00476477 BF70D96900              mov edi, 0069D970			first monster after Golems in 'live' table  
+:0047647C 8BD8                    mov ebx, eax
+:0047647E 8B07                    mov eax, dword ptr [edi]		start of loop
+:00476480 69C0E4000000            imul eax, 000000E4
+:00476486 80B828DD690000          cmp byte ptr [eax+0069DD28], 00
+:0047648D 7558                    jne 004764E7				jmp next monster if already active
+:0047648F 8B96A8DC6900            mov edx, dword ptr [esi+0069DCA8]	x-coordinate central monster
+:00476495 2B90A8DC6900            sub edx, dword ptr [eax+0069DCA8]	x-coordinate current monster
+:0047649B 85D2                    test edx, edx
+:0047649D 7D02                    jge 004764A1
+:0047649F F7DA                    neg edx
+:004764A1 83FA02                  cmp edx, 00000002
+:004764A4 7D41                    jge 004764E7				jmp next monster if too far away
+:004764A6 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]	y-coordinate central monster
+:004764AC 2B90ACDC6900            sub edx, dword ptr [eax+0069DCAC]	y-coordinate current monster
+:004764B2 85D2                    test edx, edx
+:004764B4 7D02                    jge 004764B8
+:004764B6 F7DA                    neg edx
+:004764B8 83FA02                  cmp edx, 00000002
+:004764BB 7D2A                    jge 004764E7				jmp next monster if too far away
+:004764BD F68024DD690020          test byte ptr [eax+0069DD24], 20
+:004764C4 7521                    jne 004764E7				jmp next monster if Golem or Charmed
+:004764C6 3BC6                    cmp eax, esi
+:004764C8 741D                    je 004764E7				jmp next monster if itself
+:004764CA 8B90A8DC6900            mov edx, dword ptr [eax+0069DCA8]
+:004764D0 6BD270                  imul edx, 00000070
+:004764D3 0390ACDC6900            add edx, dword ptr [eax+0069DCAC]
+:004764D9 80BA0069610002          cmp byte ptr [edx+00616900], 02
+:004764E0 7405                    je 004764E7				jmp next monster if in someones LR
+:004764E2 E965460000              jmp 0047AB4C				more codespace elsewhere
+:004764E7 83C704                  add edi, 00000004			next monster
+:004764EA 4B                      dec ebx
+:004764EB 0F8F8DFFFFFF            jg 0047647E					
+:004764F1 5F                      pop edi
+:004764F2 5B                      pop ebx
+:004764F3 5A                      pop edx
+:004764F4 59                      pop ecx
+:004764F5 C3                      ret
+:004764F6 90                      nop
+
+Using free space from obsolete command file:
+
+file offset 00079F4C
+
+:0047AB4C 8BD9                    mov ebx, ecx
+:0047AB4E ...
+changed into
+:0047AB4C 808828DD6900FF          or byte ptr [eax+0069DD28], FF	activate current monster	
+:0047AB53 8B9630DD6900            mov edx, dword ptr [esi+0069DD30]	copy target from central monster
+:0047AB59 899030DD6900            mov dword ptr [eax+0069DD30], edx
+:0047AB5F 8B9634DD6900            mov edx, dword ptr [esi+0069DD34]
+:0047AB65 899034DD6900            mov dword ptr [eax+0069DD34], edx
+:0047AB6B 56                      push esi
+:0047AB6C 8BF0                    mov esi, eax
+:0047AB6E E8F1B8FFFF              call 00476464			recursive loop: activate around current monster
+:0047AB73 51                      push ecx
+:0047AB74 E8368DFCFF              call 004438AF			check activation sounds for current monster
+:0047AB79 59                      pop ecx
+:0047AB7A 5E                      pop esi
+:0047AB7B 49                      dec ecx
+:0047AB7C 7F02                    jg 0047AB80
+:0047AB7E 33DB                    xor ebx, ebx
+:0047AB80 E962B9FFFF              jmp 004764E7			return for next monster
+:0047AB85 9090                    2*nop
+
+Now 60 bytes codespace left.

@@ -1,0 +1,285 @@
+Enabling Phasing immunity for Zhar the Mad (from the quest in SP):
+
+File offset 000444C4
+
+:004450C4 80B920DD69000C          cmp byte ptr [ecx+0069DD20], 0C		Gargoyle attacktype
+:004450CB 7525                    jne 004450F2					
+:004450CD 8B8124DD6900            mov eax, dword ptr [ecx+0069DD24]
+:004450D3 8DB124DD6900            lea esi, dword ptr [ecx+0069DD24]
+:004450D9 A804                    test al, 04
+:004450DB 7415                    je 004450F2					immune in Stone state
+:004450DD 24FB                    and al, FB					clear Stone state
+:004450DF 6A01                    push 00000001
+:004450E1 8906                    mov dword ptr [esi], eax
+:004450E3 58                      pop eax
+:004450E4 C7818CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+:004450EE 8902                    mov dword ptr [edx], eax
+:004450F0 5E                      pop esi
+:004450F1 C3                      ret
+:004450F2 8A8120DD6900            mov al, byte ptr [ecx+0069DD20]
+:004450F8 3C19                    cmp al, 19					Mage attacktype
+:004450FA 7408                    je 00445104
+:004450FC 3C1C                    cmp al, 1C					Lazarus attacktype
+:004450FE 7404                    je 00445104
+:00445100 3C0E                    cmp al, 0E					Succubi attacktype (has no effect)
+:00445102 7510                    jne 00445114
+changed into
+:004450C4 8A8120DD6900            mov al, byte ptr [ecx+0069DD20]
+:004450CA 3C0C                    cmp al, 0C					Gargoyle attacktype
+:004450CC 7525                    jne 004450F3					
+:004450CE 8B8124DD6900            mov eax, dword ptr [ecx+0069DD24]
+:004450D4 8DB124DD6900            lea esi, dword ptr [ecx+0069DD24]
+:004450DA A804                    test al, 04
+:004450DC 7436                    je 00445114
+:004450DE 24FB                    and al, FB
+:004450E0 8906                    mov dword ptr [esi], eax
+:004450E2 C7818CDC690007000000    mov dword ptr [ebx+0069DC8C], 00000007
+:004450EC 6A01                    push 00000001
+:004450EE 58                      pop eax
+:004450EF 8902                    mov dword ptr [edx], eax
+:004450F1 5E                      pop esi
+:004450F2 C3                      ret
+:004450F3 3C19                    cmp al, 19					Mage attacktype
+:004450F5 740D                    je 00445104
+:004450F7 3C1C                    cmp al, 1C					Lazarus attacktype
+:004450F9 7409                    je 00445104
+:004450FB 3C16                    cmp al, 16					Zhar the Mad attacktype
+:004450FD 7515                    jne 00445114
+:004450FF 9090909090              5*nop
+:00445104 ...
+
+
+Adding check to Monster against Monster Melee, to better avoid attacks on already dying monsters (as done in other attack routines):
+
+File offset 0003CF0B
+
+:0043DB0B 0F83C6000000            jnb 0043DBD7
+:0043DB11 69F6E4000000            imul esi, 000000E4
+:0043DB17 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043DB1D 85C0                    test eax, eax
+:0043DB1F 0F84B2000000            je 0043DBD7
+:0043DB25 F7861CDD6900C0FFFFFF    test dword ptr [esi+0069DD1C], FFFFFFC0
+:0043DB2F 0F8EA2000000            jle 0043DBD7
+:0043DB35 83381B                  cmp dword ptr [eax], 0000001B
+:0043DB38 750D                    jne 0043DB47
+:0043DB3A 80BE90DC690002          cmp byte ptr [esi+0069DC90], 02
+:0043DB41 0F8490000000            je 0043DBD7
+changed into
+:0043DB0B 7323                    jnb 0043DB30
+:0043DB0D 69F6E4000000            imul esi, 000000E4
+:0043DB13 E8C6520100              call 00452DDE
+:0043DB18 85C0                    test eax, eax
+:0043DB1A 7414                    je 0043DB30
+:0043DB1C 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0043DB22 83381B                  cmp dword ptr [eax], 0000001B
+:0043DB25 7520                    jne 0043DB47
+:0043DB27 80BE90DC690002          cmp byte ptr [esi+0069DC90], 02
+:0043DB2E 7517                    jne 0043DB47
+:0043DB30 E9A2000000              jmp 0043DBD7
+:0043DB35 ...
+
+Now 18 bytes free space from 0043DB35 to 0043DB47 (used for Renegade Block animation).
+
+
+Spiked Balls from traps are not stopped after hitting a monsters:
+
+File offset 0002E4C2
+
+:0042F0C2 83EC10                  sub esp, 00000010
+changed into
+:0042F0C2 83EC14                  sub esp, 00000014				make address space for another temporary variable
+
+File offset 0002E4E1
+
+:0042F0E1 0F85E2000000            jne 0042F1C9
+:0042F0E7 E8F23C0200              call 00452DDE
+:0042F0EC 85C0                    test eax, eax
+:0042F0EE 0F84D5000000            je 0042F1C9
+:0042F0F4 90                      nop
+:0042F0F5 90                      nop
+:0042F0F6 90                      nop
+:0042F0F7 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0042F0FD 6A02                    push 00000002
+:0042F0FF 5A                      pop edx
+:0042F100 83381B                  cmp dword ptr [eax], 0000001B
+:0042F103 750C                    jne 0042F111
+:0042F105 389690DC6900            cmp byte ptr [esi+0069DC90], dl
+:0042F10B 0F84B8000000            je 0042F1C9
+:0042F111 83BE8CDC69000E          cmp dword ptr [esi+0069DC8C], 0000000E
+:0042F118 0F84AB000000            je 0042F1C9
+:0042F11E 8B4510                  mov eax, dword ptr [ebp+10]
+changed into
+:0042F0E1 7528                    jne 0042F10B
+:0042F0E3 E8F63C0200              call 00452DDE
+:0042F0E8 85C0                    test eax, eax
+:0042F0EA 741F                    je 0042F10B
+:0042F0EC 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0042F0F2 6A02                    push 00000002
+:0042F0F4 5A                      pop edx
+:0042F0F5 83381B                  cmp dword ptr [eax], 0000001B
+:0042F0F8 7508                    jne 0042F102
+:0042F0FA 389690DC6900            cmp byte ptr [esi+0069DC90], dl
+:0042F100 7409                    je 0042F10B
+:0042F102 83BE8CDC69000E          cmp dword ptr [esi+0069DC8C], 0000000E
+:0042F109 7510                    jne 0042F11B
+:0042F10B E9AE000000              jmp 0042F1BE
+:0042F110 90                      nop
+:0042F111 90909090909090          7*nop
+:0042F118 909090                  3*nop
+:0042F11B 8B4510                  mov eax, dword ptr [ebp+10]
+:0042F11E 8945EC                  mov dword ptr [ebp-14], eax			store spell effect number
+
+Now 11 bytes free space from 0042F110 to 0042F11B
+
+File offset 0002E673
+
+:0042F273 6A01                    push 00000001
+:0042F275 58                      pop eax					flag to terminate spell effect
+:0042F276 5F                      pop edi
+:0042F277 5E                      pop esi
+:0042F278 5B                      pop ebx
+:0042F279 C9                      leave
+:0042F27A C21000                  ret 0010
+changed into
+:0042F273 837DEC62                cmp dword ptr [ebp-14], 00000062		check for Spiked Ball spell effect
+:0042F277 E94BFFFFFF              jmp 0042F1C7
+:0042F27C 90                      nop
+
+File offset 0002E5AF
+
+:0042F1AF 7408                    je 0042F1B9
+:0042F1B1 8B4510                  mov eax, dword ptr [ebp+10]
+:0042F1B4 E9BD000000              jmp 0042F276
+:0042F1B9 397DF0                  cmp dword ptr [ebp-10], edi
+:0042F1BC 6A0F                    push 0000000F
+:0042F1BE 5B                      pop ebx
+:0042F1BF 7C0F                    jl 0042F1D0
+:0042F1C1 EB06                    jmp 0042F1C9
+:0042F1C3 90                      nop
+:0042F1C4 90                      nop
+:0042F1C5 90                      nop
+:0042F1C6 90                      nop
+:0042F1C7 90                      nop
+:0042F1C8 90                      nop
+:0042F1C9 33C0                    xor eax, eax					flag to not terminate spell effect
+:0042F1CB E9A6000000              jmp 0042F276
+changed into
+:0042F1AF 7405                    je 0042F1B6
+:0042F1B1 8B4510                  mov eax, dword ptr [ebp+10]
+:0042F1B4 EB0A                    jmp 0042F1C0
+:0042F1B6 397DF0                  cmp dword ptr [ebp-10], edi
+:0042F1B9 6A0F                    push 0000000F
+:0042F1BB 5B                      pop ebx
+:0042F1BC 7C12                    jl 0042F1D0
+:0042F1BE 33C0                    xor eax, eax					flag to not terminate spell effect
+:0042F1C0 5F                      pop edi
+:0042F1C1 5E                      pop esi
+:0042F1C2 5B                      pop ebx
+:0042F1C3 C9                      leave
+:0042F1C4 C21000                  ret 0010
+:0042F1C7 74F5                    je 0042F1BE
+:0042F1C9 6A01                    push 00000001
+:0042F1CB 58                      pop eax					flag to terminate spell effect
+:0042F1CC EBF2                    jmp 0042F1C0
+:0042F1CE 9090                    2*nop
+
+File offset 0002E53A
+
+:0042F13A 0F8489000000            je 0042F1C9
+changed into
+:0042F13A 0F847E000000            je 0042F1BE
+:0042F140 
+
+File offset 0002E548
+
+:0042F148 747F                    je 0042F1C9
+changed into
+:0042F148 7474                    je 0042F1BE
+:0042F14A 
+
+File offset 0002E551
+
+:0042F151 7476                    je 0042F1C9
+changed into
+:0042F151 746B                    je 0042F1BE
+:0042F153 
+
+
+Missiles from traps or monsters against monsters - Allow stun if resisted, and take only 1/8 damage:
+
+File offset 0002E5EA
+
+:0042F1EA 837DF800                cmp dword ptr [ebp-08], 00000000
+:0042F1EE 740D                    je 0042F1FD
+:0042F1F0 8BC8                    mov ecx, eax
+:0042F1F2 C1F902                  sar ecx, 02
+:0042F1F5 298E1CDD6900            sub dword ptr [esi+0069DD1C], ecx
+:0042F1FB EB06                    jmp 0042F203
+changed into
+:0042F1EA EB08                    jmp 0042F1F4
+:0042F1EC 9090909090909090        8*nop        
+:0042F1F4 837DF800                cmp dword ptr [ebp-08], 00000000
+:0042F1F8 7403                    je 0042F1FD
+:0042F1FA C1F803                  sar eax, 03
+
+Now 8 bytes free space from 0042F1EC to 0042F1F4.
+
+File offset 0002E60D
+
+:0042F20D 7F22                    jg 0042F231
+changed into
+:0042F20D 7F35                    jg 0042F244
+:0042F20F 
+
+Now 19 bytes free space from 0042F231 to 0042F244 (used for enhanced Escape spell):
+
+:0042F231 837DF800                cmp dword ptr [ebp-08], 00000000
+:0042F235 740D                    je 0042F244					skip if not resisted
+:0042F237 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0042F23A 6A01                    push 00000001
+:0042F23C 5A                      pop edx
+:0042F23D E8AE91FEFF              call 004183F0					play sound (no stun)
+:0042F242 EB2F                    jmp 0042F273
+
+
+
+Missiles from characters against monsters - No hit when certain Fire or Lightning spell effects do 0 damage, to prevent sounds of pain:
+
+File offset 0002E8D2
+
+:0042F4D2 E85DDF0000              call 0043D434					Resistance, etc.
+changed into
+:0042F4D2 E992080000              jmp 0042FD69
+:0042F4D7 
+
+Using free space from Rage52H:
+
+File offset 0002F169
+
+:0042FD69 90                      nop
+:0042FD6A 90                      nop
+:0042FD6B 90                      nop
+:0042FD6C 90                      nop
+:0042FD6D 751A                    jne 0042FD89
+:0042FD6F 8B80CC7A6900            mov eax, dword ptr [eax+00697ACC]
+:0042FD75 3BC6                    cmp eax, esi
+:0042FD77 7510                    jne 0042FD89
+:0042FD79 6A01                    push 00000001
+:0042FD7B 8BC8                    mov ecx, eax
+:0042FD7D 5A                      pop edx
+:0042FD7E E8E23BFFFF              call 00423965
+:0042FD83 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+changed into
+:0042FD69 85FF                    test edi, edi
+:0042FD6B 7F11                    jg 0042FD7E					jmp if damage > 0
+:0042FD6D 837D1405                cmp dword ptr [ebp+14], 00000005		check for Fire Wall spell effect		
+:0042FD71 7406                    je 0042FD79
+:0042FD73 837D1446                cmp dword ptr [ebp+14], 00000046		check for Lightning Wall spell effect		
+:0042FD77 7505                    jne 0042FD7E
+:0042FD79 E94DF8FFFF              jmp 0042F5CB					exit with miss
+:0042FD7E E8B1D60000              call 0043D434					Resistance, etc.
+:0042FD83 E94FF7FFFF              jmp 0042F4D7
+:0042FD88 90
+
+Now 302 free bytes (left) from 0042FD88 to 0042FEB6
+

@@ -1,0 +1,60 @@
+Removing "goes off when thrown" text from rune display:
+
+file offset 00027BCF
+
+* Possible StringData Ref from Data Obj ->"goes off when thrown"
+:004287CF 68985C4A00              push 004A5C98
+changed into
+:004287CF EB1A                    jmp 004287EB
+:004287D1 909090                  3*nop
+
+
+Adjusting code to prevent a crosshair cursor for Runes of Recharging, Shielding and Fury:
+
+file offset 00029397
+
+:00429F97 8BC6                    mov eax, esi
+:00429F99 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00429F9F 69C0C8550000            imul eax, 000055C8
+:00429FA5 C78401AC00000033000000  mov dword ptr [ecx+eax+000000AC], 00000033
+:00429FB0 EB6A                    jmp 0042A01C
+changed into
+:00429F97 6A33                    push 00000033			
+:00429F99 5F                      pop edi
+:00429F9A E94EFDFFFF              jmp 00429CED			jmp to 'scroll clicking'
+:00429F9F 
+
+Now 19 bytes free space here.
+
+file offset 000293E8
+
+:00429FE8 8BC6                    mov eax, esi
+:00429FEA 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00429FF0 69C0C8550000            imul eax, 000055C8
+:00429FF6 C78401AC00000030000000  mov dword ptr [ecx+eax+000000AC], 00000030
+:0042A001 EB19                    jmp 0042A01C
+changed into
+:00429FE8 6A30                    push 00000030
+:00429FEA 5F                      pop edi
+:00429FEB E9FDFCFFFF              jmp 00429CED			jmp to 'scroll clicking'
+:00429FF0 
+
+Now 19 bytes free space here.
+
+file offset 00029403
+
+:0042A003 8BC6                    mov eax, esi
+:0042A005 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042A00B 69C0C8550000            imul eax, 000055C8
+:0042A011 C78401AC0000002F000000  mov dword ptr [ecx+eax+000000AC], 0000002F
+changed into
+:0042A003 6A2F                    push 0000002F
+:0042A005 5F                      pop edi
+:0042A006 E9E2FCFFFF              jmp 00429CED			jmp to 'scroll clicking'
+:0042A00B
+
+Now 17 bytes free space here.
+
+
+
+

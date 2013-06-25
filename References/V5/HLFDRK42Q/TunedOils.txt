@@ -1,0 +1,40 @@
+Tuning Oils
+
+
+Sharpness: Damage increase back to 1
+
+file offset 00027844
+
+:00428444 41                      inc ecx
+changed into
+:00428444 90                      nop
+
+
+Accuracy: Tohit increase 4-5
+Hardening: AC increase 4-5
+
+file offset 00027984
+
+:00428584 6A03                    push 00000003
+changed into
+:00428584 6A02                    push 00000002
+
+
+Mastery: Tohit increase 6-8
+Imperviousness: AC increase 6-8
+
+file offset 0002799C
+
+:0042859C 03D3                    add edx, ebx
+changed into
+:0042859C 8BD3                    mov edx, ebx
+
+
+Death: add 2 to both min and max damage
+
+file offset 00027873
+
+:00428473 83C204                  add edx, 00000004
+changed into
+:00428473 83C202                  add edx, 00000002
+

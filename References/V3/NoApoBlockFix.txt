@@ -1,0 +1,12 @@
+No blocking against Apocalypse from Monsters
+
+Previous attempt did not work, because the damaging Spelleffect for Monster-Apo is 42h:
+
+File Offset 0002ECB0
+
+:0042F8B0 837D142C                cmp dword ptr [ebp+14], 0000002C
+wordt
+:0042F8B0 837D1442                cmp dword ptr [ebp+14], 00000042
+
+
+

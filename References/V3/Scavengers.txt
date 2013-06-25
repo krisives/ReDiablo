@@ -1,0 +1,126 @@
+Fixing Scavengers 'Heal'
+
+
+Change Vile check to StoneCurse check for Scavengers and Gravediggers:
+
+File Offset 00040B63
+
+:00441763 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044176A 756A                    jne 004417D6
+wordt
+:00441763 83BE8CDC69000F          cmp dword ptr [esi+0069DC8C], 0000000F
+:0044176A 746A                    je 004417D6
+
+
+
+Fix Heal for Higher Difficulties
+
+Did not work properly on Nightmare and Hell mode. Propably old Hellfire bug, but never noticed without seeing actual Hp at monster display.
+
+Increase per animation -> maxhp/32 (higher increases leaves the bodies too often)
+
+File Offset 00040B6C
+
+:0044176C 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:00441772 8B803C010000            mov eax, dword ptr [eax+0000013C]	Hp from Data
+:00441778 C1E006                  shl eax, 06				eax*64
+:0044177B 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+wordt
+:0044176C 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00441772 C1F805                  sar eax, 05
+:00441775 01861CDD6900            add dword ptr [esi+0069DD1C], eax
+:0044177B EB22                    jmp 0044179F
+:0044177D 9090909090              5*nop
+
+Free space now.
+
+
+Fix strange check on max. Hp
+
+If current Hp was to high, the max. Hp was adjusted making everstronger monsters possible.
+
+File Offset 00040B9F
+
+:0044179F 8B8E1CDD6900            mov ecx, dword ptr [esi+0069DD1C]
+:004417A5 398E18DD6900            cmp dword ptr [esi+0069DD18], ecx
+:004417AB 7D06                    jge 004417B3
+:004417AD 898E18DD6900            mov dword ptr [esi+0069DD18], ecx
+wordt
+:0044179F 8B8E18DD6900            mov ecx, dword ptr [esi+0069DD18]
+:004417A5 398E1CDD6900            cmp dword ptr [esi+0069DD1C], ecx
+:004417AB 7E06                    jle 004417B3
+:004417AD 898E1CDD6900            mov dword ptr [esi+0069DD1C], ecx
+
+
+
+Activating Scavenging for Life < 3/4 Hp, not 1/2 Hp for Scavengers and Gravediggers:
+
+File Offset 00040AC8
+
+:004416C8 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:004416CE D1F8                    sar eax, 1
+wordt
+:004416C8 E8B0000000              call 0044177D
+:004416CD 909090                  3*nop
+
+
+Same for Mages, activating Phasing:
+
+File Offset 00042299
+
+:00442E99 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00442E9F 8B542410                mov edx, dword ptr [esp+10]
+:00442EA3 D1F8                    sar eax, 1
+wordt
+:00442E99 E8DFE8FFFF              call 0044177D
+:00442E9E 90                      nop
+:00442E9F 8B542410                mov edx, dword ptr [esp+10]
+:00442EA3 9090                    2*nop
+
+
+New routine returns 3/4 max. Hp as eax, used for Scavengers, Gravediggers and Mages.
+
+On free space from above.
+
+:0044177D 51                      push ecx
+:0044177E 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:00441784 8BC8                    mov ecx, eax
+:00441786 C1F902                  sar ecx, 02
+:00441789 2BC1                    sub eax, ecx
+:0044178B 59                      pop ecx
+:0044178C C3                      ret
+:0044178D 90909090                4*nop
+
+Some 16 byte left.
+
+
+
+
+Original code:
+
+:00441763 F68624DD690008          test byte ptr [esi+0069DD24], 08
+:0044176A 756A                    jne 004417D6
+:0044176C 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:00441772 8B803C010000            mov eax, dword ptr [eax+0000013C]	
+:00441778 C1E006                  shl eax, 06
+:0044177B 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:00441782 7502                    jne 00441786
+:00441784 D1F8                    sar eax, 1			
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00441782(C)
+|
+:00441786 8BC8                    mov ecx, eax
+:00441788 C1F903                  sar ecx, 03
+:0044178B 018E1CDD6900            add dword ptr [esi+0069DD1C], ecx
+:00441791 39861CDD6900            cmp dword ptr [esi+0069DD1C], eax
+:00441797 7E06                    jle 0044179F
+:00441799 89861CDD6900            mov dword ptr [esi+0069DD1C], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00441797(C)
+|
+:0044179F 8B8E1CDD6900            mov ecx, dword ptr [esi+0069DD1C]
+:004417A5 398E18DD6900            cmp dword ptr [esi+0069DD18], ecx
+:004417AB 7D06                    jge 004417B3
+:004417AD 898E18DD6900            mov dword ptr [esi+0069DD18], ecx

@@ -1,0 +1,40 @@
+Hi:
+
+Here's your MPQ file.  The Directory for the Objcurs2.CEL replacement is
+Data\Inv\HF_Beta.CEL
+(for your MPQ viewer data file)
+
+1) Rewrite "Objcurs2.CEL" at 93C31 & change to "HF_Beta.CEL"
+
+Now the MPQ...
+
+"The Dark"
+
+2) rewite the files at 9F4AD changing it to "The Dark.MPQ" this will
+also write over another file name (for the bard) It 'don't' matter ->
+it's what I did in Doomfire.
+
+3) Place the MPQ into your Hellfire file folder.
+
+If you have any problems implementing the please let me know.
+
+I'm going to assume that you have a copy of "The Dark" somewhere with
+the changes you told me to make.  I assume this since you told me that
+the game worked with the changes you made.  If you DON'T let me know.
+I'm willing to do this for you.
+
+Well, the edited CEL file I made doesn't work (YET!) it's great in the
+cel viewer BUT for some reason I cannot get the game program to work.
+It loads fine, however once you bring up the inventory screen with the
+new items the game crashes - S**T!  It hasn't affected any other stuff
+though, the other graphics in my hacked CEL work fine.  Also I was
+thinking that the numerical CEL values (E3, E4) used may be prohibited
+by code however the replacement for the bovine plate (at E2) won't work
+either.  This leaves me with the CEL file as the problem.  I figure
+there may be some header info that needs to be changed.  Oh well... once
+I figure the problem out I'll send you a new MPQ.
+
+Happy mod making
+
+Ted
+Reply 

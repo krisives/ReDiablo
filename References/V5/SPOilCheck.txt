@@ -1,0 +1,16 @@
+
+
+SP check on Oils:
+:0042A311 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0042A318 7415                    je 0042A32F
+:0042A31A 83B9001C4A001E          cmp dword ptr [ecx+004A1C00], 0000001E
+:0042A321 740A                    je 0042A32D
+:0042A323 80FA0C                  cmp dl, 0C
+:0042A326 7405                    je 0042A32D
+:0042A328 80FA0D                  cmp dl, 0D
+:0042A32B 7502                    jne 0042A32F
+:0042A32D 33C0                    xor eax, eax
+:0042A32F C3                      ret
+
+
+

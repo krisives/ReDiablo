@@ -1,0 +1,56 @@
+()Enable Apocalypse for FallenAngel(#28),DarkLord,DarkGhost 
+
+
+:0043AF0F 837DFC48                cmp dword ptr [ebp-04], 00000048	Old Incinerators
+:0043AF13 7C1D                    jl 0043AF32
+:0043AF15 837DFC4B                cmp dword ptr [ebp-04], 0000004B
+:0043AF19 7F17                    jg 0043AF32
+wordt
+:0043AF0F 837DFC6E                cmp dword ptr [ebp-04], 0000006E	DarkLord
+:0043AF13 7406                    je 0043AF1B
+:0043AF15 837DFC1C                cmp dword ptr [ebp-04], 0000001C	FallenAngel
+:0043AF19 7517                    jne 0043AF32
+
+:0043AF2B B119                    mov cl, 19
+wordt
+:0043AF2B B127                    mov cl, 27
+
+:0043B0BD 7507                    jne 0043B0C6
+wordt
+:0043B0BD EB07                    jmp 0043B0C6
+
+
+
+
+:0043AF0F 837DFC6E                cmp dword ptr [ebp-04], 0000006E
+:0043AF13 7406                    je 0043AF1B
+:0043AF15 837DFC1C                cmp dword ptr [ebp-04], 0000001C
+:0043AF19 7517                    jne 0043AF32
+:0043AF1B F60538D6690008          test byte ptr [0069D638], 08
+:0043AF22 750E                    jne 0043AF32
+:0043AF24 830D38D6690008          or dword ptr [0069D638], 00000008
+:0043AF2B B127                    mov cl, 27
+:0043AF2D E8F24BFFFF              call 0042FB24
+
+
+
+wordt
+
+:0043AF0F 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043AF0F 83F81C                  cmp eax, 0000001C			FallenAngel
+:0043AF0F 740E                    je 0043E4A3
+:0043AF0F 83F86E                  cmp eax, 0000006E			Diablo
+:0043AF0F 740E                    je 0043E4A3
+:0043AF0F 3D89000000              cmp eax, 00000089			DarkGhost
+:0043AF0F 750E                    jne 0043AF32
+:0043AF0F F60538D6690008          test byte ptr [0069D638], 08
+:0043AF0F 750E                    jne 0043AF32
+:0043AF0F 830D38D6690008          or dword ptr [0069D638], 00000008
+:0043AF0F E9A9000000              jmp 0043B0BF
+
+
+:0043B0B9 837DFC6E                cmp dword ptr [ebp-04], 0000006E
+wordt
+:0043B0B9 90909090                4*nop
+
+

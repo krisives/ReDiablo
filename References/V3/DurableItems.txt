@@ -1,0 +1,107 @@
+Implementing chances of avoiding loss of durability when already 9 or lower
+
+
+File Offset 0005AB47
+
+:0045B747 05480A0000              add eax, 00000A48
+:0045B74C 3BCA                    cmp ecx, edx
+:0045B74E 90                      nop
+:0045B74F 90                      nop
+:0045B750 90                      nop
+:0045B751 90                      nop
+:0045B752 90                      nop
+:0045B753 90                      nop
+wordt
+:0045B747 E87B41FDFF              call 0042F8C7
+:0045B74C 9090                    2*nop
+:0045B74E 0F84EC000000            je 0045B840
+
+
+File Offset 0005AB81
+
+:0045B781 05BC0B0000              add eax, 00000BBC
+:0045B786 3BCA                    cmp ecx, edx
+:0045B788 90                      nop
+:0045B789 90                      nop
+:0045B78A 90                      nop
+:0045B78B 90                      nop
+:0045B78C 90                      nop
+:0045B78D 90                      nop
+wordt
+:0045B781 E83A41FDFF              call 0042F8C0
+:0045B786 9090                    2*nop
+:0045B788 0F84B2000000            je 0045B840
+
+
+File Offset 0005ABB8
+
+:0045B7B8 05BC0B0000              add eax, 00000BBC
+:0045B7BD 3BCA                    cmp ecx, edx
+:0045B7BF 7400                    je 0045B7C1
+wordt
+:0045B7B8 E80341FDFF              call 0042F8C0
+:0045B7BD 9090                    2*nop
+:0045B7BF 747F                    je 0045B840
+
+
+File Offset 0005AC03
+
+:0045B803 05480A0000              add eax, 00000A48
+:0045B808 3BCA                    cmp ecx, edx
+:0045B80A 7400                    je 0045B80C
+wordt
+:0045B803 E8BF40FDFF              call 0042F8C7
+:0045B808 9090                    2*nop
+:0045B80A 7434                    je 0045B840
+
+
+File Offset 0005BF71
+
+:0045CB71 81F9FF000000            cmp ecx, 000000FF
+:0045CB77 7400                    je 0045CB79
+wordt
+:0045CB71 E8F708FEFF              call 0043D46D
+:0045CB76 90                      nop
+:0045CB77 7426                    je 0045CB9F
+
+
+Filling up free space after NoApoBlock:
+
+File Offset 0002ECC0
+
+:0042F8C0 90                      nop
+...
+:0042F8D1 90                      nop
+wordt
+:0042F8C0 05BC0B0000              add eax, 00000BBC
+:0042F8C5 EB05                    jmp 0042F8CC
+:0042F8C7 05480A0000              add eax, 00000A48
+:0042F8CC E89CDB0000              call 0043D46D
+:0042F8D1 C3                      ret
+
+
+Replacing old towncheck for Manashield drain (filled up, also):
+
+Part of this routine is also used by DemonSlaying check.
+
+File Offset 0003C86D
+
+:0043D46D 90909090909090	  7*nop
+:0043D474 9090			  2*nop
+:0043D476 909090		  3*nop
+:0043D479 9090			  2*nop
+:0043D47B 9090909090		  5*nop
+:0043D480 9090909090		  5*nop
+wordt
+:0043D46D 83F909                  cmp ecx, 00000009
+:0043D470 7F12                    jg 0043D484
+:0043D472 50                      push eax
+:0043D473 51                      push ecx
+:0043D474 E8C80E0000              call 0043E341		RND100 Routine
+:0043D479 83F832                  cmp eax, 00000032
+:0043D47C 7D02                    jge 0043D480
+:0043D47E 33C0                    xor eax, eax
+:0043D480 85C0                    test eax, eax
+:0043D482 59                      pop ecx
+:0043D483 58                      pop eax
+:0043D484 C3                      ret

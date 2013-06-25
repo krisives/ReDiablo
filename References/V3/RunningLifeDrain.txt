@@ -1,0 +1,188 @@
+Implementing a life drain for Running, using to the normal 'Constantly lose Hp' effect.
+
+This also frees some code at Mana Shield drain (Town check no longer needed there).
+
+
+File Offset 0005CFE3
+
+:0045DBE3 03C6                    add eax, esi
+:0045DBE5 F6804055000040          test byte ptr [eax+00005540], 40
+:0045DBEC 7445                    je 0045DC33
+:0045DBEE 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045DBF5 743C                    je 0045DC33
+wordt
+:0045DBE3 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045DBEA 744C                    je 0045DC38			jmp past Manashield Drain
+:0045DBEC 03C6                    add eax, esi
+:0045DBEE 909090                  3*nop
+:0045DBF1 E9BC870100              jmp 004763B2
+:0045DBF6 50                      push eax
+
+
+File Offset 0005D022
+
+:0045DC22 7F09                    jg 0045DC2D
+wordt
+:0045DC22 58                      pop eax
+:0045DC23 C3                      ret
+
+
+Reducing life for 'Constantly lose Hp' and Running
+
+Placed on LoadingCompleteNut. Will be adapted later for wearing armor by adding extra code at the end.
+
+File Offset 0007579F
+
+:0047639F 56                      push esi
+:004763A0 6A0A                    push 0000000A
+:004763A2 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:004763A8 6AFF                    push FFFFFFFF
+:004763AA 6A16                    push 00000016
+:004763AC 6A3D                    push 0000003D
+:004763AE 6A0C                    push 0000000C
+:004763B0 6A01                    push 00000001
+:004763B2 6A60                    push 00000060
+:004763B4 5A                      pop edx
+:004763B5 E8B9F7FFFF              call 00475B73
+:004763BA 8B0DE8F16F00            mov ecx, dword ptr [006FF1E8]
+:004763C0 E840F8FFFF              call 00475C05
+:004763C5 803DDEB56E0003          cmp byte ptr [006EB5DE], 03
+:004763CC 8B35E8F16F00            mov esi, dword ptr [006FF1E8]
+:004763D2 740C                    je 004763E0
+:004763D4 C1E608                  shl esi, 08
+:004763D7 33D2                    xor edx, edx
+:004763D9 B99CB94C00              mov ecx, 004CB99C
+:004763DE EB0A                    jmp 004763EA
+:004763E0 C1E608                  shl esi, 08
+:004763E3 33D2                    xor edx, edx
+:004763E5 B980B94C00              mov ecx, 004CB980
+
+wordt
+
+:0047639F 33DB                    xor ebx, ebx
+:004763A1 89988C010000            mov dword ptr [eax+0000018C], ebx
+:004763A7 5B                      pop ebx
+:004763A8 E98078FEFF              jmp 0045DC2D		if alive
+:004763AD E97278FEFF              jmp 0045DC24		if dead
+:004763B2 F6804055000040          test byte ptr [eax+00005540], 40	
+:004763B9 7407                    je 004763C2
+:004763BB E83678FEFF              call 0045DBF6		decrease life
+:004763C0 7EEB                    jle 004763AD		exit if dead
+:004763C2 83B88C010000EC          cmp dword ptr [eax+0000018C], FFFFFFEC
+:004763C9 75DD                    jne 004763A8		exit alive if not running
+:004763CB 53                      push ebx
+:004763CC 8B989C010000            mov ebx, dword ptr [eax+0000019C]
+:004763D2 D1FB                    sar ebx, 1
+:004763D4 399898010000            cmp dword ptr [eax+00000198], ebx
+:004763DA 7EC3                    jle 0047639F		exit and reset flag if wounded
+:004763DC 5B                      pop ebx
+:004763DD E81478FEFF              call 0045DBF6		decrease life
+:004763E2 7EC9                    jle 004763AD		exit if dead
+:004763E4 E94478FEFF              jmp 0045DC2D		exit alive, add extra drain here
+:004763E9 90                      nop
+
+Still lots of free space here for additional drains (for wearing armor).
+
+With new pointer
+
+:0047639F 80A020010000F7          and byte ptr [eax+00000120], F7
+:004763A6 90                      nop
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004763CF(C)
+|
+:004763A7 5B                      pop ebx
+:004763A8 E98078FEFF              jmp 0045DC2D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004763C0(C), :004763EE(C)
+|
+:004763AD E97278FEFF              jmp 0045DC24
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045DBF1(U)
+|
+:004763B2 F6804055000040          test byte ptr [eax+00005540], 40
+:004763B9 7407                    je 004763C2
+:004763BB E83678FEFF              call 0045DBF6
+:004763C0 7EEB                    jle 004763AD
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004763B9(C)
+|
+:004763C2 53                      push ebx
+:004763C3 8A9820010000            mov bl, byte ptr [eax+00000120]
+:004763C9 80E308                  and bl, 08
+:004763CC 80FB08                  cmp bl, 08
+:004763CF 75D6                    jne 004763A7
+:004763D1 8B989C010000            mov ebx, dword ptr [eax+0000019C]
+:004763D7 D1FB                    sar ebx, 1
+:004763D9 399898010000            cmp dword ptr [eax+00000198], ebx
+:004763DF 7EBE                    jle 0047639F
+:004763E1 5B                      pop ebx
+:004763E2 E80F78FEFF              call 0045DBF6
+:004763E7 7EC4                    jle 004763AD
+:004763E9 83787810                cmp dword ptr [eax+78], 00000010		Medium Armor
+:004763ED 7C14                    jl 00476403
+:004763EF E80278FEFF              call 0045DBF6
+:004763F4 7EB7                    jle 004763AD
+:004763F6 83787820                cmp dword ptr [eax+78], 00000020		Heavy Armor
+:004763FA 7C07                    jl 00476403
+:004763FC E8F577FEFF              call 0045DBF6
+:00476401 7EAA                    jle 004763AD
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004763ED(C), :004763FA(C)
+|
+:00476403 80B83C01000001          cmp byte ptr [eax+0000013C], 01		Can Block (Shield or Monk with Staff or Nothing)
+:0047640A 7519                    jne 00476413
+:0047640C 83B86409000005          cmp dword ptr [eax+00000964], 00000005	Shield in Primary Weaponslot
+:00476413 7409                    je 0047641E
+:00476415 83B8D80A000005          cmp dword ptr [eax+00000AD8], 00000005	Shield in Secondary Weaponslot
+:0047641C 7507                    jne 00476425
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00476413(C)
+|
+:0047641E E8D377FEFF              call 0045DBF6
+:00476423 7E88                    jle 004763AD
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0047640A(C), :0047641C(C)
+|
+:00476425 E90378FEFF              jmp 0045DC2D
+:0047642A 90                      nop
+:0047642B 90                      nop
+:0047642C 90                      nop
+:0047642D 90                      nop
+
+
+
+Freeing space from ManaShield Drain (Town check no longer needed)
+
+File Offset = 000514DC
+
+:004520DC E98CB3FEFF              jmp 0043D46D
+wordt
+:004520DC 83F800                  cmp eax, 00000000
+:004520DF 7C14                    jl 004520F5
+
+This frees the following code (24 byte):
+
+File Offset = 0003C86D
+
+:0043D46D 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0043D474 740A                    je 0043D480
+:0043D476 83F800                  cmp eax, 00000000
+:0043D479 7C05                    jl 0043D480
+:0043D47B E9614C0100              jmp 004520E1
+:0043D480 E9704C0100              jmp 004520F5
+wordt
+:0043D46D 90909090909090	  7*nop
+:0043D474 9090			  2*nop
+:0043D476 909090		  3*nop
+:0043D479 9090			  2*nop
+:0043D47B 9090909090		  5*nop
+:0043D480 9090909090		  5*nop
+
+

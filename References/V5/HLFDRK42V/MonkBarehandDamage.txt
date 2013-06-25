@@ -1,0 +1,17 @@
+Lower barehanded damage for Monks (now 1..1+clvl/2):
+
+file offset 00022F5E
+
+:00423B5E 8BC8                    mov ecx, eax
+:00423B60 D1F9                    sar ecx, 1
+:00423B62 3BCF                    cmp ecx, edi
+:00423B64 7C03                    jl 00423B69
+:00423B66 894DDC                  mov dword ptr [ebp-24], ecx
+changed into
+:00423B5E D1F8                    sar eax, 1
+:00423B60 40                      inc eax
+:00423B61 3BC7                    cmp eax, edi
+:00423B63 7F04                    jg 00423B69
+:00423B65 6A02                    push 00000002
+:00423B67 58                      pop eax
+:00423B68 90                      nop

@@ -1,0 +1,254 @@
+Changed trap distribution:
+
+Nest
+
+Arrow (old trap, not used in previous versions)
+Potionbreaking
+Manadraining
+
+Hell
+
+Nova
+Golem (new trap: summons a Golem)
+Lightning Arrow
+
+Caves
+
+Arrow (old trap, not used in previous versions)
+Fire Arrow
+
+Catacombs
+
+Arrow (old trap, not used in previous versions)
+Lightning Arrow
+
+
+File offset 000503CB
+
+:00450FCB 2BCB                    sub ecx, ebx
+:00450FCD 7417                    je 00450FE6		Lightning Arrow (originally Arrow)
+:00450FCF 49                      dec ecx
+:00450FD0 7418                    je 00450FEA		Fire Arrow
+:00450FD2 49                      dec ecx
+:00450FD3 7419                    je 00450FEE		Nova
+:00450FD5 49                      dec ecx
+:00450FD6 740E                    je 00450FE6		Lightning Arrow (originally Ring of Fire)
+:00450FD8 49                      dec ecx
+:00450FD9 7407                    je 00450FE2		Potion Breaking
+:00450FDB 49                      dec ecx
+:00450FDC 750C                    jne 00450FEA		Fire Arrow (originally Arrow)
+:00450FDE 6A53                    push 00000053		Mana Sucking
+:00450FE0 EB12                    jmp 00450FF4
+:00450FE2 6A52                    push 00000052
+:00450FE4 EB0E                    jmp 00450FF4
+:00450FE6 6A38                    push 00000038
+:00450FE8 EB0A                    jmp 00450FF4
+:00450FEA 6A1B                    push 0000001B
+:00450FEC EB06                    jmp 00450FF4
+:00450FEE E97E280000              jmp 00453871
+:00450FF3 90                      nop
+changed into
+:00450FCB 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:00450FD2 F6C104                  test cl, 01
+:00450FD5 7512                    jne 00450FE9
+:00450FD7 83FA0D                  cmp edx, 0000000D
+:00450FDA 7C09                    jl 00450FE5
+:00450FDC 83FA10                  cmp edx, 00000010
+:00450FDF 0F8C8C280000            jl 00453871				Nova
+:00450FE5 33D2                    xor edx, edx				Arrow
+:00450FE7 EB0C                    jmp 00450FF5
+:00450FE9 83FA08                  cmp edx, 00000008
+:00450FEC 0F8F42AB0000            jg 0045BB34
+:00450FF2 6A38                    push 00000038				Lightning Arrow
+:00450FF4
+
+
+File offset 0005AF34
+
+:0045BB34 90                      nop
+:0045BB35 90                      nop
+:0045BB36 90                      nop
+:0045BB37 90                      nop
+:0045BB38 90                      nop
+:0045BB39 90                      nop
+:0045BB3A 90                      nop
+:0045BB3B 90                      nop
+:0045BB3C 80FB01                  cmp bl, 01
+:0045BB3F 7519                    jne 0045BB5A
+:0045BB41 90                      nop
+:0045BB42 90                      nop
+:0045BB43 90                      nop
+:0045BB44 90                      nop
+:0045BB45 90                      nop
+:0045BB46 90                      nop
+:0045BB47 90                      nop
+:0045BB48 90                      nop
+:0045BB49 750F                    jne 0045BB5A
+:0045BB4B 8BD7                    mov edx, edi
+:0045BB4D 03FA                    add edi, edx
+:0045BB4F 80B86001000003          cmp byte ptr [eax+00000160], 03
+:0045BB56 7502                    jne 0045BB5A
+:0045BB58 03FA                    add edi, edx
+:0045BB5A C3                      ret
+:0045BB5B 90                      nop
+:0045BB5C 90                      nop
+:0045BB5D 90                      nop
+:0045BB5E 90                      nop
+:0045BB5F 90                      nop
+:0045BB60 90                      nop
+:0045BB61 90                      nop
+:0045BB62 90                      nop
+:0045BB63 90                      nop
+:0045BB64 90                      nop
+changed into
+:0045BB34 83FA0C                  cmp edx, 0000000C
+:0045BB37 7F04                    jg 0045BB3D
+:0045BB39 6A1B                    push 0000001B				Fire Arrow
+:0045BB3B EB1D                    jmp 0045BB5A
+:0045BB3D 83FA0F                  cmp edx, 0000000F
+:0045BB40 7F0D                    jg 0045BB4F
+:0045BB42 80F901                  cmp cl, 01
+:0045BB45 7404                    je 0045BB4B
+:0045BB47 6A5F                    push 0000005F				Golem
+:0045BB49 EB0F                    jmp 0045BB5A
+:0045BB4B 6A38                    push 00000038				Lightning Arrow
+:0045BB4D EB0B                    jmp 0045BB5A
+:0045BB4F 80F901                  cmp cl, 01
+:0045BB52 7404                    je 0045BB58
+:0045BB54 6A53                    push 00000053				Mana draining
+:0045BB56 EB02                    jmp 0045BB5A
+:0045BB58 6A52                    push 00000052				Potion breaking
+:0045BB5A E99554FFFF              jmp 00450FF4
+:0045BB5F
+
+
+
+The Golem trap calls the Spawn spell-effect (only used by the Hork Demon in Hellfire), which creates a monster as defined by the first entry on the monster selection list for the current dungeon-level. This trap will only appear in Hell levels, so the monster-selection list for those levels is adjusted to include a Golem monster (see MonsterSelection52M.TXT).
+
+The Golem summoned by traps is a new monster that looks and acts the same as the Golem summoned by spell (except that it attacks characters, ofcourse). A new Idle animation is created (by ArthurDent) and added to the MPQ as Monsters\Golem\Golemn.CL2
+
+Note that Golems lack a Hitrecovery animation, but that none is needed (see MonsterStun52M.TXT).
+
+
+Changing obsolete Bone Lord into a Golem:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size stand walk  attk1 frame   hr  death attk2 frame    playback speed
+
+ 96 Bone Lord             undead   39 Unknown          3  16-16    31   250- 280  100  135   40- 50  135   40- 50  RRI/RRI   3947  5000  10     8    20     8     6    24    16    12      3   0   0   0   0   0
+    Golem                          13 Butcher                      30   300- 300   60  135   30- 30    0    0-  0  RRR/RRR   2000         3    12    12     7     0    12    20     0      0 
+
+000AD8F0 8000 0000 8813 0000 7029 4B00 0100 0000 ........p)K.....
+000AD900 C81D 4B00 0100 0000 0000 0000 0000 0000 ..K.............
+000AD910 0A00 0000 0800 0000 1400 0000 0600 0000 ................
+000AD920 1800 0000 1000 0000 0300 0000 0000 0000 ................
+000AD930 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AD940 0409 4A00 1E1E 1F00 FA00 0000 1801 0000 ..J.............
+000AD950 2700 0000 0003 0000 0387 0828 3287 0C28 '..........(2..(
+000AD960 3264 0000 6300 6300 0000 0700 6B0F 0000 2d..c.c.....k...
+changed into
+000AD8F0 6000 0000 8813 0000 E022 4B00 0100 0000 `........"K.....
+000AD900 C422 4B00 0000 0000 0000 0000 0000 0000 ."K.............
+000AD910 0300 0000 0C00 0000 0C00 0000 0000 0000 ................
+000AD920 0C00 0000 1400 0000 0000 0000 0000 0000 ................
+000AD930 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AD940 BC22 4B00 1E1E 1E00 2C01 0000 2C01 0000 ."K.....,...,...
+000AD950 0D00 0000 0002 0000 0387 071E 1E00 0000 ................
+000AD960 003C 0000 4700 4700 0000 0700 D007 0000 .<..G.G.........
+
+For comparison, original Golem:
+
+109 Golem                 undead   21 Golem            0   1- 1*   12     1-   1    1    0    1-  1    0   0- 0    RRR/RRR   386      0   0     12   12     7     0    12    20     0      0   0   0   0   0   0
+
+000ADF70 6000 0000 8201 0000 E022 4B00 0100 0000 `........"K.....
+000ADF80 C422 4B00 0000 0000 0000 0000 0000 0000 ."K.............
+000ADF90 0000 0000 0C00 0000 0C00 0000 0000 0000 ................
+000ADFA0 0C00 0000 1400 0000 0000 0000 0000 0000 ................
+000ADFB0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000ADFC0 BC22 4B00 0000 0C00 0100 0000 0100 0000 ."K.............
+000ADFD0 1500 0000 0002 0000 0000 0701 0100 0000 ................
+000ADFE0 0001 0000 0700 0700 0000 0900 0000 0000 ................
+
+
+Disabling drops for Golems from traps:
+
+File offset 0003C9A9
+
+:0043D5A9 0F85554E0100            jne 00452404
+changed into
+:0043D5A9 0F854B2FFFFF            jne 004304FA
+:0043D5AF   
+
+File offset 0002F8FA
+
+:004304FA 90                      nop
+:004304FB 90                      nop
+:004304FC 90                      nop
+:004304FD 90                      nop
+:004304FE 90                      nop
+:004304FF 90                      nop
+:00430500 90                      nop
+:00430501 90                      nop
+:00430502 90                      nop
+:00430503 90                      nop
+:00430504 90                      nop
+:00430505 90                      nop
+:00430506 90                      nop
+:00430507 90                      nop
+changed into
+:004304FA 83F860                  cmp eax, 00000060
+:004304FD 0F85011F0200            jne 00452404
+:00430503 E949D10000              jmp 0043D651
+:00430508 
+
+
+Set facing direction for Death/Special animation (this is needed because for Golems these animations have only one direction):
+
+File offset 0003A1B7
+
+:0043ADB7 83BEB08E6A006D          cmp dword ptr [esi+006A8EB0], 0000006D
+changed into
+:0043ADB7 8BCE                    mov ecx, esi
+:0043ADB9 E9E6760100              jmp 004524A4
+:0043ADBE
+
+Using free space from obsolete Divine Shrine code:
+
+File offset 000518A4
+
+:004524A4 90                      nop
+:004524A5 90                      nop
+:004524A6 90                      nop
+:004524A7 90                      nop
+:004524A8 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:004524AE 03C8                    add ecx, eax
+:004524B0 8B919C010000            mov edx, dword ptr [ecx+0000019C]
+:004524B6 899198010000            mov dword ptr [ecx+00000198], edx
+changed into
+:004524A4 81C1B08E6A00            add ecx, 006A8EB0
+:004524AA 83396D                  cmp dword ptr [ecx], 0000006D
+:004524AD 7403                    je 004524B2
+:004524AF 833960                  cmp dword ptr [ecx], 00000060
+:004524B2 E90789FEFF              jmp 0043ADBE
+:004524B7 9090909090              5*nop
+
+
+Force Special animation at monster-creation by Spawn spell-effect:
+
+File offset 00034E8E
+
+:00435A8E 8B17                    mov edx, dword ptr [edi]		current facing direction
+:00435A90 8BC8                    mov ecx, eax				monster-number
+:00435A92 E866710000              call 0043CBFD				set Idle (00) state
+changed into
+:00435A8E 33D2                    xor edx, edx				set facing direction
+:00435A90 8BC8                    mov ecx, eax				monster-number
+:00435A92 E8C2B50000              call 00441059				set Special (0B) state
+:00435A97 
+
+
+Set Golem Summoning sound for Spawn spell-effect:
+
+000A6DCC 5F00 0000 2406 4300 A059 4300 0100 0000 _...$.C..YC.....
+000A6DDC 0200 2E00 FFFF FFFF FFFF FFFF           ............
+changed into
+000A6DE0 7400 0000                               t...

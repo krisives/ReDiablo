@@ -1,0 +1,25 @@
+**** Obsolete, now free space
+
+
+set extra slvls for LOCAL character
+
+
+* Referenced by a CALL at Addresses:
+|:00433C9E   , :00434D77   , :0043E440   
+|
+:0043E44A 52                      push edx
+:0043E44B 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0043E451 69C9C8550000            imul ecx, 000055C8
+:0043E457 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0043E45D 0FBE8C1148550000        movsx ecx, byte ptr [ecx+edx+00005548]
+:0043E465 6A01                    push 00000001
+:0043E467 5A                      pop edx
+:0043E468 3BCA                    cmp ecx, edx
+:0043E46A 7D02                    jge 0043E46E
+:0043E46C 8BCA                    mov ecx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E46A(C)
+|
+:0043E46E 5A                      pop edx
+:0043E46F C3                      ret

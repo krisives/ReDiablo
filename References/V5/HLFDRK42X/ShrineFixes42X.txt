@@ -1,0 +1,136 @@
+Various fixes to shrines
+
+
+Fascinating Shrine:
+
+file offset 00051431
+
+:00452031 8B75FC                  mov esi, dword ptr [ebp-04]
+changed into
+:00452031 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+
+Sacred Shrine:
+
+file offset 000519F3
+
+:004525F3 8B75FC                  mov esi, dword ptr [ebp-04]
+changed into
+:004525F3 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+
+Ornate Shrine:
+
+file offset 00051DA6
+
+:004529A6 8B75FC                  mov esi, dword ptr [ebp-04]
+changed into
+:004529A6 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+
+Town Shrine:
+
+file offset 00051E43
+
+:00452A43 8B75FC                  mov esi, dword ptr [ebp-04]
+changed into
+:00452A43 8B4DFC                  mov ecx, dword ptr [ebp-04]
+
+
+Mysterious Shrine:
+
+file offset 00050C82
+
+:00451882 8B75FC                  mov esi, dword ptr [ebp-04]
+:00451885 E899130000              call 00452C23
+:0045188A 7E79                    jle 00451905
+:0045188C 9090909090              5*nop
+changed into
+:00451882 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:00451888 E896130000              call 00452C23
+:0045188D 7E76                    jle 00451905
+:0045188F 9090                    2*nop
+
+
+Eerie Shrine:
+
+file offset 000517DD
+
+:004523DD 8B75FC                  mov esi, dword ptr [ebp-04]
+:004523E0 EB0A                    jmp 004523EC
+:004523E2 90                      nop
+:004523E3 90                      nop
+:004523E4 90                      nop
+:004523E5 90                      nop
+:004523E6 90                      nop
+:004523E7 90                      nop
+:004523E8 90                      nop
+:004523E9 90                      nop
+:004523EA 90                      nop
+:004523EB 90                      nop
+:004523EC 6A01                    push 00000001
+:004523EE 8BCE                    mov ecx, esi
+changed into
+:004523DD EB0A                    jmp 004523E9
+:004523DF 909090                  3*nop					
+:004523E2 ...
+:004523E9 E83DB0FEFF              call 0043D42B
+:004523EE 6A01                    push 00000001
+
+
+Abandoned Shrine:
+
+file offset 00051C6F
+
+:0045286F 8B75FC                  mov esi, dword ptr [ebp-04]
+:00452872 6A01                    push 00000001
+:00452874 8BCE                    mov ecx, esi
+changed into
+:0045286F E8B7ABFEFF              call 0043D42B				
+:00452874 6A01                    push 00000001
+
+
+Creepy Shrine:
+
+file offset 00051CAA
+
+:004528AA 8B75FC                  mov esi, dword ptr [ebp-04]
+:004528AD 6A01                    push 00000001
+:004528AF 8BCE                    mov ecx, esi
+changed into
+:004528AA E87CABFEFF              call 0043D42B
+:004528AF 6A01                    push 00000001
+
+
+Quiet Shrine:
+
+file offset 00051CE5
+
+:004528E5 8B75FC                  mov esi, dword ptr [ebp-04]
+:004528E8 6A01                    push 00000001
+:004528EA 8BCE                    mov ecx, esi
+changed into
+:004528E5 E841ABFEFF              call 0043D42B
+:004528EA 6A01                    push 00000001
+
+
+Using some old free codespace:
+
+file offset 0003C82B
+
+:0043D42B 90                      nop
+:0043D42C 90                      nop
+:0043D42D 90                      nop
+:0043D42E 90                      nop
+:0043D42F 90                      nop
+:0043D430 90                      nop
+:0043D431 90                      nop
+:0043D432 90                      nop
+:0043D433 90                      nop
+changed into
+:0043D42B 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:0043D431 8BCE                    mov ecx, esi
+:0043D433 C3                      ret
+:0043D434
+
+

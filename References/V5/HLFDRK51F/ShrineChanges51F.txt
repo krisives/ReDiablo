@@ -1,0 +1,7 @@
+Fixed bug in Murphies Shrine code, so that it will no longer lower durability below half the current value.
+
+file offset 000523E0
+
+:00452FE0 8B86EC000000            mov eax, dword ptr [esi+000000EC]
+changed into
+:00452FE0 8B86F0000000            mov eax, dword ptr [esi+000000F0]

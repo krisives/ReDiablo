@@ -1,0 +1,12 @@
+()Damage from Arrow-traps:
+
+:0043608F 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:00436096 8D0412                  lea eax, dword ptr [edx+edx]
+
+Dus:
+
+:0043608F 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+wordt
+:0043608F E8202B0500              call 00488BB4		call MOD_DLVL
+:00436094 9090			  2*nop
+

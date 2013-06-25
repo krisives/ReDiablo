@@ -1,0 +1,58 @@
+Hell PAL files:
+
+Levels\L4Data\L4_1.PAL		blue floor, brown wall, redbrown wallpaint		
+Levels\L4Data\L4_2.PAL		green floor, red wall, yellowgreen wallpaint		
+Levels\L4Data\L4_3.PAL		red floor, blue wall, very green wallpaint		
+Levels\L4Data\L4_4.PAL		brown floor, green wall, very red wallpaint	
+
+
+000-05F		very red, lava (common for all PAL)
+
+No changes
+
+060-08F		Floor base
+
+all PAL grey:
+
+00000060 8282 8279 7979 7171 7168 6868 6060 6057 ...yyyqqqhhh```W
+00000070 5757 4E4E 4E46 4646 3D3D 3D34 3434 2C2C WWNNNFFF===444,,
+00000080 2C23 2323 1A1A 1A12 1212 0909 0901 0101 ,###............
+
+090-0BF		many Floor dots, some on wall
+
+No changes
+
+0C0-0EF		WallPaint, small dark parts of Walls
+
+all PAL red as L4_1:
+
+000000C0 9766 618D 5D57 8354 4D79 4C44 7043 3A66 .fa.]W.TMyLDpC:f
+000000D0 3A30 5B32 2950 2923 4620 1C3B 1816 300F :0[2)P)#F .;..0.
+000000E0 0F28 0C0C 200A 0A18 0707 0F05 0507 0202 .(.. ...........
+
+0F0-11F		dark parts of Walls
+
+all PAL brown as L4_1:
+
+000000F0 8770 5780 694F 7962 4872 5B41 6B54 3A64 .pW.iOybHr[AkT:d
+00000100 4D33 5D46 2C56 3F25 4F38 1E45 301A 3B29 M3]F,V?%O8.E0.;)
+00000110 1531 2211 271B 0D1D 1308 140C 040A 0500 .1".'...........
+
+120-14F		Walls, rare dots on Floor
+
+all PAL brown as L4_1:
+
+00000120 7870 6872 6A62 6C64 5C66 5E56 5F58 5059 xphrjbld\f^V_XPY
+00000130 524A 534C 444D 463E 473F 383E 3731 362F RJSLDMF>G?8>716/
+00000140 2A2D 2723 241F 1C1C 1513 120D 0C0A 0707 *-'#$...........
+
+150-17F		light parts of Walls
+
+all PAL brown as L4_1:
+
+00000150 7D6E 5C77 6755 7061 4F6A 5A48 6354 425D }n\wgUpaOjZHcTB]
+00000160 4E3C 5747 3550 412F 4A3A 2840 3323 372B N<WG5PA/J:(@3#7+
+00000170 1D2D 2318 241C 131A 140D 110C 0807 0502 .-#.$...........
+
+
+

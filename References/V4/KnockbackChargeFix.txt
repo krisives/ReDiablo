@@ -1,0 +1,28 @@
+Charge : Knockback for Running Melee
+
+
+File Offset 00008867
+
+:00409467 F6400108                test [eax+01], 08
+:0040946B 0F85D2290500            jne 0045BE43
+:00409471 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00409476 F684307800000040        test byte ptr [eax+esi+00000078], 40
+:0040947E 0F85BF290500            jne 0045BE43
+:00409484 E9C2290500              jmp 0045BE4B
+:00409489 909090                  3*nop
+
+
+
+In [eax+esi+00000078] the value of esi is no longer correct, but always 15.
+
+Fix by using available eax:
+
+File Offset 00008871
+
+:00409471 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00409476 F684307800000040        test byte ptr [eax+esi+00000078], 40
+wordt
+:00409471 2D40550000              sub eax, 00005540
+:00409476 F6807800000040          test byte ptr [eax+00000078], 40
+:0040947D 90                      nop
+

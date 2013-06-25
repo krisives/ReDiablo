@@ -1,0 +1,113 @@
+Relocated Murphy,Tainted and Oily : level 12 and deeper
+
+Names:
+       Mysterious;Hidden;Gloomy;Weird
+       Magical;Stone;Religious;Enchanted
+       Thaumaturgic;Fascinating;Cryptic;Magical
+       Eldritch;Eerie;Divine;Holy
+       Sacred;Spiritual;Spooky;Abandoned
+       Creepy;Quiet;Secluded;Ornate
+       Glimmering;Tainted;Oily;Glowing
+       Mendicant's;Sparkling;Town;Shimmering
+       Solar;Murphy's
+
+First level of appearance:
+0008F1F0 E0564B00 D4564B00 01010101 01010101 01010B01 01010101 .VK..VK.................
+0008F208 01010101 01010101 01010101 01010101 01070000 00000000 ........................
+wordt
+0008F1F0 E0564B00 D4564B00 01010101 01010101 01010B01 01010101 .VK..VK.................
+0008F208 01010101 01010101 010B0B01 01010101 010B0000 00000000 ........................
+
+
+
+
+
+Fascinating	00451FDB
+
+FileOffset = 5142E
+
+:0045202E 80FA08                  cmp dl, 08
+wordt
+:0045202E 90                      nop
+:0045202F 3C0B                    cmp al, 0B
+
+
+
+Sacred		0045259D	
+
+FileOffset = 519F0
+
+:004525F0 80FA08                  cmp dl, 08
+wordt
+:004525F0 90                      nop
+:004525F1 3C0B                    cmp al, 0B
+
+
+
+Ornate		00452950	
+
+FileOffset = 51DA3
+
+:004529A3 80FA08                  cmp dl, 08
+wordt
+:004529A3 90                      nop
+:004529A4 3C0B                    cmp al, 0B
+
+
+
+Town		00452E34	
+
+FileOffset = 51E40
+
+:00452A40 80FA08                  cmp dl, 08
+wordt
+:00452A40 90                      nop
+:00452A41 3C0B                    cmp al, 0B
+
+
+
+Oily
+
+File Offset = 2EDE6
+
+:0042F9E6 90                      nop
+:0042F9E7 90                      nop
+:0042F9E8 90                      nop
+:0042F9E9 90                      nop
+:0042F9EA 90                      nop
+:0042F9EB 90                      nop
+:0042F9EC 90                      nop
+:0042F9ED 90                      nop
+:0042F9EE 90                      nop
+:0042F9EF 90                      nop
+:0042F9F0 90                      nop
+:0042F9F1 90                      nop
+:0042F9F2 90                      nop
+:0042F9F3 90                      nop
+:0042F9F4 90                      nop
+:0042F9F5 90                      nop
+:0042F9F6 90                      nop
+wordt
+:0042F9E6 8B96C8E56D00            mov edx, dword ptr [esi+006DE5C8]
+:0042F9EC 8B8EC4E56D00            mov ecx, dword ptr [esi+006DE5C4]
+:0042F9F2 E983340200              jmp 00452E7A
+:0042F9F7
+
+en
+
+File Offset = 520B1
+
+:00452CB1 E9B8010000              jmp 00452E6E
+wordt
+:00452CB1 E930CDFDFF              jmp 0042F9E6
+:00452CB6 
+
+en
+
+File Offset = 5227A
+
+:00452E7A 90                      nop
+:00452E7B 90                      nop
+:00452E7C 90                      nop
+wordt
+:00452E7A FF7070                  push [eax+70]

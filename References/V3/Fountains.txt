@@ -1,0 +1,137 @@
+()Purifying Spring
+
+:00453696 6A73                    push 00000073
+:00453698 8B88AC010000            mov ecx, dword ptr [eax+000001AC]
+:0045369E 3B88B0010000            cmp ecx, dword ptr [eax+000001B0]
+:004536A4 59                      pop ecx
+:004536A5 0F8D01010000            jnl 004537AC
+:004536AB E81450FCFF              call 004186C4
+:004536B0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536B5 838438AC01000040        add dword ptr [eax+edi+000001AC], 00000040
+:004536BD 8D8438AC010000          lea eax, dword ptr [eax+edi+000001AC]
+:004536C4 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536C9 838438A401000040        add dword ptr [eax+edi+000001A4], 00000040
+:004536D1 8D8438A4010000          lea eax, dword ptr [eax+edi+000001A4]
+:004536D8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536DD 03C7                    add eax, edi
+:004536DF 8D88AC010000            lea ecx, dword ptr [eax+000001AC]
+:004536E5 8B80B0010000            mov eax, dword ptr [eax+000001B0]
+:004536EB 3901                    cmp dword ptr [ecx], eax
+:004536ED 0F8EB5000000            jle 004537A8
+:004536F3 8901                    mov dword ptr [ecx], eax
+:004536F5 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536FA 03C7                    add eax, edi
+:004536FC 8B88A8010000            mov ecx, dword ptr [eax+000001A8]
+:00453702 8988A4010000            mov dword ptr [eax+000001A4], ecx
+:00453708 E99B000000              jmp 004537A8
+
+
+
+
+()Fountain of Blood
+
+:0045373E 6A73                    push 00000073
+:00453740 8B8898010000            mov ecx, dword ptr [eax+00000198]
+:00453746 3B889C010000            cmp ecx, dword ptr [eax+0000019C]
+:0045374C 59                      pop ecx
+:0045374D 7D5D                    jge 004537AC
+:0045374F E8704FFCFF              call 004186C4
+:00453754 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00453759 8384389801000040        add dword ptr [eax+edi+00000198], 00000040
+:00453761 8D843898010000          lea eax, dword ptr [eax+edi+00000198]
+:00453768 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045376D 8384389001000040        add dword ptr [eax+edi+00000190], 00000040
+:00453775 8D843890010000          lea eax, dword ptr [eax+edi+00000190]
+:0045377C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00453781 03C7                    add eax, edi
+:00453783 8D8898010000            lea ecx, dword ptr [eax+00000198]
+:00453789 8B809C010000            mov eax, dword ptr [eax+0000019C]
+:0045378F 3901                    cmp dword ptr [ecx], eax
+:00453791 7E15                    jle 004537A8
+:00453793 8901                    mov dword ptr [ecx], eax
+:00453795 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045379A 03C7                    add eax, edi
+:0045379C 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:004537A2 898890010000            mov dword ptr [eax+00000190], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004536ED(C), :00453708(U), :00453791(C)
+|
+:004537A8 B301                    mov bl, 01
+:004537AA EB05                    jmp 004537B1
+
+
+
+
+()Mana Increase = (1 + dlvl + 8*diff)*64
+
+:004536B0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536B5 838438AC01000040        add dword ptr [eax+edi+000001AC], 00000040
+:004536BD 8D8438AC010000          lea eax, dword ptr [eax+edi+000001AC]
+:004536C4 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536C9 838438A401000040        add dword ptr [eax+edi+000001A4], 00000040
+:004536D1 8D8438A4010000          lea eax, dword ptr [eax+edi+000001A4]
+:004536D8 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536DD 03C7                    add eax, edi
+wordt
+:004536B0 53                      push ebx
+:004536B1 E81EF3FFFF              call 004529D4				call INCREASE
+:004536B6 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004536BB 8BC8                    mov ecx, eax
+:004536BD 03CF                    add ecx, edi
+:004536BF 51                      push ecx
+:004536C0 50                      push eax
+:004536C1 0199AC010000            add dword ptr [ecx+000001AC], ebx
+:004536C7 8D8438AC010000          lea eax, dword ptr [eax+edi+000001AC]
+:004536CE 0199A4010000            add dword ptr [ecx+000001A4], ebx
+:004536D4 58                      pop eax
+:004536D5 8D8438A4010000          lea eax, dword ptr [eax+edi+000001A4]
+:004536DC 59                      pop eax
+:004536DD 5B                      pop ebx
+:004536DE 90                      nop
+
+
+()Life Increase = (1 + dlvl + 8*diff)*64
+
+:00453754 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00453759 8384389801000040        add dword ptr [eax+edi+00000198], 00000040
+:00453761 8D843898010000          lea eax, dword ptr [eax+edi+00000198]
+:00453768 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045376D 8384389001000040        add dword ptr [eax+edi+00000190], 00000040
+:00453775 8D843890010000          lea eax, dword ptr [eax+edi+00000190]
+:0045377C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00453781 03C7                    add eax, edi
+wordt
+:00453754 53                      push ebx
+:00453755 E87AF2FFFF              call 004529D4				call INCREASE
+:0045375A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045375F 8BC8                    mov ecx, eax
+:00453761 03CF                    add ecx, edi
+:00453763 51                      push ecx
+:00453764 50                      push eax
+:00453765 019998010000            add dword ptr [ecx+00000198], ebx
+:0045376B 8D843898010000          lea eax, dword ptr [eax+edi+00000198]
+:00453772 019990010000            add dword ptr [ecx+00000190], ebx
+:00453778 58                      pop eax
+:00453779 8D843890010000          lea eax, dword ptr [eax+edi+00000190]
+:00453780 59                      pop ecx
+:00453781 5B                      pop ebx
+:00453782 90                      nop
+
+INCREASE	
+
+ebx := (1+dlvl+8*diff)*64
+
+Plaatsing ergens over Shrine-code.
+
+* Referenced by a CALL at Addresses:
+|:004536B1   , :00453755   
+|
+:004529D4 8B1DC0706000            mov ebx, dword ptr [006070C0]		ebx := diff
+:004529DA C1E303                  shl ebx, 03
+:004529DD 43                      inc ebx
+:004529DE 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]	eax := dlvl
+:004529E5 03D8                    add ebx, eax
+:004529E7 C1E306                  shl ebx, 06
+:004529EA C3                      ret
+

@@ -1,0 +1,35 @@
+gold pile:
+
+
+* Referenced by a CALL at Addresses:
+|:00407391   , :004527C1   , :0045A84D   , :0045A98F   , :0045AB1F   
+|:0046FAAA   , :0046FB2F   , :0047009E   , :004701C7   , :004701E2   
+|
+:0046F893 69C9C8550000            imul ecx, 000055C8
+:0046F899 69D274010000            imul edx, 00000174
+:0046F89F A114AE6E00              mov eax, dword ptr [006EAE14]
+:0046F8A4 03C1                    add eax, ecx
+:0046F8A6 8B8C107C0E0000          mov ecx, dword ptr [eax+edx+00000E7C]
+:0046F8AD 03C2                    add eax, edx
+:0046F8AF 81F9C4090000            cmp ecx, 000009C4
+:0046F8B5 7C0B                    jl 0046F8C2
+:0046F8B7 C780780E000006000000    mov dword ptr [ebx+00000E78], 00000006
+:0046F8C1 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046F8B5(C)
+|
+:0046F8C2 81F9E8030000            cmp ecx, 000003E8
+:0046F8C8 7F0B                    jg 0046F8D5
+:0046F8CA C780780E000004000000    mov dword ptr [ebx+00000E78], 00000004
+:0046F8D4 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046F8C8(C)
+|
+:0046F8D5 C780780E000005000000    mov dword ptr [ebx+00000E78], 00000005
+:0046F8DF C3                      ret

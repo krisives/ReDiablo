@@ -1,0 +1,48 @@
+Quests
+				Level
+#	Name			SP	MP
+00 - The Magic Rock		05
+01 - Black Mushroom		09
+02 - Gharbad The Weak		03
+03 - Andariel(Zhar The Mad)	08
+04 - Red Terror(Lachdanan)	0E
+05 - Diablo			0F
+06 - The Butcher		02	04
+07 - Ogden's Sign		04
+08 - Halls Of The Blind		08
+09 - Valor			05
+0A - Anvil Of Fury		0A
+0B - Warlord Of Blood		0D
+0C - The Curse Of King Leoric	03	05
+0D - Poisoned Water Supply	04
+0E - The Chamber Of Bone	06
+0F - Archbishop Lazarus		0F	0F
+10 - Grave Matters		11	11
+11 - Farmer's Orchard		09	09
+12 - Little Girl		11
+13 - Wandering Trader		13
+14 - Red Horror			11	11
+15 - h Thing (Na-Krul)		15	15
+16 - Cornerstone Of The World	15
+17 - The Jersey's Jersey	09	09
+
+
+Quest related pointers
+
+
+Level #    	[0060B1D8]	Contains level number
+
+Quest(SP) #	[0061CB00]	Contains sublevel number (SP) (also in MP used for checking Leoric)
+
+		[0061F314]	00	No active Mp Quest ?
+				other   contains level of QUest in MP ? or just a toggle
+
+
+		[006DDFC8]	00				Multi
+				01				Single
+		
+Questlevel #	[006EB358]	Contains level on which quest will appear in SP
+		[006EB35A]	00	No quest will appear
+
+		[004B6910]	00	Quest sp only
+				01	Quest sp and mp

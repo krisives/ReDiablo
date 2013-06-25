@@ -1,0 +1,86 @@
+Mana cost for Healing and HealOther
+
+
+The maximum mana cost for Healing and Heal Other is set to 30 mana.
+
+
+File Offset 0006B391
+
+:0046BF91 C1E106                  shl ecx, 06
+wordt
+:0046BF91 EB16                    jmp 0046BFA9
+:0046BF93 90			  nop
+
+File Offset 0006B397
+
+:0046BF97 7513                    jne 0046BFAC
+wordt
+:0046BF97 7534                    jne 0046BFCD
+
+File Offset 0006B3A9
+
+:0046BFA9 C1E106                  shl ecx, 06
+:0046BFAC 8A8660010000            mov al, byte ptr [esi+00000160]
+:0046BFB2 EB19                    jmp 0046BFCD
+wordt
+:0046BFA9 83F91E                  cmp ecx, 0000001E		max = 30
+:0046BFAC 7E03                    jle 0046BFB1
+:0046BFAE 6A1E                    push 0000001E			max = 30
+:0046BFB0 59                      pop ecx
+:0046BFB1 EB17                    jmp 0046BFCA
+:0046BFB3 90                      nop
+
+File Offset 0006B3C6
+
+:0046BFC6 8BC1                    mov eax, ecx
+:0046BFC8 C1F802                  sar eax, 02
+:0046BFCB 2BC8                    sub ecx, eax
+wordt
+:0046BFC6 90909090		  4*nop
+:0046BFCA C1E106                  shl ecx, 06
+
+
+
+Original code:
+
+:0046BF7C 83FA02                  cmp edx, 00000002
+:0046BF7F 7513                    jne 0046BF94
+:0046BF81 0FBE8EB8010000          movsx ecx, byte ptr [esi+000001B8]
+:0046BF88 D1E1                    shl ecx, 1
+:0046BF8A 0FB6E8                  movzx ebp, al
+:0046BF8D 2BCF                    sub ecx, edi
+:0046BF8F 03CD                    add ecx, ebp
+:0046BF91 C1E106                  shl ecx, 06
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046BF7F(C)
+|
+:0046BF94 83FA22                  cmp edx, 00000022
+:0046BF97 7513                    jne 0046BFAC
+:0046BF99 0FBE8EB8010000          movsx ecx, byte ptr [esi+000001B8]
+:0046BFA0 D1E1                    shl ecx, 1
+:0046BFA2 0FB6C0                  movzx eax, al
+:0046BFA5 2BCF                    sub ecx, edi
+:0046BFA7 03C8                    add ecx, eax
+:0046BFA9 C1E106                  shl ecx, 06
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046BF97(C)
+|
+:0046BFAC 8A8660010000            mov al, byte ptr [esi+00000160]
+:0046BFB2 EB19                    jmp 0046BFCD
+
+---
+Other code in between
+---
+
+:0046BFC5 90                      nop
+:0046BFC6 8BC1                    mov eax, ecx
+:0046BFC8 C1F802                  sar eax, 02
+:0046BFCB 2BC8                    sub ecx, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0046BFB2(U)
+|
+:0046BFCD 0FB6830D764B00          movzx eax, byte ptr [ebx+004B760D]
+enz.

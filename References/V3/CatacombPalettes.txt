@@ -1,0 +1,97 @@
+Catacomb PAL files:
+
+Levels\L2Data\L2_1.PAL		floor is brown, roof blue.
+Levels\L2Data\L2_2.PAL		floor is brown, walls grey&brown, roof green.
+Levels\L2Data\L2_3.PAL		floor is brown&green, walls grey&red, roof purple.
+Levels\L2Data\L2_4.PAL		floor is brown&blue, walls grey&green, roof red.
+Levels\L2Data\L2_5.PAL		floor is green, walls grey&green, roof purple.
+
+
+000-02F		red			Rare puddles
+					Common between all PAL files
+
+
+030-05F		greyred in L2_1		Illumination on floor
+		greyred in L2_2
+		greygreen in L2_3
+		greyblue in L2_4
+		brown in L2_5
+
+060-08F		greybrown in L2_1	illumination on floor and walls
+		greyred in L2_2
+		red in L2_3
+		redbrown in L2_4
+		greygreen in L2_5
+
+090-0BF		brown in L2_1		walls, wood, illumination on walls and floor
+		blue in L2_2
+		red in L2_3
+		brown in L2_4
+		green in L2_5
+
+0C0-0EF		pure grey 		Walls and floor
+					Common between all PAL files
+	
+0F0-11F		blue in L2_1		roof, illumination in waterpuddles
+		green in L2_2
+		purple in L2_3
+		red in L2_4
+		purple in L2_5
+
+120-14F		brownred in L2_1	sandgrains on floor, dots on wood
+		red in L2_2
+		green in L2_3
+		blue in L2_4
+		yellow in L2_5
+
+150-17F		faint bluegreen		Waterpuddles, rare dots on ground
+					Common between all PAL files
+
+
+
+To change :
+
+030-0BF		floor and walls brown and grey : all PALs as L2_1
+
+00000030 9173 7389 6B6B 8164 6479 5D5D 7155 5569 .ss.kk.ddy]]qUUi
+00000040 4E4E 6147 4759 3F3F 5138 3847 3030 3C29 NNaGGY??Q88G00<)
+00000050 2932 2222 271B 1B1C 1313 120C 0C07 0505 )2""'...........
+00000060 948C 828A 8379 8179 7077 7067 6E66 5D64 .....y.ypwpgnf]d
+00000070 5D54 5B53 4B51 4A42 4841 3A3F 3831 3730 ]T[SKQJBHA:?8170
+00000080 292E 2721 251F 181C 1610 130D 080A 0500 ).'!%...........
+00000090 8787 757D 7D6C 7373 646A 6A5B 6060 5256 ..u}}lssdjj[``RV
+000000A0 5649 4C4C 4142 4238 3B3B 3133 332A 2C2C VILLABB8;;133*,,
+000000B0 2425 251D 1D1D 1616 160F 0F0F 0907 0702 $%%.............
+
+0F0-11F		roof : different colours
+
+L2_1	very blue : less blue
+
+000000F0 6B73 7A65 6C73 5E64 6B58 5D64 5256 5D4A kszels^dkX]dRV]J
+00000100 4F56 4448 4E3D 4148 3739 4030 3239 2A2B OVDHN=AH79@029*+
+00000110 3222 242B 1C1D 2415 161D 0F0E 1508 070E 2"$+..$.........
+
+L2_2	light blue (bluegreen) : ok
+
+L2_3	very purple : less purple
+
+000000F0 7770 7D70 6875 6A60 6E63 5966 5E53 6156 wp}phuj`ncYf^SaV
+00000100 4C59 4E47 5147 3F4A 3F3A 4236 313A 312C LYNGQG?J?:B61:1,
+00000110 3329 242B 241F 261D 181E 1510 170D 0B0F 3)$+$.&.........
+
+L2_4	red : ok
+
+L2_5	reddish purple : ok
+
+
+120-14F 	fungus : same yellowish for all PALs
+
+00000120 9B8F 2F93 882D 8980 2A7F 7627 776E 226D ../..-..*.v'wn"m
+00000130 6420 6157 1D59 521B 4F45 1943 3D14 3C36 d aW.YR.OE.C=.<6
+00000140 1133 2E0F 2926 0A23 1C07 1915 0210 0E00 .3..)&.#........
+
+150-17F		waterpuddles: more blue then green
+
+00000150 7883 8970 7B81 6973 7962 6B71 5A63 6953 x..p{.isybkqZciS
+00000160 5B61 4C53 5944 4B51 3D43 4835 3B3E 2D33 [aLSYDKQ=CH5;>-3
+00000170 3625 2A2D 1D22 2515 1A1D 0D11 1405 090C 6%*-."%.........

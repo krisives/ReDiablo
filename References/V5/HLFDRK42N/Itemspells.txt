@@ -1,0 +1,442 @@
+These modifications allow for spell charges on any item. Casting is done by speedbook with the item equipped. The number of charges is not displayed for non-staves, but the icon will not appear in the speedbook when the item is depleted. Recharging of all items is possible at Adria and by Stone Shrine, while a Sorcerer's Recharge skill will only affect items with more then zero durability.
+
+
+Add support for all equipped items to the setup of the SpeedBook:
+
+file offset 00023B6F
+
+:0042476F 69C9C8550000            imul ecx, 000055C8
+:00424775 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0042477A 33D2                    xor edx, edx
+:0042477C 89940838550000          mov dword ptr [eax+ecx+00005538], edx
+:00424783 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424788 8994083C550000          mov dword ptr [eax+ecx+0000553C], edx
+:0042478F A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424794 03C1                    add eax, ecx
+:00424796 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:0042479D 742C                    je 004247CB					exit if not righthanded item
+:0042479F 3990C00A0000            cmp dword ptr [eax+00000AC0], edx
+:004247A5 7424                    je 004247CB					exit if requirements not met
+:004247A7 3990400A0000            cmp dword ptr [eax+00000A40], edx
+:004247AD 7E1C                    jle 004247CB					exit if no charges
+:004247AF 8B883C0A0000            mov ecx, dword ptr [eax+00000A3C]
+:004247B5 56                      push esi
+:004247B6 6A01                    push 00000001
+:004247B8 8DB038550000            lea esi, dword ptr [eax+00005538]
+:004247BE 49                      dec ecx
+:004247BF 58                      pop eax
+:004247C0 E81B5D0500              call 0047A4E0
+:004247C5 0906                    or dword ptr [esi], eax
+:004247C7 095604                  or dword ptr [esi+04], edx
+:004247CA 5E                      pop esi
+:004247CB C3                      ret
+changed into
+:0042476F ...
+:0042477A 03C1                    add eax, ecx
+:0042477C 56                      push esi
+:0042477D 57                      push edi
+:0042477E 8BF8                    mov edi, eax
+:00424780 8DB738550000            lea esi, dword ptr [edi+00005538]
+:00424786 832600                  and dword ptr [esi], 00000000
+:00424789 83660400                and dword ptr [esi+04], 00000000
+:0042478D 53                      push ebx
+:0042478E 6A07                    push 00000007
+:00424790 5B                      pop ebx
+:00424791 83B894030000FF          cmp dword ptr [eax+00000394], FFFFFFFF
+:00424798 7407                    je 004247A1					next if no item
+:0042479A 33D2                    xor edx, edx
+:0042479C E8314D0000              call 004294D2
+:004247A1 0574010000              add eax, 00000174
+:004247A6 4B                      dec ebx
+:004247A7 75E8                    jne 00424791					next equipped item
+:004247A9 5B                      pop ebx
+:004247AA 5F                      pop edi
+:004247AB 5E                      pop esi
+:004247AC C3                      ret
+:004247AD 90                      nop
+:004247AE 50                      push eax
+:004247AF 8B886C040000            mov ecx, dword ptr [eax+0000046C]
+:004247B5 90                      nop
+:004247B6 6A01                    push 00000001
+:004247B8 8DB738550000            lea esi, dword ptr [edi+00005538]
+:004247BE 49                      dec ecx
+:004247BF 58                      pop eax
+:004247C0 E81B5D0500              call 0047A4E0
+:004247C5 0906                    or dword ptr [esi], eax
+:004247C7 095604                  or dword ptr [esi+04], edx
+:004247CA 58                      pop eax
+:004247CB C3                      ret
+
+Using free space from some "Indestructible" text:
+
+file offset 000288D2
+
+:004294D2 FFB5D4000000            push dword ptr [ebp+000000D4]
+:004294D8 68B4684A00              push 004A68B4
+:004294DD 53                      push ebx
+:004294DE E8DD050500              call 00479AC0
+:004294E3 83C40C                  add esp, 0000000C
+:004294E6 EB1B                    jmp 00429503
+changed into
+:004294D2 3990F0040000            cmp dword ptr [eax+000004F0], edx
+:004294D8 740C                    je 004294E6					
+:004294DA 399070040000            cmp dword ptr [eax+00000470], edx
+:004294E0 0F8FC8B2FFFF            jg 004247AE					
+:004294E6 C3                      ret
+:004294E7 90                      nop
+
+
+Allow spellcasting from any equipped item instead from only righthanded staves:
+
+file offset 000220E9
+
+:00422CE9 833D5C164D0001          cmp dword ptr [004D165C], 00000001
+:00422CF0 7547                    jne 00422D39
+:00422CF2 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00422CF7 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00422CFD 69C0C8550000            imul eax, 000055C8
+:00422D03 03C1                    add eax, ecx
+:00422D05 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:00422D0C 742B                    je 00422D39					exit if no righthand item
+:00422D0E 8B88380A0000            mov ecx, dword ptr [eax+00000A38]
+:00422D14 83F917                  cmp ecx, 00000017
+:00422D17 7405                    je 00422D1E					jmp if staff
+:00422D19 83F91B                  cmp ecx, 0000001B
+:00422D1C 751B                    jne 00422D39					exit if not unique item
+:00422D1E 8B883C0A0000            mov ecx, dword ptr [eax+00000A3C]
+:00422D24 3B88B4000000            cmp ecx, dword ptr [eax+000000B4]
+:00422D2A 750D                    jne 00422D39					exit if wrong spell
+:00422D2C 83B8400A000000          cmp dword ptr [eax+00000A40], 00000000
+:00422D33 7E04                    jle 00422D39					exit if no charges
+:00422D35 6A01                    push 00000001
+:00422D37 58                      pop eax
+:00422D38 C3                      ret
+:00422D39 33C0                    xor eax, eax
+:00422D3B C3                      ret
+changed into
+:00422CE9 ...
+:00422D05 53                      push ebx
+:00422D06 6A07                    push 00000007
+:00422D08 5B                      pop ebx
+:00422D09 8BD0                    mov edx, eax
+:00422D0B 83B894030000FF          cmp dword ptr [eax+00000394], FFFFFFFF
+:00422D12 741C                    je 00422D30					next if no item here
+:00422D14 8B886C040000            mov ecx, dword ptr [eax+0000046C]
+:00422D1A 3B8AB4000000            cmp ecx, dword ptr [edx+000000B4]
+:00422D20 750E                    jne 00422D30					next if wrong spell
+:00422D22 83B87004000000          cmp dword ptr [eax+00000470], 00000000
+:00422D29 7E05                    jle 00422D30					next if no charges
+:00422D2B 6A01                    push 00000001
+:00422D2D 58                      pop eax
+:00422D2E 5B                      pop ebx
+:00422D2F C3                      ret
+:00422D30 0574010000              add eax, 00000174
+:00422D35 4B                      dec ebx
+:00422D36 75D3                    jne 00422D0B					next equipped item
+:00422D38 5B                      pop ebx
+:00422D39 ...
+
+
+Adjust substraction of charges for staves, to support any equipped item with charges:
+
+file offset 00022089
+
+:00422C89 8BC1                    mov eax, ecx
+:00422C8B 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00422C91 69C0C8550000            imul eax, 000055C8
+:00422C97 03C2                    add eax, edx
+:00422C99 56                      push esi
+:00422C9A 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF	skip if no item there
+:00422CA1 7444                    je 00422CE7
+:00422CA3 83B8380A000017          cmp dword ptr [eax+00000A38], 00000017	skip if not a staff
+:00422CAA 7416                    je 00422CC2
+:00422CAC 8B35E8AD6E00            mov esi, dword ptr [006EADE8]
+:00422CB2 69F6C8550000            imul esi, 000055C8
+:00422CB8 83BC16380A00001B        cmp dword ptr [esi+edx+00000A38], 0000001B
+:00422CC0 7525                    jne 00422CE7					skip if not unique
+:00422CC2 8B903C0A0000            mov edx, dword ptr [eax+00000A3C]
+:00422CC8 3B90B4000000            cmp edx, dword ptr [eax+000000B4]
+:00422CCE 7517                    jne 00422CE7					skip if wrong spell
+:00422CD0 8B90400A0000            mov edx, dword ptr [eax+00000A40]
+:00422CD6 05400A0000              add eax, 00000A40
+:00422CDB 85D2                    test edx, edx
+:00422CDD 7E08                    jle 00422CE7					skip if no charges
+:00422CDF 4A                      dec edx
+:00422CE0 8910                    mov dword ptr [eax], edx
+:00422CE2 E8881A0000              call 0042476F					reset speedbook after casting
+:00422CE7 5E                      pop esi
+:00422CE8 C3                      ret
+changed into
+:00422C89 56                      push esi
+:00422C8A 53                      push ebx
+:00422C8B 8BC1                    mov eax, ecx
+:00422C8D 69C0C8550000            imul eax, 000055C8
+:00422C93 6A07                    push 00000007
+:00422C95 5B                      pop ebx
+:00422C96 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00422C9C 03C2                    add eax, edx
+:00422C9E 51                      push ecx
+:00422C9F 8BC8                    mov ecx, eax
+:00422CA1 83B894030000FF          cmp dword ptr [eax+00000394], FFFFFFFF
+:00422CA8 7429                    je 00422CD3					next if no item there
+:00422CAA 8B906C040000            mov edx, dword ptr [eax+0000046C]
+:00422CB0 3B91B4000000            cmp edx, dword ptr [ecx+000000B4]
+:00422CB6 751B                    jne 00422CD3					next if wrong spell
+:00422CB8 8B9070040000            mov edx, dword ptr [eax+00000470]
+:00422CBE 85D2                    test edx, edx
+:00422CC0 7E11                    jle 00422CD3					next if no charges
+:00422CC2 4A                      dec edx
+:00422CC3 0570040000              add eax, 00000470
+:00422CC8 8910                    mov dword ptr [eax], edx
+:00422CCA 59                      pop ecx
+:00422CCB 5B                      pop ebx
+:00422CCC E89E1A0000              call 0042476F					reset speedbook after casting
+:00422CD1 5E                      pop esi
+:00422CD2 C3                      ret
+:00422CD3 0574010000              add eax, 00000174
+:00422CD8 4B                      dec ebx
+:00422CD9 75C6                    jne 00422CA1					next equipped item
+:00422CDB 59                      pop ecx
+:00422CDC 5B                      pop ebx
+:00422CDD 5E                      pop esi
+:00422CDE C3                      ret
+:00422CDF ....									
+
+Now 10 bytes free space from 00422CDF to 00422CE9:
+
+:00422CDF 4A                      dec edx
+:00422CE0 8910                    mov dword ptr [eax], edx
+:00422CE2 E8881A0000              call 0042476F
+:00422CE7 5E                      pop esi
+:00422CE8 C3                      ret
+
+
+Adding support to Recharging at Adria:
+
+file offset 0006D54C
+
+:0046E14C 83BC32C00D00000A        cmp dword ptr [edx+esi+00000DC0], 0000000A
+:0046E154 8D0C32                  lea ecx, dword ptr [edx+esi]
+changed into
+:0046E14C 8D0C32                  lea ecx, dword ptr [edx+esi]
+:0046E14F EB19                    jmp 0046E16A
+:0046E151 909090909090            6*nop					
+
+Now 25 bytes free space from 0046E151 to 0046E16A.
+
+file offset 0006D56A 
+
+:0046E16A 8B91940E0000            mov edx, dword ptr [ecx+00000E94]
+:0046E170 83FA1B                  cmp edx, 0000001B
+:0046E173 7405                    je 0046E17A
+:0046E175 83FA17                  cmp edx, 00000017
+:0046E178 7511                    jne 0046E18B
+:0046E17A 8B919C0E0000            mov edx, dword ptr [ecx+00000E9C]
+:0046E180 3B91A00E0000            cmp edx, dword ptr [ecx+00000EA0]
+changed into
+:0046E16A 8B9194030000            mov edx, dword ptr [ecx+00000394]
+:0046E170 83FAFF                  cmp edx, FFFFFFFF
+:0046E173 7416                    je 0046E18B
+:0046E175 9090909090              5*nop
+:0046E17A 8B9170040000            mov edx, dword ptr [ecx+00000470]
+:0046E180 3B9174040000            cmp edx, dword ptr [ecx+00000474]
+
+file offset 0006D655 
+
+:0046E255 03D1                    add edx, ecx
+:0046E257 83BA640900000A          cmp dword ptr [edx+00000964], 0000000A
+changed into
+:0046E255 EB5E                    jmp 0046E2B5
+:0046E257 90909090909090          7*nop
+
+Now 94 bytes free space from 0046E257 to 0046E2B5.
+
+file offset 0006D6B5 
+
+:0046E2B5 7E76                    jle 0046E32D
+changed into
+:0046E2B5 33FF                    xor edi, edi
+
+file offset 0006D6F3
+
+:0046E2F3 8DB408B80D0000          lea esi, dword ptr [eax+ecx+00000DB8]
+changed into
+:0046E2F3 8DB4088C030000          lea esi, dword ptr [eax+ecx+0000038C]
+
+file offset 0006D724
+
+:0046E324 3BAC0AD8470000          cmp ebp, dword ptr [edx+ecx+000047D8]
+changed into
+:0046E324 E9BBB3FBFF              jmp 004296E4
+:0046E329 3BEA                    cmp ebp, edx
+
+Using free space from some "Indestructible" text:
+
+file offset 00028AE4
+
+:004296E4 51                      push ecx
+:004296E5 50                      push eax
+:004296E6 68EC684A00              push 004A68EC
+:004296EB 57                      push edi
+:004296EC E8CF030500              call 00479AC0
+:004296F1 83C410                  add esp, 00000010
+:004296F4 EB17                    jmp 0042970D
+changed into
+:004296E4 03D1                    add edx, ecx
+:004296E6 8B92D8470000            mov edx, dword ptr [edx+000047D8]
+:004296EC 83C207                  add edx, 00000007
+:004296EF E9354C0400              jmp 0046E329
+:004296F4 9090                    2*nop
+
+
+Adding support to the actual recharging (at Adria):
+
+file offset 0006FB6F
+
+:0047076F 7D21                    jge 00470792
+changed into
+:0047076F EB21                    jmp 00470792
+
+Now 33 bytes free space from 00470771 to 00470792.
+
+file offset 0006FBAF
+
+:004707AF 8B8C11A00E0000          mov ecx, dword ptr [ecx+edx+00000EA0]
+:004707B6 89889C0E0000            mov dword ptr [eax+00000E9C], ecx
+changed into
+:004707AF 8B8C1174040000          mov ecx, dword ptr [ecx+edx+00000474]
+:004707B6 898870040000            mov dword ptr [eax+00000470], ecx
+
+
+Adding support to Stone Shrine:
+
+file offset 000510FF
+
+:00451CFF 6A07                    push 00000007
+:00451D01 8BF1                    mov esi, ecx
+:00451D03 5F                      pop edi
+:00451D04 BB74010000              mov ebx, 00000174
+:00451D09 83BC30940300000A        cmp dword ptr [eax+esi+00000394], 0000000A
+:00451D11 8D1430                  lea edx, dword ptr [eax+esi]
+:00451D14 7511                    jne 00451D27
+:00451D16 8B8274040000            mov eax, dword ptr [edx+00000474]
+:00451D1C 898270040000            mov dword ptr [edx+00000470], eax
+:00451D22 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451D27 03F3                    add esi, ebx
+:00451D29 4F                      dec edi
+:00451D2A 75DD                    jne 00451D09
+:00451D2C 33FF                    xor edi, edi
+:00451D2E 39BC08D8470000          cmp dword ptr [eax+ecx+000047D8], edi
+changed into
+:00451CFF 8BF1                    mov esi, ecx
+:00451D01 8BBC08D8470000          mov edi, dword ptr [eax+ecx+000047D8]
+:00451D08 83C707                  add edi, 00000007
+:00451D0B BB74010000              mov ebx, 00000174
+:00451D10 85FF                    test edi, edi
+:00451D12 741D                    je 00451D31
+:00451D14 83BC3094030000FF        cmp dword ptr [eax+esi+00000394], FFFFFFFF
+:00451D1C 740E                    je 00451D2C
+:00451D1E 8B943074040000          mov edx, dword ptr [eax+esi+00000474]
+:00451D25 89943070040000          mov dword ptr [eax+esi+00000470], edx
+:00451D2C 03F3                    add esi, ebx
+:00451D2E 4F                      dec edi
+:00451D2F 75E3                    jne 00451D14
+:00451D31 EB56                    jmp 00451D89
+:00451D33 9090                    2*nop
+
+Now 86 bytes free space from 00451D33 to 00451D89 (which also checked the belt for staves to recharge).
+
+
+Display adjustments:
+
+00093900 2573 2053 7065 6C6C 0000 0000 2569 2053 %s Spell....%i S
+00093910 6372 6F6C 6C73 0000 3120 5363 726F 6C6C crolls..1 Scroll
+00093920 0000 0000 5363 726F 6C6C 206F 6620 2573 ....Scroll of %s
+00093930 0000 0000 2569 2043 6861 7267 6573 0000 ....%i Charges..
+00093940 3120 4368 6172 6765 0000 0000 5374 6166 1 Charge....Staf
+00093950 6620 6F66 2025 7300                     f of %s.
+changed into
+00093900 2573 2053 7065 6C6C 0000 0000 2569 2053 %s Spell....%i S
+00093910 6372 6F6C 6C73 0000 3120 5363 726F 6C6C crolls..1 Scroll
+00093920 0000 0000 5363 726F 6C6C 206F 6620 2573 ....Scroll of %s
+00093930 0000 0000 2569 2043 6861 7267 6573 0000 ....Equipped ite
+00093940 3120 4368 6172 6765 0000 0000 5374 6166 m.Charge....Staf
+00093950 6620 6F66 2025 7300                     f of %s.
+
+file offset 00003365
+
+* Possible StringData Ref from Data Obj ->"Staff of %s"
+:00403F65 684C4F4900              push 00494F4C
+changed into
+* Possible StringData Ref from Data Obj ->"%s Spell"
+:00403F65 68004F4900              push 00494F00
+
+file offset 0000338F
+
+:00403F8F 83F801                  cmp eax, 00000001
+:00403F92 7512                    jne 00403FA6
+* Possible StringData Ref from Data Obj ->"1 Charge"
+:00403F94 68404F4900              push 00494F40
+changed into
+:00403F8F 9090909090              5*nop
+* Possible StringData Ref from Data Obj ->"Equipped item"
+:00403F94 68344F4900              push 00494F34
+
+Now 11 bytes free space at 00403FA6:
+
+:00403FA6 50                      push eax
+* Possible StringData Ref from Data Obj ->"%i Charges"
+:00403FA7 68344F4900              push 00494F34
+:00403FAC E929010000              jmp 004040DA
+
+file offset 0000463D
+
+* Possible StringData Ref from Data Obj ->"Staff of %s"
+:0040523D 684C4F4900              push 00494F4C
+changed into
+* Possible StringData Ref from Data Obj ->"%s Spell"
+:0040523D 68004F4900              push 00494F00
+
+file offset 0000466C
+
+:0040526C 3BC5                    cmp eax, ebp
+:0040526E 7512                    jne 00405282
+* Possible StringData Ref from Data Obj ->"1 Charge"
+:00405270 68404F4900              push 00494F40
+changed into
+:0040526C 90909090                4*nop
+* Possible StringData Ref from Data Obj ->"Equipped item"
+:00405270 68344F4900              push 00494F34
+
+Now 11 bytes free space at 00405282:
+
+:00405282 50                      push eax
+* Possible StringData Ref from Data Obj ->"%i Charges"
+:00405283 68344F4900              push 00494F34
+:00405288 E933010000              jmp 004053C0
+
+
+Allowing the Sorcerers Recharge skill to be used on any item with durability:
+
+file offset 000276BA
+
+:004282BA 83BC02940300000A        cmp dword ptr [edx+eax+00000394], 0000000A
+:004282C2 8DB4028C030000          lea esi, dword ptr [edx+eax+0000038C]
+:004282C9 7538                    jne 00428303
+changed into
+:004282BA 83BC027804000000        cmp dword ptr [edx+eax+00000478], 00000000
+:004282C2 8DB4028C030000          lea esi, dword ptr [edx+eax+0000038C]
+:004282C9 7E38                    jle 00428303
+
+
+The following would only be executed for 2-handed items, and is NOT IMPLEMENTED
+
+Setting active spell for any item in right hand, not only for staves, if it has spell charges:
+
+file offset 0001F5B0
+
+:004201B0 83B8640900000A          cmp dword ptr [eax+00000964], 0000000A
+:004201B7 0F85DB050000            jne 00420798
+changed into
+:004201B0 83B864090000FF          cmp dword ptr [eax+00000964], FFFFFFFF
+:004201B7 0F84DB050000            je 00420798

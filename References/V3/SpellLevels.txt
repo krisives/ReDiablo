@@ -1,0 +1,248 @@
+Dit vervalt. Betere oplossing gebruikt.
+
+
+De generic routine om veilig slvl te bepalen levert me nog problemen op. Zou jij die hier kunnen aangeven? Je hoeft geen rekening te houden met de te gebruiken registers. Dan verwerk ik de parameters en aanroepen wel.
+
+Ik heb dit met copy & paste uit de apo routine gehaald, het kan zijn dat de hex commando's niet kloppen maar ik denk van wel
+
+:00434F42 8B7C2424                mov edi, dword ptr [esp+24]			edi:= char #
+:00434F5C 6A18                    push 00000018  
+:00434F5E 59                      pop ecx					ecx:= Spell #
+____________________________________________________________
+
+edi = char #
+ecx = Spell #
+routine:
+:00434F46 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434F4C 69FFC8550000            imul edi, 000055C8				
+:0045205C 03C8                    add ecx, eax
+:0045205E 0FBE8C39C1000000        movsx ecx, byte ptr [ecx+edi+000000C1]	Slvl of spell
+:00452066 0FBE843848550000        movsx eax, byte ptr [eax+edi+00005548]	extra Slvl of items
+:0045206E 03C8                    add ecx, eax
+
+ecx = Slvl
+____________________________________________________________
+
+
+eax=char, eax:=slvl
+
+eax=char, ecx:=slvl
+
+ecx=char, eax:=slvl
+
+eax=char, edx:=slvl
+
+esi=char, eax:=slvl
+
+
+
+eax=char, eax:=slvl
+-------------------
+
+Spell 4Fh - Barrier
+:00430352 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:00430358 85C0                    test eax, eax
+:0043035A 7404                    je 00430360
+
+Spell 4Dh
+:00435421 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:00435427 8D440010                lea eax, dword ptr [eax+eax+10]
+:0043542B 83F83F                  cmp eax, 0000003F
+:0043542E 7C07                    jl 00435437
+
+Spell 35h - Holy Bolt Speed
+:00435340 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:00435346 8D440010                lea eax, dword ptr [eax+eax+10]
+:0043534A 83F83F                  cmp eax, 0000003F
+:0043534D 7C07                    jl 00435356
+
+Spell 01h - Firebolt Speed
+:004318A4 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+
+Spell 4Ah
+:00432957 8B80887A6900            mov eax, dword ptr [eax+00697A88]
+:0043295D 83C010                  add eax, 00000010
+:00432960 83F832                  cmp eax, 00000032
+
+
+eax=char, ecx:=slvl
+-------------------
+
+Spell 22h - Invincibility
+:00433C9E 8B88887A6900            mov ecx, dword ptr [eax+00697A88]
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE
+
+Spell 21h - Golem
+:00433C9E 8B88887A6900            mov ecx, dword ptr [eax+00697A88]
+:00433CA4 85C9                    test ecx, ecx
+:00433CA6 7E16                    jle 00433CBE
+
+Spell 2Bh - Rage
+:00434D77 8B88887A6900            mov ecx, dword ptr [eax+00697A88]
+:00434D7D 6A01                    push 00000001
+:00434D7F 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:00434D82 8D8C4AF5000000          lea ecx, dword ptr [edx+2*ecx+000000F5]
+:00434D89 5A                      pop edx
+:00434D8A 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+
+Spell 57h
+:00433083 8B88887A6900            mov ecx, dword ptr [eax+00697A88]
+:00433089 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:0043308C 8D8C4AF5000000          lea ecx, dword ptr [edx+2*ecx+000000F5]
+:00433093 8988C87A6900            mov dword ptr [eax+00697AC8], ecx
+
+
+ecx=char, eax:=slvl
+-------------------
+
+Spell 27h - Seeing
+:00434B02 8B81887A6900            mov eax, dword ptr [ecx+00697A88]
+:00434B08 85C0                    test eax, eax
+:00434B0A 7E18                    jle 00434B24
+
+
+eax=char, edx:=slvl
+-------------------
+
+Spell 1Eh - Stone Curse
+:00433B53 8B90887A6900            mov edx, dword ptr [eax+00697A88]
+:00433B59 69C9C8550000            imul ecx, 000055C8
+:00433B5F 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:00433B65 83C206                  add edx, 00000006
+:00433B68 8990C87A6900            mov dword ptr [eax+00697AC8], edx
+
+
+esi=char, eax:=slvl
+-------------------
+
+Spell 05h - Firetrap 
+:00431D5D 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00431D63 40                      inc eax
+:00431D64 8D0480                  lea eax, dword ptr [eax+4*eax]
+:00431D67 D1E0                    shl eax, 1
+:00431D69 807D1800                cmp byte ptr [ebp+18], 00
+:00431D6D 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+
+Spell 08h - Lightning Trap
+:00432B64 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00432B6A D1F8                    sar eax, 1
+:00432B6C 83C006                  add eax, 00000006
+:00432B6F 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+
+Spell 2Ah - Nova
+:00434C3C 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00434C42 85C0                    test eax, eax
+:00434C44 7E16                    jle 00434C5C
+
+Spell 55h - Search
+:00434A6A 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00434A70 385D18                  cmp byte ptr [ebp+18], bl
+:00434A73 8D04C0                  lea eax, dword ptr [eax+8*eax]
+:00434A76 8D844158020000          lea eax, dword ptr [ecx+2*eax+00000258]
+:00434A7D 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+
+Spell 46h
+:00431C91 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00431C97 40                      inc eax
+:00431C98 69C080000000            imul eax, 00000080
+:00431C9E 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+
+Spell 3Dh - Elemental
+:00434114 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:0043411A 85C0                    test eax, eax
+:0043411C 7E16                    jle 00434134
+
+Spell 02h - Guardian #1
+:004332A1 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004332A7 85C0                    test eax, eax
+:004332A9 7E16                    jle 004332C1
+
+Spell 5Eh - Spawning V&K
+:00431F67 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:00431F6D 85C0                    test eax, eax
+:00431F6F 7E16                    jle 00431F87
+
+
+No need for changing
+--------------------
+
+Spell 06h - Fireball #1
+:00431E4C 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00431E52 85C0                    test eax, eax
+:00431E54 7E1A                    jle 00431E70
+
+Spell 06h - Fireball #2
+:00431E70 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00431E76 8D740010                lea esi, dword ptr [eax+eax+10]
+:00431E7A 83FE32                  cmp esi, 00000032
+
+Spell 58h #1
+:0043284B 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00432851 85C0                    test eax, eax
+:00432853 7E1A                    jle 0043286F
+
+Spell 58h #2
+:0043286F 8B87887A6900            mov eax, dword ptr [edi+00697A88]
+:00432875 8D740010                lea esi, dword ptr [eax+eax+10]
+:00432879 83FE32                  cmp esi, 00000032
+
+Spell 0Bh - Flash(A)
+:00432FBB 8B8E887A6900            mov ecx, dword ptr [esi+00697A88]
+:00432FC1 85C9                    test ecx, ecx
+:00432FC3 7E14                    jle 00432FD9
+
+Spell 0Ch - Flash(B)
+:00433103 8B8E887A6900            mov ecx, dword ptr [esi+00697A88]
+:00433109 85C9                    test ecx, ecx
+:0043310B 7E1C                    jle 00433129
+
+Spell 02h - Guardian #2
+:004333FE 8B96887A6900            mov edx, dword ptr [esi+00697A88]
+:00433404 6A1E                    push 0000001E
+:00433406 8D0C38                  lea ecx, dword ptr [eax+edi]
+:00433409 0FBE8438B8010000        movsx eax, byte ptr [eax+edi+000001B8]
+:00433411 D1F8                    sar eax, 1
+:00433413 03C2                    add eax, edx
+:00433415 8986C87A6900            mov dword ptr [esi+00697AC8], eax
+
+Spell 25h - Healing #1
+:00433E39 83BB887A690000          cmp dword ptr [ebx+00697A88], 00000000
+:00433E40 7E1E                    jle 00433E60
+
+Spell 25h - Healing #2
+:00433E58 3B83887A6900            cmp eax, dword ptr [ebx+00697A88]
+:00433E5E 7CE2                    jl 00433E42
+
+Spell 44h - Mana #1
+:00433F5C 83BB887A690000          cmp dword ptr [ebx+00697A88], 00000000
+:00433F63 7E1E                    jle 00433F83
+
+Spell 44h - Mana #2
+:00433F7B 3B83887A6900            cmp eax, dword ptr [ebx+00697A88]
+:00433F81 7CE2                    jl 00433F65
+
+Spell 30h
+:00435057 8B90887A6900            mov edx, dword ptr [eax+00697A88]
+:0043505D C1E203                  shl edx, 03
+:00435060 B14F                    mov cl, 4F
+:00435062 E8F34EFEFF              call 00419F5A
+:00435067 03F8                    add edi, eax
+:00435069 8D04FD10000000          lea eax, dword ptr [8*edi+00000010]
+:00435070 8BC8                    mov ecx, eax
+:00435072 D1E1                    shl ecx, 1
+:00435074 898ED47A6900            mov dword ptr [esi+00697AD4], ecx
+
+Spell Update 59h-5Dh - Rune of ...
+:00435B7E FFB6887A6900            push dword ptr [esi+00697A88]
+
+Spell Update - Firebolt, Bloodstar, etc.
+:004361D4 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004361DA 8BCF                    mov ecx, edi
+:004361DC 8D0480                  lea eax, dword ptr [eax+4*eax]
+:004361DF D1E0                    shl eax, 1
+:004361E1 03C1                    add eax, ecx
+:004361E3 C1FF01                  sar edi, 01
+:004361E6 2BC7                    sub eax, edi
+
+Etc.

@@ -1,0 +1,80 @@
+Wirt uses the same base item selection routine that Gris do. So if you make Wirt sell jewlery in MP, so will Gris do. If so change
+
+424fcc 74 eb
+
+and they will sell jewlery in MP 
+
+For hellfire its hex address 029718 change it from 74 the EB
+
+
+
+Increasing Wirt's price cap (90000 -> 150000, still lower then original):
+
+File Offset 0002A2C9
+
+:0042AEC9 81F9905F0100            cmp ecx, 00015F90
+wordt
+:0042AEC9 81F9F0490200            cmp ecx, 000249F0
+
+
+
+
+
+Item Code
+00 = All other items (novelties, potions, scrolls, books, etc)
+01 = Swords
+02 = Axes, Cleaver
+03 = Bows
+04 = Blunt weapons (maces, hammers, mauls, clubs)
+05 = Shields
+06 = Light armor (rags, capes, leather armor, etc)
+07 = Helms, crowns
+08 = Mid armor (Arkaine's Valor, chain mail, splint mail, etc)
+09 = Heavy plates (Full Plate Mail, Gothic Plate, Breast Plate, etc)
+0A = Staves
+0B = Gold
+0C = Rings
+0D = Amulets
+
+
+
+* Referenced by a CALL at Addresses:
+|:0042A365   , :0042AC51   
+|
+:0042A2F5 6BC94C                  imul ecx, 0000004C
+:0042A2F8 6A01                    push 00000001
+:0042A2FA 8A91D41B4A00            mov dl, byte ptr [ecx+004A1BD4]
+:0042A300 58                      pop eax
+:0042A301 84D2                    test dl, dl
+:0042A303 740A                    je 0042A30F
+:0042A305 80FA0B                  cmp dl, 0B
+:0042A308 7405                    je 0042A30F
+:0042A30A 80FA0E                  cmp dl, 0E
+:0042A30D 7502                    jne 0042A311
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A303(C), :0042A308(C)
+|
+:0042A30F 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042A30D(C)
+|
+:0042A311 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0042A318 7415                    je 0042A32F
+:0042A31A 83B9001C4A001E          cmp dword ptr [ecx+004A1C00], 0000001E
+:0042A321 740A                    je 0042A32D
+:0042A323 80FA0C                  cmp dl, 0C
+:0042A326 7405                    je 0042A32D
+:0042A328 80FA0D                  cmp dl, 0D
+:0042A32B 7502                    jne 0042A32F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A321(C), :0042A326(C)
+|
+:0042A32D 33C0                    xor eax, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042A318(C), :0042A32B(C)
+|
+:0042A32F C3                      ret

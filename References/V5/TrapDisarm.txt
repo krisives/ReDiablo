@@ -1,0 +1,105 @@
+Trap disarm
+
+
+
+:004503ED 8B45FC                  mov eax, dword ptr [ebp-04]
+:004503F0 6BC078                  imul eax, 00000078
+:004503F3 83B808E66D0000          cmp dword ptr [eax+006DE608], 00000000		not trapped?
+:004503FA 8DB808E66D00            lea edi, dword ptr [eax+006DE608]
+:00450400 0F8490000000            je 00450496
+:00450406 69F6C8550000            imul esi, 000055C8
+:0045040C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00450411 6A64                    push 00000064
+:00450413 5A                      pop edx
+:00450414 B19A                    mov cl, 9A
+:00450416 8BB40674010000          mov esi, dword ptr [esi+eax+00000174]
+:0045041D 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:00450424 D1E6                    shl esi, 1
+:00450426 8D0480                  lea eax, dword ptr [eax+4*eax]
+:00450429 2BF0                    sub esi, eax
+:0045042B E82A9BFCFF              call 00419F5A
+:00450430 3BC6                    cmp eax, esi
+:00450432 7F62                    jg 00450496
+:00450434 A1B4E36D00              mov eax, dword ptr [006DE3B4]
+:00450439 85C0                    test eax, eax
+:0045043B 7E59                    jle 00450496
+:0045043D BEB8E16D00              mov esi, 006DE1B8
+:00450442 8945F8                  mov dword ptr [ebp-08], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00450494(C)
+|
+:00450445 8B06                    mov eax, dword ptr [esi]
+:00450447 32D2                    xor dl, dl
+:00450449 6BC078                  imul eax, 00000078
+:0045044C 8B88C0E56D00            mov ecx, dword ptr [eax+006DE5C0]
+:00450452 83F935                  cmp ecx, 00000035
+:00450455 7502                    jne 00450459
+:00450457 FEC2                    inc dl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00450455(C)
+|
+:00450459 83F936                  cmp ecx, 00000036
+:0045045C 7502                    jne 00450460
+:0045045E B201                    mov dl, 01
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0045045C(C)
+|
+:00450460 84D2                    test dl, dl
+:00450462 742A                    je 0045048E
+:00450464 8B8818E66D00            mov ecx, dword ptr [eax+006DE618]
+:0045046A 8B901CE66D00            mov edx, dword ptr [eax+006DE61C]
+:00450470 6BC970                  imul ecx, 00000070
+:00450473 0FBE8C11209C5800        movsx ecx, byte ptr [ecx+edx+00589C20]
+:0045047B 49                      dec ecx
+:0045047C 3B4DFC                  cmp ecx, dword ptr [ebp-04]
+:0045047F 750D                    jne 0045048E
+:00450481 C78024E66D0001000000    mov dword ptr [ebx+006DE624], 00000001
+:0045048B 832700                  and dword ptr [edi], 00000000
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00450462(C), :0045047F(C)
+|
+:0045048E 83C604                  add esi, 00000004
+:00450491 FF4DF8                  dec [ebp-08]
+:00450494 75AF                    jne 00450445
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00450400(C), :00450432(C), :0045043B(C)
+|
+:00450496 5F                      pop edi
+:00450497 5E                      pop esi
+:00450498 C9                      leave
+:00450499 C3                      ret
+
+
+
+Setting off a trap:
+
+
+:0044EB3C 833D10AB6D0000          cmp dword ptr [006DAB10], 00000000
+:0044EB43 753F                    jne 0044EB84
+:0044EB45 8B55F4                  mov edx, dword ptr [ebp-0C]
+:0044EB48 53                      push ebx
+:0044EB49 51                      push ecx
+:0044EB4A 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:0044EB4D E868B3FCFF              call 00419EBA
+:0044EB52 8B55F4                  mov edx, dword ptr [ebp-0C]
+:0044EB55 8B4DF0                  mov ecx, dword ptr [ebp-10]
+:0044EB58 6A00                    push 00000000
+:0044EB5A 6A00                    push 00000000
+:0044EB5C 6AFF                    push FFFFFFFF
+:0044EB5E 6A01                    push 00000001
+:0044EB60 FFB720E66D00            push dword ptr [edi+006DE620]
+:0044EB66 50                      push eax
+:0044EB67 53                      push ebx
+:0044EB68 FF75FC                  push [ebp-04]
+:0044EB6B E8BF6BFEFF              call 0043572F
+:0044EB70 FFB6C8E56D00            push dword ptr [esi+006DE5C8]
+:0044EB76 8B96C4E56D00            mov edx, dword ptr [esi+006DE5C4]
+:0044EB7C 6A4E                    push 0000004E
+:0044EB7E 59                      pop ecx
+:0044EB7F E8409BFCFF              call 004186C4
+:0044EB84 83A608E66D0000          and dword ptr [esi+006DE608], 00000000

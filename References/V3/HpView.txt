@@ -1,0 +1,30 @@
+()View current and normal HPs for monsters:	
+
+:00444444 8BC7                    mov eax, edi
+:00444446 C1E007                  shl eax, 07
+:00444449 8B8848BF4A00            mov ecx, dword ptr [eax+004ABF48]
+:0044444F 8B904CBF4A00            mov edx, dword ptr [eax+004ABF4C]
+:00444455 A0C8DF6D00              mov al, byte ptr [006DDFC8]
+:0044445A 3C01                    cmp al, 01
+:0044445C 7504                    jne 00444462
+wordt
+:00444444 A12C164D00              mov eax, dword ptr [004D162C]
+:00444449 69C0E4000000            imul eax, 000000E4
+:00444450 8B901CDD6900            mov edx, dword ptr [eax+0069DD1C]
+:00444456 8B8818DD6900            mov ecx, dword ptr [eax+0069DD18]
+:0044445C EB4A                    jmp 004444A8
+is geworden
+:00444444 A12C164D00              mov eax, dword ptr [004D162C]
+:00444449 69C0E4000000            imul eax, 000000E4
+:0044444F 8B901CDD6900            mov edx, dword ptr [eax+0069DD1C]
+:00444455 8B8818DD6900            mov ecx, dword ptr [eax+0069DD18]
+:0044445B C1E906                  shr ecx, 06
+:0044445E C1EA06                  shr edx, 06
+:00444461 EB45                    jmp 004444A8
+:00444463 90                      nop
+
+()Voor testen:	
+:0044443F 833B1E                  cmp dword ptr [ebx], 0000001E
+wordt
+:0044443F 833B00                  cmp dword ptr [ebx], 00000000
+

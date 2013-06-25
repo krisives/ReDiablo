@@ -1,0 +1,7 @@
+Restored old modification regarding monsters being killed by Golem
+
+file offset 0003D293
+
+:0043DE93 EB02                    jmp 0043DE97
+changed into
+:0043DE93 7502                    jne 0043DE97

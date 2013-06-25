@@ -1,0 +1,90 @@
+Fixing the bugged splash for Elemental and Doom Serpents by removing it (again as original):
+
+
+File Offset 00039472
+
+:0043A072 50                      push eax
+changed into
+:0043A072 57                      push edi
+
+File Offset 0003949C
+
+:0043A09C 50                      push eax
+changed into
+:0043A09C 57                      push edi
+
+File Offset 000394C6
+
+:0043A0C6 50                      push eax
+changed into
+:0043A0C6 57                      push edi
+
+File Offset 000394F1
+
+:0043A0F1 9090                    2*nop
+:0043A0F3 E969F8FEFF              jmp 00429961
+:0043A0F8 
+changed into
+:0043A0F1 57                      push edi
+:0043A0F2 52                      push edx
+:0043A0F3 E8D67FFFFF              call 004320CE
+
+File Offset 0003951C
+
+:0043A11C 9090                    2*nop
+:0043A11E E94BF8FEFF              jmp 0042996E
+:0043A123 
+changed into
+:0043A11C 57                      push edi
+:0043A11D 52                      push edx
+:0043A11E E8AB7FFFFF              call 004320CE
+
+File Offset 00039547
+
+:0043A147 9090                    2*nop
+:0043A149 E92DF8FEFF              jmp 0042997B
+:0043A14E 
+changed into
+:0043A147 57                      push edi
+:0043A148 52                      push edx
+:0043A149 E8807FFFFF              call 004320CE
+
+File Offset 0003956D
+
+:0043A16D 50                      push eax
+changed into
+:0043A16D 57                      push edi
+
+File Offset 00039592
+
+:0043A192 50                      push eax
+changed into
+:0043A192 57                      push edi
+
+File Offset 000395B7
+
+:0043A1B7 50                      push eax
+changed into
+:0043A1B7 57                      push edi
+
+Old free space from Small Potions again available after disabling Elemental splash:
+
+File Offset 00028D61
+
+:00429961 6A00                    push 00000000
+:00429963 52                      push edx
+:00429964 E865870000              call 004320CE
+:00429969 E98A070100              jmp 0043A0F8
+:0042996E 6A00                    push 00000000
+:00429970 52                      push edx
+:00429971 E858870000              call 004320CE
+:00429976 E9A8070100              jmp 0043A123
+:0042997B 6A00                    push 00000000
+:0042997D 52                      push edx
+:0042997E E84B870000              call 004320CE
+:00429983 E9C6070100              jmp 0043A14E
+:00429988
+
+
+
+

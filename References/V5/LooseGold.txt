@@ -1,0 +1,25 @@
+Remove 1/3 gold:
+
+
+:0045301B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00453020 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00453026 69C0C8550000            imul eax, 000055C8
+:0045302C 6A03                    push 00000003
+:0045302E 8B8408CC010000          mov eax, dword ptr [eax+ecx+000001CC]
+:00453035 59                      pop ecx
+:00453036 99                      cdq
+:00453037 F7F9                    idiv ecx
+:00453039 8BC8                    mov ecx, eax
+:0045303B E8EDC80100              call 0046F92D
+
+
+Remove all gold:
+
+
+:0045301B A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00453020 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00453026 69C0C8550000            imul eax, 000055C8
+:0045302E 8B8408CC010000          mov eax, dword ptr [eax+ecx+000001CC]
+:00453039 8BC8                    mov ecx, eax
+:0045303B E8EDC80100              call 0046F92D
+

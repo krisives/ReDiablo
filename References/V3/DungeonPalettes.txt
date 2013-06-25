@@ -1,0 +1,164 @@
+Expanding the choice of palette files for Church and Catacombs
+
+A fifth palette is available for SP-Quest settings, which can be included in the normal random selection. This also decreases chances for multiple selections of the same palette.
+
+File Offset 000549A9
+
+:004555A9 E8AC49FCFF              call 00419F5A
+wordt
+:004555A9 E8AD650000              call 0045BB5B
+:004555AE
+
+Using free space from old Doppleganger's check (fully used now):
+
+File Offset 0005AF5B
+
+:0045BB5B 90                      nop
+:0045BB5C 90                      nop
+:0045BB5D 7D08                    jge 0045BB67
+:0045BB5F 8B4DF4                  mov ecx, dword ptr [ebp-0C]
+:0045BB62 E81E0CFEFF              call 0043C785
+wordt
+:0045BB5B 83FF02                  cmp edi, 00000002
+:0045BB5E 7F01                    jg 0045BB61
+:0045BB60 42                      inc edx
+:0045BB61 E8F4E3FBFF              call 00419F5A
+:0045BB66 C3                      ret
+
+
+The following is info only.
+
+
+Selection of Dungeon Palette files:
+
+:00455587 55                      push ebp
+:00455588 8BEC                    mov ebp, esp
+:0045558A 81EC04010000            sub esp, 00000104
+:00455590 57                      push edi
+:00455591 8BF9                    mov edi, ecx			edi := 'graphics set'
+
+:00455593 85FF                    test edi, edi
+:00455595 750C                    jne 004555A3			jmp if edi > 0
+
+* Possible StringData Ref from Data Obj ->"Levels\TownData\TowD.pal"
+:00455597 B9605A4B00              mov ecx, 004B5A60
+:0045559C E88AFFFFFF              call 0045552B
+:004555A1 EB71                    jmp 00455614
+
+:004555A3 56                      push esi
+:004555A4 6A04                    push 00000004
+:004555A6 5A                      pop edx
+:004555A7 32C9                    xor cl, cl
+:004555A9 E8AC49FCFF              call 00419F5A
+:004555AE 8BF0                    mov esi, eax
+:004555B0 8D85FCFEFFFF            lea eax, dword ptr [ebp+FFFFFEFC]
+:004555B6 46                      inc esi			esi = 1..4
+:004555B7 56                      push esi
+:004555B8 57                      push edi
+:004555B9 57                      push edi
+* Possible StringData Ref from Data Obj ->"Levels\L%iData\L%i_%i.PAL"
+:004555BA 68445A4B00              push 004B5A44
+:004555BF 50                      push eax
+:004555C0 E8FB440200              call 00479AC0
+:004555C5 83C414                  add esp, 00000014
+
+:004555C8 83FF05                  cmp edi, 00000005
+:004555CB 7513                    jne 004555E0			jmp if edi <> 5
+
+:004555CD 8D85FCFEFFFF            lea eax, dword ptr [ebp+FFFFFEFC]
+* Possible StringData Ref from Data Obj ->"NLevels\L5Data\L5Base.PAL"
+:004555D3 68285A4B00              push 004B5A28
+:004555D8 50                      push eax
+:004555D9 E8E2440200              call 00479AC0
+:004555DE 59                      pop ecx
+:004555DF 59                      pop ecx
+
+:004555E0 83FF06                  cmp edi, 00000006
+:004555E3 7523                    jne 00455608			jmp if edi <> 6
+
+:004555E5 803DDC53570000          cmp byte ptr [005753DC], 00
+:004555EC 7501                    jne 004555EF			jmp with 'NestArt'
+								(not set, should be random)
+:004555EE 46                      inc esi
+
+:004555EF 56                      push esi
+:004555F0 6A06                    push 00000006
+:004555F2 6A06                    push 00000006
+:004555F4 8D85FCFEFFFF            lea eax, dword ptr [ebp+FFFFFEFC]
+* Possible StringData Ref from Data Obj ->"NLevels\L%iData\L%iBase%i.PAL"
+:004555FA 68085A4B00              push 004B5A08
+:004555FF 50                      push eax
+:00455600 E8BB440200              call 00479AC0
+:00455605 83C414                  add esp, 00000014
+
+:00455608 8D8DFCFEFFFF            lea ecx, dword ptr [ebp+FFFFFEFC]
+:0045560E E818FFFFFF              call 0045552B
+:00455613 5E                      pop esi
+
+:00455614 5F                      pop edi
+:00455615 C9                      leave
+:00455616 C3                      ret
+
+Strings found:
+
+000B4400 5454 452E 6370 7000 4E4C 6576 656C 735C TTE.cpp.NLevels\
+000B4410 4C25 6944 6174 615C 4C25 6942 6173 6525 L%iData\L%iBase%
+000B4420 692E 5041 4C00 0000 4E4C 6576 656C 735C i.PAL...NLevels\
+000B4430 4C35 4461 7461 5C4C 3542 6173 652E 5041 L5Data\L5Base.PA
+000B4440 4C00 0000 4C65 7665 6C73 5C4C 2569 4461 L...Levels\L%iDa
+000B4450 7461 5C4C 2569 5F25 692E 5041 4C00 0000 ta\L%i_%i.PAL...
+000B4460 4C65 7665 6C73 5C54 6F77 6E44 6174 615C Levels\TownData\
+000B4470 546F 7744 2E70 616C 0000 0000 0000 0000 TowD.pal........
+
+Existing PAL files:
+
+Levels\L1Data\L1.PAL		?
+Levels\L1Data\L1_1.PAL		Church
+Levels\L1Data\L1_2.PAL		Church
+Levels\L1Data\L1_3.PAL		Church
+Levels\L1Data\L1_4.PAL		Church
+Levels\L1Data\L1_5.PAL		Quests (those with Church graphics)
+Levels\L2Data\L2.PAL		?
+Levels\L2Data\L2_1.PAL		Catacombs
+Levels\L2Data\L2_2.PAL		Catacombs
+Levels\L2Data\L2_3.PAL		Catacombs
+Levels\L2Data\L2_4.PAL		Catacombs
+Levels\L2Data\L2_5.PAL		Quests (those with Catacomb graphics)		
+Levels\L3Data\L3.PAL		?
+Levels\L3Data\L3_1.PAL		Caves
+Levels\L3Data\L3_2.PAL		Caves
+Levels\L3Data\L3_3.PAL		Caves
+Levels\L3Data\L3_4.PAL		Caves
+Levels\L3Data\L3pfoul.PAL	Quest (Cave graphics: Fountain Quest, before resolving)
+Levels\L3Data\L3pwater.PAL	Quest (Cave graphics: Fountain Quest, after resolving)
+Levels\L4Data\L4_1.PAL		Hell
+Levels\L4Data\L4_2.PAL		Hell
+Levels\L4Data\L4_3.PAL		Hell
+Levels\L4Data\L4_4.PAL		Hell
+NLevels\L5Data\L5Base.PAL	Abyss
+NLevels\L6Data\L6Base.PAL	?
+NLevels\L6Data\L6Base1.PAL	Nest (with NestArt)
+NLevels\L6Data\L6Base2.PAL	Nest (with/without NestArt)
+NLevels\L6Data\L6Base3.PAL	Nest (with/without NestArt)
+NLevels\L6Data\L6Base4.PAL	Nest (with/without NestArt)
+NLevels\L6Data\L6Base5.PAL	Nest (without NestArt)
+
+
+
+Church PAL files:
+
+Levels\L1Data\L1_1.PAL		floor is nice brown, walls blue.
+Levels\L1Data\L1_2.PAL		floor is blue, walls faint red.
+Levels\L1Data\L1_3.PAL		floor is red, walls faint green.
+Levels\L1Data\L1_4.PAL		floor is green, walls faint purple.
+Levels\L1Data\L1_5.PAL		floor is purple, walls faint brown (looks grey).
+
+Catacomb PAL files:
+
+Levels\L2Data\L2_1.PAL		floor is brown, roof blue.
+Levels\L2Data\L2_2.PAL		floor is brown, walls grey&brown, roof green.
+Levels\L2Data\L2_3.PAL		floor is brown&green, walls grey&red, roof purple.
+Levels\L2Data\L2_4.PAL		floor is brown&blue, walls grey&green, roof red.
+Levels\L2Data\L2_5.PAL		floor is green, walls grey&green, roof purple.
+
+

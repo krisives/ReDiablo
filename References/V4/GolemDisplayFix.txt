@@ -1,0 +1,23 @@
+Enabling Golem display without Seeing
+
+
+File Offset 00439CC
+
+:004445CC E889FEFFFF              call 0044445A
+wordt
+:004445CC E8785B0300              call 0047A149
+:004445D1 
+
+
+Using some free space at 0047A149
+
+File Offset 0079549
+
+:0047A149 8A8020DD6900            mov al, byte ptr [eax+0069DD20]
+:0047A14F 3C15                    cmp al, 15
+:0047A151 0F8503A3FCFF            jne 0044445A
+:0047A157 C3                      ret
+:0047A158 9090                    2*nop
+
+Some free space left (8 bytes).
+

@@ -1,0 +1,201 @@
+Regeneration for characters:
+
+File Offset 0005CFE3
+
+:0045DBE3 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045DBEA 744C                    je 0045DC38
+:0045DBEC 03C6                    add eax, esi
+:0045DBEE E9AC870100              jmp 0047639F
+:0045DBF3 50                      push eax
+:0045DBF4 C1E302                  shl ebx, 02
+:0045DBF7 299898010000            sub dword ptr [eax+00000198], ebx
+:0045DBFD 90                      nop
+:0045DBFE A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC03 299C3090010000          sub dword ptr [eax+esi+00000190], ebx
+:0045DC0A 90                      nop
+:0045DC0B 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:0045DC12 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC17 83BC3098010000C0        cmp dword ptr [eax+esi+00000198], FFFFFFC0
+:0045DC1F 90                      nop
+:0045DC20 90                      nop
+:0045DC21 90                      nop
+wordt
+:0045DBE3 E8BE59FFFF              call 004535A6
+:0045DBE8 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045DBEF 7441                    je 0045DC32
+:0045DBF1 03C6                    add eax, esi
+:0045DBF3 E9A7870100              jmp 0047639F
+:0045DBF8 50                      push eax
+:0045DBF9 C1E302                  shl ebx, 02
+:0045DBFC 299898010000            sub dword ptr [eax+00000198], ebx
+:0045DC02 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC07 299C3090010000          sub dword ptr [eax+esi+00000190], ebx
+:0045DC0E 8D843090010000          lea eax, dword ptr [eax+esi+00000190]
+:0045DC15 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DC1A 83BC3098010000C0        cmp dword ptr [eax+esi+00000198], FFFFFFC0
+
+File Offset 0007580C
+
+:0047640C E8E277FEFF              call 0045DBF3
+wordt
+:0047640C E8E777FEFF              call 0045DBF8
+:00476411 
+
+File Offset 0005D02D
+
+:0045DC2D 891D400E4D00            mov dword ptr [004D0E40], ebx
+:0045DC33 E85644FFFF              call 0045208E
+wordt
+:0045DC2D E85C44FFFF              call 0045208E
+:0045DC32 891D400E4D00            mov dword ptr [004D0E40], ebx
+
+File Offset 0005D043
+
+:0045DC43 742B                    je 0045DC70
+wordt
+:0045DC43 7425                    je 0045DC6A
+
+File Offset 0005D053
+
+:0045DC53 7E1B                    jle 0045DC70
+wordt
+:0045DC53 7E15                    jle 0045DC6A
+
+Using free space from Fountain of Tears:
+
+File Offset 000529A6
+
+:004535A6 8BDE                    mov ebx, esi
+:004535A8 5D                      pop ebp
+:004535A9 6A01                    push 00000001
+:004535AB 58                      pop eax
+:004535AC 39442410                cmp dword ptr [esp+10], eax
+:004535B0 7E04                    jle 004535B6
+:004535B2 89442414                mov dword ptr [esp+14], eax
+:004535B6 837C241400              cmp dword ptr [esp+14], 00000000
+:004535BB 749B                    je 00453558
+:004535BD 8BCF                    mov ecx, edi
+:004535BF E8BAAF0000              call 0045E57E
+:004535C4 E9DF010000              jmp 004537A8
+:004535C9 90                      nop
+:004535CA B301                    mov bl, 01
+:004535CC 0F85DF010000            jne 004537B1
+wordt
+:004535A6 50                      push eax
+:004535A7 03C6                    add eax, esi
+:004535A9 53                      push ebx
+:004535AA 51                      push ecx
+:004535AB 8B987C010000            mov ebx, dword ptr [eax+0000017C]
+:004535B1 E8DE010000              call 00453794
+:004535B6 E8AE010000              call 00453769
+:004535BB 8B986C010000            mov ebx, dword ptr [eax+0000016C]
+:004535C1 E8CE010000              call 00453794
+:004535C6 E8FA000000              call 004536C5
+:004535CB 59                      pop ecx
+:004535CC 5B                      pop ebx
+:004535CD 58                      pop eax
+:004535CE C3                      ret
+:004535CF 909090                  3*nop
+
+Reorganizing Life fountain:
+
+File Offset 00052B5F
+
+:0045375F 90                      nop
+:00453760 90                      nop
+:00453761 90                      nop
+:00453762 90                      nop
+:00453763 51                      push ecx
+:00453764 50                      push eax
+:00453765 019998010000            add dword ptr [ecx+00000198], ebx
+:0045376B 8D843898010000          lea eax, dword ptr [eax+edi+00000198]
+:00453772 019990010000            add dword ptr [ecx+00000190], ebx
+:00453778 58                      pop eax
+:00453779 8D843890010000          lea eax, dword ptr [eax+edi+00000190]
+:00453780 59                      pop ecx
+:00453781 5B                      pop ebx
+:00453782 90                      nop
+:00453783 8D8898010000            lea ecx, dword ptr [eax+00000198]
+:00453789 8B809C010000            mov eax, dword ptr [eax+0000019C]
+:0045378F 3901                    cmp dword ptr [ecx], eax
+:00453791 7E15                    jle 004537A8
+:00453793 8901                    mov dword ptr [ecx], eax
+:00453795 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045379A 03C7                    add eax, edi
+:0045379C 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:004537A2 898890010000            mov dword ptr [eax+00000190], ecx
+wordt
+:0045375F 03C7                    add eax, edi
+:00453761 E803000000              call 00453769
+:00453766 5B                      pop ebx
+:00453767 EB3F                    jmp 004537A8
+:00453769 019898010000            add dword ptr [eax+00000198], ebx
+:0045376F 019890010000            add dword ptr [eax+00000190], ebx
+:00453775 8D8898010000            lea ecx, dword ptr [eax+00000198]
+:0045377B 8B989C010000            mov ebx, dword ptr [eax+0000019C]
+:00453781 3919                    cmp dword ptr [ecx], ebx
+:00453783 7E0E                    jle 00453793
+:00453785 8919                    mov dword ptr [ecx], ebx
+:00453787 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:0045378D 898890010000            mov dword ptr [eax+00000190], ecx
+:00453793 C3                      ret
+
+:00453794 C1FB05                  sar ebx, 05
+:00453797 43                      inc ebx
+:00453798 803DD8B1600000          cmp byte ptr [0060B1D8], 00
+:0045379F 7503                    jne 004537A4
+:004537A1 C1E302                  shl ebx, 02
+:004537A4 C3                      ret
+
+:004537A5 909090                  3*nop
+
+
+Reorganizing Mana fountain:
+
+File Offset 00052ABB
+
+:004536BB 90                      nop
+:004536BC 90                      nop
+:004536BD 90                      nop
+:004536BE 90                      nop
+:004536BF 51                      push ecx
+:004536C0 50                      push eax
+:004536C1 0199AC010000            add dword ptr [ecx+000001AC], ebx
+:004536C7 8D8438AC010000          lea eax, dword ptr [eax+edi+000001AC]
+:004536CE 0199A4010000            add dword ptr [ecx+000001A4], ebx
+:004536D4 58                      pop eax
+:004536D5 8D8438A4010000          lea eax, dword ptr [eax+edi+000001A4]
+:004536DC 59                      pop ecx
+:004536DD 5B                      pop ebx
+:004536DE 90                      nop
+:004536DF 8D88AC010000            lea ecx, dword ptr [eax+000001AC]
+:004536E5 8B80B0010000            mov eax, dword ptr [eax+000001B0]
+:004536EB 3901                    cmp dword ptr [ecx], eax
+:004536ED 0F8EB5000000            jle 004537A8
+wordt
+:004536BB 03C7                    add eax, edi
+:004536BD E803000000              call 004536C5
+:004536C2 5B                      pop ebx
+:004536C3 EB43                    jmp 00453708
+:004536C5 0198AC010000            add dword ptr [eax+000001AC], ebx
+:004536CB 0198A4010000            add dword ptr [eax+000001A4], ebx
+:004536D1 8D88AC010000            lea ecx, dword ptr [eax+000001AC]
+:004536D7 8B98B0010000            mov ebx, dword ptr [eax+000001B0]
+:004536DD 3919                    cmp dword ptr [ecx], ebx
+:004536DF 7E0E                    jle 004536EF
+:004536E1 8919                    mov dword ptr [ecx], ebx
+:004536E3 8B88A8010000            mov ecx, dword ptr [eax+000001A8]
+:004536E9 8988A4010000            mov dword ptr [eax+000001A4], ecx
+:004536EF C3                      ret
+:004536F0 909090                  3*nop
+
+Free space from 004536F0 to 00453708 now.
+
+
+Increasing MS Drain for some compensation:
+
+File Offset 000514E1
+
+:004520E1 C1E80D                  shr eax, 0D
+wordt
+:004520E1 C1E80C                  shr eax, 0C

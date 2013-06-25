@@ -1,0 +1,27 @@
+dword ptr [edi+00] -> dword ptr [esi+000000D4]				pointer to Monstertype (?)
+dword ptr [edi+04] -> dword ptr [esi+000000D8]				pointer to Name
+
+word ptr [edi+0E]
+:0043BD1D C1E006                  shl eax, 06
+:0043BD20 898690000000            mov dword ptr [esi+00000090], eax	HP
+:0043BD4E 898694000000            mov dword ptr [esi+00000094], eax	HP
+
+byte ptr [edi+10] -> byte ptr [esi+00000098]				Attacktype
+byte ptr [edi+11] -> byte ptr [esi+00000099]				Subtype
+
+		                  dword ptr [esi+0000009C]		Special Flag
+		                  dword ptr [esi+000000A0]		Activation counter (?)
+		                  byte ptr [esi+000000C0]		DLVL*2 (or MLVL+5 if DLVL=0)
+		                  word ptr [esi+000000C2]		Xp value
+
+byte ptr [edi+12] -> byte ptr [esi+000000C5]				MinDamage
+byte ptr [edi+13] -> byte ptr [esi+000000C6]				MaxDamage
+byte ptr [edi+12] -> byte ptr [esi+000000C8]				MinDamage 2nd
+byte ptr [edi+13] -> byte ptr [esi+000000C9]				MaxDamage 2nd
+word ptr [edi+14] -> word ptr [esi+000000CC]				Resistances
+
+dword ptr [edi+1C]-> dword ptr [esi+000000D0]				pointer to special sound wav
+
+:0043BD9E 7509                    jne 0043BDA9
+:0043BDA0 80A6D700000000          and byte ptr [esi+000000D7], 00	for Leo only?
+:0043BDA7 EB13                    jmp 0043BDBC

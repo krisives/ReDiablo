@@ -1,0 +1,18 @@
+MLVL for bosses is normally set to 2*dlvl, or to mlvl+5 when dlvl=0. Changed to set it always to mlvl+5.
+
+file offset 0003B0E7
+
+:0043BCE7 8A470C                  mov al, byte ptr [edi+0C]
+:0043BCEA 84C0                    test al, al
+:0043BCEC 740A                    je 0043BCF8
+:0043BCEE D0E0                    shl al, 1
+:0043BCF0 8886C0000000            mov byte ptr [esi+000000C0], al
+:0043BCF6 EB07                    jmp 0043BCFF
+:0043BCF8 8086C000000005          add byte ptr [esi+000000C0], 05
+:0043BCFF 668B86C2000000          mov ax, word ptr [esi+000000C2]
+changed into
+:0043BCE7 EB0F                    jmp 0043BCF8
+:0043BCE9 90                      nop
+:0043BCEA ...
+
+Now 15 bytes free space.

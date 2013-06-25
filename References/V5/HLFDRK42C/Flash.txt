@@ -1,0 +1,350 @@
+Flash
+
+Special notes: 
+
+Both Flash spelleffects (0Bh and 0Ch) support Characters, Monsters and Traps (doing dlvl/128 damage each frame).
+Monster Flash damage is not properly calculated in one of the effects (0Ch), resulting in neglectable damage.
+With the character bugfix, the front side of this spell does roughly 3 times the damage listed in the spellbook, while it did only 1/3 of the spellbook damage before that.
+
+
+Decreasing actual damage to match spellbook damage.
+
+file offset 000324E0
+
+:004330E0 6A14                    push 00000014
+changed into
+:004330E0 6A02                    push 00000002
+
+file offset 00032398
+
+:00432F98 6A14                    push 00000014
+changed into
+:00432F98 6A02                    push 00000002
+
+file offset 00032537
+
+:00433137 D1FA                    sar edx, 1
+:00433139 03D1                    add edx, ecx
+changed into
+:00433137 6BD205                  imul edx, 00000005
+:0043313A 90                      nop
+
+file offset 000323E9
+
+:00432FE9 D1FA                    sar edx, 1
+:00432FEB 03D1                    add edx, ecx
+changed into
+:00432FE9 6BD205                  imul edx, 00000005
+:00432FEC 90                      nop
+
+
+Correcting monster Flash damage for spelleffect 0Ch, and connecting to maxmonsterdamage instead of monsterlevel for both spelleffects (increasing it for higher difficulties).
+
+file offset 00032557
+
+:00433157 5F                      pop edi
+:00433158 69C0B0000000            imul eax, 000000B0
+changed into
+:00433157 E9C5790400              jmp 0047AB21
+:0043315C 90                      nop
+:0043315D 5F                      pop edi
+
+Free space from 'Command.drk' used:
+
+file offset 00079F21
+
+:0047AB21 90                      nop
+:0047AB22 90                      nop
+:0047AB23 90                      nop
+:0047AB24 0F8290000000            jb 0047ABBA
+:0047AB2A F7D9                    neg ecx
+:0047AB2C E989000000              jmp 0047ABBA
+:0047AB31 F0                      lock
+:0047AB32 FF05D0197000            inc dword ptr [007019D0]
+:0047AB38 833DCC19700000          cmp dword ptr [007019CC], 00000000
+:0047AB3F 7F04                    jg 0047AB45
+:0047AB41 6A00                    push 00000000
+:0047AB43 EB19                    jmp 0047AB5E
+:0047AB45 F0                      lock
+:0047AB46 FF0DD0197000            dec dword ptr [007019D0]
+changed into
+:0047AB21 69C0B0000000            imul eax, 000000B0
+:0047AB27 807C241400              cmp byte ptr [esp+14], 00
+:0047AB2C 7419                    je 0047AB47
+:0047AB2E 8B742424                mov esi, dword ptr [esp+24]
+:0047AB32 69F6E4000000            imul esi, 000000E4
+:0047AB38 0FBE9E4EDD6900          movsx ebx, byte ptr [esi+0069DD4E]	maxdamage
+:0047AB3F D1E3                    shl ebx, 1
+:0047AB41 8998D47A6900            mov dword ptr [eax+00697AD4], ebx
+:0047AB47 E91186FBFF              jmp 0043315D
+:0047AB4C ...
+
+file offset 0003241E
+
+:0043301E 0FBE8048DD6900          movsx eax, byte ptr [eax+0069DD48]	mlvl
+changed into
+:0043301E 0FBE804EDD6900          movsx eax, byte ptr [eax+0069DD4E]	maxdamage
+
+
+
+The following is information only.
+
+
+Jarulf's Guide:
+
+Characters
+
+Type: magic (but uses same animation as lightning)
+Min. Damage: [3·Rec(slvl, clvl)/2]
+Max. Damage: 2·[3·Rec(slvl, clvl)/2]
+Quick Min. Damage: 3·clvl/2 · (9/8) ^slvl
+Quick Max. Damage: 3·clvl · (9/8) ^slvl
+Real Damage 1: [3·Rec(slvl, Itt(clvl, Rnd[20] + 1))/2]/64
+Real Damage 2: [3·Rec(slvl, Itt(clvl, Rnd[2] + 1))/2]/64
+Duration: 0.95 seconds
+Blockable: No
+
+* The Flash spell is actually composed of two different effects, the two different Real Damages given are for the two different effects. The first hit in front of you and to the sides, the other behind you.
+* You seem to be able to do two flashes in a row, then you have to wait for them to finish. Don’t know how this affects damage though.
+* While casting Flash, you are temporarily invulnerable and can’t access the normal GUI.
+* The flash will try to hit once every 0.05 seconds for a total of 19 times.
+
+Monsters
+
+Type: magic
+Damage 1: mlvl/32
+Damage 2: 4/64
+Duration: 0.95 seconds
+Blockable: No
+
+* The Flash spell is actually composed of two different effects, the two different Damages given are for the
+two different effects. The first hit in front of the monster and to the sides, the other behind the monster.
+* The flash will try to hit once every 0.05 seconds for a total of 19 times.
+
+
+Previous Spellbook damage
+
+:0042E9DE 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]	clvl
+:0042E9E5 85F6                    test esi, esi				slvl
+:0042E9E7 8902                    mov dword ptr [edx], eax
+:0042E9E9 7E0E                    jle 0042E9F9
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042E9F7(C)
+|
+:0042E9EB 8B02                    mov eax, dword ptr [edx]
+:0042E9ED 8BC8                    mov ecx, eax
+:0042E9EF C1F903                  sar ecx, 03
+:0042E9F2 03C8                    add ecx, eax
+:0042E9F4 4E                      dec esi
+:0042E9F5 890A                    mov dword ptr [edx], ecx
+:0042E9F7 75F2                    jne 0042E9EB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042E9E9(C)
+|
+:0042E9F9 8B02                    mov eax, dword ptr [edx]
+:0042E9FB 8BC8                    mov ecx, eax
+:0042E9FD D1F9                    sar ecx, 1
+:0042E9FF 03C1                    add eax, ecx
+:0042EA01 8902                    mov dword ptr [edx], eax
+:0042EA03 03C0                    add eax, eax
+:0042EA05 E945030000              jmp 0042ED4F
+
+
+Previous real character damage (effect 0Ch):
+
+:004330CF 33DB                    xor ebx, ebx
+:004330D1 899ED47A6900            mov dword ptr [esi+00697AD4], ebx
+:004330D7 389C38B8010000          cmp byte ptr [eax+edi+000001B8], bl
+:004330DE 7C23                    jl 00433103
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433101(C)
+|
+:004330E0 6A14                    push 00000014
+:004330E2 B138                    mov cl, 38
+:004330E4 5A                      pop edx
+:004330E5 E8706EFEFF              call 00419F5A
+:004330EA 40                      inc eax
+:004330EB 0186D47A6900            add dword ptr [esi+00697AD4], eax
+:004330F1 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004330F6 43                      inc ebx
+:004330F7 0FBE8438B8010000        movsx eax, byte ptr [eax+edi+000001B8]	clvl
+:004330FF 3BD8                    cmp ebx, eax
+:00433101 7EDD                    jle 004330E0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004330DE(C)
+|
+:00433103 8B8E887A6900            mov ecx, dword ptr [esi+00697A88]		slvl
+:00433109 85C9                    test ecx, ecx
+:0043310B 7E1C                    jle 00433129
+:0043310D 8B9ED47A6900            mov ebx, dword ptr [esi+00697AD4]
+:00433113 8D86D47A6900            lea eax, dword ptr [esi+00697AD4]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00433125(C)
+|
+:00433119 8BD3                    mov edx, ebx
+:0043311B 8BFA                    mov edi, edx
+:0043311D C1FF03                  sar edi, 03
+:00433120 03FA                    add edi, edx
+:00433122 49                      dec ecx
+:00433123 8BDF                    mov ebx, edi
+:00433125 75F2                    jne 00433119
+:00433127 8918                    mov dword ptr [eax], ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043310B(C)
+|
+:00433129 8B8ED47A6900            mov ecx, dword ptr [esi+00697AD4]
+:0043312F 8D86D47A6900            lea eax, dword ptr [esi+00697AD4]
+:00433135 8BD1                    mov edx, ecx
+:00433137 D1FA                    sar edx, 1
+:00433139 03D1                    add edx, ecx
+:0043313B 8910                    mov dword ptr [eax], edx
+:0043313D EB15                    jmp 00433154
+
+
+Previous real character damage (effect 0Bh):
+
+:00432F87 33DB                    xor ebx, ebx
+:00432F89 899ED47A6900            mov dword ptr [esi+00697AD4], ebx
+:00432F8F 389C38B8010000          cmp byte ptr [eax+edi+000001B8], bl
+:00432F96 7C23                    jl 00432FBB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00432FB9(C)
+|
+:00432F98 6A14                    push 00000014
+:00432F9A B137                    mov cl, 37
+:00432F9C 5A                      pop edx
+:00432F9D E8B86FFEFF              call 00419F5A
+:00432FA2 40                      inc eax
+:00432FA3 0186D47A6900            add dword ptr [esi+00697AD4], eax
+:00432FA9 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00432FAE 43                      inc ebx
+:00432FAF 0FBE8438B8010000        movsx eax, byte ptr [eax+edi+000001B8]
+:00432FB7 3BD8                    cmp ebx, eax
+:00432FB9 7EDD                    jle 00432F98
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00432F96(C)
+|
+:00432FBB 8B8E887A6900            mov ecx, dword ptr [esi+00697A88]
+:00432FC1 85C9                    test ecx, ecx
+:00432FC3 7E14                    jle 00432FD9
+:00432FC5 8D86D47A6900            lea eax, dword ptr [esi+00697AD4]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00432FD7(C)
+|
+:00432FCB 8B10                    mov edx, dword ptr [eax]
+:00432FCD 8BFA                    mov edi, edx
+:00432FCF C1FF03                  sar edi, 03
+:00432FD2 03FA                    add edi, edx
+:00432FD4 49                      dec ecx
+:00432FD5 8938                    mov dword ptr [eax], edi
+:00432FD7 75F2                    jne 00432FCB
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00432FC3(C)
+|
+:00432FD9 8B8ED47A6900            mov ecx, dword ptr [esi+00697AD4]
+:00432FDF 8D86D47A6900            lea eax, dword ptr [esi+00697AD4]
+:00432FE5 8BD1                    mov edx, ecx
+:00432FE7 6A04                    push 00000004
+:00432FE9 D1FA                    sar edx, 1
+:00432FEB 03D1                    add edx, ecx
+:00432FED 8B4C2428                mov ecx, dword ptr [esp+28]
+:00432FF1 8910                    mov dword ptr [eax], edx
+
+
+Previous real monster damage (effect 0Ch):
+
+:0043309C 55                      push ebp
+:0043309D 8BEC                    mov ebp, esp
+:0043309F 51                      push ecx
+:004330A0 807D1800                cmp byte ptr [ebp+18], 00
+:004330A4 53                      push ebx
+:004330A5 56                      push esi
+:004330A6 8BF1                    mov esi, ecx
+:004330A8 57                      push edi
+:004330A9 8975FC                  mov dword ptr [ebp-04], esi
+:004330AC 0F85A2000000            jne 00433154
+...
+:00433154 8B45FC                  mov eax, dword ptr [ebp-04]
+:00433157 5F                      pop edi
+:00433158 69C0B0000000            imul eax, 000000B0
+:0043315E 5E                      pop esi
+:0043315F 5B                      pop ebx
+:00433160 C780C07A690001000000    mov dword ptr [ebx+00697AC0], 00000001		!W32DASM bug [ebx=eax]
+:0043316A C780C87A690013000000    mov dword ptr [ebx+00697AC8], 00000013		!W32DASM bug [ebx=eax]
+:00433174 C9                      leave
+:00433175 C21C00                  ret 001C
+
+
+
+Previous real monster damage (effect 0Bh):
+
+:00432F59 807C241400              cmp byte ptr [esp+14], 00
+:00432F5E 53                      push ebx
+:00432F5F 56                      push esi
+:00432F60 57                      push edi
+:00432F61 0F85A5000000            jne 0043300C
+...
+:0043300C 8B442424                mov eax, dword ptr [esp+24]
+:00433010 8BF1                    mov esi, ecx
+:00433012 69C0E4000000            imul eax, 000000E4
+:00433018 69F6B0000000            imul esi, 000000B0
+:0043301E 0FBE8048DD6900          movsx eax, byte ptr [eax+0069DD48]
+:00433025 D1E0                    shl eax, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043300A(U)
+|
+:00433027 8986D47A6900            mov dword ptr [esi+00697AD4], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00432FF9(U)
+|
+:0043302D C786C87A690013000000    mov dword ptr [esi+00697AC8], 00000013
+:00433037 5F                      pop edi
+:00433038 5E                      pop esi
+:00433039 5B                      pop ebx
+:0043303A C21C00                  ret 001C
+
+
+
+"Double" Flash attack by Mages:
+
+:00442EEE 33FF                    xor edi, edi
+:00442EF0 83CAFF                  or edx, FFFFFFFF
+:00442EF3 57                      push edi
+:00442EF4 8BCB                    mov ecx, ebx
+:00442EF6 E831D7FFFF              call 0044062C
+:00442EFB 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:00442F01 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:00442F07 57                      push edi
+:00442F08 6A04                    push 00000004
+:00442F0A 53                      push ebx
+:00442F0B 6A01                    push 00000001
+:00442F0D 6A0B                    push 0000000B
+:00442F0F FFB6D0DC6900            push dword ptr [esi+0069DCD0]
+:00442F15 57                      push edi
+:00442F16 57                      push edi
+:00442F17 E81328FFFF              call 0043572F
+:00442F1C 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:00442F22 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:00442F28 57                      push edi
+:00442F29 6A04                    push 00000004
+:00442F2B 53                      push ebx
+:00442F2C 6A01                    push 00000001
+:00442F2E 6A0C                    push 0000000C
+:00442F30 FFB6D0DC6900            push dword ptr [esi+0069DCD0]
+:00442F36 57                      push edi
+:00442F37 57                      push edi
+:00442F38 E8F227FFFF              call 0043572F
+:00442F3D E9B7000000              jmp 00442FF9
+

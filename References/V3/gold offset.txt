@@ -1,0 +1,13 @@
+Offset max gold in a pile
+
+      5000 gp -> 10000 gp
+
+Hellfire 
+A4020 881300  -> 10270000
+      	
+Price limits of town people
+
+29677 - no change
+29AFA - no change
+29F99 - no change
+2A2CB - changed -> Wirt

@@ -1,0 +1,35 @@
+New graphics from Diablo-Beta
+
+
+Doortellend vanaf de originele plaatjes (btw. er zit een foutje in de nummering op de site)
+
+E2 Bovine Armor 
+E3 Blank				
+E4 Blank				
+E5 Ring				
+E6 Key				
+E7 Bokal				
+E8 Golden Orb			
+E9 Crown				
+EA Mask				
+EB Mask				
+EC Helm				
+ED (Horned) Helm			
+EE Book				
+EF Bag				
+F0 Helmet
+F1 Shield
+F2 Bow
+F3 Heavy Armor (= armor op de grond)
+F4 Sword
+F5 Chain Mail
+F6 Scale Mail
+F7 Shield (lijkt schild op de grond)
+F8 Bow
+F9 Bow
+FA Staff
+FB Staff/Pike
+FC Staff
+FD Sword
+FE Light Armor
+FF Halberd

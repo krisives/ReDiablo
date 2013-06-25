@@ -1,0 +1,101 @@
+Max Gold found at [004A5620] offset 000A4020
+
+
+Test: 
+
+changing 10000 -> 150000 gold : 
+
+000A4020 1027 0000 0000 0000 0100 0000 0500 0000 .'..............
+wordt
+000A4020 F049 0200 0000 0000 0100 0000 0500 0000 .I..............
+
+Werkt voor 1 spel, volgend spel is slechts 18928 gold per vakje over (= F049). Inventory-gold wordt dus per Word, niet per Dword opgeslagen, wat een max van ongeveer 65000 opleverd. Routine 'Load Player' wel gevonden, maar oplossing ligt daar niet voor de hand.
+
+
+
+
+
+All max shop prices at 100000 gold?
+
+
+Griz base item price cap
+
+:0042A271 813D48636800400D0300    cmp dword ptr [00686348], 00030D40	200000
+
+Griz magic item price cap
+
+:0042A6F8 81F9400D0300            cmp ecx, 00030D40			200000
+
+Adria price cap
+
+:0042AB93 813D48636800400D0300    cmp dword ptr [00686348], 00030D40	200000
+
+
+Wirt price cap
+
+:0042AEC9 81F9905F0100            cmp ecx, 00015F90			 90000
+
+
+
+Tally Gold routine:
+
+Counts Gold in Belt and Inventory
+
+
+* Referenced by a CALL at Addresses:
+|:0040743D   , :0041F777   , :0041F81F   , :0041F97A   , :004204B9   
+|:0042077C   , :00420DC0   , :0045AA7D   , :0045ABA9   , :0046F937   
+|
+:0042313F 69C9C8550000            imul ecx, 000055C8
+:00423145 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0042314B 56                      push esi
+:0042314C 33C0                    xor eax, eax
+:0042314E 57                      push edi
+:0042314F 03CA                    add ecx, edx
+:00423151 6A08                    push 00000008
+:00423153 5E                      pop esi
+:00423154 BF74010000              mov edi, 00000174
+:00423159 8D91C8480000            lea edx, dword ptr [ecx+000048C8]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423177(C)
+|
+:0042315F 83BA44FFFFFF0B          cmp dword ptr [edx+FFFFFF44], 0000000B
+:00423166 750C                    jne 00423174
+:00423168 0302                    add eax, dword ptr [edx]
+:0042316A C705AC535700FF000000    mov dword ptr [005753AC], 000000FF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423166(C)
+|
+:00423174 03D7                    add edx, edi
+:00423176 4E                      dec esi
+:00423177 75E6                    jne 0042315F
+:00423179 8B91D8470000            mov edx, dword ptr [ecx+000047D8]
+:0042317F 85D2                    test edx, edx
+:00423181 7E16                    jle 00423199
+:00423183 81C17C0E0000            add ecx, 00000E7C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423197(C)
+|
+:00423189 83B944FFFFFF0B          cmp dword ptr [ecx+FFFFFF44], 0000000B
+:00423190 7502                    jne 00423194
+:00423192 0301                    add eax, dword ptr [ecx]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423190(C)
+|
+:00423194 03CF                    add ecx, edi
+:00423196 4A                      dec edx
+:00423197 75F0                    jne 00423189
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00423181(C)
+|
+:00423199 5F                      pop edi
+:0042319A 5E                      pop esi
+:0042319B C3                      ret
+
+
+

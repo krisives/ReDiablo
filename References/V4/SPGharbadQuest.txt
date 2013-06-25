@@ -1,0 +1,102 @@
+In SP, the activation of the Gharbad Quest causes Diablo to receive Gharbad's name, and Gharbad himself never appears. This is caused by the fact that Diablo is a boss without a corresponding data-record and game apparantly uses data from boss number 0 if it is 'active'.
+
+The fix is to free boss number 0 from use by a quest, so Gharbad's Quest gets disabled. Additional changes are made to preserve the speeches related to Gharbad's name and to prevent those speeches from being activated at Diablo's death.
+
+
+
+Setting Gharbad Quest to dlvl=99:
+
+000B5330 03FF FF02 6400 0000 0000 0000 9000 0000 ....d...........
+000B5340 886C 4B00                               .lK.
+wordt
+000B5330 63                                      c
+
+
+Adjusting name from Gharbad boss data for use by Diablo:
+
+000AF280 2B00 0000 F31A 4B00 841B 4B00 0400 7800 +.....K...K...x.
+000AF290 1203 0810 1000 0300 0000 0000 9000 0000 ................
+wordt
+000AF284 6C22 4B00                               l"K.
+
+
+Fixing the activation speech for Gharbad the Satyr Lord:
+
+File Offset 00050664
+
+:00451264 3B0584084B00            cmp eax, dword ptr [004B0884]		
+wordt
+:00451264 3B05040D4B00            cmp eax, dword ptr [004B0D04]		
+
+
+Fixing the victory comment:
+
+File Offset 0005EFF6
+
+:0045FBF6 3B0D84084B00            cmp ecx, dword ptr [004B0884]
+wordt
+:0045FBF6 3B0D040D4B00            cmp ecx, dword ptr [004B0D04]
+
+
+Other namepointer related fixes (just in case):
+
+File Offset 0003C908
+
+:0043D508 3B0584084B00            cmp eax, dword ptr [004B0884]
+wordt
+:0043D508 3B05040D4B00            cmp eax, dword ptr [004B0D04]
+
+File Offset 0003DEDE
+
+:0043EADE 3B0584084B00            cmp eax, dword ptr [004B0884]
+wordt
+:0043EADE 3B0504084B00            cmp eax, dword ptr [004B0D04]
+
+
+Adjusting Gharbad the Satyr Lord to make him 'weak':
+
+ 36 Gharbad the Weak   2 Skeleton  4  11      9      18       16   710   16- 40  RIR
+                                                                          8- 16
+000AF700 2100 0000 F31A 4B00 841B 4B00 0900 C602 !.....K...K.....
+000AF710 0204 1028 1500 0B00 4600 0000 0000 0000 ...(....F.......
+wordt
+000AF712 0810                                    ..
+
+
+
+Additional info: Placing (some) Quest monsters
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AA96(C)
+|
+:0043AAA2 8BCE                    mov ecx, esi			Gharbad Questnumber
+:0043AAA4 E8EA4F0200              call 0045FA93			Check if quest appears
+:0043AAA9 85C0                    test eax, eax
+:0043AAAB 740D                    je 0043AABA
+:0043AAAD 8B0D80084B00            mov ecx, dword ptr [004B0880]	Gharbad Boss data
+:0043AAB3 8BD7                    mov edx, edi
+:0043AAB5 E8A4FEFFFF              call 0043A95E			Place monster
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AAAB(C)
+|
+:0043AABA 6A03                    push 00000003			Zhar The Mad
+:0043AABC 59                      pop ecx
+:0043AABD E8D14F0200              call 0045FA93
+:0043AAC2 85C0                    test eax, eax
+:0043AAC4 740D                    je 0043AAD3
+:0043AAC6 8B0DC0084B00            mov ecx, dword ptr [004B08C0]	
+:0043AACC 8BD7                    mov edx, edi
+:0043AACE E88BFEFFFF              call 0043A95E	
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043AAC4(C)
+|
+:0043AAD3 6A07                    push 00000007			Ogden's Sign
+:0043AAD5 59                      pop ecx
+:0043AAD6 E8B84F0200              call 0045FA93			Check if quest appears
+:0043AADB 85C0                    test eax, eax
+:0043AADD 740D                    je 0043AAEC
+:0043AADF 8B0DE0084B00            mov ecx, dword ptr [004B08E0]	Snotspill Boss data
+:0043AAE5 8BD7                    mov edx, edi
+:0043AAE7 E872FEFFFF              call 0043A95E			Place monster

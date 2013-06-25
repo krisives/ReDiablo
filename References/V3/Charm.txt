@@ -1,0 +1,349 @@
+Charm spell
+
+Only affects Animals, with 33% chance for resisting. Bosses and Apo-ing monsters are already excluded in preceding code. 
+
+Also decreased damage (disabling all previous damage bonusses) : 
+min.damage := 1
+max.damage := min.damage
+
+
+File Offset = 2F863
+
+:00430463 668B8754DD6900          mov ax, word ptr [edi+0069DD54]
+:0043046A A808                    test al, 08
+:0043046C 7525                    jne 00430493			jmp if Magic immune
+:0043046E 83E001                  and eax, 00000001
+:00430471 6685C0                  test ax, ax
+:00430474 7414                    je 0043048A			
+:00430476 663D0100                cmp ax, 0001
+:0043047A 7517                    jne 00430493
+:0043047C 6A02                    push 00000002
+wordt
+:00430463 8B8768DD6900            mov eax, dword ptr [edi+0069DD68]
+:00430469 80787202                cmp byte ptr [eax+72], 02
+:0043046D 7524                    jne 00430493			jmp if no Animal
+:0043046F 9090                    2*nop
+:00430471 9090909090909090909090  11*nop
+:0043047C 6A04                    push 00000003
+
+en
+
+File Offset = 2F888
+
+:00430488 7509                    jne 00430493			
+wordt
+:00430488 7409                    je 00430493			
+
+
+
+Set max. damage to min. damage
+
+File Offset = 2F8EF
+
+:00430506 E865A00400              call 0047A570
+wordt
+:00430506 9090909090              5*nop
+
+en
+
+File Offset = 2F90F
+
+:0043050F 88864DDD6900            mov byte ptr [esi+0069DD4D], al	set min.damage
+wordt
+:0043050F 88864EDD6900            mov byte ptr [esi+0069DD4E], al	set max.damage
+
+
+
+Set min. damage to 1 
+
+File Offset = 2F940
+
+:00430540 E82BA00400              call 0047A570
+wordt
+:00430540 6A01                    push 00000001
+:00430542 58                      pop eax
+:00430543 90                      nop
+:00430544 90                      nop
+
+en
+
+File Offset = 2F949
+
+:00430549 88864EDD6900            mov byte ptr [esi+0069DD4E], al	set max.damage
+wordt
+:00430549 88864DDD6900            mov byte ptr [esi+0069DD4D], al	set min.damage
+
+
+
+Set max. damage to min. damage for 2d attack
+
+File Offset = 2F97A
+
+:0043057A E8F19F0400              call 0047A570
+wordt
+:0043057A 9090909090              5*nop
+
+en
+
+File Offset = 2F983
+
+:00430583 888650DD6900            mov byte ptr [esi+0069DD50], al
+wordt
+:00430583 888651DD6900            mov byte ptr [esi+0069DD51], al
+
+
+Set min. damage to 1 for 2d attack
+
+File Offset = 2F9B4
+
+:004305B4 E8B79F0400              call 0047A570
+wordt
+:004305B4 6A01                    push 00000001
+:004305B6 58                      pop eax
+:004305B7 90                      nop
+:004305B8 90                      nop
+
+en
+
+File Offset = 2F9B9
+
+:004305B9 888651DD6900            mov byte ptr [esi+0069DD51], al
+wordt
+:004305B9 888650DD6900            mov byte ptr [esi+0069DD50], al
+
+
+
+
+
+
+
+Full code in HLFDRK31:
+
+:004303A8 55                      push ebp
+:004303A9 8BEC                    mov ebp, esp
+:004303AB 83EC14                  sub esp, 00000014
+:004303AE 8B451C                  mov eax, dword ptr [ebp+1C]
+:004303B1 894DF4                  mov dword ptr [ebp-0C], ecx
+:004303B4 85C0                    test eax, eax
+:004303B6 0F8C4A020000            jl 00430606
+:004303BC 69C9B0000000            imul ecx, 000000B0
+:004303C2 8365FC00                and dword ptr [ebp-04], 00000000
+:004303C6 57                      push edi
+:004303C7 56                      push esi
+:004303C8 53                      push ebx
+:004303C9 8981CC7A6900            mov dword ptr [ecx+00697ACC], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004305FD(C)
+|
+:004303CF 8B45FC                  mov eax, dword ptr [ebp-04]
+:004303D2 8B048568004900          mov eax, dword ptr [4*eax+00490068]
+:004303D9 0FBE8850694A00          movsx ecx, byte ptr [eax+004A6950]
+:004303E0 85C9                    test ecx, ecx
+:004303E2 894DF8                  mov dword ptr [ebp-08], ecx
+:004303E5 0F8E0B020000            jle 004305F6
+:004303EB 8D9852694A00            lea ebx, dword ptr [eax+004A6952]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043049C(C)
+|
+:004303F1 0FBE43FF                movsx eax, byte ptr [ebx-01]
+:004303F5 0FBE13                  movsx edx, byte ptr [ebx]
+:004303F8 03450C                  add eax, dword ptr [ebp+0C]
+:004303FB 8B4D10                  mov ecx, dword ptr [ebp+10]
+:004303FE 03CA                    add ecx, edx
+:00430400 85C0                    test eax, eax
+:00430402 0F8E8B000000            jle 00430493
+:00430408 83F870                  cmp eax, 00000070
+:0043040B 0F8D82000000            jnl 00430493
+:00430411 85C9                    test ecx, ecx
+:00430413 7E7E                    jle 00430493
+:00430415 83F970                  cmp ecx, 00000070
+:00430418 7D79                    jge 00430493
+:0043041A 6BC070                  imul eax, 00000070
+:0043041D 03C1                    add eax, ecx
+:0043041F 8B3485E0D15700          mov esi, dword ptr [4*eax+0057D1E0]
+:00430426 85F6                    test esi, esi
+:00430428 7E03                    jle 0043042D
+:0043042A 4E                      dec esi
+:0043042B EB07                    jmp 00430434
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430428(C)
+|
+:0043042D 83C8FF                  or eax, FFFFFFFF
+:00430430 2BC6                    sub eax, esi
+:00430432 8BF0                    mov esi, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043042B(U)
+|
+:00430434 83FE03                  cmp esi, 00000003
+:00430437 7E5A                    jle 00430493
+:00430439 8BFE                    mov edi, esi
+:0043043B 69FFE4000000            imul edi, 000000E4
+:00430441 80BF44DD690000          cmp byte ptr [edi+0069DD44], 00
+:00430448 7549                    jne 00430493			jmp if boss
+:0043044A 80BF20DD69001B          cmp byte ptr [edi+0069DD20], 1B
+:00430451 7440                    je 00430493			jmp if Apo-attack
+:00430453 8B878CDC6900            mov eax, dword ptr [edi+0069DC8C]
+:00430459 83F808                  cmp eax, 00000008
+:0043045C 7435                    je 00430493
+:0043045E 83F809                  cmp eax, 00000009
+:00430461 7430                    je 00430493
+:00430463 668B8754DD6900          mov ax, word ptr [edi+0069DD54]
+:0043046A A808                    test al, 08
+:0043046C 7525                    jne 00430493			jmp if Magic immune
+:0043046E 83E001                  and eax, 00000001
+:00430471 6685C0                  test ax, ax
+:00430474 7414                    je 0043048A
+:00430476 663D0100                cmp ax, 0001
+:0043047A 7517                    jne 00430493
+:0043047C 6A02                    push 00000002
+:0043047E B163                    mov cl, 63
+:00430480 5A                      pop edx
+:00430481 E8D49AFEFF              call 00419F5A
+:00430486 85C0                    test eax, eax
+:00430488 7509                    jne 00430493			jmp 50% if resist magic
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430474(C)
+|
+:0043048A 83BF8CDC69000E          cmp dword ptr [edi+0069DC8C], 0000000E
+:00430491 7514                    jne 004304A7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00430402(C), :0043040B(C), :00430413(C), :00430418(C), :00430437(C)
+|:00430448(C), :00430451(C), :0043045C(C), :00430461(C), :0043046C(C)
+|:0043047A(C), :00430488(C)
+|
+:00430493 FF4DF8                  dec [ebp-08]
+:00430496 43                      inc ebx
+:00430497 43                      inc ebx
+:00430498 837DF800                cmp dword ptr [ebp-08], 00000000
+:0043049C 0F8F4FFFFFFF            jg 004303F1
+:004304A2 E94F010000              jmp 004305F6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00430491(C)
+|
+:004304A7 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004304AA 6A2C                    push 0000002C
+:004304AC 5A                      pop edx
+:004304AD C745FC06000000          mov [ebp-04], 00000006
+:004304B4 E89CEBFFFF              call 0042F055
+:004304B9 69F6E4000000            imul esi, 000000E4
+:004304BF 8945F8                  mov dword ptr [ebp-08], eax
+:004304C2 6A05                    push 00000005
+:004304C4 DB45F8                  fild dword ptr [ebp-08]
+:004304C7 66818E24DD69002008      or word ptr [esi+0069DD24], 0820	set flag
+:004304D0 5B                      pop ebx
+:004304D1 8BD3                    mov edx, ebx
+:004304D3 B191                    mov cl, 91
+:004304D5 DD5DEC                  fstp qword ptr [ebp-14]
+:004304D8 E87D9AFEFF              call 00419F5A
+:004304DD 6A01                    push 00000001
+:004304DF 5F                      pop edi
+:004304E0 03C7                    add eax, edi
+:004304E2 8945F8                  mov dword ptr [ebp-08], eax
+:004304E5 DB45F8                  fild dword ptr [ebp-08]
+:004304E8 0FB6864DDD6900          movzx eax, byte ptr [esi+0069DD4D]
+:004304EF DC0DB8004900            fmul qword ptr [004900B8]
+:004304F5 8945F8                  mov dword ptr [ebp-08], eax
+:004304F8 DC25C0004900            fsub qword ptr [004900C0]
+:004304FE DB45F8                  fild dword ptr [ebp-08]
+:00430501 DEC9                    fmulp st(1), st(0)
+:00430503 DC45EC                  fadd qword ptr [ebp-14]
+:00430506 E865A00400              call 0047A570
+:0043050B 8BD3                    mov edx, ebx
+:0043050D B191                    mov cl, 91
+:0043050F 88864DDD6900            mov byte ptr [esi+0069DD4D], al	min.damage
+:00430515 E8409AFEFF              call 00419F5A
+:0043051A 03C7                    add eax, edi
+:0043051C 8945F8                  mov dword ptr [ebp-08], eax
+:0043051F DB45F8                  fild dword ptr [ebp-08]
+:00430522 0FB6864EDD6900          movzx eax, byte ptr [esi+0069DD4E]
+:00430529 DC0DB8004900            fmul qword ptr [004900B8]
+:0043052F 8945F8                  mov dword ptr [ebp-08], eax
+:00430532 DC25C0004900            fsub qword ptr [004900C0]
+:00430538 DB45F8                  fild dword ptr [ebp-08]
+:0043053B DEC9                    fmulp st(1), st(0)
+:0043053D DC45EC                  fadd qword ptr [ebp-14]
+:00430540 E82BA00400              call 0047A570
+:00430545 8BD3                    mov edx, ebx
+:00430547 B191                    mov cl, 91
+:00430549 88864EDD6900            mov byte ptr [esi+0069DD4E], al	max.damage
+:0043054F E8069AFEFF              call 00419F5A
+:00430554 03C7                    add eax, edi
+:00430556 8945F8                  mov dword ptr [ebp-08], eax
+:00430559 DB45F8                  fild dword ptr [ebp-08]
+:0043055C 0FB68650DD6900          movzx eax, byte ptr [esi+0069DD50]
+:00430563 DC0DB8004900            fmul qword ptr [004900B8]
+:00430569 8945F8                  mov dword ptr [ebp-08], eax
+:0043056C DC25C0004900            fsub qword ptr [004900C0]
+:00430572 DB45F8                  fild dword ptr [ebp-08]
+:00430575 DEC9                    fmulp st(1), st(0)
+:00430577 DC45EC                  fadd qword ptr [ebp-14]
+:0043057A E8F19F0400              call 0047A570
+:0043057F 8BD3                    mov edx, ebx
+:00430581 B191                    mov cl, 91
+:00430583 888650DD6900            mov byte ptr [esi+0069DD50], al	2e att. min.damage
+:00430589 E8CC99FEFF              call 00419F5A
+:0043058E 03C7                    add eax, edi
+:00430590 8945F8                  mov dword ptr [ebp-08], eax
+:00430593 DB45F8                  fild dword ptr [ebp-08]
+:00430596 0FB68651DD6900          movzx eax, byte ptr [esi+0069DD51]
+:0043059D DC0DB8004900            fmul qword ptr [004900B8]
+:004305A3 8945F8                  mov dword ptr [ebp-08], eax
+:004305A6 DC25C0004900            fsub qword ptr [004900C0]
+:004305AC DB45F8                  fild dword ptr [ebp-08]
+:004305AF DEC9                    fmulp st(1), st(0)
+:004305B1 DC45EC                  fadd qword ptr [ebp-14]
+:004305B4 E8B79F0400              call 0047A570
+:004305B9 888651DD6900            mov byte ptr [esi+0069DD51], al	2e att. max.damage
+:004305BF A0D8B16000              mov al, byte ptr [0060B1D8]
+:004305C4 3C11                    cmp al, 11
+:004305C6 7208                    jb 004305D0
+:004305C8 3C14                    cmp al, 14
+:004305CA 7704                    ja 004305D0
+:004305CC 6A09                    push 00000009
+:004305CE EB02                    jmp 004305D2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004305C6(C), :004305CA(C)
+|
+:004305D0 6A03                    push 00000003
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004305CE(U)
+|
+:004305D2 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:004305D8 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:004305DE 58                      pop eax
+:004305DF 50                      push eax
+:004305E0 E88FC2FFFF              call 0042C874
+:004305E5 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004305E8 88865FDD6900            mov byte ptr [esi+0069DD5F], al
+:004305EE 6A10                    push 00000010
+:004305F0 5A                      pop edx
+:004305F1 E806BA0300              call 0046BFFC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004303E5(C), :004304A2(U)
+|
+:004305F6 FF45FC                  inc [ebp-04]
+:004305F9 837DFC06                cmp dword ptr [ebp-04], 00000006
+:004305FD 0F8CCCFDFFFF            jl 004303CF
+:00430603 5B                      pop ebx
+:00430604 5E                      pop esi
+:00430605 5F                      pop edi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004303B6(C)
+|
+:00430606 8B45F4                  mov eax, dword ptr [ebp-0C]
+:00430609 69C0B0000000            imul eax, 000000B0
+:0043060F 83A0C87A690000          and dword ptr [eax+00697AC8], 00000000
+:00430616 C7808C7A690001000000    mov dword ptr [ebx+00697A8C], 00000001
+:00430620 C9                      leave
+:00430621 C21C00                  ret 001C

@@ -1,0 +1,95 @@
+Spell effects for Hellfire v1.01
+
+Spell Effects
+00 - Doom Serpents , Blood Ritual, Invisibility, Blood Boil
+01 - Firebolt
+02 - Guardian
+03 - Phasing
+04 - Lightning Ball (no damage)
+05 - Fire Trap
+06 - Fireball
+07 - Lightning
+08 - Lightning Trap (no damage)
+09 - No effect
+0A - Town Portal
+0B - Flash (1 side)
+0C - Flash (other side)
+0D - Mana Shield
+0E - Another type of Flame Wave
+0F - Chain Lightning
+10 - Crash
+11 - Some funny sound
+12 - red bones falling (blood boil?)
+13 - Stone Curse dust
+14 - No effect
+15 - 
+16 - 
+17 - No effect
+18 - Blood Star
+19 - No effect
+1A - Teleport
+1B - Fire Arrow
+1C - Crash
+1D - Another Fire Trap
+1E - Stone Curse
+1F - No effect
+20 - 
+21 - Golem
+22 - Etherealize
+23 - 
+24 - 
+25 - Healing
+26 - FireWall
+27 - Infravision
+28 - Identify
+29 - Flame Wave
+2A - Nova
+2B - Rage
+2C - Apocalypse
+2D - Item Repair
+2E - Staff Recharge
+2F - Trap Disarm
+31 - Inferno
+32 - 
+33 - 
+34 - Charged Bolt
+35 - Holy Bolt
+36 - Resurrect
+37 - Telekinesis
+3C - Heal Other
+3D - Elemental
+3E - Resurrect part 2?
+3F - Bone Spirit
+40 - familiar's lightning
+41 - Unholy Altar portal
+42 - 
+43 - 
+44 - Mana
+45 - the Magi
+46 - 
+47 - Lightning Wall
+48 - Immolation
+49 - 
+4A - 
+4B - 
+4C - 
+4D - 
+4E - Warp
+4F - Reflect
+50 - Berserk
+51 - Ring of Fire
+52 - 
+53 - 
+54 - 
+55 - Search
+56 - 
+57 - 
+58 - 
+59 - Rune of Fire
+5A - Rune of Light
+5B - Rune of Nova
+5C - Rune of Immolation
+5D - Rune of Stone
+5E - 
+5F - 
+60 - the Jester

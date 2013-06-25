@@ -1,0 +1,7 @@
+Darkmages were unintended included in the check on running or Hiddens and Warpers.
+
+file offset 0003C6DA
+
+:0043D2DA 83F81D                  cmp eax, 0000001D		Dark Mage
+changed into
+:0043D2DA 83F81E                  cmp eax, 0000001E		Stalker

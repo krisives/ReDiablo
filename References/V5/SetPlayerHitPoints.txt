@@ -1,0 +1,19 @@
+* Referenced by a CALL at Addresses:
+|:004241CB   , :00437C47   , :0045A1F7   , :0045AC06   , :0045AC4C   
+|:0045AFBF   , :0046C261   
+|
+:0045E9AC 56                      push esi
+:0045E9AD 8BF1                    mov esi, ecx
+:0045E9AF 57                      push edi
+:0045E9B0 83FE04                  cmp esi, 00000004
+:0045E9B3 8BFA                    mov edi, edx
+:0045E9B5 720D                    jb 0045E9C4
+:0045E9B7 56                      push esi
+
+* Possible StringData Ref from Data Obj ->"SetPlayerHitPoints: illegal player "
+                                        ->"%d"
+                                  |
+:0045E9B8 68F0674B00              push 004B67F0
+:0045E9BD E8A32FFAFF              call 00401965
+:0045E9C2 59                      pop ecx
+:0045E9C3 59                      pop ecx

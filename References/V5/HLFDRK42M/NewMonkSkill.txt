@@ -1,0 +1,91 @@
+New Monk skill is Escape (former Blink/Phasing)
+
+
+file offset 000574CA
+
+:004580CA 80FA01                  cmp dl, 01
+:004580CD 7512                    jne 004580E1
+:004580CF A114AE6E00              mov eax, dword ptr [006EAE14]
+:004580D4 C784301401000001000000  mov dword ptr [eax+esi+00000114], 00000001
+:004580DF EB72                    jmp 00458153
+:004580E1 80FA02                  cmp dl, 02
+:004580E4 7512                    jne 004580F8
+:004580E6 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004580EB C784301001000000000004  mov dword ptr [eax+esi+00000110], 04000000
+:004580F6 EB4F                    jmp 00458147
+:004580F8 80FA03                  cmp dl, 03
+:004580FB 751E                    jne 0045811B
+:004580FD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458102 899C3010010000          mov dword ptr [eax+esi+00000110], ebx
+:00458109 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045810E C784301401000000200000  mov dword ptr [eax+esi+00000114], 00002000
+:00458119 EB38                    jmp 00458153
+changed into
+:004580CA 80FA03                  cmp dl, 03
+:004580CD 7512                    jne 004580E1
+:004580CF A114AE6E00              mov eax, dword ptr [006EAE14]
+:004580D4 C784301001000000000001  mov dword ptr [eax+esi+00000110], 01000000
+:004580DF EB66                    jmp 00458147
+:004580E1 ...
+:004580F8 80FA01                  cmp dl, 01
+:004580FB 751E                    jne 0045811B
+:004580FD A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458102 899C3010010000          mov dword ptr [eax+esi+00000110], ebx
+:00458109 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045810E C784301401000001000000  mov dword ptr [eax+esi+00000114], 00000001
+:00458119 EB38                    jmp 00458153
+
+file offset 00057D90
+
+:00458990 80F901                  cmp cl, 01
+:00458993 750C                    jne 004589A1
+:00458995 C7801401000001000000    mov dword ptr [ebx+00000114], 00000001
+:0045899F EB4E                    jmp 004589EF
+:004589A1 80F902                  cmp cl, 02
+:004589A4 750C                    jne 004589B2
+:004589A6 C7801001000000000004    mov dword ptr [ebx+00000110], 04000000
+:004589B0 EB37                    jmp 004589E9
+:004589B2 80F903                  cmp cl, 03
+:004589B5 7512                    jne 004589C9
+:004589B7 899810010000            mov dword ptr [eax+00000110], ebx
+:004589BD C7801401000000200000    mov dword ptr [ebx+00000114], 00002000
+:004589C7 EB26                    jmp 004589EF
+changed into
+:00458990 80F903                  cmp cl, 03
+:00458993 750C                    jne 004589A1
+:00458995 C7801001000000000001    mov dword ptr [ebx+00000110], 01000000
+:0045899F EB48                    jmp 004589E9
+:004589A1 ...
+:004589B2 80F901                  cmp cl, 01
+:004589B5 7512                    jne 004589C9
+:004589B7 899810010000            mov dword ptr [eax+00000110], ebx
+:004589BD C7801401000001000000    mov dword ptr [ebx+00000114], 00000001
+:004589C7 EB26                    jmp 004589EF
+
+
+Spell book correction:
+
+file offset 00004097
+
+:00404C97 C705684D49002E000000    mov dword ptr [00494D68], 0000002E
+changed into
+:00404C97 C705684D490019000000    mov dword ptr [00494D68], 00000019
+
+
+Supplying skill name for Escape:
+
+000B6560 1923 0200 7482 4B00 0000 0000 FFFF FFFF .#..t.K.........
+000B6570 0400 0000 0100 0000 0000 0000 1400 0000 ................
+000B6580 5003 0000 0312 0000 1400 0000 2800 0000 P...........(...
+000B6590 983A 0000 E803 0000                     .:......
+changed into
+000B6568 7482 4B00                               t.K.
+
+
+Adjusting F1 hotkey for Monk:
+
+000A52EA 0217 2B08 0217 2108 1517 0B08 2E17 0B08 ..+...!.........
+000A52FA 1517 0B08 0217 2B08 0000 0000 0000 0000 ......+.........
+000A530A 0000                                    ..
+changed into
+000A52F6 19                                      .

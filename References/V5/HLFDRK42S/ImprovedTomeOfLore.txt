@@ -1,0 +1,112 @@
+This modification allows the Tome of Lore to be used by right-clicking. 
+
+
+Changed base item data for Tome of Lore (not equippable, use once, MagicCode 36h):
+
+000A11A8 0100 0000 0302 0000 6100 0000 0000 0000 ........a.......
+000A11B8 C253 4A00 0000 0000 2800 0000 0000 0000 .SJ.....(.......
+000A11C8 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A11D8 001E 0000 0000 0000 1700 0000 0500 0000 ................
+000A11E8 0000 0000 1027 0000 1027 0000           .....'...'..
+changed into
+000A11AD 07                                      .
+000A11E0 3600 0000                               6...
+000A11E8 0100 0000                               ....
+
+
+Adjust Right-Click handling for MagicCode = 36h (unused Reconstructed Note)
+
+file offset 00029391
+
+:00429F91 0F85CC000000            jne 0042A063			jmp exit with edx=3 if it was 36h
+changed into
+:00429F91 0F8537AB0000            jne 00434ACE
+:00429F97 
+
+Using last free space from obsolete Search spell:
+
+file offset 00033ECA
+
+:00434ACA 90                      nop
+:00434ACB 90                      nop
+:00434ACC 90                      nop
+:00434ACD 8B5070                  mov edx, dword ptr [eax+70]
+:00434AD0 BFFFFFFF7F              mov edi, 7FFFFFFF
+:00434AD5 2BF9                    sub edi, ecx
+:00434AD7 3BD7                    cmp edx, edi
+:00434AD9 7D05                    jge 00434AE0
+:00434ADB 03D1                    add edx, ecx
+:00434ADD 895070                  mov dword ptr [eax+70], edx
+:00434AE0 C7868C7A690001000000    mov dword ptr [esi+00697A8C], 00000001
+:00434AEA 5F                      pop edi
+:00434AEB 5E                      pop esi
+:00434AEC 5B                      pop ebx
+:00434AED C9                      leave
+:00434AEE C21C00                  ret 001C
+changed into
+:00434ACA 90909090                4*nop
+:00434ACE 83EA03                  sub edx, 00000003
+:00434AD1 7519                    jne 00434AEC
+:00434AD3 3B5508                  cmp edx, dword ptr [ebp+08]
+:00434AD6 7414                    je 00434AEC
+:00434AD8 8B97E4000000            mov edx, dword ptr [edi+000000E4]
+:00434ADE 4A                      dec edx
+:00434ADF 7C0B                    jl 00434AEC
+:00434AE1 8997E4000000            mov dword ptr [edi+000000E4], edx
+:00434AE7 E9FE51FFFF              jmp 00429CEA		
+:00434AEC E97255FFFF              jmp 0042A063
+:00434AF1
+
+
+Disabling old support for Reconstructed Note (speech #142):
+
+file offset 000223DA
+
+:00422FDA B942010000              mov ecx, 00000142
+:00422FDF E85FB50000              call 0042E543
+:00422FE4 893504556800            mov dword ptr [00685504], esi
+:00422FEA E9D4000000              jmp 004230C3
+changed into
+:00422FDA E9E4000000              jmp 004230C3
+:00422FDF ...						
+
+Now 16 bytes free space here.
+
+
+Adjusting the display code:
+
+file offset 000287D1
+
+:004293D1 83BFDC00000017          cmp dword ptr [edi+000000DC], 00000017
+:004293D8 751D                    jne 004293F7
+:004293DA 837F0800                cmp dword ptr [edi+08], 00000000
+:004293DE 7517                    jne 004293F7
+changed into
+:004293D1 83BFDC00000036          cmp dword ptr [edi+000000DC], 00000036
+:004293D8 751D                    jne 004293F7
+:004293DA 909090909090            6*nop
+
+Text "right click to read" is already provided for this MagicCode.
+
+
+Adjusting support at Adria's recharge option:
+
+file offset 00033498
+
+:00434098 33C0                    xor eax, eax
+:0043409A E9ECA00300              jmp 0046E18B
+changed into
+:00434098 9090                    2*nop
+:0043409A E940EFFEFF              jmp 00422FDF
+:0043409F
+
+Using free space from obsolete Reconstructed Note support (see above):
+
+file offset 000223DF
+
+:00422FDF 83EA1B                  sub edx, 0000001B
+:00422FE2 0F849E100100            je 00434086
+:00422FE8 33C0                    xor eax, eax
+:00422FEA E99CB10400              jmp 0046E18B
+:00422FEF 
+

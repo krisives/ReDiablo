@@ -1,0 +1,395 @@
+(Fixed) Tome of Lore
+
+The Tome of Lore will enable a character to cast Identify spells, as long as it is held in hand and has scrolls stored in it. The Tome can not be bought, and is always found empty. It will automatically recharge itself with scrolls of Identify that are picked up in such a manner that they go into the backpack (not belt) directly. The Tome can hold as many as 40 scrolls. The Witch and Stone Shrines (after it has been charged by Adria at least once) will refill the Tome also, but only up to 10 scrolls.
+
+
+file offset 000211CA
+
+:00421DCA 0F8EF5000000            jle 00421EC5
+changed into
+:00421DCA 0F8E6DF7FFFF            jle 0042153D
+:00421DD0
+
+file offset 000211EF
+
+:00421DEF E9D1000000              jmp 00421EC5
+changed into
+:00421DEF E949F7FFFF              jmp 0042153D
+:00421DF4
+
+
+Adjusting (mostly obsolete) support for Arkaines Valor to gain workspace:
+
+file offset 00020920
+
+:00421520 8BD0                    mov edx, eax
+:00421522 C60556B46E0003          mov byte ptr [006EB456], 03
+:00421529 69D2C8550000            imul edx, 000055C8
+:0042152F C70514A2570014000000    mov dword ptr [0057A214], 00000014
+:00421539 8A940A60010000          mov dl, byte ptr [edx+ecx+00000160]
+:00421540 84D2                    test dl, dl
+:00421542 743D                    je 00421581
+:00421544 80FA01                  cmp dl, 01
+:00421547 7427                    je 00421570
+:00421549 80FA02                  cmp dl, 02
+:0042154C 750C                    jne 0042155A
+:0042154E C70518A2570061020000    mov dword ptr [0057A218], 00000261
+:00421558 EB31                    jmp 0042158B
+:0042155A 80FA03                  cmp dl, 03
+:0042155D 750C                    jne 0042156B
+:0042155F C70518A25700A1030000    mov dword ptr [0057A218], 000003A1
+:00421569 EB20                    jmp 0042158B
+:0042156B 80FA04                  cmp dl, 04
+:0042156E 750C                    jne 0042157C
+:00421570 C70518A25700C8020000    mov dword ptr [0057A218], 000002C8
+:0042157A EB0F                    jmp 0042158B
+:0042157C 80FA05                  cmp dl, 05
+:0042157F 750A                    jne 0042158B
+:00421581 C70518A2570035030000    mov dword ptr [0057A218], 00000335
+
+changed into
+
+:00421520 C60556B46E0003          mov byte ptr [006EB456], 03
+:00421527 C70514A2570014000000    mov dword ptr [0057A214], 00000014
+:00421531 C70518A25700A1030000    mov dword ptr [0057A218], 000003A1
+:0042153B EB4E                    jmp 0042158B
+
+Adding code that checks for ID scrolls:
+
+:0042153D 8BC3                    mov eax, ebx
+:0042153F 69C0C8550000            imul eax, 000055C8
+:00421545 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042154B 8D3401                  lea esi, dword ptr [ecx+eax]
+:0042154E 8B960C550000            mov edx, dword ptr [esi+0000550C]
+:00421554 E8C9A70100              call 0043BD22					check for all ID scroll base items
+:00421559 90                      nop
+:0042155A 85D2                    test edx, edx
+:0042155C 7428                    je 00421586					exit of no ID scroll
+:0042155E 8BF3                    mov esi, ebx
+:00421560 8BFA                    mov edi, edx
+:00421562 8BCE                    mov ecx, esi					ecx = character
+:00421564 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421568 50                      push eax
+:00421569 E8EF520500              call 0047685D					check backpack for 'edx'
+:0042156E 85C0                    test eax, eax
+:00421570 7414                    je 00421586					exit if no ID scroll in backpack
+:00421572 6A28                    push 00000028
+:00421574 5A                      pop edx					Tome of Lore (item #40)
+:00421575 8D442414                lea eax, dword ptr [esp+14]			address to store found item
+:00421579 50                      push eax
+:0042157A 8BCE                    mov ecx, esi					ecx = character
+:0042157C E8DC520500              call 0047685D					check backpack for 'edx'
+:00421581 E9F8A90400              jmp 0046BF7E                                  continue elsewhere
+:00421586 E93A090000              jmp 00421EC5                                  exit
+:0042158B
+
+Using free space from special manacost for Healing and Heal Other spells:
+
+file offset 0006B37E
+
+:0046BF7E 90                      nop
+:0046BF7F 7513                    jne 0046BF94
+:0046BF81 0FBE8EB8010000          movsx ecx, byte ptr [esi+000001B8]
+:0046BF88 D1E1                    shl ecx, 1
+:0046BF8A 0FB6E8                  movzx ebp, al
+:0046BF8D 2BCF                    sub ecx, edi
+:0046BF8F 03CD                    add ecx, ebp
+:0046BF91 EB16                    jmp 0046BFA9
+:0046BF93 90                      nop
+:0046BF94 83FA22                  cmp edx, 00000022
+:0046BF97 7534                    jne 0046BFCD
+:0046BF99 0FBE8EB8010000          movsx ecx, byte ptr [esi+000001B8]
+:0046BFA0 D1E1                    shl ecx, 1
+:0046BFA2 0FB6C0                  movzx eax, al
+:0046BFA5 2BCF                    sub ecx, edi
+:0046BFA7 03C8                    add ecx, eax
+:0046BFA9 83F91E                  cmp ecx, 0000001E
+:0046BFAC 7E03                    jle 0046BFB1
+:0046BFAE 6A1E                    push 0000001E
+:0046BFB0 59                      pop ecx
+:0046BFB1 EB17                    jmp 0046BFCA
+:0046BFB3 90                      nop
+changed into
+:0046BF7E 85C0                    test eax, eax
+:0046BF80 742C                    je 0046BFAE					exit if Tome of Lore not found
+:0046BF82 8B542414                mov edx, dword ptr [esp+14]
+:0046BF86 83B8E400000028          cmp dword ptr [eax+000000E4], 00000028
+:0046BF8D 7D1F                    jge 0046BFAE					exit if already 40 scrolls in it
+:0046BF8F FF80E4000000            inc dword ptr [eax+000000E4]			add 'scroll' to Tome
+:0046BF95 8BD7                    mov edx, edi					ID scroll
+:0046BF97 8D442414                lea eax, dword ptr [esp+14]
+:0046BF9B 50                      push eax
+:0046BF9C 8BCE                    mov ecx, esi
+:0046BF9E E8BAA80000              call 0047685D					check backpack for 'edx'
+:0046BFA3 8B542414                mov edx, dword ptr [esp+14]			found at address 'edx'
+:0046BFA7 8BCE                    mov ecx, esi
+:0046BFA9 E8D14EFBFF              call 00420E7F					destroy item at address 'edx'
+:0046BFAE E9125FFBFF              jmp 00421EC5					exit
+:0046BFB3 90                      nop
+
+file offset 0003B122
+
+:0043BD22 80BE28DD690000          cmp byte ptr [esi+0069DD28], 00
+:0043BD29 7508                    jne 0043BD33
+:0043BD2B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043BD2E E81CA70300              call 0047644F
+:0043BD33 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043BD36 8D55F4                  lea edx, dword ptr [ebp-0C]
+:0043BD39 E9281E0000              jmp 0043DB66
+changed into
+:0043BD22 83FA1A                  cmp edx, 0000001A				ID scroll (item #26)
+:0043BD25 7411                    je 0043BD38
+:0043BD27 83FA5E                  cmp edx, 0000005E				ID scroll (item #94)
+:0043BD2A 740C                    je 0043BD38					
+:0043BD2C 83FA6D                  cmp edx, 0000006D				ID scroll (item #109)
+:0043BD2F 7407                    je 0043BD38					
+:0043BD31 83FA70                  cmp edx, 00000070				ID scroll (item #112)
+:0043BD34 7402                    je 0043BD38					
+:0043BD36 33D2                    xor edx, edx
+:0043BD38 C3                      ret
+:0043BD39 9090909090              5*nop
+
+
+Adria will, as part of her 'Recharge items' option, set all items at 10 maximum charges if they have none but were supposed to have:
+
+file offset 0006D6CD
+
+:0046E2CD 7439                    je 0046E308
+changed into
+:0046E2CD 7E39                    jle 0046E308
+
+file offset 0006D54A
+
+:0046E14A 33C0                    xor eax, eax
+:0046E14C 8D0C32                  lea ecx, dword ptr [edx+esi]
+:0046E14F EB19                    jmp 0046E16A
+changed into
+:0046E14A 8D0C32                  lea ecx, dword ptr [edx+esi]
+:0046E14D 33D2                    xor edx, edx
+:0046E14F EB12                    jmp 0046E163
+
+file offset 0006D563
+
+:0046E163 90909090909090          7*nop
+:0046E16A 8B9194030000            mov edx, dword ptr [ecx+00000394]
+:0046E170 83FAFF                  cmp edx, FFFFFFFF
+:0046E173 7416                    je 0046E18B
+:0046E175 9090909090              5*nop
+changed into
+:0046E163 8B8194030000            mov eax, dword ptr [ecx+00000394]
+:0046E169 83F8FF                  cmp eax, FFFFFFFF
+:0046E16C 741D                    je 0046E18B
+:0046E16E 8D8168040000            lea eax, dword ptr [ecx+00000468]
+:0046E174 90                      nop
+:0046E175 E9F25EFCFF              jmp 0043406C
+:0046E17A 
+
+Using space from obsolete Heal Other spell effect:
+
+file offset 0003346C
+
+:0043406C 69C9B0000000            imul ecx, 000000B0
+:00434072 56                      push esi
+:00434073 8B74241C                mov esi, dword ptr [esp+1C]
+:00434077 6A22                    push 00000022
+:00434079 C7818C7A690001000000    mov dword ptr [ebx+00697A8C], 00000001
+:00434083 5A                      pop edx
+:00434084 8BCE                    mov ecx, esi
+:00434086 E8717F0300              call 0046BFFC
+:0043408B 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:00434091 7508                    jne 0043409B
+:00434093 6A0A                    push 0000000A
+:00434095 59                      pop ecx
+:00434096 E8523AFDFF              call 00407AED
+:0043409B 5E                      pop esi
+:0043409C C21C00                  ret 001C
+changed into
+:0043406C 3B5004                  cmp edx, dword ptr [eax+04]
+:0043406F 7D27                    jge 00434098
+:00434071 8B10                    mov edx, dword ptr [eax]
+:00434073 85D2                    test edx, edx
+:00434075 740F                    je 00434086
+:00434077 83EA17                  sub edx, 00000017
+:0043407A 740A                    je 00434086
+:0043407C 4A                      dec edx
+:0043407D 4A                      dec edx
+:0043407E 7406                    je 00434086
+:00434080 4A                      dec edx
+:00434081 7403                    je 00434086
+:00434083 4A                      dec edx
+:00434084 7512                    jne 00434098
+:00434086 3B500C                  cmp edx, dword ptr [eax+0C]
+:00434089 7C06                    jl 00434091
+:0043408B 6A0A                    push 0000000A
+:0043408D 5A                      pop edx
+:0043408E 89500C                  mov dword ptr [eax+0C], edx
+:00434091 33C0                    xor eax, eax
+:00434093 E9E2A00300              jmp 0046E17A
+:00434098 33C0                    xor eax, eax
+:0043409A E9ECA00300              jmp 0046E18B
+:0043409F
+
+
+Adjust Stone Shrine code, to prevent it from emptying the Tome of Lore:
+
+file offset 0005111E
+
+:00451D1E 8B943074040000          mov edx, dword ptr [eax+esi+00000474]
+:00451D25 89943070040000          mov dword ptr [eax+esi+00000470], edx
+changed into
+:00451D1E 8D8C3070040000          lea ecx, dword ptr [eax+esi+00000470]
+:00451D25 8B5104                  mov edx, dword ptr [ecx+04]
+:00451D28 3B11                    cmp edx, dword ptr [ecx]
+:00451D2A 7FBE                    jg 00451CEA
+:00451D2C 
+
+file offset 000510EA
+
+:00451CEA FF00                    inc dword ptr [eax]
+:00451CEC A114AE6E00              mov eax, dword ptr [006EAE14]
+:00451CF1 C3                      ret
+changed into
+:00451CEA 8911                    mov dword ptr [ecx], edx
+:00451CEC EB3E                    jmp 00451D2C
+:00451CEE 90909090                4*nop
+
+
+Set active spell when equipping a staff or Tome of Lore (this is only executed for 2-handed items):
+
+file offset 0001F5B7
+
+:004201B7 0F85DB050000            jne 00420798
+changed into
+:004201B7 0F854F8E0100            jne 0043900C
+:004201BD 
+
+Using free space from Search update code:
+
+file offset 0003840C
+
+:0043900C 90                      nop
+:0043900D 03C1                    add eax, ecx
+:0043900F FF703C                  push [eax+3C]
+:00439012 8B5038                  mov edx, dword ptr [eax+38]
+:00439015 6A57                    push 00000057
+:00439017 59                      pop ecx
+:00439018 E8A7F6FDFF              call 004186C4
+:0043901D 802538E76E0000          and byte ptr [006EE738], 00
+:00439024 C3                      ret
+changed into
+:0043900C 83B8380A000017          cmp dword ptr [eax+00000A38], 00000017
+:00439013 0F857F77FEFF            jne 00420798
+:00439019 E99F71FEFF              jmp 004201BD
+:0043901E 90909090909090          7*nop
+
+
+Adding number of contained scrolls to the display of the Tome (Ears will no longer show the level of their owner):
+
+file offset 0002880C
+
+:0042940C 8BD5                    mov edx, ebp
+:0042940E 59                      pop ecx
+changed into
+:0042940C 59                      pop ecx
+:0042940D 8BD5                    mov edx, ebp
+
+file offset 000287D1
+
+:004293D1 83BFDC0000002B          cmp dword ptr [edi+000000DC], 0000002B
+:004293D8 751D                    jne 004293F7
+:004293DA FFB7C4000000            push dword ptr [edi+000000C4]
+:004293E0 6894674A00              push 004A6794
+:004293E5 56                      push esi
+:004293E6 E8D5060500              call 00479AC0
+:004293EB 83C40C                  add esp, 0000000C
+:004293EE 8BD5                    mov edx, ebp
+:004293F0 8BCE                    mov ecx, esi
+:004293F2 E853B1FDFF              call 0040454A
+changed into
+:004293D1 83BFDC00000017          cmp dword ptr [edi+000000DC], 00000017
+:004293D8 751D                    jne 004293F7
+:004293DA 837F0800                cmp dword ptr [edi+08], 00000000
+:004293DE 7517                    jne 004293F7
+:004293E0 8B9FE4000000            mov ebx, dword ptr [edi+000000E4]
+:004293E6 83FB01                  cmp ebx, 00000001
+:004293E9 0F8525A50200            jne 00453914
+* Possible StringData Ref from Data Obj ->"1 Scroll"
+:004293EF 68184F4900              push 00494F18
+:004293F4 EB0F                    jmp 00429405
+:004293F6 90                      nop
+
+file offset 00052D14
+
+:00453914 90                      nop
+:00453915 90                      nop
+:00453916 90                      nop
+:00453917 C705BCB56E0001000000    mov dword ptr [006EB5BC], 00000001
+:00453921 A3B4B56E00              mov dword ptr [006EB5B4], eax
+:00453926 8B8E1CE66D00            mov ecx, dword ptr [esi+006DE61C]
+changed into
+:00453914 53                      push ebx
+* Possible StringData Ref from Data Obj ->"%i Scrolls"
+:00453915 680C4F4900              push 00494F0C
+:0045391A 56                      push esi
+:0045391B E8A0610200              call 00479AC0
+:00453920 83C40C                  add esp, 0000000C
+:00453923 E9E55AFDFF              jmp 0042940D
+:00453928 90909090                4*nop
+
+
+Removing 'Charges: x/y' from the display for all non-staves:
+
+file offset 0002890C
+
+:0042950C 83BDDC00000017          cmp dword ptr [ebp+000000DC], 00000017
+changed into
+:0042950C 837D080A                cmp dword ptr [ebp+08], 0000000A
+:00429510 909090                  3*nop
+
+file offset 00028B17
+
+:00429717 83BEDC00000017          cmp dword ptr [esi+000000DC], 00000017
+changed into
+:00429717 837E080A                cmp dword ptr [esi+08], 0000000A
+:0042971B 909090                  3*nop
+
+file offset 0006C338
+
+:0046CF38 83BEDC00000017          cmp dword ptr [esi+000000DC], 00000017
+changed into
+:0046CF38 837E080A                cmp dword ptr [esi+08], 0000000A
+:0046CF3C 909090                  3*nop
+
+
+Using graphic from Fungal Tome since the red book was blurry, and increasing Magic requirement:
+
+pos name                 item type            item group          equip     qlvl  dur   str mag dex  price  pic  src  
+ 40 Tome of Lore         3 pot/scr/jewl        0 other            2 2-h      20     0    0  10   0   10000  238    1
+                                                                                            30               97
+000A11A8 0100 0000 0302 0000 EE00 0000 0000 0000 ................
+000A11B8 C253 4A00 0000 0000 1400 0000 0000 0000 .SJ.............
+000A11C8 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A11D8 000A 0000 0000 0000 1700 0000 0500 0000 ................
+000A11E8 0000 0000 1027 0000 1027 0000           .....'...'..
+changed into
+000A11B0 6100 0000                               a...
+000A11D9 1E                                      .
+
+
+Replacing useless Bone Spirit scroll by Identify to make those more common:
+
+pos name                  item type           item group          equip     qlvl  dur   str mag dex  price  pic  src 
+
+109 Scroll of Bone Spirit 3 pot/scr/jewl      0 other             7 not      14     0    0  30   0     400    1    1 
+    Scroll of Identify                                                                      10         200
+
+000A2624 0100 0000 0307 0000 0100 0000 0000 0000 ................
+000A2634 EC4F 4A00 0000 0000 0E00 0000 0000 0000 .OJ.............
+000A2644 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000A2654 001E 0000 0000 0000 1600 0000 2400 0000 ............$...
+000A2664 0100 0000 9001 0000 9001 0000           ............
+changed into
+000A2634 A454 4A00                               .TJ.
+000A2655 0A                                      .
+000A2660 05                                      .
+000A2668 C800 0000 C800 0000                     ........

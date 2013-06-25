@@ -1,0 +1,64 @@
+Allowing Mages to 'escape'
+
+Mages are supposed to be able to escape stunlock when trying to run away, because of following routine. However moving some Mages around disabled this for some. 
+
+Fixed by checking attacktype, and gave Witches this ability too (like Darkspawn already had).
+
+File Offset 000444F2
+
+:004450F2 8B8164DD6900            mov eax, dword ptr [ecx+0069DD64]
+:004450F8 8B00                    mov eax, dword ptr [eax]
+:004450FA 83F869                  cmp eax, 00000069
+:004450FD 7C15                    jl 00445114
+:004450FF 83F86C                  cmp eax, 0000006C
+:00445102 7F10                    jg 00445114
+wordt
+:004450F2 8A8120DD6900            mov al, byte ptr [ecx+0069DD20]
+:004450F8 3C19                    cmp al, 19
+:004450FA 7408                    je 00445104		jmp if Mage attack
+:004450FC 3C1C                    cmp al, 1C
+:004450FE 7404                    je 00445104		jmp if Lazarus attack
+:00445100 3C0E                    cmp al, 0E
+:00445102 7510                    jne 00445114		jmp if not Succubi attack
+
+
+Original code:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004450CB(C), :004450DB(C)
+|
+:004450F2 8B8164DD6900            mov eax, dword ptr [ecx+0069DD64]
+:004450F8 8B00                    mov eax, dword ptr [eax]
+:004450FA 83F869                  cmp eax, 00000069
+:004450FD 7C15                    jl 00445114
+:004450FF 83F86C                  cmp eax, 0000006C
+:00445102 7F10                    jg 00445114
+:00445104 6A01                    push 00000001
+:00445106 58                      pop eax
+:00445107 388190DC6900            cmp byte ptr [ecx+0069DC90], al
+:0044510D 7405                    je 00445114
+:0044510F 832200                  and dword ptr [edx], 00000000
+:00445112 5E                      pop esi
+:00445113 C3                      ret
+:00445114 33C0                    xor eax, eax
+:00445116 5E                      pop esi
+:00445117 C3                      ret
+
+
+
+Max to Hit in Character Missiles vs. Monsters 95 -> 90 -> 95%
+
+Restoring old value, because Spells and Arrows already miss much from tile system. 
+
+
+File Offset 0002E815
+
+:0042F415 83FF5A                  cmp edi, 0000005A
+wordt
+:0042F415 83FF5F                  cmp edi, 0000005F
+
+File Offset 0002E81A
+
+:0042F41A 6A5A                    push 0000005A
+wordt
+:0042F41A 6A5F                    push 0000005F

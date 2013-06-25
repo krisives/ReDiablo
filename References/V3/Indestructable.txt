@@ -1,0 +1,96 @@
+Removing "Indestructable"
+
+
+()Various texts
+
+:00429450 7511                    jne 00429463
+wordt
+:00429450 EB11                    jmp 00429463
+
+:00429483 7512                    jne 00429497
+wordt
+:00429483 EB12                    jmp 00429497
+
+:004294D0 7516                    jne 004294E8
+wordt
+:004294D0 7516                    jne 004294E8
+
+:004296AF 7511                    jne 004296C2
+wordt
+:004296AF EB11                    jmp 004296C2
+
+:004296E2 7512                    jne 004296F6
+wordt
+:004296E2 EB12                    jmp 004296F6
+
+:0042976D 7516                    jne 00429785
+wordt
+:0042976D EB16                    jmp 00429785
+
+:0046D00E 741E                    je 0046D02E
+wordt
+:0046D00E 7400                    je 0046D010
+
+
+()Oil of Permanence
+
+"makes an item indestructible"
+wordt 
+"makes an item very durable"
+
+
+()Blacksmith Oil
+
+:004284FF 0F84A6000000            je 004285AB
+wordt
+:004284FF 909090909090            6*nop
+
+
+()Oil of Hardening
+
+:00428547 7462                    je 004285AB
+wordt
+:00428547 7400                    je 00428549
+
+
+()Getting damaged
+
+:0045B74E 0F84EC000000            je 0045B840
+wordt
+:0045B74E 909090909090            6*nop
+
+:0045B788 0F84B2000000            je 0045B840
+wordt
+:0045B788 909090909090            6*nop
+
+:0045B7BF 747F                    je 0045B840
+wordt
+:0045B7BF 7400                    je 0045B8C1
+
+:0045B80A 7434                    je 0045B840
+wordt
+:0045B80A 7400                    je 0045B80C
+
+:0045CB77 7426                    je 0045CB9F
+wordt
+:0045CB77 7400                    je 0045CB79
+
+
+()Hidden Shrine
+
+:00451969 81FBFF000000            cmp ebx, 000000FF
+:0045196F 743F                    je 004519B0
+wordt
+:00451969 81FBF5000000            cmp ebx, 000000F5
+:0045196F 7F3F                    jg 004519B0
+
+:00451A0A 74AE                    je 004519BA
+wordt
+:00451A0A 7400                    je 00451A0C
+
+
+()Murphy's Shrine
+
+:00452FEB 7404                    je 00452FF1
+wordt
+:00452FEB 7400                    je 00452FED

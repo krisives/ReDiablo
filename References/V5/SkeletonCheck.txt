@@ -1,0 +1,44 @@
+Original check on skeleton slots:
+
+* Referenced by a CALL at Addresses:
+|:0043AB64   , :0043C0AB   , :00444C19   , :00444C58   , :00444E14   
+|:00444E53   , :00471D58   
+|
+:00444BB8 83F908                  cmp ecx, 00000008			axe skeletons
+:00444BBB 7C05                    jl 00444BC2
+:00444BBD 83F90B                  cmp ecx, 0000000B
+:00444BC0 7E14                    jle 00444BD6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444BBB(C)
+|
+:00444BC2 83F914                  cmp ecx, 00000014			bow skeletons
+:00444BC5 7C05                    jl 00444BCC
+:00444BC7 83F917                  cmp ecx, 00000017
+:00444BCA 7E0A                    jle 00444BD6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444BC5(C)
+|
+:00444BCC 83F918                  cmp ecx, 00000018			captains
+:00444BCF 7C09                    jl 00444BDA
+:00444BD1 83F91B                  cmp ecx, 0000001B
+:00444BD4 7F04                    jg 00444BDA
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00444BC0(C), :00444BCA(C)
+|
+:00444BD6 6A01                    push 00000001
+:00444BD8 58                      pop eax
+:00444BD9 C3                      ret
+
+
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00444BCF(C), :00444BD4(C)
+|
+:00444BDA 33C0                    xor eax, eax
+:00444BDC C3                      ret
+
+
+

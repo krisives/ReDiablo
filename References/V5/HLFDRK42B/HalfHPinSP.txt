@@ -1,0 +1,45 @@
+This allows for SP monsters to have the normal full HP, and creates some free space.
+
+
+Halved HP for bosses in SP:
+
+file offset 0003B120
+
+:0043BD20 898690000000            mov dword ptr [esi+00000090], eax
+:0043BD26 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043BD2D 7515                    jne 0043BD44
+:0043BD2F 6A40                    push 00000040
+:0043BD31 D1F8                    sar eax, 1
+:0043BD33 59                      pop ecx
+:0043BD34 898690000000            mov dword ptr [esi+00000090], eax
+:0043BD3A 3BC1                    cmp eax, ecx
+:0043BD3C 7D06                    jge 0043BD44
+:0043BD3E 898E90000000            mov dword ptr [esi+00000090], ecx
+changed into
+:0043BD20 EB1C                    jmp 0043BD3E
+:0043BD22 90909090                4*nop                                    (28 free bytes now)
+...                               
+:0043BD3E 898690000000            mov dword ptr [esi+00000090], eax
+
+
+Halved HP for Normal monsters in SP:
+
+file offset 0003A648
+
+:0043B248 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0043B24F 898618DD6900            mov dword ptr [esi+0069DD18], eax
+:0043B255 7519                    jne 0043B270
+:0043B257 D1BE18DD6900            sar dword ptr [esi+0069DD18], 1
+:0043B25D 8B8618DD6900            mov eax, dword ptr [esi+0069DD18]
+:0043B263 6A40                    push 00000040
+:0043B265 59                      pop ecx
+:0043B266 3BC1                    cmp eax, ecx
+:0043B268 7D06                    jge 0043B270
+:0043B26A 898E18DD6900            mov dword ptr [esi+0069DD18], ecx
+changed into
+:0043B248 EB20                    jmp 0043B26A
+:0043B24A 9090909090              5*nop                                    (32 free bytes now)
+...
+:0043B26A 898618DD6900            mov dword ptr [esi+0069DD18], eax
+
+

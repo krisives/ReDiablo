@@ -1,0 +1,368 @@
+F5-F8 in Hellfire
+
+:0040A675 83FE74                  cmp esi, 00000074
+:0040A678 7518                    jne 0040A692
+:0040A67A 391D18164D00            cmp dword ptr [004D1618], ebx
+:0040A680 7404                    je 0040A686
+:0040A682 33C9                    xor ecx, ecx
+:0040A684 EB3A                    jmp 0040A6C0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A680(C)
+|
+:0040A686 33C9                    xor ecx, ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A6BE(C)
+|
+:0040A688 E88A9CFFFF              call 00404317		set active spell
+:0040A68D E965020000              jmp 0040A8F7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A678(C)
+|
+:0040A692 83FE75                  cmp esi, 00000075
+:0040A695 750A                    jne 0040A6A1
+:0040A697 391D18164D00            cmp dword ptr [004D1618], ebx
+:0040A69D 8BCD                    mov ecx, ebp
+:0040A69F EB1D                    jmp 0040A6BE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A695(C)
+|
+:0040A6A1 83FE76                  cmp esi, 00000076
+:0040A6A4 750A                    jne 0040A6B0
+:0040A6A6 391D18164D00            cmp dword ptr [004D1618], ebx
+:0040A6AC 8BCF                    mov ecx, edi
+:0040A6AE EB0E                    jmp 0040A6BE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A6A4(C)
+|
+:0040A6B0 83FE77                  cmp esi, 00000077
+:0040A6B3 7515                    jne 0040A6CA
+:0040A6B5 391D18164D00            cmp dword ptr [004D1618], ebx
+:0040A6BB 6A03                    push 00000003
+:0040A6BD 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0040A69F(U), :0040A6AE(U)
+|
+:0040A6BE 74C8                    je 0040A688
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040A684(U)
+|
+:0040A6C0 E8B09BFFFF              call 00404275		store spell hotkey
+:0040A6C5 E92D020000              jmp 0040A8F7
+
+
+
+
+
+Hotkeys read from data, from Bobafett's fix:
+
+Called from :
+:00408FD9 E837000000              call 00409015		changed to call to below
+
+
+:0043D360 60                      pushad
+:0043D361 33F6                    xor esi, esi
+:0043D363 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0043D368 69C0C8550000            imul eax, 000055C8
+:0043D36E 030514AE6E00            add eax, dword ptr [006EAE14]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043D393(C)
+|
+:0043D374 0FBE9E3E8C4800          movsx ebx, byte ptr [esi+00488C3E]
+:0043D37B 899CB024010000          mov dword ptr [eax+4*esi+00000124], ebx
+:0043D382 8A9E428C4800            mov bl, byte ptr [esi+00488C42]
+:0043D388 889C3034010000          mov byte ptr [eax+esi+00000134], bl
+:0043D38F 46                      inc esi
+:0043D390 83FE04                  cmp esi, 00000004
+:0043D393 7CDF                    jl 0043D374
+
+:0043D395 61                      popad
+:0043D396 E9D703F8FF              jmp 003BD772		jmp to original routine
+
+:0043D39B 2312170C                
+:0043D39D 01010101
+
+
+
+Set current spell from data:
+
+Called from:
+:0040907F E8542C0400              call 0044BCD8
+
+
+:0043D3A2 50                  	  push eax
+:0043D3A2 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0043D3AA 69C0C8550000            imul eax, 000055C8
+:0043D3AF 030514AE6E00            add eax, dword ptr [006EAE14]
+:0043D3B5 C780B400000009000000    mov dword ptr [ebx+000000B4], 00000009
+:0043D3BF C780B800000001000000    mov dword ptr [ebx+000000B8], 00000001
+:0043D3C9 58                      pop eax
+:0043D3CA E96630FCFF              jmp 00400435		jmp to original routine
+
+
+
+Bron:
+
+# This is very useful if you use hot keys (function keys)
+# for spells.  This allows you to set your hot keys automatically
+# when you enter a game.  It saves on time for each time you
+# enter a game.  It works by setting location 488c3e to
+# the values of the spell to hot key you want.  For example,
+# I use F5 for Bone Spirit, F6 for Nova,
+# F7 for Teleport and F8 for Fireball.  Bone Spirit=23
+# Nova=12, Teleport=17, Fireball=0C
+# Just set location 488c3e to the value of the spell for the
+# Hot Key you want.  It always goes in order of F5 to F8.
+# Here is the complete list of spells and their hex values that you
+# would use:
+# 2b - Reflect
+# 2a - Warp
+# 29 - Immolation
+# 28 - Lightning Wall
+# 24 - Bone Spirit
+# 23 - Blood Star
+# 22 - Heal Other
+# 21 - Telekinesis
+# 20 - Resurrect
+# 1F - Holy Bolt
+# 1E - Charged Bolt
+# 1D - Elemental
+# 1C - Trap Disarm
+# 1B - Staff Recharge
+# 1A - Item Repair
+# 19 - Etherealize
+# 18 - Apocalypse
+# 17 - Teleport
+# 16 - Rage
+# 15 - Golem
+# 14 - Inferno
+# 13 - Invisibility
+# 12 - Nova
+# 11 - Blood Ritual
+# 10 - Doom Serpents
+# 0F - Flame Wave
+# 0E - Chain Lightning
+# 0D - Guardian
+# 0C - Fireball
+# 0B - Mana Shield
+# 0A - Phasing
+# 09 - Infravision
+# 08 - Stone Curse
+# 07 - Town Portal
+# 06 - Firwall
+# 05 - Identify
+# 04 - Flash
+# 03 - Lightning
+# 02 - Healing
+# 01 - Firebolt
+# This was written by the Great BoBaFeTT on 2 April 1998
+start V1.01 "Set Hot Keys to Spells
+408fda 370000 25fc07
+488c03 00 60
+488c04 0000 33f6
+488c06 00000000 a1e8ad6e
+488c0b 00000000 69c0c855
+488c11 0000000000 030514ae6e
+488c17 000000000000 0fbe9e3e8c48
+488c1e 0000000000 899cb02401
+488c25 0000000000 8a9e428c48
+488c2b 0000000000 889c303401
+488c32 00 46
+488c33 000000 83fe04
+488c36 0000 7cdf
+488c38 00 61
+488c39 0000000000 e9d703f8ff
+488c3e 00000000 2312170c
+488c42 00000000 01010101
+end
+
+# Tired of setting the current spell when you enter each game?
+# This sets it for you so that you don't have to keep setting it.
+# At 488c5e is the number of the spell you want to set to.
+# I use Infravision as my default spell so 09 is the value there.
+# Use the same numbers from the list given in the other hack
+# called "Set Hot Keys to Spells".
+# This was written by the Great BoBaFeTT on 2 April 1998
+start V1.01 "Set the current spell when enter game
+409080 542c04 c2fb07
+488c46 00 50
+488c47 00000000 a1e8ad6e
+488c4c 00000000 69c0c855
+488c52 0000000000 030514ae6e
+488c58 000000 c780b4
+488c5e 00 09
+488c62 000000 c780b8
+488c68 00 01
+488c6c 00 58
+488c6d 0000000000 e96630fcff
+end
+
+
+
+For Diablo, from Vector:
+
+
+F1-F5 Hotkeys
+-------------
+90BF
+WAS: 0F 8598 0000 0039 1DB8 5763 0074 0B89 1DB8 5763 00E9 0703
+NOW: 0F 8298 0000 0051 8BCE 83E9 7083 F903 7606 59E9 8700 0000
+
+90D9
+WAS: 0000 381D 38BA 6A00 7429 E826 A5FF FF8B D5B9 0C54 4800 E8E8 A4
+NOW: 833D 709F 4B00 0074 2F83 3DFC 9A4B 00FF 7506 59E9 F102 0000 50
+
+90EF
+WAS: FF FF8B D5B9 FC53 4800 E8DC A4FF FF33 C9E8 D297 0500 E9D6 0200 0038 1D24 8064
+NOW: A1 FC9A 4B00 8804 4D00 6A4B 00A0 209C 4B00 8804 4D01 6A4B 0058 59E9 D102 0000
+
+910E
+WAS: 0089 1DD4 5F63 0089 1D38 9C4B 0089 1D34 9C4B 0089 1D70 9F4B 0074 1338 1DFC C45B 0075 0B
+NOW: 5056 8B35 7477 6800 69F6 D854 0000 668B 044D 006A 4B00 3C00 7425 3C24 7721 80FC 0377 1C
+
+9131
+WAS: 88 1D24 8064 00E8 87C2 0000 891D 34D0 6900 891D 0091 4B00 881D E0CC 5200 E8FA F200 00E8 9F
+NOW: 33 C98A C889 8E2C 7868 008A CC89 8E30 7868 00C7 0514 6A52 00FF 0000 005E 5859 E98A 0200 00
+
+
+in ASM dus, voor Diablo:
+
+
+:00409CBC 83FE70                  cmp esi, 00000070
+:00409CBF 0F8298000000            jb 00409D5D
+:00409CC5 51                      push ecx
+:00409CC6 8BCE                    mov ecx, esi
+:00409CC8 83E970                  sub ecx, 00000070
+:00409CCB 83F903                  cmp ecx, 00000003
+:00409CCE 7606                    jbe 00409CD6
+:00409CD0 59                      pop ecx
+:00409CD1 E987000000              jmp 00409D5D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409CCE(C)
+|
+:00409CD6 833D709F4B0000          cmp dword ptr [004B9F70], 00000000
+:00409CDD 742F                    je 00409D0E
+:00409CDF 833DFC9A4B00FF          cmp dword ptr [004B9AFC], FFFFFFFF
+:00409CE6 7506                    jne 00409CEE
+:00409CE8 59                      pop ecx
+:00409CE9 E9F1020000              jmp 00409FDF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409CE6(C)
+|
+:00409CEE 50                      push eax
+:00409CEF A1FC9A4B00              mov eax, dword ptr [004B9AFC]
+:00409CF4 88044D006A4B00          mov byte ptr [2*ecx+004B6A00], al
+:00409CFB A0209C4B00              mov al, byte ptr [004B9C20]
+:00409D00 88044D016A4B00          mov byte ptr [2*ecx+004B6A01], al
+:00409D07 58                      pop eax
+:00409D08 59                      pop ecx
+:00409D09 E9D1020000              jmp 00409FDF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409CDD(C)
+|
+:00409D0E 50                      push eax
+:00409D0F 56                      push esi
+:00409D10 8B3574776800            mov esi, dword ptr [00687774]
+:00409D16 69F6D8540000            imul esi, 000054D8
+:00409D1C 668B044D006A4B00        mov ax, word ptr [2*ecx+004B6A00]
+:00409D24 3C00                    cmp al, 00
+:00409D26 7425                    je 00409D4D
+:00409D28 3C24                    cmp al, 24
+:00409D2A 7721                    ja 00409D4D
+:00409D2C 80FC03                  cmp ah, 03
+:00409D2F 771C                    ja 00409D4D
+:00409D31 33C9                    xor ecx, ecx
+:00409D33 8AC8                    mov cl, al
+:00409D35 898E2C786800            mov dword ptr [esi+0068782C], ecx
+:00409D3B 8ACC                    mov cl, ah
+:00409D3D 898E30786800            mov dword ptr [esi+00687830], ecx
+:00409D43 C705146A5200FF000000    mov dword ptr [00526A14], 000000FF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00409D26(C), :00409D2A(C), :00409D2F(C)
+|
+:00409D4D 5E                      pop esi
+:00409D4E 58                      pop eax
+:00409D4F 59                      pop ecx
+:00409D50 E98A020000              jmp 00409FDF
+
+
+-----------
+
+
+
+
+
+Diablo hotkey F5-F8:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409CBF(C)
+|
+:00409D5D 83FE74                  cmp esi, 00000074
+:00409D60 7518                    jne 00409D7A
+:00409D62 391D709F4B00            cmp dword ptr [004B9F70], ebx
+:00409D68 7404                    je 00409D6E
+:00409D6A 33C9                    xor ecx, ecx
+:00409D6C EB3A                    jmp 00409DA8
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409D68(C)
+|
+:00409D6E 33C9                    xor ecx, ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409DA6(C)
+|
+:00409D70 E863A2FFFF              call 00403FD8
+:00409D75 E965020000              jmp 00409FDF
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409D60(C)
+|
+:00409D7A 83FE75                  cmp esi, 00000075
+:00409D7D 750A                    jne 00409D89
+:00409D7F 391D709F4B00            cmp dword ptr [004B9F70], ebx
+:00409D85 8BCD                    mov ecx, ebp
+:00409D87 EB1D                    jmp 00409DA6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409D7D(C)
+|
+:00409D89 83FE76                  cmp esi, 00000076
+:00409D8C 750A                    jne 00409D98
+:00409D8E 391D709F4B00            cmp dword ptr [004B9F70], ebx
+:00409D94 8BCF                    mov ecx, edi
+:00409D96 EB0E                    jmp 00409DA6
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409D8C(C)
+|
+:00409D98 83FE77                  cmp esi, 00000077
+:00409D9B 7515                    jne 00409DB2
+:00409D9D 391D709F4B00            cmp dword ptr [004B9F70], ebx
+:00409DA3 6A03                    push 00000003
+:00409DA5 59                      pop ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00409D87(U), :00409D96(U)
+|
+:00409DA6 74C8                    je 00409D70
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409D6C(U)
+|
+:00409DA8 E8C0A1FFFF              call 00403F6D
+:00409DAD E92D020000              jmp 00409FDF
+
+
+

@@ -1,0 +1,87 @@
+Avoiding Stun for Monsters
+
+
+Following will give any monster that would get stunned a chance of 25% to avoid it. This also goes for Hiddens and Warpers (making Warpers a bit less dangerous, but Hiddens more).
+
+File Offset 0003C323
+
+:0043CF23 7516                    jne 0043CF3B			jmp stunning if true
+:0043CF25 90                      nop
+:0043CF26 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043CF2D 83C003                  add eax, 00000003
+:0043CF30 C1FD06                  sar ebp, 06
+wordt
+:0043CF23 7505                    jne 0043CF2A
+:0043CF25 E8F5060000              call 0043D61F		(1)	eax := Mlvl+3, sar ebp
+:0043CF2A 50                      push eax
+:0043CF2B 51                      push ecx
+:0043CF2C E871050000              call 0043D4A2		(2)	ebp := 0 if avoided
+:0043CF31 59                      pop ecx
+:0043CF32 58                      pop eax
+
+
+En ook:
+
+Start routine op 0043DBDE, minder vaak gebruikt dan vorige. Voor secondary effects? In ieder geval niet voor Melee of Missiles.
+
+! Problemen met 'ebp vs. 'ebx
+
+:0043DC62 7516                    jne 0043DC7A
+:0043DC64 90                      nop
+:0043DC65 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043DC6C 83C003                  add eax, 00000003
+:0043DC6F C1FB06                  sar ebx, 06
+wordt dus niet
+:0043DC62 7505                    jne 0043DC69
+:0043DC64 E8????????              call 0043D61F		(1)	eax := Mlvl+3, sar ebp
+:0043DC69 50                      push eax
+:0043DC6A 51                      push ecx
+:0043DC6B E8????????              call 00??????		(3)	ebx := 0 if avoided
+:0043DC70 59                      pop ecx
+:0043DC71 58                      pop eax
+
+Voorstel: deze zo laten.
+
+
+
+Routine 1 
+
+File Offset 0003CA1F
+
+Laatste vrije ruimte bij oude Nakrul-rewards :
+
+:0043D61F 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043D622 57                      push edi
+:0043D623 53                      push ebx
+:0043D624 6A77                    push 00000077
+:0043D626 6A03                    push 00000003
+:0043D628 E876E3FEFF              call 0042B9A3
+wordt
+:0043D61F 0FBE8648DD6900          movsx eax, byte ptr [esi+0069DD48]
+:0043D626 83C003                  add eax, 00000003
+:0043D629 C1FD06                  sar ebp, 06
+:0043D62C C3                      ret
+
+
+Routine 2 
+
+File Offset 0003C8A2
+
+Over oude Diablo Death.
+
+:0043D4A2 90                      nop
+:0043D4A3 894DF4                  mov dword ptr [ebp-0C], ecx
+:0043D4A6 DB45F4                  fild dword ptr [ebp-0C]
+:0043D4A9 D8F1                    fdiv st(0), st(1)
+:0043D4AB E8C0D00300              call 0047A570
+wordt
+:0043D4A2 E89A0E0000              call 0043E341			call RND100
+:0043D4A7 83F819                  cmp eax, 00000019		25%
+:0043D4AA 7D02                    jge 0043D4AE
+:0043D4AC 33ED                    xor ebp, ebp			
+:0043D4AE C3                      ret
+:0043D4AF 90                      nop
+
+
+
+

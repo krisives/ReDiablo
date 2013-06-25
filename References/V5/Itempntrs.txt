@@ -1,0 +1,116 @@
+Item adresses
+
+Item Code
+00 = All other items (novelties, potions, scrolls, books, etc)
+01 = Swords
+02 = Axes, Cleaver
+03 = Bows
+04 = Blunt weapons (maces, hammers, mauls, clubs)
+05 = Shields
+06 = Light armor (rags, capes, leather armor, etc)
+07 = Helms, crowns
+08 = Mid armor (Arkaine's Valor, chain mail, splint mail, etc)
+09 = Heavy plates (Full Plate Mail, Gothic Plate, Breast Plate, etc)
+0A = Staves
+0B = Gold
+0C = Rings
+0D = Amulets
+
+
+
+?			+000000BD]
+?			+000000BE]
+?			+000000C0]
+
+
+Price			+000000C4]	
+Price			+000000C8]	
+
+
+Min. Damage		+000000CC]
+Max. Damage		+000000D0]
+
+AC			+000000D4]
+
+Speed/Hitrecovery	+000000DA]	02h tot 80h
+
+magic code	 	+000000DC]	15h,16h for scrolls, 17h for staves
+
+spell number		+000000E0]
+
+Cur. Spellcharges	+000000E4]	
+Max. Spellcharges	+000000E8]	
+
+Cur. Durability		+000000EC]
+Max. Durability		+000000F0]
+
++% Damage		+000000F4]
++% ToHit		+000000F8]
++% Armor		+000000FC]
+
++Strength		+00000100]
++Magic			+00000104]
++Dexterity		+00000108]
++Vitality		+0000010C]
+
+
++Damage			+00000124]
+
+Light radius 		+0000012C]	
+
+
+
+Spell-levels		+00000130]	
+
+?			+0000014C]	init op 'or FF'
+?			+0000014D]	init op 'or FF'
+
+Str req.		+00000160]
+Mag req.		+00000161]
+Dex req.		+00000162]
+
+Req. met?		+00000164]
+
+
+Price ?			+00000168]
+
+Equipped items:
+Item Type		+00000394]	FFh=none, 0Ah=Staff
+Identified		+000003C4]	01h=Identified
+Charges			+00000470]	
+Charges Maximum		+00000474]	
+Current Dur		+00000478]	
+Maximum Dur		+0000047C]	
+
+Item in Inventory:
+Gold value for Gold     +00000E7C]
+Item Type		+00000DC0]	0Ah=Staff, 0Bh=Gold
+Identified		+00000DF0]	01h=Identified
+Charges			+00000E9C]	
+Charges Maximum		+00000EA0]	
+
+
+
+
+Item setup:
+
+:00424BB4 8B86E4000000            mov eax, dword ptr [esi+000000E4]
+:00424BBA 8986E8000000            mov dword ptr [esi+000000E8], eax
+:00424BC0 8B471C                  mov eax, dword ptr [edi+1C]
+:00424BC3 8986EC000000            mov dword ptr [esi+000000EC], eax
+:00424BC9 8B471C                  mov eax, dword ptr [edi+1C]
+:00424BCC 8986F0000000            mov dword ptr [esi+000000F0], eax
+:00424BD2 8A4730                  mov al, byte ptr [edi+30]
+:00424BD5 888660010000            mov byte ptr [esi+00000160], al
+:00424BDB 8A4731                  mov al, byte ptr [edi+31]
+:00424BDE 888661010000            mov byte ptr [esi+00000161], al
+:00424BE4 8A4732                  mov al, byte ptr [edi+32]
+:00424BE7 888662010000            mov byte ptr [esi+00000162], al
+:00424BED 8B4744                  mov eax, dword ptr [edi+44]
+:00424BF0 8986C4000000            mov dword ptr [esi+000000C4], eax
+:00424BF6 8B4744                  mov eax, dword ptr [edi+44]
+:00424BF9 808E4C010000FF          or byte ptr [esi+0000014C], FF
+:00424C00 808E4D010000FF          or byte ptr [esi+0000014D], FF
+:00424C07 80663C00                and byte ptr [esi+3C], 00
+:00424C0B 8986C8000000            mov dword ptr [esi+000000C8], eax
+:00424C11 899E68010000            mov dword ptr [esi+00000168], ebx

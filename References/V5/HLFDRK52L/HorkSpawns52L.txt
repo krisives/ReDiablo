@@ -1,0 +1,79 @@
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1 TH2  damage2  MFL/MFL    exp  size    stand walk  attk1 frame   hr  death attk2 frame    playback speed
+
+117 Hork Spawn (yellow)   animal   11 Winged Fiend     2  H1-H4*   22     5-  10   25   60   15- 25    0    0-  0  I--/I--   1000     1      15    12    14     8    11    14     1     0     0   0   0   0   0   0
+                                                                          8-  12             20- 30
+000AE370 A400 0000 0100 0000 B020 4B00 0100 0000 ......... K.....
+000AE380 9020 4B00 0100 0000 0100 0000 9031 4B00 . K..........1K.
+000AE390 0F00 0000 0C00 0000 0E00 0000 0B00 0000 ................
+000AE3A0 0E00 0000 0100 0000 0000 0000 0000 0000 ................
+000AE3B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AE3C0 5417 4B00 2026 1600 0500 0000 0A00 0000 T.K. &..........
+000AE3D0 0B00 0000 0000 0000 023C 080F 1900 0000 .........<......
+000AE3E0 0019 0200 0800 0800 0040 0300 E803 0000 .........@......
+changed into
+000AE3C8 0800 0000 0C00 0000                     ........
+000AE3DB 141E                                    ..
+
+ 56 Hork Spawn (black)    animal   11 Winged Fiend    40  H1-H4    23    25-  30   25   60   20- 35    -      -    I--/I--   1000   690      15    12    14     8    11    14     -     -     0   0   0   0   0   -
+                                                       3                 16-  20             25- 35                                   1
+000AC4F0 A400 0000 B202 0000 B020 4B00 0000 0000 ......... K.....
+000AC500 9020 4B00 0100 0000 0100 0000 9C30 4B00 . K..........0K.
+000AC510 0F00 0000 0C00 0000 0E00 0000 0B00 0000 ................
+000AC520 0E00 0000 0000 0000 0000 0000 0000 0000 ................
+000AC530 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AC540 5417 4B00 2026 1700 1900 0000 1E00 0000 T.K. &..........
+000AC550 0B00 0000 0000 0000 033C 0814 2300 0000 .........<..#...
+000AC560 0019 0200 0800 0800 0040 0300 E803 0000 .........@......
+changed into
+000AC4F4 0100 0000                               ....
+000AC548 1000 0000 1400                          ......
+000AC55B 1923                                    .#
+
+
+Acid Puddles for Hork Spawns:
+
+File offset 0003C672
+
+:0043D272 E8DD250000              call 0043F854				check for Spiders and Spitters
+changed into
+:0043D272 E830B2FEFF              call 004284A7				
+:0043D277 
+
+File offset 0003D355
+
+:0043DF55 E8FA180000              call 0043F854				check for Spiders and Spitters
+changed into
+:0043DF55 E84DA5FEFF              call 004284A7				
+:0043DF5A 
+
+
+Using old Trapview code (obsolete since 52H):
+
+File offset 000278A7
+
+:004284A7 52                      push edx
+:004284A8 8B88D0010000            mov ecx, dword ptr [eax+000001D0]
+:004284AE 0FB615D8B16000          movzx edx, byte ptr [0060B1D8]
+:004284B5 42                      inc edx
+:004284B6 D1E2                    shl edx, 1
+:004284B8 0FBE80B8010000          movsx eax, byte ptr [eax+000001B8]
+:004284BF 3BD0                    cmp edx, eax
+:004284C1 7D02                    jge 004284C5
+:004284C3 8BC8                    mov ecx, eax
+:004284C5 5A                      pop edx
+:004284C6 C3                      ret
+changed into
+:004284A7 E8A8730100              call 0043F854				check for Spiders and Spitters
+:004284AC 7516                    jne 004284C4
+:004284AE 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:004284B4 8B00                    mov eax, dword ptr [eax]
+:004284B6 83F838                  cmp eax, 00000038			Hork Spawn
+:004284B9 7407                    je 004284C2
+:004284BB 83F875                  cmp eax, 00000075			Hork Spawn
+:004284BE 7402                    je 004284C2
+:004284C0 33C0                    xor eax, eax
+:004284C2 85C0                    test eax, eax
+:004284C4 C3                      ret
+:004284C5 9090                    2*nop
+
+

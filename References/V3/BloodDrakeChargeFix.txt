@@ -1,0 +1,56 @@
+Fixing support for BloodDrakes at Charge Spelleffect
+
+
+File Offset 00032987
+
+:00433587 83F959                  cmp ecx, 00000059
+:0043358A 7C08                    jl 00433594
+:0043358C 83F95C                  cmp ecx, 0000005C
+:0043358F 8D7860                  lea edi, dword ptr [eax+60]
+:00433592 7E03                    jle 00433597
+wordt
+:00433587 E8012A0000              call 00435F8D
+:0043358C 85C9                    test ecx, ecx
+:0043358E 7404                    je 00433594
+:00433590 8D7860                  lea edi, dword ptr [eax+60]
+:00433593 90			  nop
+
+
+File Offset 00032A08
+
+:00433608 83F959                  cmp ecx, 00000059
+:0043360B 7C0F                    jl 0043361C
+:0043360D 83F95C                  cmp ecx, 0000005C
+:00433610 7F0A                    jg 0043361C
+wordt
+:00433608 E880290000              call 00435F8D
+:0043360D 85C9                    test ecx, ecx
+:0043360F 740B                    je 0043361C
+:00433611 90			  nop
+
+
+Free space from modified FireArrow:
+
+File Offset 0003538D
+
+:00435F8D 90                      nop
+:00435F8E 90                      nop
+:00435F8F 90                      nop
+:00435F90 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:00435F97 6A0A                    push 0000000A
+:00435F99 8D5C0801                lea ebx, dword ptr [eax+ecx+01]
+:00435F9D 5A                      pop edx
+:00435F9E B144                    mov cl, 44
+:00435FA0 E8B53FFEFF              call 00419F5A
+:00435FA5 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+wordt
+:00435F8D 83F95C                  cmp ecx, 0000005C
+:00435F90 7F0A                    jg 00435F9C
+:00435F92 83F946                  cmp ecx, 00000046
+:00435F95 7407                    je 00435F9E
+:00435F97 83F959                  cmp ecx, 00000059
+:00435F9A 7D02                    jge 00435F9E
+:00435F9C 33C9                    xor ecx, ecx
+:00435F9E C3                      ret
+:00435F9F 90                      nop
+

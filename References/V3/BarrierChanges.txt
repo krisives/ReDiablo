@@ -1,0 +1,28 @@
+Barrier shorter duration :
+
+Duration SLVL+CLVL-1 -> (SLVL+CLVL+1)/2
+
+Minimum of 10 already implemented.
+
+
+File Offset 0002F775
+
+:00430375 660FBEB8B8010000        movsx di, byte ptr [eax+000001B8]
+:0043037D 03FA                    add edi, edx
+:0043037F 4F                      dec edi
+wordt
+:00430375 0290B8010000            add dl, byte ptr [eax+000001B8]
+:0043037B 42                      inc edx
+:0043037C D1EA                    shr edx, 1
+:0043037E 8BFA                    mov edi, edx
+
+
+Increasing effect of Barrier:
+
+Damage reduction  10+rnd[CLVL/2]  ->  15+rnd[CLVL/2]
+
+File Offset 0003D924
+
+:0043E524 83C00A                  add eax, 0000000A
+wordt
+:0043E524 83C00F                  add eax, 0000000F

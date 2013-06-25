@@ -1,0 +1,8 @@
+Bosses with 01-pack flags (Leoric, Izual, Wraith of Izual and the Defiler) did not receive the intended support from their minions, due to a another check on that flag. This modifications allows improved behaviour for all existing packs.
+
+file offset 0003EC8B
+
+:0043F88B F68076084B0002          test byte ptr [eax+004B0876], 02
+changed into
+:0043F88B F68076084B0001          test byte ptr [eax+004B0876], 01
+

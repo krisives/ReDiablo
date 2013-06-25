@@ -1,0 +1,55 @@
+Increasing durations for Search, Rage and Seeing
+
+
+Search:
+
+old duration = clvl + 10*slvl + 1000  (60 secs at clvl=40, slvl=15) 
+new duration = 9*clvl + 64*slvl + 4096 (270 secs at clvl=40, slvl=15)
+
+File Offset 00033E73
+
+:00434A73 8D0480                  lea eax, dword ptr [eax+4*eax]
+:00434A76 8D8441E8030000          lea eax, dword ptr [ecx+2*eax+000003E8]
+wordt
+:00434A73 8D04C1                  lea eax, dword ptr [ecx+8*eax]
+:00434A76 8D84C100100000          lea eax, dword ptr [ecx+8*eax+00001000]
+
+
+Rage:
+
+old duration = clvl + 10*slvl + 390  (22 secs at clvl=40, slvl=1) 
+new duration = 9*clvl + 2*slvl + 512 (44 secs at clvl=40, slvl=1) 
+
+File Offset 0003417F
+
+:00434D7F 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:00434D82 8D8C4A86010000          lea ecx, dword ptr [edx+2*ecx+00000186]
+wordt
+:00434D7F 8D0C91                  lea ecx, dword ptr [ecx+4*edx]
+:00434D82 8D8C4A00020000          lea ecx, dword ptr [edx+2*ecx+00000200]
+
+
+Seeing:
+
+:00434AF8 C781C87A690030060000    mov dword ptr [ebx+00697AC8], 00000630
+:00434B02 E838990000              call 0043E43F
+:00434B07 90                      nop
+:00434B08 85C0                    test eax, eax
+:00434B0A 7E18                    jle 00434B24
+:00434B0C 8BD0                    mov edx, eax
+:00434B0E 8B81C87A6900            mov eax, dword ptr [ecx+00697AC8]
+:00434B14 8BF0                    mov esi, eax
+:00434B16 C1FE03                  sar esi, 03
+:00434B19 03F0                    add esi, eax
+:00434B1B 4A                      dec edx
+:00434B1C 89B1C87A6900            mov dword ptr [ecx+00697AC8], esi
+:00434B22 75EA                    jne 00434B0E
+
+Old Duration = 1584 * (9/8)^slvl  (89 secs at slvl=1, 257 secs at slvl=10)
+New Duration = 4096 * (9/8)^slvl  (230 secs at slvl=1, 665 secs at slvl=10)
+
+File Offset 00033EF8
+
+:00434AF8 C781C87A690030060000    mov dword ptr [ebx+00697AC8], 00000630
+wordt
+:00434AF8 C781C87A690000100000    mov dword ptr [ebx+00697AC8], 00001000

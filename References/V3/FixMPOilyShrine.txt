@@ -1,0 +1,36 @@
+Oily Shrine's Ring of Fire is only visible to user
+
+File Offset 00051FFD
+
+:00452BFD 0F8569040000            jne 0045306C
+wordt
+:00452BFD 0F8589000000            jne 00452C8C
+:00452C03
+
+Doing Ring of Fire:
+
+:00452C8C A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00452C91 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00452C97 69C0C8550000            imul eax, 000055C8
+:00452C9D 03C1                    add eax, ecx
+:00452C9F 57                      push edi
+:00452CA0 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]	
+:00452CA7 8D4C0902                lea ecx, dword ptr [ecx+ecx+02]
+:00452CAB 51                      push ecx
+:00452CAC 57                      push edi
+:00452CAD 6A01                    push 00000001
+:00452CAF 6A51                    push 00000051				Ring of Fire
+:00452CB1 E930CDFDFF              jmp 0042F9E6
+
+Works correctly now.
+
+
+Damage adjusted for Difficulty in 36P:
+
+File Offset 000520A0
+
+:00452CA0 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]	
+wordt
+:00452CA0 E80F5F0300              call 00488BB4
+:00452CA5 8BCA                    mov ecx, edx
+

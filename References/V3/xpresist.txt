@@ -1,0 +1,12 @@
+Tricky
+by Jarulf 
+
+
+It may be a bit tricy to acomplish that. First of, the flag is set in the routine that check for among other things hit recovery. that is, if you are not allowed for a hit recovery, you can not get the flag set. If I remember correctly, you can't get hit recovery on a monster that is resistant. So you would have to change quite a few things. The flag is kept on each monster at 64e717 where the first 4 bits flag for each player (the flag is of course also always set in the monster death routine).
+
+The place where this is set, starts at 43474f (the test right before is to see if it was a playr or monster that hit the target).
+
+For players hitting monsters with spells, it is called from42ab83 and 42abb3, and possibly a few other places, did not check the others. But changing them might have other consequences.
+
+So, if anyone have time and patience to invest in a good solution, you may get an easy answer, unfortunately I can't give it. Perhaps with the help above someone else can help you.
+

@@ -1,0 +1,191 @@
+
+Change Apocalypse (Hellfire)
+
+00434F5B - 434F7E
+
+Was:
+:00434F42 8B7C2424                mov edi, dword ptr [esp+24]
+:00434F46 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434F4B 69FFC8550000            imul edi, 000055C8
+:00434F51 80BC38B801000000        cmp byte ptr [eax+edi+000001B8], 00
+:00434F59 7E00                    jle 00434F5B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434F59(C)
+|
+:00434F5B 6A06                    push 00000006
+:00434F5D B143                    mov cl, 43
+:00434F5F 5A                      pop edx
+:00434F60 E8F54FFEFF              call 00419F5A
+:00434F65 40                      inc eax
+:00434F66 0186D47A6900            add dword ptr [esi+00697AD4], eax
+:00434F6C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434F71 43                      inc ebx
+:00434F72 0FBE8438B8010000        movsx eax, byte ptr [eax+edi+000001B8]
+:00434F7A 3BD8                    cmp ebx, eax
+:00434F7C 7CDD                    jl 00434F5B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00434F59(C)
+|
+:00434F7E 8B4C2424                mov ecx, dword ptr [esp+24]
+:00434F82 6A18                    push 00000018
+:00434F84 C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:00434F8E 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:00434F95 5A                      pop edx
+:00434F96 E861700300              call 0046BFFC
+:00434F9B 5F                      pop edi
+:00434F9C 5E                      pop esi
+:00434F9D 5B                      pop ebx
+:00434F9E C21C00                  ret 001C
+
+First try:
+
+B143			mov cl, 43
+0FBE9C38B8010000	movsx ebx, byte ptr [eax+edi+000001B8]
+C1E302			shl ebx, 02
+8B8407AC010000		mov eax, dword ptr [edi+eax+000001AC]
+C1E906			sar eax, 06
+03D8			add ebx, eax
+019ED47A6900		add dword ptr [esi+00697AD4], ebx
+90			nop
+90			nop
+90			nop
+90			nop
+
+Second try:
+
+:00434F5B B143                    mov cl, 43
+:00434F5D 8B8407AC010000          mov eax, dword ptr [edi+eax+000001AC]
+:00434F64 C1E806                  shr eax, 06
+:00434F67 0186D47A6900            add dword ptr [esi+00697AD4], eax
+:00434F6D 8BCF                    mov ecx, edi
+:00434F6F 6A18                    push 00000018
+:00434F71 C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:00434F7B 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:00434F82 5A                      pop edx
+:00434F83 E874700300              call 0046BFFC
+:00434F88 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00434F8E 750B                    jne 00434F9B
+:00434F90 83CAFF                  or edx, FFFFFFFF
+:00434F93 8BCF                    mov ecx, edi
+:00434F95 E88A970200              call 0045E724
+:00434F9A 90                      nop
+
+Third try:
+:00434F42 8B7C2424                mov edi, dword ptr [esp+24]
+:00434F46 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00434F4B 57                      push edi					bugfix
+:00434F4C 69FFC8550000            imul edi, 000055C8				
+:00434F52 80BC38B801000000        cmp byte ptr [eax+edi+000001B8], 00		not used
+:00434F5A B143                    mov cl, 43					not used
+:00434F5C 6A18                    push 00000018
+:00434F5E 59                      pop ecx
+:00434F5F 90                      nop
+:00434F60 90                      nop
+:00434F61 90                      nop
+:00434F62 E8D7D00100              call 0045203E
+:00434F67 5F                      pop edi					bugfix
+:00434F68 019ED47A6900            add dword ptr [esi+00697AD4], ebx		Damage
+:00434F6E 8BCF                    mov ecx, edi
+:00434F70 6A18                    push 00000018					Spell #
+:00434F72 C786C87A6900FF000000    mov dword ptr [esi+00697AC8], 000000FF
+:00434F7C 83A68C7A690000          and dword ptr [esi+00697A8C], 00000000
+:00434F83 5A                      pop edx
+:00434F84 E873700300              call 0046BFFC					Calculate manacost
+:00434F89 3B3DE8AD6E00            cmp edi, dword ptr [006EADE8]
+:00434F8F 750A                    jne 00434F9B
+:00434F91 83CAFF                  or edx, FFFFFFFF
+:00434F94 8BCF                    mov ecx, edi
+:00434F96 E889970200              call 0045E724					Reduce magic
+
+New damage procedure:
+
+* Referenced by a CALL at Addresses:
+|:0042EC88   , :00434F63   
+|
+:0045203E 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00452044 50                      push eax
+:00452045 53                      push ebx
+:00452046 8BC3                    mov eax, ebx
+:00452048 8B9C1FAC010000          mov ebx, dword ptr [edi+ebx+000001AC]		Current mod mana
+:0045204F C1FB06                  sar ebx, 06
+:00452052 83FB00                  cmp ebx, 00000000
+:00452055 7D02                    jge 00452059					If below 0
+:00452057 33DB                    xor ebx, ebx					set to 0
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452055(C)
+|
+:00452059 90                      nop
+:0045205A 90                      nop
+:0045205B 90                      nop
+:0045205C 03C8                    add ecx, eax
+:0045205E 0FBE8C39C1000000        movsx ecx, byte ptr [ecx+edi+000000C1]	Slvl
+:00452066 0FBE843848550000        movsx eax, byte ptr [eax+edi+00005548]	extra Slvl
+:0045206E 03C8                    add ecx, eax
+:00452070 0FAFCB                  imul ecx, ebx
+:00452073 C1F904                  sar ecx, 04
+:00452076 5B                      pop ebx
+:00452077 0FBE9C3BB8010000        movsx ebx, byte ptr [ebx+edi+000001B8]	Clvl
+:0045207F C1E302                  shl ebx, 02
+:00452082 03D9                    add ebx, ecx
+:00452084 58                      pop eax
+:00452085 C3                      ret
+
+Adapted for use of Doom Serpent:
+
+:0045203E 8B1D14AE6E00            mov ebx, dword ptr [006EAE14]
+:00452044 50                      push eax
+:00452045 51                      push ecx
+:00452046 53                      push ebx
+:00452047 8BC3                    mov eax, ebx
+:00452049 8B9C1FAC010000          mov ebx, dword ptr [edi+ebx+000001AC]
+:00452050 C1FB06                  sar ebx, 06
+:00452053 83FB00                  cmp ebx, 00000000
+:00452056 7D02                    jge 0045205A
+:00452058 33DB                    xor ebx, ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452056(C)
+|
+:0045205A 03C8                    add ecx, eax
+:0045205C 0FBE8C39C1000000        movsx ecx, byte ptr [ecx+edi+000000C1]
+:00452064 0FBE843848550000        movsx eax, byte ptr [eax+edi+00005548]
+:0045206C 03C8                    add ecx, eax
+:0045206E 0FAFCB                  imul ecx, ebx
+:00452071 C1F904                  sar ecx, 04
+:00452074 5B                      pop ebx
+:00452075 0FBE9C3BB8010000        movsx ebx, byte ptr [ebx+edi+000001B8]
+:0045207D C1E302                  shl ebx, 02
+:00452080 03D9                    add ebx, ecx
+:00452082 59                      pop ecx
+:00452083 83F918                  cmp ecx, 00000018				if apo -> jump
+:00452086 7403                    je 0045208B
+:00452088 C1EB01                  shr ebx, 01					Divide for doom serpent
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00452086(C)
+|
+:0045208B 58                      pop eax
+:0045208C C3                      ret
+
+
+In Book:
+:0042EC7A 6A18                    push 00000018
+:0042EC7C 8B3DE8AD6E00            mov edi, dword ptr [006EADE8]		Char #
+:0042EC82 69FFC8550000            imul edi, 000055C8
+:0042EC88 59                      pop ecx
+:0042EC89 E8B0330200              call 0045203E
+:0042EC8E 8918                    mov dword ptr [eax], ebx		2 Damage
+:0042EC90 8958FC                  mov dword ptr [eax-04], ebx		1 Damage
+:0042EC93 90                      nop
+:0042EC94 90                      nop
+:0042EC95 90                      nop
+:0042EC96 90                      nop
+:0042EC97 90                      nop
+:0042EC98 90                      nop
+:0042EC99 90                      nop
+:0042EC9A 90                      nop
+:0042EC9B 90                      nop
+:0042EC9C E9E7010000              jmp 0042EE88

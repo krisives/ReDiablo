@@ -1,0 +1,20 @@
+Clearing speedspell icon?
+
+
+:00424722 80BC30B800000002        cmp byte ptr [eax+esi+000000B8], 02
+:0042472A 8D3C30                  lea edi, dword ptr [eax+esi]
+:0042472D 753B                    jne 0042476A
+:0042472F 8B8FB4000000            mov ecx, dword ptr [edi+000000B4]
+:00424735 6A01                    push 00000001
+:00424737 49                      dec ecx
+:00424738 58                      pop eax
+:00424739 D3E0                    shl eax, cl
+:0042473B 99                      cdq
+:0042473C 238718010000            and eax, dword ptr [edi+00000118]
+:00424742 23971C010000            and edx, dword ptr [edi+0000011C]
+:00424748 0BC2                    or eax, edx
+:0042474A 751E                    jne 0042476A
+:0042474C 838FB4000000FF          or dword ptr [edi+000000B4], FFFFFFFF
+:00424753 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424758 C68430B800000004        mov byte ptr [eax+esi+000000B8], 04
+:00424760 C705AC535700FF000000    mov dword ptr [005753AC], 000000FF

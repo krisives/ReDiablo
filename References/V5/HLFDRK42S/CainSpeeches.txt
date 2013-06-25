@@ -1,0 +1,15 @@
+Disabling Cain's speeches about Lazarus in MP:
+
+file offset 00076844
+
+:00477444 E8FA70FBFF              call 0042E543
+changed into
+:00477444 9090909090              5*nop
+
+file offset 0007687C
+
+:0047747C E8C270FBFF              call 0042E543
+changed into
+:0047747C 9090909090              5*nop
+
+

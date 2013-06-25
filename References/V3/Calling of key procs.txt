@@ -1,0 +1,191 @@
+This procedures calls different procedures which handle the key actions
+
+
+:00409A1A 55                      push ebp
+:00409A1B 8BEC                    mov ebp, esp
+:00409A1D 56                      push esi
+:00409A1E 8B750C                  mov esi, dword ptr [ebp+0C]
+:00409A21 B812010000              mov eax, 00000112
+:00409A26 57                      push edi
+:00409A27 8B7D14                  mov edi, dword ptr [ebp+14]
+:00409A2A 3BF0                    cmp esi, eax
+:00409A2C 7777                    ja 00409AA5
+:00409A2E 3BF0                    cmp esi, eax
+:00409A30 7453                    je 00409A85
+:00409A32 8BC6                    mov eax, esi
+:00409A34 2D00010000              sub eax, 00000100
+:00409A39 743D                    je 00409A78
+:00409A3B 48                      dec eax
+:00409A3C 742D                    je 00409A6B
+:00409A3E 48                      dec eax
+:00409A3F 741D                    je 00409A5E
+:00409A41 48                      dec eax
+:00409A42 48                      dec eax
+:00409A43 0F85AB010000            jne 00409BF4
+:00409A49 8B4D10                  mov ecx, dword ptr [ebp+10]		[ebp+0C] = 104h
+:00409A4C E8AA090000              call 0040A3FB
+:00409A51 85C0                    test eax, eax
+:00409A53 0F849B010000            je 00409BF4
+:00409A59 E92D020000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409A3F(C)								[ebp+0C] = 102h
+|
+:00409A5E 8B4D10                  mov ecx, dword ptr [ebp+10]
+:00409A61 E8D20E0000              call 0040A938				Letter and number accelerator keys
+:00409A66 E920020000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409A3C(C)								[ebp+0C] = 101h
+|
+:00409A6B 8B4D10                  mov ecx, dword ptr [ebp+10]
+:00409A6E E84B0A0000              call 0040A4BE				Print screen function
+:00409A73 E913020000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409A39(C)								[ebp+0C] = 100h
+|
+:00409A78 8B4D10                  mov ecx, dword ptr [ebp+10]
+:00409A7B E8490A0000              call 0040A4C9				Function keys + special keys like TAB, ESC, arrowkeys
+:00409A80 E906020000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409A30(C)
+|
+:00409A85 817D1060F00000          cmp dword ptr [ebp+10], 0000F060	[ebp+0C] = 112h
+:00409A8C 0F8562010000            jne 00409BF4
+:00409A92 83259452570000          and dword ptr [00575294], 00000000
+:00409A99 83250053570000          and dword ptr [00575300], 00000000
+:00409AA0 E9E6010000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409A2C(C)								[ebp+0C] > 112h
+|
+:00409AA5 B815020000              mov eax, 00000215
+:00409AAA 3BF0                    cmp esi, eax
+:00409AAC 0F8755010000            ja 00409C07
+:00409AB2 0F8429010000            je 00409BE1
+:00409AB8 8BC6                    mov eax, esi
+:00409ABA 2D00020000              sub eax, 00000200
+:00409ABF 0F84FE000000            je 00409BC3
+:00409AC5 48                      dec eax
+:00409AC6 0F84B2000000            je 00409B7E
+:00409ACC 48                      dec eax
+:00409ACD 7470                    je 00409B3F
+:00409ACF 48                      dec eax
+:00409AD0 48                      dec eax
+:00409AD1 7431                    je 00409B04
+:00409AD3 48                      dec eax
+:00409AD4 0F851A010000            jne 00409BF4
+:00409ADA 8B4514                  mov eax, dword ptr [ebp+14]
+:00409ADD 0FB7C8                  movzx ecx, ax
+:00409AE0 C1E810                  shr eax, 10
+:00409AE3 803DF053570002          cmp byte ptr [005753F0], 02
+:00409AEA 890D28525700            mov dword ptr [00575228], ecx
+:00409AF0 A324525700              mov dword ptr [00575224], eax
+:00409AF5 0F8590010000            jne 00409C8B
+:00409AFB 8025F053570000          and byte ptr [005753F0], 00
+:00409B02 EB6F                    jmp 00409B73
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409AD1(C)
+|
+:00409B04 8B4514                  mov eax, dword ptr [ebp+14]
+:00409B07 0FB7C8                  movzx ecx, ax
+:00409B0A C1E810                  shr eax, 10
+:00409B0D 803DF053570000          cmp byte ptr [005753F0], 00
+:00409B14 890D28525700            mov dword ptr [00575228], ecx
+:00409B1A A324525700              mov dword ptr [00575224], eax
+:00409B1F 0F8566010000            jne 00409C8B
+:00409B25 FF7508                  push [ebp+08]
+:00409B28 C605F053570002          mov byte ptr [005753F0], 02
+
+* Reference To: USER32.SetCapture, Ord:01E3h
+                                  |
+:00409B2F FF1500924800            Call dword ptr [00489200]
+:00409B35 E8D4070000              call 0040A30E
+:00409B3A E94C010000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409ACD(C)
+|
+:00409B3F 8B4514                  mov eax, dword ptr [ebp+14]
+:00409B42 0FB7C8                  movzx ecx, ax
+:00409B45 C1E810                  shr eax, 10
+:00409B48 803DF053570001          cmp byte ptr [005753F0], 01
+:00409B4F 890D28525700            mov dword ptr [00575228], ecx
+:00409B55 A324525700              mov dword ptr [00575224], eax
+:00409B5A 0F852B010000            jne 00409C8B
+:00409B60 8025F053570000          and byte ptr [005753F0], 00
+:00409B67 E85D070000              call 0040A2C9
+:00409B6C 33C9                    xor ecx, ecx
+:00409B6E E8C0DF0600              call 00477B33
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409B02(U)
+|
+
+* Reference To: USER32.ReleaseCapture, Ord:01CCh
+                                  |
+:00409B73 FF151C924800            Call dword ptr [0048921C]
+:00409B79 E90D010000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409AC6(C)
+|
+:00409B7E 8B4514                  mov eax, dword ptr [ebp+14]
+:00409B81 0FB7C8                  movzx ecx, ax
+:00409B84 C1E810                  shr eax, 10
+:00409B87 803DF053570000          cmp byte ptr [005753F0], 00
+:00409B8E 890D28525700            mov dword ptr [00575228], ecx
+:00409B94 A324525700              mov dword ptr [00575224], eax
+:00409B99 0F85EC000000            jne 00409C8B
+:00409B9F FF7508                  push [ebp+08]
+:00409BA2 C605F053570001          mov byte ptr [005753F0], 01
+
+* Reference To: USER32.SetCapture, Ord:01E3h
+                                  |
+:00409BA9 FF1500924800            Call dword ptr [00489200]
+:00409BAF 8B4D10                  mov ecx, dword ptr [ebp+10]
+:00409BB2 E8DB000000              call 00409C92
+:00409BB7 8BC8                    mov ecx, eax
+:00409BB9 E875DF0600              call 00477B33
+:00409BBE E9C8000000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409ABF(C)
+|
+:00409BC3 8B4514                  mov eax, dword ptr [ebp+14]
+:00409BC6 0FB7C8                  movzx ecx, ax
+:00409BC9 C1E810                  shr eax, 10
+:00409BCC 890D28525700            mov dword ptr [00575228], ecx
+:00409BD2 A324525700              mov dword ptr [00575224], eax
+:00409BD7 E81A080000              call 0040A3F6
+:00409BDC E9AA000000              jmp 00409C8B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409AB2(C)
+|
+:00409BE1 397D08                  cmp dword ptr [ebp+08], edi
+:00409BE4 740E                    je 00409BF4
+:00409BE6 8025F053570000          and byte ptr [005753F0], 00
+:00409BED 33C9                    xor ecx, ecx
+:00409BEF E83FDF0600              call 00477B33
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00409A43(C), :00409A53(C), :00409A8C(C), :00409AD4(C), :00409BE4(C)
+|:00409C0D(C), :00409C15(C)
+|
+:00409BF4 57                      push edi
+:00409BF5 FF7510                  push [ebp+10]
+:00409BF8 56                      push esi
+:00409BF9 FF7508                  push [ebp+08]
+:00409BFC E82B410100              call 0041DD2C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00409C8D(U)
+|
+:00409C01 5F                      pop edi
+:00409C02 5E                      pop esi
+:00409C03 5D                      pop ebp
+:00409C04 C21000                  ret 0010

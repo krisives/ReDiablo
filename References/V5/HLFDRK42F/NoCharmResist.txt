@@ -1,0 +1,29 @@
+Removing 33% chance to resist a Charm spell
+
+file offset 0002F86F
+
+:0043046F 90                      nop
+:00430470 90                      nop
+:00430471 90                      nop
+:00430472 90                      nop
+:00430473 90                      nop
+:00430474 90                      nop
+:00430475 90                      nop
+:00430476 90                      nop
+:00430477 90                      nop
+:00430478 90                      nop
+:00430479 90                      nop
+:0043047A 90                      nop
+:0043047B 90                      nop
+:0043047C 6A03                    push 00000003
+:0043047E B163                    mov cl, 63
+:00430480 5A                      pop edx
+:00430481 E8D49AFEFF              call 00419F5A
+:00430486 85C0                    test eax, eax
+:00430488 7409                    je 00430493
+changed into
+:0043046F EB19                    jmp 0043048A
+:00430471 ...
+
+Now 25 bytes free.
+

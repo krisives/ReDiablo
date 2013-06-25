@@ -1,0 +1,231 @@
+
+Load Hit Recovery Animation in place of Blocking Animation for characters which do not have a shield.
+
+Was:
+0044BF3A:
+0F84 [C7000000] je 0044C007
+
+Now:
+0044BF3A: (0004B33A)
+0F84 [xxxxxxxx] je ?
+
+(0001D81A)
+Was: (00003C71)
+80BE 44090000 03 cmp byte ptr [esi+00000944], 03
+0F84 [xxxxxxxx] je 0044C007
+80BE 60010000 02 cmp byte ptr [esi+00000160], 02
+0F84 [xxxxxxxx] je 0044C007
+
+8BBE D0540000 mov edi, dword ptr [esi+000054D0]
+C745 FC 00224A00 mov [ebp-04], 004A2200 "HT"
+E9 [xxxxxxxx] jmp 0044BF4D
+
+None Axe Bow Club Staff Sword
+004A21E4: LM..
+Warrior: ? ? ? ? ? ?
+Rogue: ? ? XX ? ? ?
+Sorcerer: ? ? ? ? ? XX
+004A21E8: FM..
+Warrior: ? ? ? ? ? ?
+Rogue: ? ? XX ? ? ?
+Sorcerer: ? ? ? ? ? XX
+004A21EC: QM..
+Warrior: ? ? ? ? ? ?
+Rogue: ? ? XX ? ? ?
+Sorcerer: ? ? ? ? ? XX
+004A21F0: DT..
+Warrior: ? ? ? ? ? ?
+Rogue: ? ? NA ? ? ?
+Sorcerer: ? ? ? ? ? NA
+004A21F4: BL.. Blocking
+Warrior: ? ? ? ? ? ?
+Rogue: ? ? NA ? ? ?
+Sorcerer: ? ? ? ? ? NA
+004A2200: HT..
+Warrior: OK OK OK OK OK OK
+Rogue: OK OK XX* OK OK OK
+Sorcerer: ? ? ? ? XX ?
+
+* It loads OK when changing weapons, but crashs when you change levels with it equiped.
+
+None Axe Bow Club Staff Sword
+004A2204: ST..
+Warrior: ? XX ? ? ? ?
+Rogue: ? ? ? ? ? ?
+Sorcerer: ? ? ? ? ? XX
+004A2208: AS..
+Warrior: ? XX ? ? ? ?
+Rogue: ? ? ? ? ? ?
+Sorcerer: ? ? ? ? ? XX
+004A220C: WL..
+Warrior: ? XX ? ? ? XX
+Rogue: ? ? ? ? ? ?
+Sorcerer: ? ? ? ? XX ?
+004A2210: AW.. Walking
+Warrior: XX XX XX XX ? XX
+Rogue: OK OK XX OK OK OK
+Sorcerer: ? ? ? ? XX ?
+004A2214: AT..
+Warrior: ? XX ? ? ? ?
+Rogue: ? ? ? ? ? ?
+Sorcerer: ? ? ? ? XX ?
+
+NOTE: The following code is NOT IMPLEMENTED, since it is for ranged attacks, and dodging is for melee only.
+
+Allow player without shield to block, with 1/2 of the chance.
+
+Was:
+0042AD26:
+........
+
+Now:
+0042AD26: (0002A126)
+6A 64 push 00000064
+B1 49 mov cl, 49
+5A pop edx
+E8 [47CFFEFF] call 00417C77
+80BE B4786800 00 cmp byte ptr [esi+006878B4], 00
+75 [09] jne SKIP
+C1E0 01 shl eax, 01
+EB [04] jmp SKIP
+C1E0 03 shl eax, 03
+90 nop
+SKIP:
+8945 FC mov dword ptr [ebp-04], eax
+
+the above is for magical/ranged attacks.
+
+During actions where one cannot normally block, the chance to block is reduced to 1/8, with a max of 10%. normally no blocking....
+
+The following code IS IMPLEMENTED
+
+Allow a Warrior or Rogue which is not using a bow to dodge
+
+Was:
+00435B0D: (00034F0D)
+
+Now:
+00435B0D: (00034F0D)
+6A 64 push 00000064
+B1 62 mov cl, 62
+5A pop edx
+E8 [6021FEFF] call 00417C77
+E9 [xxxxxxxx] jmp ?
+
+90 x 6 nop x 6
+
+NORMALY CAN'T BLOCK: 00435B22
+6A 64 push 00000064
+58 pop eax
+
+00421E8F: (0002128F) 28 (40) bytes
+80BE B4786800 00 cmp byte ptr [esi+006878B4], 00 have shield
+75 [15] jne ALLOW BLOCKING
+80BE D8786800 02 cmp byte ptr [esi+006878D8], 02 class & Sorcerer
+74 [11] je NO DODGING/BLOCKING
+83BE B0786800 01 cmp dword ptr [esi+006878B0], 00000001 have bow
+74 [08] je NO DODGING/BLOCKING
+PARRYING:
+C1E0 01 shl eax, 01
+ALLOW BLOCKING:
+E9 [xxxxxxxx] jmp 00435B25
+NO DODGING/BLOCKING:
+E9 [xxxxxxxx] jmp 00435B22
+
+above for melee attacks.
+
+--------------------------------------------------------
+----------------------------------------------------------------
+
+Fix monsters with bad animation
+
+Fix Unravelers by bypassing 'w' animation
+
+Unravelers change to
+n 6E (110) neutral OK
+w 77 (119) walking NA n
+a 61 (97) attacking flawed s
+h 68 (104) hit recovery ?
+d 64 (100) death OK
+s 73 (115) second animation looks like an attack
+
+Fix the Incinerator group's attack animation.
+
+Incinerator change to
+n 6E (110) neutral ?
+w 77 (119) walking ?
+a 61 (97) attacking Flawed (h didn't look good)
+(n crashed upon use)
+h 68 (104) hit recovery ?
+d 64 (100) death ?
+s 73 (115) second animation ?
+
+'Fix' the Golem group.
+
+Golem change to
+n 6E (110) neutral NA a
+w 77 (119) walking OK
+a 61 (97) attacking OK
+h 68 (104) hit recovery NA a
+d 64 (100) death ?
+s 73 (115) second animation ?
+
+Was:
+0043233F:
+80F9 73 cmp cl, 73 "s"
+75 [09] jne 0043234D
+
+Now:
+0043233F: (0003173F)
+E9 [xxxxxxxx] jmp 0043970F
+
+0043970F: (00038B0F)
+80F9 73 cmp cl, 73 "s"
+0F84 [2C8CFFFF] je 00432344
+50 push eax
+8B83 788E4900 mov eax, dword ptr [ebx+00498E78]
+
+UNRAVELER WALKING:
+3D C4DC4900 cmp eax, 0049DCC4 Unravelers
+75 [12] jne INCINERATOR
+80F9 77 cmp cl, 77 "w" - missing
+75 [04] jne UNRAVELER ATTACK
+B1 6E mov cl, 6E substitute "n"
+EB [2C] jmp EXIT
+
+UNRAVELER ATTACK:
+80F9 61 cmp cl, 61 "a" - missing
+75 [27] jne EXIT
+B1 73 mov cl, 73 substitute "s"
+EB [23] jmp EXIT
+
+00439738: INCINERATOR:
+3D C4E04900 cmp eax, 0049E0C4 Incinerators
+75 [09] jne GOLEM
+80F9 61 cmp cl, 61 "a" - flawed
+75 [17] jne EXIT
+B1 77 mov cl, 77 substitute "w" (00038B45)
+EB [13] jmp EXIT
+
+GOLEM:
+3D 00DB4900 cmp eax, 0049DB00 Golem
+75 [0C] jne EXIT
+80F9 6E cmp cl, 6E "n" - missing
+74 [05] je SKIP
+80F9 68 cmp cl, 68 "h" - missing
+75 [02] jne EXIT
+SKIP:
+B1 61 mov cl, 61 substitute "a"
+
+EXIT:
+58 pop eax
+E9 [xxxxxxxx] jmp 0043234D
+
+BTW, you still can't use the golem as a monster due to unique golem-specific code.
+
+----------------------------------------------------------------
+
+
+Anyone who can cope with the above can feel free to ask me how I fixed black deaths and mana-wreaking shrines to reduce the character's stat instead (which, BTW, also reduces the character's secondary attribute since it isn't automatic).
+
+Dr. Zed

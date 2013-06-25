@@ -1,0 +1,29 @@
+Critical Hit Changes
+
+
+Fixing bug introduced by Open-ended damage:
+
+Would crash if bow-user was not Warrior or Rogue.
+
+File Offset 0003D729
+
+:0043E329 7F15                    jg 0043E340
+wordt
+:0043E329 7F22                    jg 0043E34D
+
+
+
+Disabling halved chance for Monk (because of modified DemonSlaying), and adding a clvl/4 chance for Bard (melee only):
+
+File Offset 0005AE7E
+
+:0045BA7E 3C05                    cmp al, 05
+:0045BA80 7406                    je 0045BA88
+:0045BA82 3C03                    cmp al, 03
+:0045BA84 750C                    jne 0045BA92
+wordt
+:0045BA7E 3C03                    cmp al, 03
+:0045BA80 7C10                    jl 0045BA92
+:0045BA82 3C04                    cmp al, 04
+:0045BA84 7502                    jne 0045BA88
+

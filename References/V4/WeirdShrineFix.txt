@@ -1,0 +1,24 @@
+Increasing damage gain at Weird Shrine (+1 -> +2) for equipped item also:
+
+File Offset 00051030
+
+:00451C30 FF82A00B0000            inc dword ptr [edx+00000BA0]
+wordt
+:00451C30 E8D0060000              call 00452305
+:00451C35 90                      nop
+
+Using free space from Eldritch Shrine:
+
+File Offset 00051705
+
+:00452305 90                      nop
+:00452306 90                      nop
+:00452307 90                      nop
+:00452308 E80A28FDFF              call 00424B17
+:0045230D A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:00452305 FF82A00B0000            inc dword ptr [edx+00000BA0]
+:0045230B FF82A00B0000            inc dword ptr [edx+00000BA0]
+:00452311 C3                      ret
+
+

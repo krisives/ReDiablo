@@ -1,0 +1,100 @@
+Suffix locations for Hellfire v1.01, 48 bytes between
+
+8b870 - quality
+8b8a0 - maiming
+8b8d0 - slaying
+8b900 - gore
+8b930 - carnage
+8b960 - slaughter
+8b990 - pain
+8b9c0 - tears
+8b9f0 - health
+8ba20 - protection
+8ba50 - absorption
+8ba80 - deflection
+8bab0 - osmosis
+8bae0 - frailty
+8bb10 - weakness
+8bb40 - strength
+8bb70 - might
+8bba0 - power
+8bbd0 - giants
+8bc00 - titans
+8bc30 - paralysis
+8bc60 - atrophy
+8bc90 - dexterity
+8bcc0 - skill
+8bcf0 - accuracy
+8bd20 - precision
+8bd50 - perfection
+8bd80 - the fool
+8bdb0 - dyslexia
+8bde0 - magic
+8be10 - the mind
+8be40 - brilliance
+8be70 - sorcery
+8bea0 - wizardry
+8bed0 - illness
+8bf00 - disease
+8bf30 - vitality
+8bf60 - zest
+8bf90 - vim
+8bfc0 - vigor
+8bff0 - life
+8c020 - trouble
+8c050 - the pit
+8c080 - the sky
+8c0b0 - the moon
+8c0e0 - the stars
+8c110 - the heavens
+8c140 - the zodiac
+8c170 - the vulture
+8c1a0 - the jackal
+8c1d0 - the fox
+8c200 - the jaguar
+8c230 - the eagle
+8c260 - the wolf
+8c290 - the tiger
+8c2c0 - the lion
+8c2f0 - the mammoth
+8c320 - the whale
+8c350 - fragility
+8c380 - brittleness
+8c3b0 - sturdiness
+8c3e0 - craftsmanship
+8c410 - structure
+8c440 - the ages
+8c470 - the dark
+8c4a0 - the night
+8c4d0 - light
+8c500 - radiance
+8c530 - flame
+8c560 - fire
+8c590 - burning
+8c5c0 - shock
+8c5f0 - lightning
+8c620 - thunder
+8c650 - many
+8c680 - plenty
+8c6b0 - thorns
+8c6e0 - corruption
+8c710 - thieves
+8c740 - the bear
+8c770 - the bat
+8c7a0 - vampires
+8c7d0 - the leech
+8c800 - blood
+8c830 - piercing
+8c860 - puncturing
+8c890 - bashing
+8c8c0 - readiness
+8c8f0 - swiftness
+8c920 - speed
+8c950 - haste
+8c980 - balance
+8c9b0 - stability
+8c9e0 - harmony
+8ca10 - blocking
+8ca40 - devastation
+8ca70 - decay
+8caa0 - peril

@@ -1,0 +1,64 @@
+Lowering Wall durations, mostly for higher slvls
+
+Firewall duration
+
+:00431D5D E870F50100              call 004512D2
+:00431D62 90                      nop
+:00431D63 40                      inc eax
+:00431D64 8D0480                  lea eax, dword ptr [eax+4*eax]
+:00431D67 D1E0                    shl eax, 1
+
+File Offset 00031162
+
+:00431D62 90                      nop
+:00431D63 40                      inc eax
+:00431D64 8D0480                  lea eax, dword ptr [eax+4*eax]
+wordt
+:00431D62 40                      inc eax
+:00431D63 40                      inc eax
+:00431D64 909090                  3*nop
+
+
+Lightningwall duration:
+
+:00431C91 E83CF60100              call 004512D2
+:00431C96 90                      nop
+:00431C97 40                      inc eax
+:00431C98 69C080000000            imul eax, 00000080
+
+File Offset 00031096
+
+:00431C96 90                      nop
+:00431C97 40                      inc eax
+:00431C98 69C080000000            imul eax, 00000080
+wordt
+:00431C96 40                      inc eax
+:00431C97 40                      inc eax
+:00431C98 69C030000000            imul eax, 00000030
+
+
+Shared routine for obtaining slvl:
+
+File Offset 000506D2
+
+:004512D2 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004512D8 83F806                  cmp eax, 00000006
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A06                    push 00000006
+:004512DF 58                      pop eax
+:004512E0 83F802                  cmp eax, 00000002
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A02                    push 00000002
+:004512E7 58                      pop eax
+:004512E8 C3                      ret
+wordt
+:004512D2 8B86887A6900            mov eax, dword ptr [esi+00697A88]
+:004512D8 83F807                  cmp eax, 00000007
+:004512DB 7E03                    jle 004512E0
+:004512DD 6A07                    push 00000007
+:004512DF 58                      pop eax
+:004512E0 83F804                  cmp eax, 00000004
+:004512E3 7D03                    jge 004512E8
+:004512E5 6A04                    push 00000004
+:004512E7 58                      pop eax
+:004512E8 C3                      ret

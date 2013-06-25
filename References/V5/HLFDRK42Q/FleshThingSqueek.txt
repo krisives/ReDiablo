@@ -1,0 +1,20 @@
+Flesh Things originally had a 'squeek' sound when walking, but it got lost by modifications long ago. This change re-enables the sound.
+
+
+file offset 0003CBDC
+
+:0043D7DC 813887000000            cmp dword ptr [eax], 00000087
+changed into
+:0043D7DC 813862000000            cmp dword ptr [eax], 00000062
+
+file offset 0003CD41
+
+:0043D941 813887000000            cmp dword ptr [eax], 00000087
+changed into
+:0043D941 813862000000            cmp dword ptr [eax], 00000062
+
+file offset 0003CE83
+
+:0043DA83 813887000000            cmp dword ptr [eax], 00000087
+changed into
+:0043DA83 813862000000            cmp dword ptr [eax], 00000062

@@ -1,0 +1,477 @@
+
+
+
+Reconstructed note:
+
+:00421602 8B860C550000            mov eax, dword ptr [esi+0000550C]
+:00421608 6A2C                    push 0000002C
+:0042160A 5B                      pop ebx
+:0042160B 6A2A                    push 0000002A
+:0042160D 5D                      pop ebp
+:0042160E 3BC5                    cmp eax, ebp
+:00421610 740D                    je 0042161F
+:00421612 83F82B                  cmp eax, 0000002B
+:00421615 7408                    je 0042161F
+:00421617 3BC3                    cmp eax, ebx
+:00421619 0F85B1010000            jne 004217D0
+
+
+
+
+Routine that searches backpack for certain base item (edx):
+
+* Referenced by a CALL at Addresses:
+|:00421632   , :0042164E   , :0042166A   , :00421708   , :00421722   
+|:0042173A   , :00421753   , :0042176C   , :00444EF1   , :00444F37   
+|:0045168F   , :00476B2F   , :00476DD0   , :00476EC9   , :00476F7A   
+|:00476FE0   , :00477059   , :004770A6   , :00477131   , :004772BB   
+|:0047739E   , :0047757E   , :0047761B   , :00477677   , :004776F9   
+|:00477721   , :00477764   , :004778DF   
+|
+:0047685D 8BC1                    mov eax, ecx
+:0047685F 53                      push ebx
+:00476860 69C0C8550000            imul eax, 000055C8
+:00476866 56                      push esi
+:00476867 8B74240C                mov esi, dword ptr [esp+0C]
+:0047686B 57                      push edi
+:0047686C 832600                  and dword ptr [esi], 00000000
+:0047686F 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00476875 83BC01D847000000        cmp dword ptr [ecx+eax+000047D8], 00000000
+:0047687D 7E27                    jle 004768A6
+:0047687F 8B3E                    mov edi, dword ptr [esi]
+:00476881 8BDF                    mov ebx, edi
+:00476883 69DB74010000            imul ebx, 00000174
+:00476889 03D9                    add ebx, ecx
+:0047688B 399403200F0000          cmp dword ptr [ebx+eax+00000F20], edx
+:00476892 741A                    je 004768AE
+:00476894 47                      inc edi
+:00476895 893E                    mov dword ptr [esi], edi
+:00476897 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0047689D 3BBC01D8470000          cmp edi, dword ptr [ecx+eax+000047D8]
+:004768A4 7CD9                    jl 0047687F
+:004768A6 33C0                    xor eax, eax
+:004768A8 5F                      pop edi
+:004768A9 5E                      pop esi
+:004768AA 5B                      pop ebx
+:004768AB C20400                  ret 0004
+
+
+
+Reconstruction:									ebx = 2C, ebp = 2A
+
+:0042167A 83FF07                  cmp edi, 00000007
+:0042167D 0F854D010000            jne 004217D0					skip all if not complete
+
+:00421683 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:00421688 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042168E 69C0C8550000            imul eax, 000055C8
+
+:00421694 C70514A257000A000000    mov dword ptr [0057A214], 0000000A
+
+:0042169E 8A840860010000          mov al, byte ptr [eax+ecx+00000160]		character sound
+:004216A5 84C0                    test al, al
+:004216A7 7438                    je 004216E1
+:004216A9 3C01                    cmp al, 01
+:004216AB 7424                    je 004216D1
+:004216AD 3C02                    cmp al, 02
+:004216AF 750C                    jne 004216BD
+:004216B1 C70518A2570033020000    mov dword ptr [0057A218], 00000233
+:004216BB EB2E                    jmp 004216EB
+:004216BD 3C03                    cmp al, 03
+:004216BF 750C                    jne 004216CD
+:004216C1 C70518A2570073030000    mov dword ptr [0057A218], 00000373
+:004216CB EB1E                    jmp 004216EB
+:004216CD 3C04                    cmp al, 04
+:004216CF 750C                    jne 004216DD
+:004216D1 C70518A257009A020000    mov dword ptr [0057A218], 0000029A
+:004216DB EB0E                    jmp 004216EB
+:004216DD 3C05                    cmp al, 05
+:004216DF 750A                    jne 004216EB
+:004216E1 C70518A2570007030000    mov dword ptr [0057A218], 00000307
+
+:004216EB 8BC6                    mov eax, esi
+:004216ED 2BC5                    sub eax, ebp
+:004216EF 7454                    je 00421745
+:004216F1 48                      dec eax
+:004216F2 7439                    je 0042172D
+:004216F4 48                      dec eax
+:004216F5 0F8581000000            jne 0042177C
+
+:004216FB 8B742410                mov esi, dword ptr [esp+10]
+:004216FF 8D44241C                lea eax, dword ptr [esp+1C]
+:00421703 50                      push eax
+:00421704 8BD5                    mov edx, ebp
+:00421706 8BCE                    mov ecx, esi
+:00421708 E850510500              call 0047685D
+:0042170D 8BCE                    mov ecx, esi
+:0042170F 8B54241C                mov edx, dword ptr [esp+1C]
+:00421713 E867F7FFFF              call 00420E7F
+:00421718 8D442414                lea eax, dword ptr [esp+14]
+:0042171C 8BCE                    mov ecx, esi
+:0042171E 50                      push eax
+:0042171F 6A2B                    push 0000002B
+:00421721 5A                      pop edx
+:00421722 E836510500              call 0047685D
+:00421727 8B542414                mov edx, dword ptr [esp+14]
+:0042172B EB48                    jmp 00421775
+
+:0042172D 8B742410                mov esi, dword ptr [esp+10]
+:00421731 8D44241C                lea eax, dword ptr [esp+1C]
+:00421735 50                      push eax
+:00421736 8BD5                    mov edx, ebp					2A
+:00421738 8BCE                    mov ecx, esi
+:0042173A E81E510500              call 0047685D
+:0042173F 8B54241C                mov edx, dword ptr [esp+1C]
+:00421743 EB17                    jmp 0042175C
+
+:00421745 8B742410                mov esi, dword ptr [esp+10]
+:00421749 8D442414                lea eax, dword ptr [esp+14]
+:0042174D 50                      push eax
+:0042174E 6A2B                    push 0000002B					2B
+:00421750 5A                      pop edx
+:00421751 8BCE                    mov ecx, esi
+:00421753 E805510500              call 0047685D
+:00421758 8B542414                mov edx, dword ptr [esp+14]
+
+:0042175C 8BCE                    mov ecx, esi
+:0042175E E81CF7FFFF              call 00420E7F
+:00421763 8D442418                lea eax, dword ptr [esp+18]
+:00421767 8BD3                    mov edx, ebx					2C
+:00421769 50                      push eax
+:0042176A 8BCE                    mov ecx, esi
+:0042176C E8EC500500              call 0047685D
+:00421771 8B542418                mov edx, dword ptr [esp+18]
+
+:00421775 8BCE                    mov ecx, esi
+:00421777 E803F7FFFF              call 00420E7F
+
+:0042177C 8B1D18576800            mov ebx, dword ptr [00685718]
+
+:00421782 6A5D                    push 0000005D
+:00421784 8BC3                    mov eax, ebx					2C
+:00421786 59                      pop ecx
+:00421787 69C074010000            imul eax, 00000174
+:0042178D 8D7C2424                lea edi, dword ptr [esp+24]
+:00421791 6A10                    push 00000010
+:00421793 8DA880626800            lea ebp, dword ptr [eax+00686280]
+:00421799 6A2D                    push 0000002D					2D
+:0042179B 8BF5                    mov esi, ebp
+:0042179D 5A                      pop edx
+:0042179E F3                      repz
+:0042179F A5                      movsd
+:004217A0 8BCB                    mov ecx, ebx					2C
+:004217A2 E80D400000              call 004257B4
+:004217A7 8BCB                    mov ecx, ebx					2C
+:004217A9 E832540000              call 00426BE0
+
+:004217AE A114AE6E00              mov eax, dword ptr [006EAE14]
+:004217B3 8B4C2420                mov ecx, dword ptr [esp+20]
+
+:004217B7 6A5D                    push 0000005D
+:004217B9 8BF5                    mov esi, ebp					2A
+:004217BB 8DBC08A4530000          lea edi, dword ptr [eax+ecx+000053A4]
+:004217C2 59                      pop ecx
+:004217C3 F3                      repz
+:004217C4 A5                      movsd
+
+:004217C5 6A5D                    push 0000005D
+:004217C7 8D742428                lea esi, dword ptr [esp+28]
+:004217CB 59                      pop ecx
+:004217CC 8BFD                    mov edi, ebp
+:004217CE F3                      repz
+:004217CF A5                      movsd
+
+
+
+
+
+
+
+Picking up special Quest items:
+
+:0042188C E851FAFFFF              call 004212E2				cursor-held
+and
+:00421A0B E8D2F8FFFF              call 004212E2				just-picked-up
+
+
+
+* Referenced by a CALL at Addresses:
+|:0042188C   , :00421A0B   
+|
+:004212E2 81EC88010000            sub esp, 00000188
+:004212E8 8BC1                    mov eax, ecx
+:004212EA 53                      push ebx
+:004212EB 89442404                mov dword ptr [esp+04], eax
+:004212EF 69C0C8550000            imul eax, 000055C8
+:004212F5 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+...
+
+Golden Elixir for Lachdanan:
+
+:0042141D 83BE0C5500000F          cmp dword ptr [esi+0000550C], 0000000F
+:00421424 7564                    jne 0042148A
+:00421426 8BD0                    mov edx, eax
+:00421428 C70514A257001E000000    mov dword ptr [0057A214], 0000001E
+:00421432 69D2C8550000            imul edx, 000055C8
+:00421438 8A940A60010000          mov dl, byte ptr [edx+ecx+00000160]
+:0042143F 84D2                    test dl, dl
+:00421441 743D                    je 00421480
+:00421443 80FA01                  cmp dl, 01
+:00421446 7427                    je 0042146F
+:00421448 80FA02                  cmp dl, 02
+:0042144B 750C                    jne 00421459
+:0042144D C70518A257005E020000    mov dword ptr [0057A218], 0000025E
+:00421457 EB31                    jmp 0042148A
+:00421459 80FA03                  cmp dl, 03
+:0042145C 750C                    jne 0042146A
+:0042145E C70518A257009E030000    mov dword ptr [0057A218], 0000039E
+
+Mushroom:
+
+:00421317 83BE0C55000011          cmp dword ptr [esi+0000550C], 00000011
+:0042131E 756B                    jne 0042138B
+:00421320 803D76B36E0002          cmp byte ptr [006EB376], 02
+:00421327 7562                    jne 0042138B
+:00421329 803D88B36E0003          cmp byte ptr [006EB388], 03
+:00421330 7559                    jne 0042138B
+:00421332 893D14A25700            mov dword ptr [0057A214], edi
+:00421338 8A8660010000            mov al, byte ptr [esi+00000160]
+:0042133E 84C0                    test al, al
+:00421340 7438                    je 0042137A
+:00421342 3C01                    cmp al, 01
+:00421344 7424                    je 0042136A
+:00421346 3C02                    cmp al, 02
+:00421348 750C                    jne 00421356
+:0042134A C70518A2570065020000    mov dword ptr [0057A218], 00000265
+:00421354 EB2E                    jmp 00421384
+:00421356 3C03                    cmp al, 03
+:00421358 750C                    jne 00421366
+:0042135A C70518A25700A5030000    mov dword ptr [0057A218], 000003A5
+:00421364 EB1E                    jmp 00421384
+
+Arkaines valor:
+
+:00421517 83BE0C5500001C          cmp dword ptr [esi+0000550C], 0000001C	Arkaines Valor
+:0042151E 756B                    jne 0042158B
+:00421520 8BD0                    mov edx, eax
+:00421522 C60556B46E0003          mov byte ptr [006EB456], 03
+:00421529 69D2C8550000            imul edx, 000055C8
+:0042152F C70514A2570014000000    mov dword ptr [0057A214], 00000014
+:00421539 8A940A60010000          mov dl, byte ptr [edx+ecx+00000160]
+:00421540 84D2                    test dl, dl
+:00421542 743D                    je 00421581
+:00421544 80FA01                  cmp dl, 01
+:00421547 7427                    je 00421570
+:00421549 80FA02                  cmp dl, 02
+:0042154C 750C                    jne 0042155A
+:0042154E C70518A2570061020000    mov dword ptr [0057A218], 00000261
+:00421558 EB31                    jmp 0042158B
+:0042155A 80FA03                  cmp dl, 03
+:0042155D 750C                    jne 0042156B
+:0042155F C70518A25700A1030000    mov dword ptr [0057A218], 000003A1		"May the spirit ..."
+:00421569 EB20                    jmp 0042158B
+
+
+
+Possibly useful:
+
+:0041FC5C 8B941F0C550000          mov edx, dword ptr [edi+ebx+0000550C]
+:0041FC63 33C0                    xor eax, eax
+:0041FC65 6BD24C                  imul edx, 0000004C
+:0041FC68 894D08                  mov dword ptr [ebp+08], ecx
+:0041FC6B 3982081C4A00            cmp dword ptr [edx+004A1C08], eax		use-once flag
+:0041FC71 7503                    jne 0041FC76
+:0041FC73 894508                  mov dword ptr [ebp+08], eax
+
+
+
+
+
+
+:00422E70 33D2                    xor edx, edx
+:00422E72 3990081C4A00            cmp dword ptr [eax+004A1C08], edx		use-once flag
+:00422E78 7507                    jne 00422E81
+:00422E7A 33C0                    xor eax, eax
+:00422E7C E945020000              jmp 004230C6
+:00422E81 399764010000            cmp dword ptr [edi+00000164], edx		spell selected?
+:00422E87 754B                    jne 00422ED4
+:00422E89 8A8960010000            mov cl, byte ptr [ecx+00000160]
+:00422E8F 84C9                    test cl, cl					"I cannot cast that here"
+:00422E91 7432                    je 00422EC5
+:00422E93 80F901                  cmp cl, 01
+:00422E96 741D                    je 00422EB5
+:00422E98 80F902                  cmp cl, 02
+:00422E9B 7507                    jne 00422EA4
+:00422E9D B912020000              mov ecx, 00000212
+:00422EA2 EB26                    jmp 00422ECA
+:00422EA4 80F903                  cmp cl, 03
+:00422EA7 7507                    jne 00422EB0
+:00422EA9 B952030000              mov ecx, 00000352
+:00422EAE EB1A                    jmp 00422ECA
+:00422EB0 80F904                  cmp cl, 04
+:00422EB3 7507                    jne 00422EBC
+:00422EB5 B979020000              mov ecx, 00000279
+:00422EBA EB0E                    jmp 00422ECA
+:00422EBC 80F905                  cmp cl, 05
+:00422EBF 0F85FE010000            jne 004230C3
+:00422EC5 B9E0020000              mov ecx, 000002E0
+:00422ECA E83E56FFFF              call 0041850D
+:00422ECF E9EF010000              jmp 004230C3
+
+
+
+
+
+
+
+Use-once items get destroyed:
+
+:00422FC5 8BAC28940E0000          mov ebp, dword ptr [eax+ebp+00000E94]
+:00422FCC 83FD2A                  cmp ebp, 0000002A
+:00422FCF 0F84EE000000            je 004230C3				but not if 2A (Cathedral Map)
+:00422FD5 83FD36                  cmp ebp, 00000036
+:00422FD8 7515                    jne 00422FEF				and not if 36 (Reconstructed Note)
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00422FB3(C)
+|
+:00422FDA B942010000              mov ecx, 00000142			do the speech for Reconstructed note
+:00422FDF E85FB50000              call 0042E543
+:00422FE4 893504556800            mov dword ptr [00685504], esi
+:00422FEA E9D4000000              jmp 004230C3
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00422FD8(C)
+|
+:00422FEF 8B4C2410                mov ecx, dword ptr [esp+10]
+:00422FF3 8BD3                    mov edx, ebx
+:00422FF5 E885DEFFFF              call 00420E7F				destroy item
+:00422FFA E9C4000000              jmp 004230C3
+
+
+
+
+Check for Town spell with scrolls:
+
+:00422F00 8B87DC000000            mov eax, dword ptr [edi+000000DC]
+:00422F06 8A0DD8B16000            mov cl, byte ptr [0060B1D8]
+:00422F0C 83F815                  cmp eax, 00000015
+:00422F0F 7519                    jne 00422F2A
+:00422F11 84C9                    test cl, cl
+:00422F13 7515                    jne 00422F2A
+:00422F15 8BB7E0000000            mov esi, dword ptr [edi+000000E0]
+:00422F1B 6BF638                  imul esi, 00000038
+:00422F1E 399600764B00            cmp dword ptr [esi+004B7600], edx
+:00422F24 0F8499010000            je 004230C3
+:00422F2A 83F816                  cmp eax, 00000016
+:00422F2D 7519                    jne 00422F48
+:00422F2F 84C9                    test cl, cl
+:00422F31 7515                    jne 00422F48
+:00422F33 8BB7E0000000            mov esi, dword ptr [edi+000000E0]
+:00422F39 6BF638                  imul esi, 00000038
+:00422F3C 399600764B00            cmp dword ptr [esi+004B7600], edx
+:00422F42 0F847B010000            je 004230C3
+
+
+
+No runes in town:
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00422F2D(C), :00422F31(C)
+|
+:00422F48 83F82E                  cmp eax, 0000002E
+:00422F4B 7E0D                    jle 00422F5A
+:00422F4D 83F834                  cmp eax, 00000034
+:00422F50 7D08                    jge 00422F5A
+:00422F52 84C9                    test cl, cl
+:00422F54 0F8469010000            je 004230C3
+
+
+
+*******************
+
+
+routine that drops item (?):
+
+:00409DEA E834830100              call 00422123
+
+and 
+
+* Referenced by a CALL at Addresses:
+|:00476979   , :0047948D   , :004794AD   
+|
+:0042319C E882EFFFFF              call 00422123				drop item if room
+:004231A1 85C0                    test eax, eax
+:004231A3 7422                    je 004231C7
+:004231A5 A054164D00              mov al, byte ptr [004D1654]
+:004231AA B20A                    mov dl, 0A
+:004231AC 50                      push eax
+:004231AD A050164D00              mov al, byte ptr [004D1650]
+:004231B2 50                      push eax
+:004231B3 6A01                    push 00000001
+:004231B5 59                      pop ecx
+:004231B6 E81A400200              call 004471D5				communicate
+:004231BB 6A01                    push 00000001
+:004231BD 59                      pop ecx
+:004231BE E82A49FEFF              call 00407AED				clear cursor
+:004231C3 6A01                    push 00000001
+:004231C5 58                      pop eax
+:004231C6 C3                      ret
+
+
+
+
+or this one?:
+
+:0042182D 833D5C164D000C          cmp dword ptr [004D165C], 0000000C
+:00421834 7C20                    jl 00421856
+:00421836 69C0C8550000            imul eax, 000055C8
+:0042183C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:00421842 B25E                    mov dl, 5E
+:00421844 03C1                    add eax, ecx
+:00421846 8A483C                  mov cl, byte ptr [eax+3C]
+:00421849 8A4038                  mov al, byte ptr [eax+38]
+:0042184C 51                      push ecx
+:0042184D 50                      push eax
+:0042184E 6A01                    push 00000001
+:00421850 59                      pop ecx
+:00421851 E87F590200              call 004471D5
+
+
+this?
+
+:0044961D 833D5C164D000C          cmp dword ptr [004D165C], 0000000C
+:00449624 7C29                    jl 0044964F
+:00449626 8BC8                    mov ecx, eax
+:00449628 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044962E 69C9C8550000            imul ecx, 000055C8
+:00449634 6A5D                    push 0000005D
+:00449636 BF0C1B6900              mov edi, 00691B0C
+:0044963B 8DB411A4530000          lea esi, dword ptr [ecx+edx+000053A4]
+:00449642 59                      pop ecx
+:00449643 F3                      repz
+:00449644 A5                      movsd
+:00449645 6A7F                    push 0000007F
+:00449647 8BC8                    mov ecx, eax
+:00449649 5A                      pop edx
+:0044964A E82983FDFF              call 00421978
+
+
+find and delete:
+
+:0045A28A 833D5C164D000C          cmp dword ptr [004D165C], 0000000C
+:0045A291 C705400E4D0001000000    mov dword ptr [004D0E40], 00000001
+:0045A29B C7050CAE6E001E000000    mov dword ptr [006EAE0C], 0000001E
+:0045A2A5 7C19                    jl 0045A2C0
+:0045A2A7 6A00                    push 00000000
+:0045A2A9 6A00                    push 00000000
+:0045A2AB 8D96A4530000            lea edx, dword ptr [esi+000053A4]
+:0045A2B1 8BCB                    mov ecx, ebx
+:0045A2B3 E86F010000              call 0045A427
+:0045A2B8 6A01                    push 00000001
+:0045A2BA 59                      pop ecx
+:0045A2BB E82DD8FAFF              call 00407AED
+
+
+
+

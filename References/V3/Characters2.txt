@@ -1,0 +1,176 @@
+Character's life and mana from items
+
+
+()Bard 
+
+Mana : 3 + 1.5*Magcharacter + 1.75*Magitems + 2*clvl -> ... + 2.5*Magitems + ...
+
+:00424155 C1FF02                  sar edi, 02
+wordt
+:00424155 909090                  3*nop
+
+Hiermee wordt een Bard die mini-mage is bevoordeeld tov. een mini-warrior bard.
+
+
+
+By JG:
+
+Life
+
+Warrior		18 + 2·Vit + 2·clvl
+Rogue		23 + Vitcharacter + 1.5·Vititems + 2·clvl
+Sorcerer	9 + Vit + clvl
+Monk		23 + Vitcharacter + 1.5·Vititems + 2·clvl
+Bard		23 + Vitcharacter + 1.5·Vititems + 2·clvl
+Barbarian	18 + 2·Vitcharacter + 2.5·Vititems + 2·clvl
+
+Mana
+
+Warrior		-1 + Mag + clvl
+Rogue		5 + Magcharacter + 1.5·Magitem + 2·clvl
+Sorcerer	-2 + 2·Mag + 2·clvl
+Monk		5 + Magcharacter + 1.5·Magitem + 2·clvl
+Bard		3 + 1.5·Magcharacter + 1.75·Magitems + 2·clvl
+Barbarian	Mag
+
+
+
+Full routine:
+
+:004240E0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004240E5 889C30CB010000          mov byte ptr [eax+esi+000001CB], bl
+:004240EC A114AE6E00              mov eax, dword ptr [006EAE14]
+:004240F1 03C6                    add eax, esi
+:004240F3 8A9060010000            mov dl, byte ptr [eax+00000160]	dl:=class
+:004240F9 84D2                    test dl, dl
+:004240FB 7507                    jne 00424104
+:004240FD 8B4DF8                  mov ecx, dword ptr [ebp-08]		warrior
+:00424100 D1E1                    shl ecx, 1
+:00424102 EB2E                    jmp 00424132
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004240FB(C)
+|
+:00424104 80FA05                  cmp dl, 05
+:00424107 750C                    jne 00424115
+:00424109 8B4DF8                  mov ecx, dword ptr [ebp-08]		barbarian
+:0042410C 03C9                    add ecx, ecx
+:0042410E 8BF9                    mov edi, ecx
+:00424110 C1FF02                  sar edi, 02
+:00424113 EB16                    jmp 0042412B
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00424107(C)
+|
+:00424115 80FA01                  cmp dl, 01
+:00424118 740A                    je 00424124
+:0042411A 80FA03                  cmp dl, 03
+:0042411D 7405                    je 00424124
+:0042411F 80FA04                  cmp dl, 04
+:00424122 750B                    jne 0042412F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00424118(C), :0042411D(C)
+|
+:00424124 8B4DF8                  mov ecx, dword ptr [ebp-08]		rogue,monk,bard
+:00424127 8BF9                    mov edi, ecx
+:00424129 D1FF                    sar edi, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00424113(U)
+|
+:0042412B 03CF                    add ecx, edi
+:0042412D EB03                    jmp 00424132
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00424122(C)
+|
+:0042412F 8B4DF8                  mov ecx, dword ptr [ebp-08]		sorcerer
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00424102(U), :0042412D(U)
+|
+:00424132 C1E106                  shl ecx, 06				all classes
+:00424135 014DD8                  add dword ptr [ebp-28], ecx
+:00424138 8B4DD0                  mov ecx, dword ptr [ebp-30]
+:0042413B 80FA02                  cmp dl, 02
+:0042413E 7502                    jne 00424142
+:00424140 D1E1                    shl ecx, 1				sorcerer
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042413E(C)
+|
+:00424142 80FA01                  cmp dl, 01
+:00424145 741A                    je 00424161
+:00424147 80FA03                  cmp dl, 03
+:0042414A 7415                    je 00424161
+:0042414C 80FA04                  cmp dl, 04
+:0042414F 7516                    jne 00424167
+:00424151 8BF9                    mov edi, ecx				bard
+:00424153 8BD1                    mov edx, ecx
+:00424155 C1FF02                  sar edi, 02
+:00424158 D1FA                    sar edx, 1
+:0042415A 03F9                    add edi, ecx
+:0042415C 8D0C17                  lea ecx, dword ptr [edi+edx]
+:0042415F EB06                    jmp 00424167
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00424145(C), :0042414A(C)
+|
+:00424161 8BD1                    mov edx, ecx				rogue,monk
+:00424163 D1FA                    sar edx, 1
+:00424165 03CA                    add ecx, edx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042414F(C), :0042415F(U)
+|
+:00424167 C1E106                  shl ecx, 06				all
+:0042416A 014DD4                  add dword ptr [ebp-2C], ecx
+:0042416D 8B8890010000            mov ecx, dword ptr [eax+00000190]
+:00424173 034DD8                  add ecx, dword ptr [ebp-28]
+:00424176 898898010000            mov dword ptr [eax+00000198], ecx
+:0042417C A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424181 03C6                    add eax, esi
+:00424183 8B8894010000            mov ecx, dword ptr [eax+00000194]
+:00424189 034DD8                  add ecx, dword ptr [ebp-28]
+:0042418C 89889C010000            mov dword ptr [eax+0000019C], ecx
+:00424192 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424197 8D0C30                  lea ecx, dword ptr [eax+esi]
+:0042419A 8D8198010000            lea eax, dword ptr [ecx+00000198]
+:004241A0 8B899C010000            mov ecx, dword ptr [ecx+0000019C]
+:004241A6 3908                    cmp dword ptr [eax], ecx
+:004241A8 7E02                    jle 004241AC
+:004241AA 8908                    mov dword ptr [eax], ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004241A8(C)
+|
+:004241AC 8B4DE0                  mov ecx, dword ptr [ebp-20]
+:004241AF 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:004241B5 7519                    jne 004241D0
+:004241B7 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004241BC F7843098010000C0FFFFFF  test dword ptr [eax+esi+00000198], FFFFFFC0
+:004241C7 7F07                    jg 004241D0
+:004241C9 33D2                    xor edx, edx
+:004241CB E8DCA70300              call 0045E9AC
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004241B5(C), :004241C7(C)
+|
+:004241D0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004241D5 03C6                    add eax, esi
+:004241D7 8B88A4010000            mov ecx, dword ptr [eax+000001A4]
+:004241DD 034DD4                  add ecx, dword ptr [ebp-2C]
+:004241E0 8988AC010000            mov dword ptr [eax+000001AC], ecx
+:004241E6 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004241EB 03C6                    add eax, esi
+:004241ED 8B88A8010000            mov ecx, dword ptr [eax+000001A8]
+:004241F3 034DD4                  add ecx, dword ptr [ebp-2C]
+:004241F6 8988B0010000            mov dword ptr [eax+000001B0], ecx
+:004241FC A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424201 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00424204 8D81AC010000            lea eax, dword ptr [ecx+000001AC]
+:0042420A 8B89B0010000            mov ecx, dword ptr [ecx+000001B0]
+:00424210 3908                    cmp dword ptr [eax], ecx
+:00424212 7E02                    jle 00424216
+:00424214 8908                    mov dword ptr [eax], ecx

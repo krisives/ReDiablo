@@ -1,0 +1,47 @@
+Hello Azril,
+
+Some answers.
+
+>If i know how to change the formulas concerning based the vitality or mag, i
+>would be very satisfied, the reason is that i want to make a paladin (with
+>paladin mana formula) and a real barbarian that does not have a lot of mana).
+
+For changing the mana-formula for a warrior, you have to change the following code. It is tricky however, because this part is also used for other characters. Monks, Bards and Barbarians seem to be done elsewhere.
+
+Not being familiar with this part of the code, we cannot give you reliable hints on what to change here.
+
+:00429BEB A114AE6E00              mov eax, dword ptr [006EAE14] eax := char.number
+:00429BF0 6A01                    push 00000001
+:00429BF2 5B                      pop ebx			ebx := 00000001
+:00429BF3 B128                    mov cl, 28
+:00429BF5 891D400E4D00            mov dword ptr [004D0E40], ebx
+:00429BFB 8BBC30B0010000          mov edi, dword ptr [eax+esi+000001B0]
+:00429C02 C1FF08                  sar edi, 08			edi := edi/256
+:00429C05 8BD7                    mov edx, edi
+:00429C07 E84E03FFFF              call 00419F5A			eax := 0..(edx-1)
+:00429C0C 83E7FE                  and edi, FFFFFFFE		FFFFFFFE = -2
+:00429C0F 8D3C47                  lea edi, dword ptr [edi+2*eax]
+:00429C12 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00429C17 03C6                    add eax, esi
+:00429C19 C1E705                  shl edi, 05			edi := edi*32
+:00429C1C 8A8860010000            mov cl, byte ptr [eax+00000160]
+:00429C22 80F902                  cmp cl, 02
+:00429C25 7502                    jne 00429C29			jmp if not mage
+:00429C27 D1E7                    shl edi, 1			edi := edi*2
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00429C25(C)
+|
+:00429C29 80F901                  cmp cl, 01
+:00429C2C 7506                    jne 00429C34			jmp if not rogue
+:00429C2E 8BCF                    mov ecx, edi
+:00429C30 D1F9                    sar ecx, 1			ecx := ecx/2
+:00429C32 03F9                    add edi, ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00429C2C(C)
+|
+:00429C34 F6804355000008          test byte ptr [eax+00005543], 08
+:00429C3B 0F8522040000            jne 0042A063			jmp if not corruption
+:00429C41 01B8AC010000            add dword ptr [eax+000001AC], edi
+

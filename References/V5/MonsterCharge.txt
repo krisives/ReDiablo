@@ -1,0 +1,340 @@
+Charging monsters
+
+
+
+* Referenced by a CALL at Addresses:
+|:0043894D   , :00438B0D   
+|
+:00444656 55                      push ebp
+:00444657 8BEC                    mov ebp, esp
+:00444659 83EC0C                  sub esp, 0000000C
+:0044465C 53                      push ebx
+:0044465D 56                      push esi
+:0044465E 83F97D                  cmp ecx, 0000007D
+:00444661 57                      push edi
+:00444662 8955F4                  mov dword ptr [ebp-0C], edx
+:00444665 0F838F020000            jnb 004448FA
+:0044466B 69C9B0000000            imul ecx, 000000B0
+:00444671 81C1587A6900            add ecx, 00697A58
+:00444677 8BC1                    mov eax, ecx
+:00444679 8B7874                  mov edi, dword ptr [eax+74]
+:0044467C 81FFC8000000            cmp edi, 000000C8
+:00444682 0F8372020000            jnb 004448FA
+:00444688 6BD270                  imul edx, 00000070
+:0044468B 8BF7                    mov esi, edi
+:0044468D 8B4804                  mov ecx, dword ptr [eax+04]
+:00444690 035508                  add edx, dword ptr [ebp+08]
+:00444693 69F6E4000000            imul esi, 000000E4
+:00444699 8B5808                  mov ebx, dword ptr [eax+08]
+:0044469C 894DFC                  mov dword ptr [ebp-04], ecx
+:0044469F 8D4F01                  lea ecx, dword ptr [edi+01]
+:004446A2 81C688DC6900            add esi, 0069DC88
+:004446A8 890C95E0D15700          mov dword ptr [4*edx+0057D1E0], ecx
+:004446AF 8B402C                  mov eax, dword ptr [eax+2C]
+:004446B2 894648                  mov dword ptr [esi+48], eax
+:004446B5 8B45F4                  mov eax, dword ptr [ebp-0C]
+:004446B8 8B5648                  mov edx, dword ptr [esi+48]
+:004446BB 894620                  mov dword ptr [esi+20], eax		new monster coordinate
+:004446BE 8B4508                  mov eax, dword ptr [ebp+08]
+:004446C1 8BCF                    mov ecx, edi
+:004446C3 895DF8                  mov dword ptr [ebp-08], ebx
+:004446C6 894624                  mov dword ptr [esi+24], eax		new monster coordinate
+:004446C9 E82F85FFFF              call 0043CBFD				set direction, acquire target
+:004446CE 8B86DC000000            mov eax, dword ptr [esi+000000DC]	0069DD64
+:004446D4 8B00                    mov eax, dword ptr [eax]
+:004446D6 83F848                  cmp eax, 00000048
+:004446D9 EB13                    jmp 004446EE
+:004446DB 83F84B                  cmp eax, 0000004B			obsolete code
+:004446DE 7F0E                    jg 004446EE
+:004446E0 8B5648                  mov edx, dword ptr [esi+48]		original Incinerators
+:004446E3 6A00                    push 00000000
+:004446E5 8BCF                    mov ecx, edi
+:004446E7 E8EEC3FFFF              call 00440ADA
+:004446EC EB21                    jmp 0044470F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004446D9(U), :004446DE(C)
+|
+:004446EE F6869C00000010          test byte ptr [esi+0000009C], 10	0069DD24
+:004446F5 6A00                    push 00000000
+:004446F7 750C                    jne 00444705
+:004446F9 83CAFF                  or edx, FFFFFFFF
+:004446FC 8BCF                    mov ecx, edi
+:004446FE E8AC87FFFF              call 0043CEAF				'hit' monster for 0 damage if MvP
+:00444703 EB0A                    jmp 0044470F
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004446F7(C)
+|
+:00444705 83CAFF                  or edx, FFFFFFFF			MvM
+:00444708 8BCF                    mov ecx, edi
+:0044470A E8CF94FFFF              call 0043DBDE
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004446EC(U), :00444703(U)
+|
+:0044470F F6869C00000010          test byte ptr [esi+0000009C], 10	0069DD24
+:00444716 8B45FC                  mov eax, dword ptr [ebp-04]
+:00444719 0F8517010000            jne 00444836				jmp MvM
+:0044471F 6BC070                  imul eax, 00000070
+:00444722 8A8C18E8FE6000          mov cl, byte ptr [eax+ebx+0060FEE8]
+:00444729 8D9C18E8FE6000          lea ebx, dword ptr [eax+ebx+0060FEE8]
+:00444730 0FBEC1                  movsx eax, cl
+:00444733 84C9                    test cl, cl
+:00444735 8D50FF                  lea edx, dword ptr [eax-01]
+:00444738 895508                  mov dword ptr [ebp+08], edx
+:0044473B 0F8EB9010000            jle 004448FA
+:00444741 8B86DC000000            mov eax, dword ptr [esi+000000DC]	0069DD64
+:00444747 8B00                    mov eax, dword ptr [eax]
+:00444749 83F828                  cmp eax, 00000028
+:0044474C 0F84A8010000            je 004448FA				Gloom, jmp exit
+:00444752 83F848                  cmp eax, 00000048
+:00444755 EB09                    jmp 00444760
+:00444757 83F84B                  cmp eax, 0000004B			Original Incinerators
+:0044475A 0F8E9A010000            jle 004448FA				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444755(U)
+|
+:00444760 0FB686C9000000          movzx eax, byte ptr [esi+000000C9]	max.damage 2nd attack
+:00444767 50                      push eax
+:00444768 8BCF                    mov ecx, edi
+:0044476A 0FB686C8000000          movzx eax, byte ptr [esi+000000C8]	min.damage 2nd attack
+:00444771 50                      push eax
+:00444772 68EE020000              push 000002EE				750% tohit
+:00444777 E87099FFFF              call 0043E0EC				MvP attack
+:0044477C 0FBE03                  movsx eax, byte ptr [ebx]
+:0044477F 8B5D08                  mov ebx, dword ptr [ebp+08]
+:00444782 48                      dec eax
+:00444783 3BD8                    cmp ebx, eax
+:00444785 0F856F010000            jne 004448FA				jmp exit
+:0044478B 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:00444791 8B00                    mov eax, dword ptr [eax]
+:00444793 83F859                  cmp eax, 00000059
+:00444796 EB09                    jmp 004447A1				Drakes 89-92
+:00444798 83F85C                  cmp eax, 0000005C
+:0044479B 0F8E59010000            jle 004448FA				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444796(U)
+|
+:004447A1 69DBC8550000            imul ebx, 000055C8
+:004447A7 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004447AC 8B0418                  mov eax, dword ptr [eax+ebx]
+:004447AF 83F807                  cmp eax, 00000007
+:004447B2 7411                    je 004447C5
+:004447B4 83F808                  cmp eax, 00000008
+:004447B7 740C                    je 004447C5
+:004447B9 8B4D08                  mov ecx, dword ptr [ebp+08]
+:004447BC 6A01                    push 00000001
+:004447BE 33D2                    xor edx, edx
+:004447C0 E883560100              call 00459E48				hit and knockback player
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004447B2(C), :004447B7(C)
+|									displace character
+:004447C5 8B7648                  mov esi, dword ptr [esi+48]
+:004447C8 8B4D08                  mov ecx, dword ptr [ebp+08]
+:004447CB C1E602                  shl esi, 02
+:004447CE 8BBE40374B00            mov edi, dword ptr [esi+004B3740]
+:004447D4 8BB660374B00            mov esi, dword ptr [esi+004B3760]
+:004447DA 037DFC                  add edi, dword ptr [ebp-04]
+:004447DD 0375F8                  add esi, dword ptr [ebp-08]
+:004447E0 56                      push esi
+:004447E1 8BD7                    mov edx, edi
+:004447E3 E87E960100              call 0045DE66
+:004447E8 85C0                    test eax, eax
+:004447EA 0F840A010000            je 004448FA
+:004447F0 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004447F5 897C1838                mov dword ptr [eax+ebx+38], edi	new character coordinate
+:004447F9 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004447FE 8974183C                mov dword ptr [eax+ebx+3C], esi	new character coordinate
+:00444802 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00444807 8B541870                mov edx, dword ptr [eax+ebx+70]
+:0044480B 8B5D08                  mov ebx, dword ptr [ebp+08]
+:0044480E 8BCB                    mov ecx, ebx
+:00444810 E89B450100              call 00458DB0
+:00444815 8BCB                    mov ecx, ebx
+:00444817 E8E4540100              call 00459D00
+:0044481C 6BFF70                  imul edi, 00000070
+:0044481F 8AC3                    mov al, bl
+:00444821 8BCB                    mov ecx, ebx
+:00444823 FEC0                    inc al
+:00444825 888437E8FE6000          mov byte ptr [edi+esi+0060FEE8], al
+:0044482C E843450100              call 00458D74
+:00444831 E9C4000000              jmp 004448FA				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444719(C)								MvM
+|
+:00444836 6BC070                  imul eax, 00000070
+:00444839 03C3                    add eax, ebx
+:0044483B 8D1C85E0D15700          lea ebx, dword ptr [4*eax+0057D1E0]
+:00444842 8B0485E0D15700          mov eax, dword ptr [4*eax+0057D1E0]
+:00444849 85C0                    test eax, eax
+:0044484B 0F8EA9000000            jle 004448FA
+:00444851 8B8EDC000000            mov ecx, dword ptr [esi+000000DC]
+:00444857 8B09                    mov ecx, dword ptr [ecx]
+:00444859 83F928                  cmp ecx, 00000028			Gloom
+:0044485C 0F8498000000            je 004448FA				jmp exit
+:00444862 83F948                  cmp ecx, 00000048
+:00444865 EB09                    jmp 00444870
+:00444867 83F94B                  cmp ecx, 0000004B			original Incinerators
+:0044486A 0F8E8A000000            jle 004448FA				jmp exit
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00444865(U)
+|
+:00444870 0FB68EC9000000          movzx ecx, byte ptr [esi+000000C9]	max.damage 2nd attack
+:00444877 51                      push ecx
+:00444878 8D50FF                  lea edx, dword ptr [eax-01]
+:0044487B 0FB68EC8000000          movzx ecx, byte ptr [esi+000000C8]	min.damage 2nd attack
+:00444882 51                      push ecx
+:00444883 68EE020000              push 000002EE				750% tohit
+:00444888 8BCF                    mov ecx, edi
+:0044488A E86592FFFF              call 0043DAF4
+:0044488F 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:00444895 8B00                    mov eax, dword ptr [eax]
+:00444897 83F859                  cmp eax, 00000059
+:0044489A EB05                    jmp 004448A1				Drakes 89-92
+:0044489C 83F85C                  cmp eax, 0000005C
+:0044489F 7E59                    jle 004448FA
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044489A(U)
+|									displace monster
+:004448A1 8B7648                  mov esi, dword ptr [esi+48]
+:004448A4 8B0B                    mov ecx, dword ptr [ebx]
+:004448A6 C1E602                  shl esi, 02
+:004448A9 8BBE40374B00            mov edi, dword ptr [esi+004B3740]
+:004448AF 8BB660374B00            mov esi, dword ptr [esi+004B3760]
+:004448B5 037DFC                  add edi, dword ptr [ebp-04]
+:004448B8 0375F8                  add esi, dword ptr [ebp-08]
+:004448BB 49                      dec ecx
+:004448BC 56                      push esi
+:004448BD 8BD7                    mov edx, edi
+:004448BF E83D000000              call 00444901
+:004448C4 85C0                    test eax, eax
+:004448C6 7432                    je 004448FA
+:004448C8 8BCF                    mov ecx, edi
+:004448CA 8B03                    mov eax, dword ptr [ebx]
+:004448CC 6BC970                  imul ecx, 00000070
+:004448CF 03CE                    add ecx, esi
+:004448D1 89048DE0D15700          mov dword ptr [4*ecx+0057D1E0], eax
+:004448D8 832300                  and dword ptr [ebx], 00000000
+:004448DB 48                      dec eax
+:004448DC 69C0E4000000            imul eax, 000000E4
+:004448E2 89B8A8DC6900            mov dword ptr [eax+0069DCA8], edi	new target monster coordinate
+:004448E8 89B8B0DC6900            mov dword ptr [eax+0069DCB0], edi
+:004448EE 89B0ACDC6900            mov dword ptr [eax+0069DCAC], esi	new target monster coordinate
+:004448F4 89B0B4DC6900            mov dword ptr [eax+0069DCB4], esi
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00444665(C), :00444682(C), :0044473B(C), :0044474C(C), :0044475A(C)
+|:00444785(C), :0044479B(C), :004447EA(C), :00444831(U), :0044484B(C)
+|:0044485C(C), :0044486A(C), :0044489F(C), :004448C6(C)
+|
+:004448FA 5F                      pop edi
+:004448FB 5E                      pop esi
+:004448FC 5B                      pop ebx
+:004448FD C9                      leave
+:004448FE C20400                  ret 0004
+
+
+
+
+
+
+
+Drake AI
+
+General
+1. if not active, exit
+2. R = Rnd[100]
+Distance = 1
+1. if last action was delay or charge, do attack, exit
+2. if R < Intf + 20, do attack, exit
+3. do delay for (Rnd[10] + 10 - Intf)/20 seconds
+Distance = 2
+1. if last action was charge, act as distance > 2
+2. if charge is not possible, act as distance > 2
+3. do charge
+Distance > 2
+1. if last action was delay, walk, exit
+2. if R < 2·Intf + 65, walk, exit
+3. do delay for (Rnd[10] + 15 - Intf)/20 seconds
+
+
+Drake charge:
+
+:00440121 FF75F8                  push [ebp-08]
+:00440124 8B5DFC                  mov ebx, dword ptr [ebp-04]
+:00440127 8BD3                    mov edx, ebx
+* Possible StringData Ref from Code Obj ->"SUV"
+:00440129 B901494400              mov ecx, 00444901
+:0044012E FF75F4                  push [ebp-0C]
+:00440131 FF7624                  push [esi+24]
+:00440134 FF7620                  push [esi+20]
+:00440137 E8A53E0000              call 00443FE1
+:0044013C 85C0                    test eax, eax
+:0044013E 7458                    je 00440198
+:00440140 6A0E                    push 0000000E
+:00440142 5F                      pop edi
+:00440143 397E70                  cmp dword ptr [esi+70], edi
+:00440146 7450                    je 00440198			skip if previous action was a charge
+:00440148 6A00                    push 00000000
+:0044014A 6A00                    push 00000000
+:0044014C 53                      push ebx
+:0044014D 8B5624                  mov edx, dword ptr [esi+24]
+:00440150 FF75EC                  push [ebp-14]
+:00440153 8B4E20                  mov ecx, dword ptr [esi+20]
+:00440156 6A14                    push 00000014			spell effect
+:00440158 FF75F0                  push [ebp-10]			direction (?)
+:0044015B FF75F8                  push [ebp-08]
+:0044015E FF75F4                  push [ebp-0C]			esi+50	target coordinate
+:00440161 E8C955FFFF              call 0043572F
+
+
+Runner charge:
+
+:004428D5 FF75F8                  push [ebp-08]
+:004428D8 8B55FC                  mov edx, dword ptr [ebp-04]
+* Possible StringData Ref from Code Obj ->"SUV"
+:004428DB B901494400              mov ecx, 00444901
+:004428E0 FF75F0                  push [ebp-10]
+:004428E3 FF7624                  push [esi+24]
+:004428E6 FF7620                  push [esi+20]
+:004428E9 E8F3160000              call 00443FE1
+:004428EE 85C0                    test eax, eax
+:004428F0 7462                    je 00442954
+:004428F2 8A464C                  mov al, byte ptr [esi+4C]
+:004428F5 33FF                    xor edi, edi
+:004428F7 57                      push edi
+:004428F8 57                      push edi
+:004428F9 FF75FC                  push [ebp-04]
+:004428FC 8B5624                  mov edx, dword ptr [esi+24]
+:004428FF 8B4E20                  mov ecx, dword ptr [esi+20]
+:00442902 50                      push eax
+:00442903 6A14                    push 00000014				spell effect
+:00442905 FF75F4                  push [ebp-0C]				direction (?)
+:00442908 FF75F8                  push [ebp-08]
+:0044290B FF75F0                  push [ebp-10]				esi+50	target coordinate
+:0044290E E81C2EFFFF              call 0043572F
+
+
+
+
+:0043356D 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:00433573 8B08                    mov ecx, dword ptr [eax]
+:00433575 83F940                  cmp ecx, 00000040
+:00433578 7C0D                    jl 00433587
+:0043357A 83F945                  cmp ecx, 00000045
+:0043357D 7F08                    jg 00433587
+:0043357F 8DB8E4000000            lea edi, dword ptr [eax+000000E4]	Runners
+:00433585 EB10                    jmp 00433597
+:00433587 E8012A0000              call 00435F8D
+:0043358C 85C9                    test ecx, ecx
+:0043358E 7404                    je 00433594
+:00433590 8D7860                  lea edi, dword ptr [eax+60]		Drakes
+:00433593 90                      nop
+:00433594 8D7834                  lea edi, dword ptr [eax+34]		Other

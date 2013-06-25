@@ -1,0 +1,1156 @@
+Slightly larger boss packs:
+
+file offset 0003AE57
+
+:0043BA57 6A0C                    push 0000000C
+changed into
+:0043BA57 6A0F                    push 0000000F
+
+
+Small bugfixes in boss pack behaviour:
+
+file offset 0003ED0E
+
+:0043F90E 4A                      dec edx
+:0043F90F 889028DD6900            mov byte ptr [eax+0069DD28], dl
+:0043F915 90                      nop
+:0043F916 90                      nop
+:0043F917 90                      nop
+:0043F918 90                      nop
+changed into
+:0043F90E 8BCA                    mov ecx, edx
+:0043F910 FEC9                    dec cl
+:0043F912 888828DD6900            mov byte ptr [eax+0069DD28], cl
+:0043F918 90                      nop
+
+file offset 0003ECEC
+
+:0043F8EC C6805DDD690001          mov byte ptr [eax+0069DD5D], 01
+:0043F8F3 EB0C                    jmp 0043F901
+changed into
+:0043F8EC EB13                    jmp 0043F901
+:0043F8EE 90909090909090          7*nop
+
+
+
+Disabled monster deactivation in view of target:
+
+file offset 00042DCD
+
+:004439CD 80BE44DD690000          cmp byte ptr [esi+0069DD44], 00
+:004439D4 7500                    jne 004439D6
+changed into
+:004439CD 50                      push eax
+:004439CE E94FA9FFFF              jmp 0043E322
+:004439D3 58                      pop eax
+:004439D4 7504                    jne 004439DA
+
+file offset 0003D722
+
+:0043E322 80B96001000001          cmp byte ptr [ecx+00000160], 01
+:0043E329 7F22                    jg 0043E34D
+:0043E32B 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0043E332 D1FB                    sar ebx, 1
+:0043E334 E808000000              call 0043E341
+:0043E339 3BC3                    cmp eax, ebx
+:0043E33B 7D10                    jge 0043E34D
+:0043E33D D1E7                    shl edi, 1
+:0043E33F EBF3                    jmp 0043E334
+:0043E341 52                      push edx
+:0043E342 6A64                    push 00000064
+:0043E344 B106                    mov cl, 06
+:0043E346 5A                      pop edx
+:0043E347 E80EBCFDFF              call 00419F5A
+:0043E34C 5A                      pop edx
+:0043E34D C3                      ret
+:0043E34E 
+changed into
+:0043E322 51                      push ecx
+:0043E323 52                      push edx
+:0043E324 0FB696D9DC6900          movzx edx, byte ptr [esi+0069DCD9]	target coordinate
+:0043E32B 52                      push edx
+:0043E32C 0FB696D8DC6900          movzx edx, byte ptr [esi+0069DCD8]	target coordinate
+:0043E333 52                      push edx
+:0043E334 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]	monster coordinate
+:0043E33A 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]	monster coordinate
+:0043E340 E8825C0000              call 00443FC7
+:0043E345 5A                      pop edx
+:0043E346 59                      pop ecx
+:0043E347 85C0                    test eax, eax
+:0043E349 E985560000              jmp 004439D3
+:0043E34E 
+
+
+Slightly increased monster chain activation effect:
+
+file offset 00075871
+
+:00476471 6A01                    push 00000001
+changed into
+:00476471 6A02                    push 00000002
+
+Removed check for being in light range of a character in the monster chain activation code (for less monster desynchronisation and better performance on slower systems):
+
+file offset 000758CA
+
+:004764CA 8B90A8DC6900            mov edx, dword ptr [eax+0069DCA8]
+changed into
+:004764CA E97D460000              jmp 0047AB4C
+:004764CF 90                      nop
+
+Now 24 bytes free space from 004764CF to 004764E7.
+
+
+Minions retain their attacklevel (subtype) together with attacktype:
+
+file offset 0003B8E4
+
+:0043C4E4 8A9121DD6900            mov dl, byte ptr [ecx+0069DD21]
+:0043C4EA 889021DD6900            mov byte ptr [eax+0069DD21], dl
+:0043C4F0 8A550C                  mov dl, byte ptr [ebp+0C]
+:0043C4F3 88905CDD6900            mov byte ptr [eax+0069DD5C], dl
+:0043C4F9 C6805DDD690001          mov byte ptr [eax+0069DD5D], 01
+:0043C500 740C                    je 0043C50E
+changed into
+:0043C4E4 8A550C                  mov dl, byte ptr [ebp+0C]
+:0043C4E7 88905CDD6900            mov byte ptr [eax+0069DD5C], dl
+:0043C4ED C6805DDD690001          mov byte ptr [eax+0069DD5D], 01
+:0043C4F4 7418                    je 0043C50E
+:0043C4F6 8A9121DD6900            mov dl, byte ptr [ecx+0069DD21]
+:0043C4FC 889021DD6900            mov byte ptr [eax+0069DD21], dl
+
+
+Disabled special AC and Tohit for bosses (because this 'bonus' is not adjusted for Difficulty, it makes monsters weaker outside Normal Mode, so it wasn't used):
+
+file offset 0003B346
+
+:0043BF46 F6471604                test [edi+16], 04
+:0043BF4A 7412                    je 0043BF5E
+:0043BF4C 8A4718                  mov al, byte ptr [edi+18]
+:0043BF4F 8886C4000000            mov byte ptr [esi+000000C4], al
+:0043BF55 8A4718                  mov al, byte ptr [edi+18]
+:0043BF58 8886C7000000            mov byte ptr [esi+000000C7], al
+:0043BF5E F6471608                test [edi+16], 08
+:0043BF62 7409                    je 0043BF6D
+:0043BF64 8A4718                  mov al, byte ptr [edi+18]
+:0043BF67 8886CA000000            mov byte ptr [esi+000000CA], al
+changed into
+:0043BF46 EB25                    jmp 0043BF6D
+:0043BF48 9090                    2*nop
+:0043BF4A ...
+:0043BF6D 
+
+Now 37 bytes free space from 0043BF48 to 0043BF6D.
+
+
+Increased chance for Horned Runners to do a charge:
+
+file offset 00041CCC
+
+:004428CC 8D440038                lea eax, dword ptr [eax+eax+38]
+changed into
+:004428CC 8D440040                lea eax, dword ptr [eax+eax+40]
+
+
+Apart from Defiler and Dark Ghost, now also the Butcher, King Leoric, Gharbad and Diablo will drop a second magic item (Butcher and Leoric only in MP).
+
+file offset 0003C9A9
+
+:0043D5A9 0F8532000000            jne 0043D5E1
+changed into
+:0043D5A9 0F85554E0100            jne 00452404
+:0043D5AF 
+
+file offset 00051804
+
+:00452404 0FB69699000000          movzx edx, byte ptr [esi+00000099]
+:0045240B E91CE2FEFF              jmp 0044062C
+changed into
+:00452404 0FB686BC000000          movzx eax, byte ptr [esi+000000BC]
+:0045240B E94A1AFDFF              jmp 00423E5A
+:00452410 
+
+file offset 0002325A
+
+:00423E5A 90                      nop
+:00423E5B 90                      nop
+:00423E5C 90                      nop
+:00423E5D 038164010000            add eax, dword ptr [ecx+00000164]
+:00423E63 0FAFC2                  imul eax, edx
+:00423E66 99                      cdq
+:00423E67 E946010000              jmp 00423FB2
+changed into
+:00423E5A 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:00423E61 0F85E3E90200            jne 0045284A
+:00423E67 E9E6E90200              jmp 00452852
+:00423E6C 
+
+
+Using last free space from old Spooky Shrine:
+
+file offset 00051C4A
+
+:0045284A 90                      nop
+:0045284B 8B88B0010000            mov ecx, dword ptr [eax+000001B0]
+:00452851 8988AC010000            mov dword ptr [eax+000001AC], ecx
+:00452857 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0045285C 69C0C8550000            imul eax, 000055C8
+:00452862 E961060000              jmp 00452EC8
+changed into
+:0045284A 3C02                    cmp al, 02			King Leoric
+:0045284C 7414                    je 00452862
+:0045284E 3C0A                    cmp al, 0A			Butcher
+:00452850 7410                    je 00452862
+:00452852 3C01                    cmp al, 01			Diablo
+:00452854 740C                    je 00452862
+:00452856 3C62                    cmp al, 62			Defiler
+:00452858 7408                    je 00452862
+:0045285A 3C37                    cmp al, 37			Gharbad
+:0045285C 0F85DCADFEFF            jne 0043D63E
+:00452862 E992ADFEFF              jmp 0043D5F9
+:00452867 
+
+
+Now 7 bytes free space, right after Running code:
+
+:0043D5E1 83F87C                  cmp eax, 0000007C
+:0043D5E4 7413                    je 0043D5F9
+:0043D5E6 EB56                    jmp 0043D63E
+
+
+Butcher will now appear in Caves, replacing Crosseye as "The Cave Boss" and Herder of the Cave Boars. The Butcher quest will always be available in SP. The bloody room previously used by the Butcher is now found on level 3, and occupied by The Killing Brute.
+
+Butcher quest:
+
+000B5380 0204 FF06 6400 0000 0100 0000 3F00 0000 ....d.......?...
+000B5390 F82B 4B00                               .+K.
+changed into
+000B5380 0303                                    ..
+
+Force selection of Butcher quest, and improve chances for Ogden's Sign quest:
+
+000B5510 0600 0000 0700 0000 0200 0000           ............
+changed into
+000B5510 0700 0000 0700 0000 0200 0000           ............
+
+Adjust Butcher as base monster:
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1
+ 51 The Butcher           demon    13 Butcher          3   9- 9*   10   220- 220   75   60   10- 15 
+                                                          12-12    20                   85
+000AC2C4 1010 0A                                 ...
+changed into
+000AC2C4 1616 14                                 ...
+
+000AC2D9 3C                                      <
+changed into
+000AC2D9 55                                      U
+
+Adjust Butcher as boss:
+
+pos name                      type                  attacktype        sub  pack  dlvl   HP   damage 
+ 9 The Butcher               The Butcher           13 Butcher          3   3Y     0*   300   10- 25 
+                                                                           1           800   24- 36
+000AF3A0 3300 0000 F82B 4B00 9C1B 4B00 0000 2C01 3....+K...K...,.
+000AF3B0 0D03 0A19 5500 0300 0000 0000 0000 0000 ....U...........
+changed into
+000AF3AE 2003                                     .
+000AF3B2 1824                                    .$
+000AF3B6 01                                      .
+
+Forced placement of Butcher as boss with a pack of 25 Cave Boars:
+
+file offset 0003B467
+
+:0043C067 6A06                    push 00000006
+:0043C069 59                      pop ecx
+:0043C06A E8243A0200              call 0045FA93
+:0043C06F 85C0                    test eax, eax
+:0043C071 740C                    je 0043C07F
+:0043C073 6A00                    push 00000000
+:0043C075 6A09                    push 00000009
+:0043C077 33D2                    xor edx, edx
+changed into
+:0043C067 803DD8B160000C          cmp byte ptr [0060B1D8], 0C
+:0043C06E 750F                    jne 0043C07F
+:0043C070 6A01                    push 00000001
+:0043C072 5A                      pop edx
+:0043C073 6A19                    push 00000019
+:0043C075 6A09                    push 00000009
+:0043C077 9090                    2*nop
+
+Forced placement of Butcher as base monster:
+
+file offset 00051563
+
+:00452163 7511                    jne 00452176
+changed into
+:00452163 751B                    jne 00452180
+:00452165 
+
+file offset 00051578
+
+:00452178 6A20                    push 00000020			Illusion Weaver
+:0045217A 59                      pop ecx
+:0045217B E8DE87FEFF              call 0043A95E	
+:00452180 E99D88FEFF              jmp 0043AA22
+:00452185 
+changed into
+:00452178 6A33                    push 00000033			Butcher
+:0045217A 59                      pop ecx
+:0045217B E8DE87FEFF              call 0043A95E
+:00452180 E98240FEFF              jmp 00436207
+:00452185 
+
+file offset 00035607
+
+:00436207 90                      nop
+:00436208 90                      nop
+:00436209 90                      nop
+:0043620A 90                      nop
+:0043620B 90                      nop
+:0043620C 90                      nop
+:0043620D C1F902                  sar ecx, 02
+:00436210 8D440801                lea eax, dword ptr [eax+ecx+01]
+:00436214 EB49                    jmp 0043625F
+changed into
+:00436207 8BD7                    mov edx, edi
+:00436209 6A20                    push 00000020			Illusion Weaver
+:0043620B 59                      pop ecx
+:0043620C E84D470000              call 0043A95E
+:00436211 E90C480000              jmp 0043AA22
+:00436216 
+
+
+Special placement of Butcher in his room is now applied to The Killing Brute:
+
+file offset 0003B065
+
+:0043BC65 83FA09                  cmp edx, 00000009
+changed into
+:0043BC65 83FA1D                  cmp edx, 0000001D
+
+Select Brute as base monster instead of Butcher for Butcher Quest Level:
+
+file offset 00039E98
+
+:0043AA98 6A33                    push 00000033
+changed into
+:0043AA98 6A03                    push 00000003
+
+pos name                      type                  attacktype        sub  pack  dlvl   HP   damage 
+29 The Killing Brute         Devil Kin Brute        2 Skeleton         3    3Y    12   380   25- 30 
+                                                                       4    0      3   360   10- 15
+000AF620 0300 0000 1122 4B00 841B 4B00 0C00 7C01 ....."K...K...|.
+000AF630 0203 191E 0E00 0300 0000 0000 0000 0000 ................
+changed into
+000AF62C 0300 6801 0204 0A0F                     ..h.....
+000AF636 0000                                    ..
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1
+  3 Devil Kin Brute       animal    2 Skeleton         2  12-12    21    80- 100   70  100   18- 24 
+                                                                   18              40   60
+000AAAC6 1500                                    ..
+changed into
+000AAAC6 1200                                    ..
+
+000AAAD9 64                                      d
+changed into
+000AAAD9 3C                                      <
+
+000AAAE1 46                                      F
+changed into
+000AAAE1 28                                      <
+
+
+Relocating King Leoric, to make him "The Church Boss":
+
+000B53F8 0305 010C 6401 0000 0100 0000 0100 0000 ....d...........
+000B5408 386C 4B00                               8lK.
+changed into
+000B53F8 0404                                    ..
+
+pos name                      type                  attacktype        sub  pack  dlvl   HP   damage 
+  1 Skeleton King             Skeleton King         10 Skeleton King   3   1Y     0*   500   20- 30
+                                                                                       400   18- 27
+000AF2A0 3200 0000 3C2C 4B00 9C1B 4B00 0000 F401 2...<,K...K.....
+000AF2B0 0A03 141E 6300 0100 0000 0000 0000 0000 ....c...........
+changed into
+000AF2AE 9001                                    ..
+000AF2B2 121B                                    ..
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1
+ 50 Skeleton King         undead   10 Skeleton King    3  13-13*   15   250- 250   75   90   20- 30 
+                                                                   13              70   80
+000AC246 0F                                      .
+changed into
+000AC246 0D                                      .
+
+000AC259 5A                                      Z
+changed into
+000AC259 50                                      P
+
+000AC261 4B                                      K
+changed into
+000AC261 46                                      F
+
+000AC208 0100 0000 C833 4B00                     .....3K.
+changed into
+000AC208 0100 0000 1031 4B00                     .....1K.
+
+
+Force selection of Leoric quest, and increase chance for Poisoned Water Supply:
+
+file offset 0005EAFD
+
+:0045F6FD 6A02                    push 00000002
+changed into
+:0045F6FD 6A03                    push 00000003
+
+file offset 0005EB07
+
+:0045F707 7408                    je 0045F711
+changed into
+:0045F707 750E                    jne 0045F717
+:0045F709 
+
+
+The following enables bosses based on a different monster as from the pack they lead, who appear only when the monster type from the pack is chosen for a given level, as normally. The space for special AC and Tohit in the boss data (which is already obsolete) is used as indicator for the boss monster. This boss monster type must be on the monster selection list for the level (although it does not need to appear as base monster).
+
+file offset 0003AECE
+
+:0043BACE BAB08E6A00              mov edx, 006A8EB0
+changed into
+:0043BACE E90D5E0100              jmp 004518E0
+
+file offset 00050CE0
+
+:004518E0 C1F804                  sar eax, 04
+:004518E3 83E003                  and eax, 00000003
+:004518E6 83E20F                  and edx, 0000000F
+:004518E9 80F903                  cmp cl, 03
+:004518EC 740E                    je 004518FC
+:004518EE 80F902                  cmp cl, 02
+:004518F1 0F8597F9FFFF            jne 0045128E
+:004518F7 3C02                    cmp al, 02
+:004518F9 7401                    je 004518FC
+:004518FB 40                      inc eax
+:004518FC C3                      ret
+:004518FD 90                      nop
+changed into
+:004518E0 8B55FC                  mov edx, dword ptr [ebp-04]
+:004518E3 C1E205                  shl edx, 05
+:004518E6 8B9298084B00            mov edx, dword ptr [edx+004B0898]
+:004518EC 85D2                    test edx, edx
+:004518EE 7E04                    jle 004518F4
+:004518F0 8BCA                    mov ecx, edx
+:004518F2 9090                    2*nop
+:004518F4 BAB08E6A00              mov edx, 006A8EB0
+:004518F9 E9D5A1FEFF              jmp 0043BAD3
+:004518FE 
+
+Clearing indicator space from old leftovers:
+
+000AF598 4600 0000                               F...
+changed into
+000AF598 0000 0000                               ....
+
+000AF718 4600 0000                               F...
+changed into
+000AF718 0000 0000                               ....
+
+000AF798 2D00 0000                               -...
+changed into
+000AF798 0000 0000                               ....
+
+000AF818 4100 0000                               A...
+changed into
+000AF818 0000 0000                               ....
+
+000AF938 4B00 0000                               K...
+changed into
+000AF938 0000 0000                               ....
+
+000AF958 2D00 0000                               -...
+changed into
+000AF958 0000 0000                               ....
+
+000AFA98 5000 0000                               P...
+changed into
+000AFA98 0000 0000                               ....
+
+000AFAB8 5A00 0000                               Z...
+changed into
+000AFAB8 0000 0000                               ....
+
+000AFB18 5A00 0000                               Z...
+changed into
+000AFB18 0000 0000                               ....
+
+000AFED8 5A00 0000                               Z...
+changed into
+000AFED8 0000 0000                               ....
+
+
+With the above, goat bosses are now changed into Satyr Lords.
+
+
+Satyr Lords adjusted and disabled as normal monster (they will only appear as Goat boss and Gharbad's minions):
+
+pos name                  type      attacktype        sub  dlvl   mlvl     HP      AC  TH1   damage1  size MFL/MFL
+ 33 Satyr Lord            demon     2 Skeleton         4   7- 9    16   150- 200   55  130   15- 30    700 -IR/RIR
+    Guardian Goat                                      3   6- 8         100- 120   50  100   15- 25   5000 IIR/IIR
+
+000AB970 A000 0000 BC02 0000 642F 4B00 0000 0000 ........d/K.....
+000AB980 442F 4B00 0000 0000 0000 0000 0000 0000 D/K.............
+000AB990 0D00 0000 0D00 0000 0E00 0000 0900 0000 ................
+000AB9A0 1000 0000 0000 0000 0200 0000 0000 0000 ................
+000AB9B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AB9C0 382F 4B00 0C10 1000 9600 0000 C800 0000 8/K.............
+000AB9D0 0200 0000 8003 0000 0482 080F 1E00 0000 ................
+000AB9E0 0037 0100 1400 1500 0000 0300 7805 0000 .7..........x...
+changed into
+000AB970 A000 0000 8813 0000 642F 4B00 0000 0000 ........d/K.....
+000AB980 442F 4B00 0000 0000 0000 0000 0000 0000 D/K.............
+000AB990 0D00 0000 0D00 0000 0E00 0000 0900 0000 ................
+000AB9A0 1000 0000 0000 0000 0200 0000 0000 0000 ................
+000AB9B0 0000 0000 0000 0000 0000 0000 0000 0000 ................
+000AB9C0 352F 4B00 0A0E 1000 6400 0000 7800 0000 5/K.....d...x...
+000AB9D0 0200 0000 8003 0000 0364 080F 1900 0000 .........d......
+000AB9E0 0032 0100 1C00 1C00 0000 0300 7805 0000 .2..........x...
+
+
+Adjusted name for Gharbad's minions:
+
+000B1935 0000 0053 6174 7972 204C 6F72 6400      ...Satyr Lord.
+changed into
+000B1935 4775 6172 6469 616E 2047 6F61 7400      Guardian Goat.
+
+
+Forced selection of Satyr Lords on levels 6-8, and Illusion Weavers on level 8 (to allow those in barrels there):
+
+file offset 0005179F
+
+:0045239F E8BA85FEFF              call 0043A95E
+changed into
+:0045239F E9A49BFEFF              jmp 0043BF48
+:004523A4 
+
+file offset 0003B348
+
+:0043BF48 90                      nop
+:0043BF49 90                      nop
+:0043BF4A 7412                    je 0043BF5E
+:0043BF4C 8A4718                  mov al, byte ptr [edi+18]
+:0043BF4F 8886C4000000            mov byte ptr [esi+000000C4], al
+:0043BF55 8A4718                  mov al, byte ptr [edi+18]
+:0043BF58 8886C7000000            mov byte ptr [esi+000000C7], al
+:0043BF5E F6471608                test [edi+16], 08
+:0043BF62 7409                    je 0043BF6D
+:0043BF64 8A4718                  mov al, byte ptr [edi+18]
+:0043BF67 8886CA000000            mov byte ptr [esi+000000CA], al
+changed into
+:0043BF48 E811EAFFFF              call 0043A95E
+:0043BF4D 8BD7                    mov edx, edi
+:0043BF4F 6A21                    push 00000021		Satyr Lord
+:0043BF51 59                      pop ecx
+:0043BF52 E807EAFFFF              call 0043A95E
+:0043BF57 58                      pop eax
+:0043BF58 50                      push eax
+:0043BF59 3C08                    cmp al, 08
+:0043BF5B 750A                    jne 0043BF67
+:0043BF5D 8BD7                    mov edx, edi
+:0043BF5F 6A20                    push 00000020		Illusion Weaver
+:0043BF61 59                      pop ecx
+:0043BF62 E8F7E9FFFF              call 0043A95E
+:0043BF67 E938640100              jmp 004523A4 
+:0043BF6C 90                      nop
+
+
+Adjusted goat bosses:
+
+pos name                      type                  attacktype        sub  pack  dlvl  HP   damage  MFL   TRN
+
+ 24 Gorestone                 Night Clan            35 Lich             2   3Y     8  330    8- 16  IIR  
+                                                     2 Skeleton         3   1      7  360   18- 26        bl(1)
+
+000AF580 2A00 0000 1C1A 4B00 841B 4B00 0800 4A01 *.....K...K...J.
+000AF590 2302 0810 1C00 0300 0000 0000 0000 0000 #...............
+changed into
+000AF580 2A00 0000 1C1A 4B00 B218 4B00 0700 6801 *.....K...K...h.
+000AF590 0203 121A 1C00 0100 2100 0000 0000 0000 ........!.......
+
+ 47 Blightfire                Fire Clan             33 Torchant         3   3Y     9  340   10- 18  IIR 
+                                                     2 Skeleton         4   1      8  480   22- 30        br
+
+000AF860 5500 0000 5818 4B00 5418 4B00 0900 5401 U...X.K.T.K...T.
+000AF870 2103 0A12 1C00 0300 0000 0000 0000 0000 !...............
+changed into
+000AF860 5500 0000 5818 4B00 A41A 4B00 0800 E001 U...X.K...K.....
+000AF870 0204 161E 1C00 0100 2100 0000 0000 0000 ........!.......
+
+ 43 Bloodgutter               Fire Clan              6 Goat Man         3   3Y     6  320   24- 34  IIR 
+                                                     2 Skeleton         3   1      7  400   20- 28        bs(2)
+
+000AF7E0 2200 0000 B818 4B00 B018 4B00 0600 4001 ".....K...K...@.
+000AF7F0 0603 1822 1C00 0300 0000 0000 0000 0000 ..."............
+changed into
+000AF7E0 2200 0000 B818 4B00 3F1A 4B00 0700 9001 ".....K.?.K.....
+000AF7F0 0203 141C 1C00 0100 2100 0000 0000 0000 ........!.......
+
+ 54 Blighthorn Steelmace      Night Clan             5 Horned Demon     3   3Y     7  350   25- 35  IIR 
+    Gharbad the Weak          Satyr Lord             2 Skeleton         4   1      8  600                 general
+
+000AF940 6F00 0000 BC17 4B00 B417 4B00 0700 5E01 o.....K...K...^.
+000AF950 0503 1923 1C00 0300 0000 0000 0000 0000 ...#............
+changed into
+000AF940 2100 0000 F31A 4B00 841B 4B00 0800 5802 !.....K...K...X.
+000AF950 0204 1923 1C00 0100 0000 0000 0000 0000 ...#............
+
+ 44 Deathshade Fleshmaul      Stone Clan            24 Viper            2   3Y     6  310   12- 24  IIR 
+                                                     2 Skeleton         3   1         340   16- 24        bhbs
+
+000AF800 2300 0000 9818 4B00 9018 4B00 0600 3601 #.....K...K...6.
+000AF810 1802 0C18 1C00 0300 0000 0000 0000 0000 ................
+changed into
+000AF800 2300 0000 9818 4B00 3D1A 4B00 0600 5401 #.....K.=.K...T.
+000AF810 0203 1018 1C00 0100 2100 0000 0000 0000 ........!.......
+
+(1 BL is GREY_BAT.TRN which is added to MPQ as TRN for bosses)
+(2 BS is ORANGE.TRN which is added to MPQ as TRN for bosses)
+
+Corrected monster activation sound for Gharbad:
+
+file offset 00050667
+
+:00451267 3C25                    cmp al, 25
+changed into
+:00451267 3C37                    cmp al, 37
+
+Correcting victory comment:
+
+File Offset 0005EFF6
+
+:0045FBF6 3B0D040D4B00            cmp ecx, dword ptr [004B0D04]
+changed into
+:0045FBF6 3B0D440F4B00            cmp ecx, dword ptr [004B0F44]
+
+Disabling some Gharbad quest related code:
+
+File Offset 0003C908
+
+:0043D508 3B05040D4B00            cmp eax, dword ptr [004B0D04]
+changed into
+:0043D508 3B05480F4B00            cmp eax, dword ptr [004B0F48]
+
+File Offset 0003DEDE
+
+:0043EADE 3B05040D4B00            cmp eax, dword ptr [004B0D04]
+changed into
+:0043EADE 3B05480F4B00            cmp eax, dword ptr [004B0F48]
+
+
+
+0009A016 526F 6775 6536 30                       Rogue60
+changed into
+0009A016 526F 6775 6536 31                       Rogue61
+
+
+Crosseye the Herder will now be Crosseye the Leader of Brutes by using the random boss method above. Biclops are already on the selection list for level 12. This makes the code that gives him a pack of Cave Boars obsolete.
+
+pos name                      type                  attacktype        sub  pack  dlvl    HP   damage  MFL
+ 45 Crosseye the Herder       Biclops                2 Skeleton         5   1Y    12    800   24- 36  IRI
+    Crosseye the Leader       Brute                                                     720
+
+000AF820 8600 0000 7918 4B00 281B 4B00 0C00 2003 ....y.K.(.K... .
+000AF830 0205 1824 2A00 0100 0000 0000 0000 0000 ...$*...........
+changed into
+000AF820 0300 0000                               ....
+000AF82E D002                                    ..
+000AF838 8600 0000                               ....
+
+000B0286 4865 7264 6572                          Herder
+changed into
+000B0286 4C65 6164 6572                          Leader
+
+
+Forced selection of Chimera's on Nest-2 instead of Nest-3:
+
+file offset 00039E52
+
+:0043AA52 3C13                    cmp al, 13
+changed into
+:0043AA52 3C12                    cmp al, 12
+
+
+Forced selection of Hellbats and Reapers on 13, Rogues on 14, and Hell Spawn and Reapers on 15:
+
+file offset 00039E31
+
+:0043AA31 E828FFFFFF              call 0043A95E
+changed into
+:0043AA31 E90E3A0000              jmp 0043E444
+:0043AA36 58                      pop eax
+
+file offset 0003D844
+
+:0043E444 90                      nop
+:0043E445 90                      nop
+:0043E446 90                      nop
+:0043E447 90                      nop
+:0043E448 90                      nop
+:0043E449 90                      nop
+:0043E44A 52                      push edx
+:0043E44B 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0043E451 69C9C8550000            imul ecx, 000055C8
+:0043E457 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0043E45D 0FBE8C1148550000        movsx ecx, byte ptr [ecx+edx+00005548]
+:0043E465 6A01                    push 00000001
+:0043E467 5A                      pop edx
+:0043E468 3BCA                    cmp ecx, edx
+:0043E46A 7D02                    jge 0043E46E
+:0043E46C 8BCA                    mov ecx, edx
+:0043E46E 5A                      pop edx
+:0043E46F C3                      ret
+changed into
+:0043E444 E815C5FFFF              call 0043A95E
+:0043E449 58                      pop eax
+:0043E44A 50                      push eax
+:0043E44B 3C0E                    cmp al, 0E
+:0043E44D 750F                    jne 0043E45E
+:0043E44F 8BD7                    mov edx, edi
+:0043E451 6A6B                    push 0000006B				Fallen Rogue
+:0043E453 59                      pop ecx
+:0043E454 E805C5FFFF              call 0043A95E
+:0043E459 E9D8C5FFFF              jmp 0043AA36
+:0043E45E 0F8C4E04FFFF            jl 0042E8B2
+:0043E464 8BD7                    mov edx, edi
+:0043E466 6A67                    push 00000067				Hell Spawn
+:0043E468 59                      pop ecx
+:0043E469 E94B04FFFF              jmp 0042E8B9
+:0043E46E 9090                    2*nop
+
+file offset 0002DCB2
+
+:0042E8B2 90                      nop
+:0042E8B3 90                      nop
+:0042E8B4 90                      nop
+:0042E8B5 90                      nop
+:0042E8B6 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0042E8BC 8B84086C010000          mov eax, dword ptr [eax+ecx+0000016C]
+:0042E8C3 C1F802                  sar eax, 02
+:0042E8C6 8D44300A                lea eax, dword ptr [eax+esi+0A]
+:0042E8CA E980040000              jmp 0042ED4F
+:0042E8CF 
+changed into
+:0042E8B2 8BD7                    mov edx, edi
+:0042E8B4 B983000000              mov ecx, 00000083			Hell Bat
+:0042E8B9 E8A0C00000              call 0043A95E
+:0042E8BE 8BD7                    mov edx, edi
+:0042E8C0 6A1C                    push 0000001C				Reaper
+:0042E8C2 59                      pop ecx
+:0042E8C3 E896C00000              call 0043A95E
+:0042E8C8 E969C10000              jmp 0043AA36
+:0042E8CD 9090                    2*nop
+
+
+Larger packs for Red Vex (with Hell Spawn) and Black Jade (random monster, but never Stalking Death, Advocates or Hell Spawn):
+
+file offset 0003B65C
+
+:0043C25C 8BD6                    mov edx, esi	
+:0043C25E 8BFE                    mov edi, esi	
+changed into
+:0043C25C 33FF                    xor edi, edi
+:0043C25E 33D2                    xor edx, edx
+
+file offset 0003B668
+
+:0043C268 8BD7                    mov edx, edi
+:0043C26A 57                      push edi
+:0043C26B 6A05                    push 00000005
+:0043C26D 59                      pop ecx
+:0043C26E E805F8FFFF              call 0043BA78
+:0043C273 8BD7                    mov edx, edi
+:0043C275 57                      push edi
+:0043C276 6A06                    push 00000006
+:0043C278 59                      pop ecx
+:0043C279 E8FAF7FFFF              call 0043BA78
+changed into
+:0043C268 6A09                    push 00000009
+:0043C26A 5F                      pop edi
+:0043C26B 6A05                    push 00000005
+:0043C26D 59                      pop ecx
+:0043C26E 6A02                    push 00000002
+:0043C370 5A                      pop edx
+:0043C271 E8818EFFFF              call 004350F7
+:0043C276 6A06                    push 00000006
+:0043C278 59                      pop ecx
+:0043C279 E8718EFFFF              call 004350EF
+:0043C27E 
+
+file offset 000344EF
+
+:004350EF 90                      nop
+:004350F0 90                      nop
+:004350F1 750B                    jne 004350FE
+:004350F3 8B4D1C                  mov ecx, dword ptr [ebp+1C]
+:004350F6 6A14                    push 00000014
+:004350F8 5A                      pop edx
+:004350F9 E8FE6E0300              call 0046BFFC
+changed into
+:004350EF 8B1598B76A00            mov edx, dword ptr [006AB798]
+:004350F5 4A                      dec edx
+:004350F6 4A                      dec edx
+:004350F7 57                      push edi
+:004350F8 E87B690000              call 0043BA78
+:004350FD C3                      ret
+
+
+Altered locations for Red Vex and Blackjade (in MP):
+
+file offset 0003B050
+
+:0043BC50 8D7C001A                lea edi, dword ptr [eax+eax+1A]
+changed into
+:0043BC50 8D7C001B                lea edi, dword ptr [eax+eax+1B]
+
+file offset 0003B05D
+
+:0043BC5D 8D7C001A                lea edi, dword ptr [eax+eax+1A]
+changed into
+:0043BC5D 8D7C001B                lea edi, dword ptr [eax+eax+1B]
+
+
+Adding to code for special boss packs:
+
+file offset 0002F969
+
+:00430569 83F961                  cmp ecx, 00000061			Defiler
+:0043056C 74EE                    je 0043055C
+:0043056E 83F92D                  cmp ecx, 0000002D			Crosseye (now obsolete)
+:00430571 74E9                    je 0043055C
+:00430573 83F922                  cmp ecx, 00000022			Doomskull
+:00430576 74E4                    je 0043055C
+:00430578 EBE5                    jmp 0043055F
+:0043057A 90                      nop
+:0043057B 90                      nop
+:0043057C 90                      nop
+:0043057D 90                      nop
+:0043057E 90                      nop
+:0043057F 8BD3                    mov edx, ebx
+:00430581 B191                    mov cl, 91
+:00430583 888651DD6900            mov byte ptr [esi+0069DD51], al
+changed into
+:00430569 83F961                  cmp ecx, 00000061			Defiler
+:0043056C 74EE                    je 0043055C
+:0043056E 83F922                  cmp ecx, 00000022			Doomskull
+:00430571 74E9                    je 0043055C
+:00430573 83F949                  cmp ecx, 00000049			Blacktongue
+:00430576 7505                    jne 0043057D
+:00430578 6A02                    push 00000002
+:0043057A 5A                      pop edx
+:0043057B EBE2                    jmp 0043055F
+:0043057D 83F924                  cmp ecx, 00000024			The Conjurer
+:00430580 74F6                    je 00430578
+:00430582 EBDB                    jmp 0043055F
+:00430584 9090909090              5*nop
+
+
+Blacktongue the Counselor will now lead a pack of Hellbats:
+
+pos name                      type                  attacktype        sub  pack  dlvl    HP   damage  MFL
+ 73 Blacktongue               Counselor             25 Mage             3   3Y    13    360   15- 30  RIR
+                                                                            1
+000AFBB6 0300                                    ..
+changed into
+000AFBB6 0100                                    ..
+
+
+The ability to follow targets is swapped between Bats and Dogs:
+
+ 48 Doomspitter           
+000AC150 1400 0000 0000 0000 03                  .........
+changed into
+000AC150 1400 0000 0001 0000 03                  .........
+
+ 49 Lava Maw              
+000AC1D0 1400 0000 0000 0000 02                  .........
+changed into
+000AC1D0 1400 0000 0001 0000 02                  .........
+
+127 Firebat      
+000AE8D0 2000 0000 0001 0000 01                   ........
+changed into
+000AE8D0 2000 0000 0000 0000 01                   ........
+
+131 Hellbat     
+000AEAD0 2000 0000 0001 0000 02                   ........
+changed into
+000AEAD0 2000 0000 0000 0000 02                   ........
+
+
+Obsolete Gharbad the Satyr changed into a Warper boss for Nest (with a random pack):
+
+pos name                      type                  attacktype        sub  pack  dlvl    HP   damage  MFL
+ 36 Gharbad the Weak          Guardian Goat          2 Skeleton         4   3      9$   710    8- 16  RIR
+    The Conjurer              Warp Demon                                    1     H1    760   23- 37  RRR
+
+000AF700 2100 0000 F31A 4B00 841B 4B00 0900 C602 !.....K...K.....
+000AF710 0204 0810 1500 0300 0000 0000 0000 0000 ................
+changed into
+000AF700 2500 0000 9D17 4B00 841B 4B00 1100 F802 %.....K...K.....
+000AF710 0204 1725 0700 0100 0000 0000 0000 0000 ...%............
+
+000B019D 0000 0000 0000 0000 0000 0043 6861 6F73 ...........Chaos
+000B01AD 686F 776C 6572 00                       howler.
+changed into
+000B019D 5468 6520 436F 6E6A 7572 6572 0000 0000 The Conjurer....
+000B01AD 0000 0000 0000                          ......
+
+
+Lonely Black Prince in Diablo's room is now a Reaper:
+
+000AEF74 2C00 0000                               ,...
+changed into
+000AEF74 1C00 0000                               ....
+
+Izual leads a pack of Reapers:
+
+000AF5A0 8800 0000 AC1B 4B00 D41A 4B00 1000 4006 ......K...K...@.
+000AF5B0 1B03 303E 7100 0100 0000 0000 0000 0000 ..0>q...........
+changed into
+000AF5A0 1C00 0000 AC1B 4B00 D41A 4B00 1000 4006 ......K...K...@.
+000AF5B0 1B03 303E 7100 0100 8800 0000 0000 0000 ..0>q...........
+
+
+Bloodhowler (Lava Maw boss) is now a Reaper:
+
+pos name                  type        attacktype        sub  pack  dlvl   HP   damage  MFL   
+ 71 Bloodhowler           Lava Maw    20 Fast Spit       2    3Y    13   360   20- 37  IRR
+    Madeye Oozelover                  13 Butcher         3    1          960   36- 58  RIR  
+
+000AFB60 3100 0000 B416 4B00 841B 4B00 0D00 6801 1.....K...K...h.
+000AFB70 1402 1425 0E00 0300 0000 0000 0000 0000 ...%............
+changed into
+000AFB60 3100 0000 4119 4B00 381A 4B00 0D00 C003 1...A.K.8.K.....
+000AFB70 0D03 243A 5500 0100 1C00 0000 0000 0000 ..$:U...........
+
+000B0341 0000 0042 6C69 6768 7473 746F 6E65 2074 ...Blightstone t
+000B0351 6865 2057 6561 6B00 0000 00             he Weak....
+changed into
+000B0341 4D61 6465 7965 204F 6F7A 656C 6F76 6572 Madeye Oozelover
+000B0351 0000 0000 0000 0000 0000 00             ...........
+
+Bloodlust (Hell Spawn boss) is now a Reaper:
+
+pos name                  type        attacktype        sub  pack  dlvl   HP   damage  MFL   
+ 95 Bloodlust             Hell Spawn  14 Succubi         3    3Y    15   800   25- 45  RRR
+    The Gatekeeper                    13 Butcher         3    1         1300   40- 60  RIR  
+
+000AFE60 6700 0000 5015 4B00 B018 4B00 0F00 2003 g...P.K...K... .
+000AFE70 0E03 192D 0700 0300 0000 0000 0000 0000 ...-............
+changed into
+000AFE60 6700 0000 081A 4B00 CC19 4B00 0F00 1405 g.....K...K.....
+000AFE70 0D03 283C 5500 0100 1C00 0000 0000 0000 ..(<U...........
+
+000B0408 4D61 6465 7965 2074 6865 2044 6561 64   Madeye the Dead
+changed into
+000B0408 5468 6520 4761 7465 6B65 6570 6572 00   The Gatekeeper.
+
+
+Dark Servants will always appear:
+
+000ACC74 BC02 0000                               ....
+changed into
+000ACC74 0100 0000                               ....
+
+So that Doomhowler (Doomspitter boss) can be a Dark Servant:
+
+pos name                  type        attacktype        sub  pack  dlvl   HP   damage  MFL   
+ 42 Doomhowler            Doomspitter 20 Fast Spit       3    3Y    C2   540   28- 45  IRR
+    Viletouch                          2 Skeleton             1         1100   30- 60  III
+
+000AF7C0 3000 0000 CC18 4B00 841B 4B00 1600 1C02 0.....K...K.....
+000AF7D0 1403 1C2D 0E00 0300 0000 0000 0000 0000 ...-............
+changed into
+000AF7C0 3000 0000 8816 4B00 981B 4B00 1600 4C04 0.....K...K...L.
+000AF7D0 0203 1E3C 7800 0100 4700 0000 0000 0000 ...<x...G.......
+
+ 74 Viletouch             Fell Wing   12 Gargoyle        3    3Y    12   520   20- 40  RIR
+    Doomwing
+
+000AFBC4 8816 4B00                               ..K.
+changed into
+000AFBC4 CC18 4B00                               ..K.
+
+000B02CC 446F 6F6D 686F 776C 6572                Doomhowler
+changed into
+000B02CC 446F 6F6D 7769 6E67 0000                Doomwing..
+
+
+Red Horror (Reality Weaver boss) is now a rogue with fire arrows:
+
+pos name                  type        attacktype        sub  pack  dlvl   HP   damage  MFL   
+ 11 Red Horror            Weaver      15 Hidden          3    3Y   16*   950   30- 60  RIR 
+    Nocturnia                         28 Lazarus         5    1           95   17- 23  RRR
+
+000AF3E0 5D00 0000 081B 4B00 281B 4B00 1000 B603 ].....K.(.K.....
+000AF3F0 0F03 1E3C 1500 0300 0000 0000 0000 0000 ...<............
+changed into
+000AF3E0 5D00 0000 081B 4B00 281B 4B00 1000 5F00 ].....K.(.K..._.
+000AF3F0 1C05 1117 4700 0100 6B00 0000 0000 0000 ...&G...k.......
+
+000B0508 5265 6420 486F 7272 6F72                Red Horror
+changed into
+000B0508 4E6F 6374 7572 6E69 6100                Nocturnia.
+
+Forced selection of rogues on 16:
+
+file offset 0003D71D
+
+:0043E31D E9ECC6FFFF              jmp 0043AA0E
+changed into
+:0043E31D E988010000              jmp 0043E4AA
+:0043E322
+
+file offset 0003D8AA
+
+:0043E4AA 90                      nop
+:0043E4AB 90                      nop
+:0043E4AC F6400108                test [eax+01], 08
+:0043E4B0 7503                    jne 0043E4B5
+:0043E4B2 33C0                    xor eax, eax
+:0043E4B4 C3                      ret
+:0043E4B5 6A01                    push 00000001
+:0043E4B7 58                      pop eax
+:0043E4B8 C3                      ret
+:0043E4B9 90                      nop
+:0043E4BA 90                      nop
+changed into
+:0043E4AA 8BD7                    mov edx, edi
+:0043E4AC 6A6B                    push 0000006B
+:0043E4AE 59                      pop ecx
+:0043E4AF E8AAC4FFFF              call 0043A95E
+:0043E4B4 E955C5FFFF              jmp 0043AA0E
+:0043E4B9 90                      nop
+:0043E4BA 90                      nop
+
+
+Shadow Biter (goat archer boss) is now a rogue with fire arrows:
+
+pos name                  type        attacktype        sub  pack  dlvl      HP   damage  MFL
+ 85 Shadow Biter          Death Clan  35 Lich            3    3Y    C2      900   20- 30  IIR
+    Capricornia           Hell Clan   28 Lazarus         5    1     14       95   15- 21  RRR
+
+000AFD20 5600 0000 2A51 4900 841B 4B00 1600 8403 V...*QI...K.....
+000AFD30 2303 141E 1C00 0300 0000 0000 0000 0000 #...............
+changed into
+000AFD20 5600 0000 2B51 4900 841B 4B00 0E00 5F00 V...+QI...K..._.
+000AFD30 1C05 0F15 4700 0100 6B00 0000 0000 0000 ....G...k.......
+
+00093B2A 0053 6861 646F 7720 4269 7465 72        .Shadow Biter
+changed into
+00093B2A 4361 7072 6963 6F72 6E69 6100 00        Capricornia..
+
+Activation sound for Capricornia:
+
+file offset 00042CE8
+
+:004438E8 7507                    jne 004438F1
+:004438EA B9BA030000              mov ecx, 000003BA
+:004438EF EB15                    jmp 00443906
+:004438F1 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:004438F8 7418                    je 00443912
+:004438FA E95DD90000              jmp 0045125C
+:004438FF 90                      nop
+:00443900 90                      nop
+:00443901 90                      nop
+:00443902 90                      nop
+:00443903 90                      nop
+:00443904 90                      nop
+:00443905 90                      nop
+changed into
+:004438E8 7417                    je 00443901
+:004438EA 3C56                    cmp al, 56
+:004438EC 0F84EDEA0000            je 004523DF
+:004438F2 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:004438F9 7417                    je 00443912
+:004438FB E95CD90000              jmp 0045125C
+:00443900 90                      nop
+:00443901 B9BA030000              mov ecx, 000003BA
+
+file offset 000517DF
+
+:004523DF 90                      nop
+:004523E0 90                      nop
+:004523E1 90                      nop
+:004523E2 90                      nop
+:004523E3 90                      nop
+:004523E4 90                      nop
+:004523E5 90                      nop
+:004523E6 90                      nop
+:004523E7 90                      nop
+:004523E8 90                      nop
+changed into
+:004523DF B9A8020000              mov ecx, 000002A8
+:004523E4 E91D15FFFF              jmp 00443906
+:004523E9
+
+
+Small improvement to generic shooter AI:
+
+file offset 000408A9
+
+:004414A9 EB47                    jmp 004414F2
+:004414AB 90                      nop
+:004414AC 90                      nop
+:004414AD 90                      nop
+changed into
+:004414A9 E959AC0200              jmp 0046C107
+:004414AE 
+
+file offset 0006B507
+
+:0046C107 90                      nop
+:0046C108 90                      nop
+:0046C109 90                      nop
+:0046C10A 90                      nop
+:0046C10B 90                      nop
+:0046C10C 90                      nop
+:0046C10D 90                      nop
+:0046C10E 90                      nop
+:0046C10F 90                      nop
+:0046C110 90                      nop
+:0046C111 90                      nop
+changed into
+:0046C107 7D02                    jge 0046C10B
+:0046C109 F7DF                    neg edi
+:0046C10B 2BDA                    sub ebx, edx
+:0046C10D 7D02                    jge 0046C111
+:0046C10F F7DB                    neg ebx
+:0046C111 C3                      ret
+
+file offset 000408DA
+
+:004414DA 7524                    jne 00441500
+changed into
+:004414DA 751B                    jne 004414F7
+:004414DC 
+
+file offset 000408F2
+
+:004414F2 7D02                    jge 004414F6
+:004414F4 F7DF                    neg edi
+:004414F6 2BDA                    sub ebx, edx
+:004414F8 7D02                    jge 004414FC
+:004414FA F7DB                    neg ebx
+:004414FC C3                      ret
+:004414FD 90                      nop
+:004414FE 90                      nop
+:004414FF 90                      nop
+changed into
+:004414F2 9090909090              5*nop
+:004414F7 80BE28DD6900FF          cmp byte ptr [esi+0069DD28], FF
+:004414FE 7539                    jne 00441539
+:00441500 

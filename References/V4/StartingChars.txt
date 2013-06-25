@@ -1,0 +1,79 @@
+Changes for starting characters, related to the character regeneration
+
+
+Changing Sorcerer's starting Staff of Mana into Staff of Charged Bolt with less damage:
+
+000A0744 0000 0000 0102 0000 6D00 0000 0A00 0000 ........m.......
+000A0754 D855 4A00 0000 0000 0100 0000 1900 0000 .UJ.............
+000A0764 0200 0000 0400 0000 0000 0000 0000 0000 ................
+000A0774 0014 0000 0000 0000 1700 0000 2500 0000 ............%...
+000A0784 0000 0000 0802 0000 0802 0000           ............
+wordt
+000A0764 0100 0000 0200 0000                     ........
+000A0780 1E00 0000                               ....
+
+000A3FD8 5368 6F72 7420 5374 6166 6620 6F66 204D Short Staff of M
+000A3FE8 616E 6100                               ana.
+wordt
+000A3FD8 5374 6166 6620 6F66 2042 6F6C 7473 0000 Staff of Bolts..
+000A3FE8 0000 0000                               ....
+
+
+Sorcerer and Bard start with 2 Rejuvenation potions:
+
+File Offset 0002429F
+
+:00424E9F A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424EA4 6A18                    push 00000018
+:00424EA6 5A                      pop edx
+wordt
+:00424E9F 6A18                    push 00000018
+:00424EA1 5A                      pop edx
+:00424EA2 E828E70200              call 004535CF
+:00424EA7
+
+File Offset 000242C4
+
+:00424EC4 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00424EC9 6A18                    push 00000018
+:00424ECB 5A                      pop edx
+wordt
+:00424EC4 6A18                    push 00000018
+:00424EC6 5A                      pop edx
+:00424EC7 E803E70200              call 004535CF
+:00424ECC
+
+Using last free space from Fountain of Tears:
+
+File Offset 000529CF
+
+:004535CF 90                      nop
+:004535D0 90                      nop
+:004535D1 90                      nop
+:004535D2 FF742418                push [esp+18]
+:004535D6 EB7E                    jmp 00453656
+:004535D8 80BE00E66D0000          cmp byte ptr [esi+006DE600], 00
+:004535DF 0F84CC010000            je 004537B1
+:004535E5 33DB                    xor ebx, ebx
+:004535E7 391D10AB6D00            cmp dword ptr [006DAB10], ebx
+:004535ED 7514                    jne 00453603
+wordt
+:004535CF A114AE6E00              mov eax, dword ptr [006EAE14]
+:004535D4 80BC186001000002        cmp byte ptr [eax+ebx+00000160], 02
+:004535DC 740A                    je 004535E8
+:004535DE 80BC186001000004        cmp byte ptr [eax+ebx+00000160], 04
+:004535E6 7503                    jne 004535EB
+:004535E8 83C239                  add edx, 00000039
+:004535EB C3                      ret
+:004535EC 909090                  3*nop
+
+
+Slower level-gaining in first Church floor: 
+
+Cap for Xp gaining 1/20 of Xp-needed-for-next-level changed into 1/30 of the same amount 
+
+File Offset 00057943
+
+:00458543 6A14                    push 00000014
+wordt
+:00458543 6A1E                    push 0000001E

@@ -1,0 +1,91 @@
+Changing Nova and Immolation into remote effects, as the corresponding runes
+
+
+Spells
+pos nbr name                type       qlvl(bo) qlvl(st) ini  min  dec  req charges  effects  price(bo) multiplier
+
+ 17  18 Nova                lightning      14       10    80   40    2   90 15- 30  42: -: -   21000        260
+                                                               60    1  100         91: -: -
+000B63D8 1250 0100 B082 4B00 0000 0000 0E00 0000 .P....K.........
+000B63E8 0A00 0000 0000 0000 0000 0000 5A00 0000 ............Z...
+000B63F8 542A 0000 0228 0000 0F00 0000 1E00 0000 T*...(..........
+000B6408 0852 0000 1405 0000                     .R......
+changed into
+000B63F4 6400 0000                               d...
+000B63F9 5B00 00                                 [..
+000B63FC 013C                                    .<
+                                                            
+ 40  41 Immolation          fire           14       10    80   40    2   95 15- 30  72: -: -   21000        260
+                                                               60    1  100         92: -: -
+000B68E0 2950 0000 AC81 4B00 0000 0000 0E00 0000 )P....K.........
+000B68F0 0A00 0000 0000 0000 0000 0000 5F00 0000 ............_...
+000B6900 5248 0000 0228 0000 0F00 0000 1E00 0000 RH...(..........
+000B6910 0852 0000 1405 0000                     .R......
+changed into
+000B68FC 6400 0000                               d...
+000B6901 5C00 00                                 \..
+000B6904 013C                                    .<
+
+ 48  49 Rune of Nova        magic/other   255      255   255   10    1   48 40- 80  91: -: -    8000         60
+
+5B	Greater Rune of Lightning
+A6D5C	5B00 0000 BE01 4300 D85A
+	4300 0100 0000 0100 3400
+	FFFF FFFF FFFF FFFF
+
+Correcting manacost for this spell effect:
+
+file offset 0002F5E1
+
+:004301E1 6A31                    push 00000031		49-Rune Nova
+changed into
+:004301E1 6A12                    push 00000012		18-Nova
+
+
+ 49  50 Rune of Immolation  magic/other   255      255   255   10    1   48 40- 80  92: -: -    8000         60
+
+5C	Greater Rune of Fire
+A6D78	5C00 0000 3E02 4300 D85A
+	4300 0100 0000 0100 3400
+	FFFF FFFF FFFF FFFF
+
+Correcting manacost for this spell effect:
+
+file offset 0002F661
+
+:00430261 6A32                    push 00000032		50-Rune Immolation
+changed into
+:00430261 6A29                    push 00000029		41-Immolation
+
+
+
+Information from JG:
+
+Nova
+
+Type: lightning
+Min. Damage: 5·Rec(slvl, 2 + [clvl/2])
+Max. Damage: 5·Rec(slvl, 15 + [clvl/2])
+Quick Min. Damage: 5·(2 + clvl/2) · (9/8) ^slvl
+Quick Max. Damage: 5·(15 + clvl/2) · (9/8) ^slvl
+Real Damage: Rec(slvl, (Itt(5, Rnd[6]) + clvl + 5)/2)
+Number of bolts: 92
+Speed: 16
+Blockable: No
+
+Immolation
+
+Type: fire
+Min. Damage: 5·Rec(slvl, 2 + clvl/2)
+Max. Damage: 5·Rec(slvl, 15 + clvl/2)
+Quick Min. Damage: 5·(2 + clvl/2) · (9/8) ^slvl
+Quick Max. Damage: 5·(15 + clvl/2) · (9/8) ^slvl
+Real Damage: Rec(slvl, (Itt(5, Rnd[6]) + clvl + 5)/2)
+Number of bolts: 92
+Speed: 16 + slvl
+
+Note:
+* Does the same damage as Nova.
+* Immolation will use bolts that are basically fireballs
+(including splash damage), they just has a different
+damage and speed compared to normal fireballs.

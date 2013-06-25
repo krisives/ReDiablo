@@ -1,0 +1,31 @@
+ToHit for Arrow using monsters:
+
+ToHit = BaseToHit - 2*distance - AC + 40 + 2*(mlvl-clvl)
+     -> BaseToHit - 2*distance - AC + 40 + 8*(mlvl-clvl)
+
+This formula now resembles that of Melee ToHit.
+
+File Offset 0002EAB4
+
+:0042F6B4 742B                    je 0042F6E1
+wordt
+:0042F6B4 742E                    je 0042F6E4
+
+File Offset 0002EAD4
+
+:0042F6D4 8D5C5028                lea ebx, dword ptr [eax+2*edx+28]
+:0042F6D8 8B4508                  mov eax, dword ptr [ebp+08]
+:0042F6DB 03C0                    add eax, eax
+:0042F6DD 2BD8                    sub ebx, eax
+:0042F6DF EB0C                    jmp 0042F6ED
+:0042F6E1 8B4508                  mov eax, dword ptr [ebp+08]
+wordt
+:0042F6D4 909090                  3*nop
+:0042F6D7 8D5CD028                lea ebx, dword ptr [eax+8*edx+28]
+:0042F6DB 8B4508                  mov eax, dword ptr [ebp+08]
+:0042F6DE 03C0                    add eax, eax
+:0042F6E0 2BD8                    sub ebx, eax
+:0042F6E2 EB09                    jmp 0042F6ED
+
+
+More changed then necessary, due to failed earlier attempts.

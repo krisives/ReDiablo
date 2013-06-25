@@ -1,0 +1,528 @@
+Monster AI Routines
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004439E1(C)
+|
+:004439EE 0FB68620DD6900          movzx eax, byte ptr [esi+0069DD20]
+:004439F5 8BCB                    mov ecx, ebx
+:004439F7 FF1485C0374B00          call dword ptr [4*eax+004B37C0]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004439EC(C)
+|
+:004439FE 8B868CDC6900            mov eax, dword ptr [esi+0069DC8C]
+:00443A04 83F811                  cmp eax, 00000011
+
+
+004B37C0:B21C0 is:
+
+000B21C0 36FC 4300 C406 4400 F5FD 4300 F704 4400 6.C...D...C...D.
+000B21D0 9616 4400 1A27 4400 0E14 4400 3416 4400 ..D..'D...D.4.D.
+000B21E0 5F0E 4400 821E 4400 F923 4400 9802 4400 _.D...D..#D...D.
+000B21F0 EC19 4400 D710 4400 3E16 4400 6508 4400 ..D...D.>.D.e.D.
+000B2200 911E 4400 3F0C 4400 2030 4400 AF1E 4400 ..D.?.D. 0D...D.
+000B2210 7516 4400 E021 4400 2131 4400 6032 4400 u.D..!D.!1D.`2D.
+000B2220 0B00 4400 B52C 4400 D521 4400 BE1E 4400 ..D..,D..!D...D.
+000B2230 AB33 4400 1B35 4400 D535 4400 B136 4400 .3D..5D..5D..6D.
+000B2240 8016 4400 8B16 4400 042A 4400 4916 4400 ..D...D..*D.I.D.
+000B2250 5416 4400 5F16 4400 6A16 4400 A01E 4400 T.D._.D.j.D...D.
+
+
+So:
+
+ 34 Doomskull the Unholy       0 Zombie 		00	004B37C0 0043FC36
+ 23 Bilefroth                  1 Overlord  		01	004B37C4 004406C4
+ 10 King of the Nest           2 Skeleton 		02	004B37C8 0043FDF5
+			       3 SkeletonArcher  	03	004B37CC 004404F7
+			       4 Scavenger		04	004B37D0 00441696
+ 44 Deathshade Fleshmaul       5 Horned Demon		05	004B37D4 0044271A
+ 90 Scissorclaw                6 Goat Man 		06	004B37D8 0044140E
+ 49 Gorestone                  7 Goat Archer		07	004B37DC 00441634 *
+			       8 Fallen One		08	004B37E0 00440E5F
+ 50 Bronzefist Firestone       9 Magma Demon		09	004B37E4 00441E82
+  1 Skeleton King             10 Skeleton King 		0A	004B37E8 004423F9
+ 32 Wrathraven                11 Winged Fiend  		0B	004B37EC 00440298
+ 24 Winglord                  12 Gargoyle 		0C	004B37F0 004419EC
+  9 The Butcher               13 Butcher 		0D	004B37F4 004410D7
+ 13 Aguinara                  14 Succubi		0E	004B37F8 0044163E *
+ 11 Red Horror                15 Hidden 		0F	004B37FC 00440865
+ 16 Master of the Storm       16 Lightning Demon 	10	004B3800 00441E91
+			      17 Incinerator		11	004B3804 00440C3F
+  0 Gharbad the Weak          18 Gharbad		12	004B3808 00443020
+			      19 Spit			13	004B380C 00441EAF
+ 42 Doomhowler                20 Fast Spit 		14	004B3810 00441675 *
+			      21 Golem			15	004B3814 004421E0
+  2 Zhar the Mad              22 Zhar the Mad 		16	004B3818 00443121
+  3 Snotspill                 23 Snotspil   		17	004B381C 00443260
+ 14 The Cursed Captain        24 Viper  		18	004B3820 0044000B
+ 73 Blacktongue               25 Mage  			19	004B3824 00442CB5
+ 17 Wrathfire                 26 Balrog 		1A	004B3828 004421D5
+ 12 The Dark Ghost            27 Diablo 		1B	004B382C 00441EBE
+  4 Arch-Bishop Lazarus       28 Lazarus      		1C	004B3830 004433AB	as mage, but no delays
+  5 Red Vex                   29 Succubi at Laz		1D	004B3834 0044351B *
+  7 Lachdanan                 30 Lachdanan		1E	004B3838 004435D5
+  8 Warlord of Blood          31 Warlord 		1F	004B383C 004436B1
+			      32 FireBat [1]		20	004B3840 00441680 *
+			      33 HellBat [6]		21	004B3844 0044168B *	fire arrow archer
+			      34 Horkdemon		22	004B3848 00442A04
+			      35 Lich [62]		23	004B384C 00441649 *	lightning arrow archer
+ 62 Horazon the Summoner      36 Arch lich [65]		24	004B3850 00441654 *
+ 27 The Beholder              37 Psychorb [63] 		25	004B3854 0044165F *
+    unused						26	004B3858 0044166A *
+							27	004B385C 00441EA0
+
+
+* = uses generic shooter AI code
+
+Check on Quest AI's
+
+* Referenced by a CALL at Addresses:
+|:0042310D   , :0043CA7D   
+|
+:0043C898 69C9E4000000            imul ecx, 000000E4
+:0043C89E 8A8920DD6900            mov cl, byte ptr [ecx+0069DD20]
+:0043C8A4 80F91C                  cmp cl, 1C
+:0043C8A7 7421                    je 0043C8CA
+:0043C8A9 80F91F                  cmp cl, 1F
+:0043C8AC 741C                    je 0043C8CA
+:0043C8AE 80F912                  cmp cl, 12
+:0043C8B1 7417                    je 0043C8CA
+:0043C8B3 80F916                  cmp cl, 16
+:0043C8B6 7412                    je 0043C8CA
+:0043C8B8 80F917                  cmp cl, 17
+:0043C8BB 740D                    je 0043C8CA
+:0043C8BD 80F91E                  cmp cl, 1E
+:0043C8C0 7408                    je 0043C8CA
+:0043C8C2 80F91D                  cmp cl, 1D
+:0043C8C5 7403                    je 0043C8CA
+:0043C8C7 33C0                    xor eax, eax
+:0043C8C9 C3                      ret
+
+
+
+
+Butcher:
+
+- eax = Attack Type
+- ebx = ecx
+- esi = monster-id
+
+
+:004410D7 51                      push ecx
+:004410D8 53                      push ebx
+:004410D9 55                      push ebp
+:004410DA 56                      push esi
+:004410DB 81F9C8000000            cmp ecx, 000000C8
+:004410E1 57                      push edi
+:004410E2 894C2410                mov dword ptr [esp+10], ecx
+:004410E6 0F838A000000            jnb 00441176
+:004410EC 8BF1                    mov esi, ecx
+:004410EE 69F6E4000000            imul esi, 000000E4
+:004410F4 81C688DC6900            add esi, 0069DC88
+:004410FA 837E0400                cmp dword ptr [esi+04], 00000000
+:004410FE 7576                    jne 00441176			jmp exit if already busy
+:00441100 80BEA000000000          cmp byte ptr [esi+000000A0], 00
+:00441107 746D                    je 00441176			jmp exit if inactive
+:00441109 8B4E20                  mov ecx, dword ptr [esi+20]	coordinate
+:0044110C FFB6AC000000            push dword ptr [esi+000000AC]
+:00441112 0FB64650                movzx eax, byte ptr [esi+50]
+:00441116 8B5624                  mov edx, dword ptr [esi+24]	coordinate
+:00441119 FFB6A8000000            push dword ptr [esi+000000A8]
+:0044111F 8BF9                    mov edi, ecx
+:00441121 8BEA                    mov ebp, edx
+:00441123 2BF8                    sub edi, eax
+:00441125 0FB64651                movzx eax, byte ptr [esi+51]
+:00441129 2BE8                    sub ebp, eax
+:0044112B E88A8DFDFF              call 00419EBA
+:00441130 8BD8                    mov ebx, eax
+:00441132 57                      push edi
+:00441133 895E48                  mov dword ptr [esi+48], ebx
+:00441136 E8959A0300              call 0047ABD0			eax := +[esp+04]
+:0044113B 83F802                  cmp eax, 00000002
+:0044113E 59                      pop ecx
+:0044113F 7D17                    jge 00441158			jmp if eax > 1
+:00441141 55                      push ebp
+:00441142 E8899A0300              call 0047ABD0
+:00441147 83F802                  cmp eax, 00000002
+:0044114A 59                      pop ecx
+:0044114B 7D0B                    jge 00441158			jmp if eax > 1
+:0044114D 8B4C2410                mov ecx, dword ptr [esp+10]	ecx := Target (?)
+:00441151 E81DECFFFF              call 0043FD73			Attack
+:00441156 EB0B                    jmp 00441163
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044113F(C), :0044114B(C)
+|
+:00441158 8B4C2410                mov ecx, dword ptr [esp+10]
+:0044115C 8BD3                    mov edx, ebx
+:0044115E E8D4E7FFFF              call 0043F937
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00441156(U)
+|
+:00441163 837E0400                cmp dword ptr [esi+04], 00000000
+:00441167 750D                    jne 00441176
+:00441169 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:0044116F 8B44980C                mov eax, dword ptr [eax+4*ebx+0C]
+:00441173 894654                  mov dword ptr [esi+54], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004410E6(C), :004410FE(C), :00441107(C), :00441167(C)
+|
+:00441176 5F                      pop edi
+:00441177 5E                      pop esi
+:00441178 5D                      pop ebp
+:00441179 5B                      pop ebx
+:0044117A 59                      pop ecx
+:0044117B C3                      ret
+
+
+
+
+
+02 Skeleton
+
+
+* Referenced by a CALL at Addresses:
+|:0044104F   , :00441969   , :004421C9   , :00443759   
+|
+:0043FDF5 51                      push ecx
+:0043FDF6 53                      push ebx
+:0043FDF7 55                      push ebp
+:0043FDF8 56                      push esi
+:0043FDF9 81F9C8000000            cmp ecx, 000000C8
+:0043FDFF 57                      push edi
+:0043FE00 894C2410                mov dword ptr [esp+10], ecx
+:0043FE04 0F8316010000            jnb 0043FF20
+:0043FE0A 8BF1                    mov esi, ecx
+:0043FE0C 69F6E4000000            imul esi, 000000E4
+:0043FE12 81C688DC6900            add esi, 0069DC88
+:0043FE18 837E0400                cmp dword ptr [esi+04], 00000000
+:0043FE1C 0F85FE000000            jne 0043FF20
+:0043FE22 80BEA000000000          cmp byte ptr [esi+000000A0], 00
+:0043FE29 0F84F1000000            je 0043FF20
+:0043FE2F 8B4E20                  mov ecx, dword ptr [esi+20]
+:0043FE32 FFB6AC000000            push dword ptr [esi+000000AC]
+:0043FE38 0FB64650                movzx eax, byte ptr [esi+50]
+:0043FE3C 8B5624                  mov edx, dword ptr [esi+24]
+:0043FE3F FFB6A8000000            push dword ptr [esi+000000A8]
+:0043FE45 8BF9                    mov edi, ecx
+:0043FE47 8BEA                    mov ebp, edx
+:0043FE49 2BF8                    sub edi, eax
+:0043FE4B 0FB64651                movzx eax, byte ptr [esi+51]
+:0043FE4F 2BE8                    sub ebp, eax
+:0043FE51 E864A0FDFF              call 00419EBA
+:0043FE56 8BD8                    mov ebx, eax
+:0043FE58 57                      push edi
+:0043FE59 895E48                  mov dword ptr [esi+48], ebx
+:0043FE5C E86FAD0300              call 0047ABD0
+:0043FE61 83F802                  cmp eax, 00000002
+:0043FE64 59                      pop ecx
+:0043FE65 7D51                    jge 0043FEB8
+:0043FE67 55                      push ebp
+:0043FE68 E863AD0300              call 0047ABD0
+:0043FE6D 83F802                  cmp eax, 00000002
+:0043FE70 59                      pop ecx
+:0043FE71 7D45                    jge 0043FEB8
+:0043FE73 837E700D                cmp dword ptr [esi+70], 0000000D
+:0043FE77 7434                    je 0043FEAD
+:0043FE79 6A64                    push 00000064
+:0043FE7B B169                    mov cl, 69
+:0043FE7D 5A                      pop edx
+:0043FE7E E8D7A0FDFF              call 00419F5A
+:0043FE83 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]	ecx := subtype
+:0043FE8A 8D4C0914                lea ecx, dword ptr [ecx+ecx+14]	ecx := 20+2*ecx
+:0043FE8E 3BC1                    cmp eax, ecx
+:0043FE90 7C1B                    jl 0043FEAD		jmp attack if rnd[100] < 20+2*ST
+:0043FE92 6A0A                    push 0000000A
+:0043FE94 B169                    mov cl, 69
+:0043FE96 5A                      pop edx
+:0043FE97 E8BEA0FDFF              call 00419F5A
+:0043FE9C 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]
+:0043FEA3 6A05                    push 00000005
+:0043FEA5 5A                      pop edx
+:0043FEA6 2BD1                    sub edx, ecx
+:0043FEA8 8D1450                  lea edx, dword ptr [eax+2*edx]
+:0043FEAB EB4A                    jmp 0043FEF7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043FE77(C), :0043FE90(C)
+|
+:0043FEAD 8B4C2410                mov ecx, dword ptr [esp+10]
+:0043FEB1 E8BDFEFFFF              call 0043FD73		Do attack
+:0043FEB6 EB55                    jmp 0043FF0D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043FE65(C), :0043FE71(C)
+|
+:0043FEB8 837E700D                cmp dword ptr [esi+70], 0000000D
+:0043FEBC 7444                    je 0043FF02
+:0043FEBE 6A64                    push 00000064
+:0043FEC0 B16A                    mov cl, 6A
+:0043FEC2 5A                      pop edx
+:0043FEC3 E892A0FDFF              call 00419F5A
+:0043FEC8 0FB68E99000000          movzx ecx, byte ptr [esi+00000099]
+:0043FECF 6A23                    push 00000023
+:0043FED1 C1E102                  shl ecx, 02
+:0043FED4 5A                      pop edx
+:0043FED5 2BD1                    sub edx, ecx
+:0043FED7 3BC2                    cmp eax, edx
+:0043FED9 7D27                    jge 0043FF02
+:0043FEDB 6A0A                    push 0000000A
+:0043FEDD B16A                    mov cl, 6A
+:0043FEDF 5A                      pop edx
+:0043FEE0 E875A0FDFF              call 00419F5A
+:0043FEE5 8BD0                    mov edx, eax
+:0043FEE7 0FB68699000000          movzx eax, byte ptr [esi+00000099]
+:0043FEEE 6A0F                    push 0000000F
+:0043FEF0 D1E0                    shl eax, 1
+:0043FEF2 59                      pop ecx
+:0043FEF3 2BC8                    sub ecx, eax
+:0043FEF5 03D1                    add edx, ecx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043FEAB(U)
+|
+:0043FEF7 8B4C2410                mov ecx, dword ptr [esp+10]
+:0043FEFB E826000000              call 0043FF26
+:0043FF00 EB0B                    jmp 0043FF0D
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043FEBC(C), :0043FED9(C)
+|
+:0043FF02 8B4C2410                mov ecx, dword ptr [esp+10]
+:0043FF06 8BD3                    mov edx, ebx
+:0043FF08 E82AFAFFFF              call 0043F937
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043FEB6(U), :0043FF00(U)
+|
+:0043FF0D 837E0400                cmp dword ptr [esi+04], 00000000
+:0043FF11 750D                    jne 0043FF20
+:0043FF13 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:0043FF19 8B44980C                mov eax, dword ptr [eax+4*ebx+0C]
+:0043FF1D 894654                  mov dword ptr [esi+54], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043FE04(C), :0043FE1C(C), :0043FE29(C), :0043FF11(C)
+|
+:0043FF20 5F                      pop edi
+:0043FF21 5E                      pop esi
+:0043FF22 5D                      pop ebp
+:0043FF23 5B                      pop ebx
+:0043FF24 59                      pop ecx
+:0043FF25 C3                      ret
+
+
+
+
+AI for Ranged attackers:
+
+:00441634 6A00                    push 00000000			Archer
+:00441636 33D2                    xor edx, edx
+:00441638 E8D9FDFFFF              call 00441416
+:0044163D C3                      ret
+
+* Referenced by a CALL at Address:
+|:004435A6   
+|
+:0044163E 6A00                    push 00000000			Succubi
+:00441640 6A18                    push 00000018
+:00441642 5A                      pop edx
+:00441643 E8CEFDFFFF              call 00441416
+:00441648 C3                      ret
+
+
+:00441649 6A00                    push 00000000			Lightning arrow Archer
+:0044164B 6A38                    push 00000038
+:0044164D 5A                      pop edx
+:0044164E E8C3FDFFFF              call 00441416
+:00441653 C3                      ret
+
+
+:00441654 6A00                    push 00000000			(Arch-)Lich
+:00441656 6A65                    push 00000065
+:00441658 5A                      pop edx
+:00441659 E8B8FDFFFF              call 00441416
+:0044165E C3                      ret
+
+
+:0044165F 6A00                    push 00000000			Scowler
+:00441661 6A63                    push 00000063
+:00441663 5A                      pop edx
+:00441664 E8ADFDFFFF              call 00441416
+:00441669 C3                      ret
+
+
+:0044166A 6A00                    push 00000000			unused (Hellfire's Necromorb)
+:0044166C 6A64                    push 00000064
+:0044166E 5A                      pop edx
+:0044166F E8A2FDFFFF              call 00441416
+:00441674 C3                      ret
+
+
+:00441675 6A01                    push 00000001			Fastspit
+:00441677 6A39                    push 00000039
+:00441679 5A                      pop edx
+:0044167A E897FDFFFF              call 00441416
+:0044167F C3                      ret
+
+
+:00441680 6A00                    push 00000000			Firebat
+:00441682 6A01                    push 00000001
+:00441684 5A                      pop edx
+:00441685 E88CFDFFFF              call 00441416
+:0044168A C3                      ret
+
+
+:0044168B 6A00                    push 00000000			Fire arrow Archer
+:0044168D 6A1B                    push 0000001B
+:0044168F 5A                      pop edx
+:00441690 E881FDFFFF              call 00441416
+:00441695 C3                      ret
+
+
+The following is information only.
+
+
+Original code:
+
+Note that delays are only done after using a primary attack. This is why fastspitting dogs, who use the second attack to spit, never delay and thus spit really fast.
+
+:00441416 55                      push ebp
+:00441417 8BEC                    mov ebp, esp
+:00441419 83EC14                  sub esp, 00000014
+:0044141C 53                      push ebx
+:0044141D 56                      push esi
+:0044141E 81F9C8000000            cmp ecx, 000000C8
+:00441424 57                      push edi
+:00441425 8955F4                  mov dword ptr [ebp-0C], edx
+:00441428 894DFC                  mov dword ptr [ebp-04], ecx
+:0044142B 0F835B010000            jnb 0044158C
+:00441431 8BF1                    mov esi, ecx
+:00441433 69F6E4000000            imul esi, 000000E4
+:00441439 83BE8CDC690000          cmp dword ptr [esi+0069DC8C], 00000000	skip all if already busy
+:00441440 0F8546010000            jne 0044158C					skip all if already busy
+:00441446 8A8628DD6900            mov al, byte ptr [esi+0069DD28]
+:0044144C 3CFF                    cmp al, FF
+:0044144E 743D                    je 0044148D					jmp if in sight
+:00441450 F68624DD690010          test byte ptr [esi+0069DD24], 10
+:00441457 7534                    jne 0044148D					jmp if target is monster
+:00441459 84C0                    test al, al
+:0044145B 0F842B010000            je 0044158C					skip all if not active
+:00441461 FFB634DD6900            push dword ptr [esi+0069DD34]			(last known) target coordinate
+:00441467 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]		shooter coordinate
+:0044146D 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]		shooter coordinate
+:00441473 FFB630DD6900            push dword ptr [esi+0069DD30]			(last known) target coordinate
+:00441479 E83C8AFDFF              call 00419EBA					set facing direction
+:0044147E 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00441481 8BD0                    mov edx, eax
+:00441483 E8AFE4FFFF              call 0043F937					start follow target
+:00441488 E9FF000000              jmp 0044158C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044144E(C), :00441457(C)
+|
+:0044148D 0FB686D8DC6900          movzx eax, byte ptr [esi+0069DCD8]		(real) target coordinate
+:00441494 0FB696D9DC6900          movzx edx, byte ptr [esi+0069DCD9]		(real) target coordinate
+:0044149B 8BBEA8DC6900            mov edi, dword ptr [esi+0069DCA8]		shooter coordinate
+:004414A1 8B9EACDC6900            mov ebx, dword ptr [esi+0069DCAC]		shooter coordinate
+:004414A7 8945EC                  mov dword ptr [ebp-14], eax
+:004414AA 8955F0                  mov dword ptr [ebp-10], edx
+:004414AD 2BF8                    sub edi, eax
+:004414AF 2BDA                    sub ebx, edx
+:004414B1 E8AEBBFFFF              call 0043D064	
+:004414B6 80BE28DD6900FF          cmp byte ptr [esi+0069DD28], FF
+:004414BD 8945F8                  mov dword ptr [ebp-08], eax			store facing direction
+:004414C0 7308                    jnb 004414CA					jmp if in sight
+:004414C2 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004414C5 E86AE40000              call 0044F934					
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004414C0(C)
+|
+:004414CA 8B45F8                  mov eax, dword ptr [ebp-08]
+:004414CD 83BEF8DC69000A          cmp dword ptr [esi+0069DCF8], 0000000A	
+:004414D4 8986D0DC6900            mov dword ptr [esi+0069DCD0], eax
+:004414DA 7516                    jne 004414F2					jmp if not attacking before	
+:004414DC 6A14                    push 00000014
+:004414DE B176                    mov cl, 76
+:004414E0 5A                      pop edx
+:004414E1 E8748AFDFF              call 00419F5A
+:004414E6 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:004414E9 8BD0                    mov edx, eax
+:004414EB E836EAFFFF              call 0043FF26					start delay
+:004414F0 EB47                    jmp 00441539
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:004414DA(C)
+|
+:004414F2 57                      push edi
+:004414F3 E8D8960300              call 0047ABD0
+:004414F8 83F804                  cmp eax, 00000004
+:004414FB 59                      pop ecx
+:004414FC 7D3B                    jge 00441539
+:004414FE 53                      push ebx
+:004414FF E8CC960300              call 0047ABD0
+:00441504 83F804                  cmp eax, 00000004
+:00441507 59                      pop ecx
+:00441508 7D2F                    jge 00441539
+:0044150A 6A64                    push 00000064
+:0044150C B177                    mov cl, 77
+:0044150E 5A                      pop edx
+:0044150F E8468AFDFF              call 00419F5A
+:00441514 0FB68E21DD6900          movzx ecx, byte ptr [esi+0069DD21]		attack subtype
+:0044151B 83C107                  add ecx, 00000007
+:0044151E 8D0C89                  lea ecx, dword ptr [ecx+4*ecx]
+:00441521 D1E1                    shl ecx, 1
+:00441523 3BC1                    cmp eax, ecx
+:00441525 7D12                    jge 00441539
+:00441527 8B45F8                  mov eax, dword ptr [ebp-08]
+:0044152A 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0044152D 8B148520374B00          mov edx, dword ptr [4*eax+004B3720]
+:00441534 E8FEE3FFFF              call 0043F937					start walk
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:004414F0(U), :004414FC(C), :00441508(C), :00441525(C)
+|
+:00441539 83BE8CDC690000          cmp dword ptr [esi+0069DC8C], 00000000
+:00441540 754A                    jne 0044158C
+:00441542 FF75F0                  push [ebp-10]
+:00441545 8B96ACDC6900            mov edx, dword ptr [esi+0069DCAC]
+:0044154B 8B8EA8DC6900            mov ecx, dword ptr [esi+0069DCA8]
+:00441551 FF75EC                  push [ebp-14]
+:00441554 E86E2A0000              call 00443FC7					check for clear LOS
+:00441559 85C0                    test eax, eax
+:0044155B 741C                    je 00441579
+:0044155D 837D0800                cmp dword ptr [ebp+08], 00000000
+:00441561 8B55F4                  mov edx, dword ptr [ebp-0C]
+:00441564 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00441567 6A04                    push 00000004
+:00441569 7407                    je 00441572
+:0044156B E823000000              call 00441593					start ranged attack (dogs)
+:00441570 EB1A                    jmp 0044158C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00441569(C)
+|
+:00441572 E8B5F0FFFF              call 0044062C					start ranged attack (other)
+:00441577 EB13                    jmp 0044158C
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044155B(C)
+|
+:00441579 8B8664DD6900            mov eax, dword ptr [esi+0069DD64]
+:0044157F 8B4DF8                  mov ecx, dword ptr [ebp-08]
+:00441582 8B44880C                mov eax, dword ptr [eax+4*ecx+0C]
+:00441586 8986DCDC6900            mov dword ptr [esi+0069DCDC], eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0044142B(C), :00441440(C), :0044145B(C), :00441488(U), :00441540(C)
+|:00441570(U), :00441577(U)
+|
+:0044158C 5F                      pop edi
+:0044158D 5E                      pop esi
+:0044158E 5B                      pop ebx
+:0044158F C9                      leave
+:00441590 C20400                  ret 0004
+

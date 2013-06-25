@@ -1,0 +1,22 @@
+()Melee Player vs. Player : Friendly Hit enabled
+
+
+1e Poging -> werkt niet
+
+:0045BEB8 7407                    je 0045BEC1
+wordt
+:0045BEB8 EB07                    jmp 0045BEC1
+
+2e Poging -> werkt niet
+
+:0045BEAF 7509                    jne 0045BEBA
+wordt
+:0045BEAF 9090                    2*nop
+
+3e Poging -> werkt niet
+
+:0045BF64 7418                    je 0045BF7E
+()wordt
+:0045BF64 9090                    2*nop
+
+Latere poging wel.

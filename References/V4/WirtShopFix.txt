@@ -1,0 +1,16 @@
+Wirt no longer tries to sell items that are more expensive then what the character already has, and no longer restricts himself to item types the character does not have:
+
+File Offset 0002A2F7
+
+:0042AEF7 7D0D                    jge 0042AF06
+wordt
+:0042AEF7 EB0D                    jmp 0042AF06
+
+At last he tries to sell a bow to Laurelin, even when she already has 3 bows with her.
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+Barbarian gets stunned at damage>1.25*clvl, others at damage>clvl
+
+:00459F09 80BC306001000005        cmp byte ptr [eax+esi+00000160], 05
+:00459F11 8D0C30                  lea ecx, dword ptr [eax+esi]
+:00459F14 7522                    jne 00459F38
+:00459F16 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00459F1D 6A04                    push 00000004
+:00459F1F 99                      cdq
+:00459F20 5F                      pop edi
+:00459F21 F7FF                    idiv edi
+:00459F23 8BD0                    mov edx, eax
+:00459F25 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00459F2C 03D0                    add edx, eax
+:00459F2E 8B45FC                  mov eax, dword ptr [ebp-04]
+:00459F31 C1F806                  sar eax, 06
+:00459F34 3BC2                    cmp eax, edx
+:00459F36 EB0C                    jmp 00459F44
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:00459F14(C)
+|
+:00459F38 0FBE81B8010000          movsx eax, byte ptr [ecx+000001B8]
+:00459F3F C1FF06                  sar edi, 06
+:00459F42 3BF8                    cmp edi, eax
+
+Voorstel:
+
+()Barbarian gets stunned at damage>2*clvl
+
+:00459F1D 6A04                    push 00000004
+wordt
+:00459F1D 6A01                    push 00000001
+

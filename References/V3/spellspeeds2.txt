@@ -1,0 +1,12 @@
+Spell speeds in The Dark
+
+
+()BoneSpirit and DoomSerpents speed : 16 -> 10
+
+:0043A4E2 6A10                    push 00000010
+wordt
+:0043A4E2 6A0A                    push 0000000A
+
+:00452631 6A10                    push 00000010
+wordt
+:00452631 6A0A                    push 0000000A

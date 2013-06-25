@@ -1,0 +1,41 @@
+
+:0040C9A2 002424                  add byte ptr [esp], ah
+:0040C9A5 2424                    and al, 24
+:0040C9A7 2424                    and al, 24
+:0040C9A9 2424                    and al, 24
+:0040C9AB 2424                    and al, 24
+:0040C9AD 2424                    and al, 24
+:0040C9AF 2424                    and al, 24
+:0040C9B1 2424                    and al, 24
+:0040C9B3 2424                    and al, 24
+:0040C9B5 2401                    and al, 01
+:0040C9B7 2402                    and al, 02
+:0040C9B9 03040506072408          add eax, dword ptr [eax+08240706]
+:0040C9C0 09240A                  or dword ptr [edx+ecx], esp
+:0040C9C3 2424                    and al, 24
+:0040C9C5 2424                    and al, 24
+:0040C9C7 0B240C                  or esp, dword ptr [esp+ecx]
+:0040C9CA 0D0E0F1011              or eax, 11100F0E
+:0040C9CF 2412                    and al, 12
+:0040C9D1 132414                  adc esp, dword ptr [esp+edx]
+:0040C9D4 2424                    and al, 24
+:0040C9D6 2424                    and al, 24
+:0040C9D8 1524161718              adc eax, 18171624
+:0040C9DD 191A                    sbb dword ptr [edx], ebx
+:0040C9DF 1B241C                  sbb esp, dword ptr [esp+ebx]
+:0040C9E2 1D241E2424              sbb eax, 24241E24
+:0040C9E7 2424                    and al, 24
+:0040C9E9 1F                      pop ds
+:0040C9EA 2424                    and al, 24
+:0040C9EC 2424                    and al, 24
+:0040C9EE 2424                    and al, 24
+:0040C9F0 2424                    and al, 24
+:0040C9F2 2424                    and al, 24
+:0040C9F4 2424                    and al, 24
+:0040C9F6 2424                    and al, 24
+:0040C9F8 2424                    and al, 24
+:0040C9FA 2420                    and al, 20
+:0040C9FC 2122                    and dword ptr [edx], esp
+:0040C9FE 2424                    and al, 24
+:0040CA00 2424                    and al, 24
+:0040CA02 23                      BYTE 23h

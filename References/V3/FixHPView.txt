@@ -1,0 +1,8 @@
+()Fix HPView
+
+Check op IV bleek wel goed te zijn, maar niet de check op 30 kills.
+
+:0044444C 7F05                    jg 00444453
+wordt
+:0044444C 7C05                    jl 00444453
+

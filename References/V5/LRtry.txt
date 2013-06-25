@@ -1,0 +1,59 @@
+
+
+Monster processing:
+
+:00443886 8B86A8DC6900            mov eax, dword ptr [esi+0069DCA8]
+:0044388C 8B8EACDC6900            mov ecx, dword ptr [esi+0069DCAC]
+:00443892 6BC070                  imul eax, 00000070
+:00443895 8DBC0800696100          lea edi, dword ptr [eax+ecx+00616900]
+:0044389C F60702                  test byte ptr [edi], 02
+:0044389F 7471                    je 00443912
+
+
+Initializing:
+
+:00401E8C 6A70                    push 00000070
+:00401E8E 8D8100696100            lea eax, dword ptr [ecx+00616900]
+:00401E94 5A                      pop edx
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:00401E9C(C)
+:00401E95 80207F                  and byte ptr [eax], 7F
+:00401E98 83C070                  add eax, 00000070
+:00401E9B 4A                      dec edx
+:00401E9C 75F7                    jne 00401E95
+:00401E9E 41                      inc ecx
+:00401E9F 83F970                  cmp ecx, 00000070
+:00401EA2 7CE8                    jl 00401E8C
+
+
+
+:00408266 F6860069610040          test byte ptr [esi+00616900], 40
+
+:00408564 F6830069610040          test byte ptr [ebx+00616900], 40
+
+:0040880E F6830069610004          test byte ptr [ebx+00616900], 04
+
+
+
+:00408E9C 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:00408EA3 6BC970                  imul ecx, 00000070
+:00408EA6 03CB                    add ecx, ebx
+:00408EA8 8A8600696100            mov al, byte ptr [esi+00616900]
+:00408EAE 6BC970                  imul ecx, 00000070
+:00408EB1 8145F8C0010000          add dword ptr [ebp-08], 000001C0
+:00408EB8 8AD0                    mov dl, al
+:00408EBA 03CF                    add ecx, edi
+:00408EBC 80E202                  and dl, 02
+:00408EBF 2408                    and al, 08
+:00408EC1 43                      inc ebx
+:00408EC2 83C670                  add esi, 00000070
+:00408EC5 83FB70                  cmp ebx, 00000070
+:00408EC8 8891B85C4D00            mov byte ptr [ecx+004D5CB8], dl
+:00408ECE 8881B8565200            mov byte ptr [ecx+005256B8], al
+:00408ED4 7C9F                    jl 00408E75
+:00408ED6 8345FC04                add dword ptr [ebp-04], 00000004
+:00408EDA 47                      inc edi
+:00408EDB 817DFCA0D35700          cmp dword ptr [ebp-04], 0057D3A0
+:00408EE2 7C87                    jl 00408E6B
+
+
+

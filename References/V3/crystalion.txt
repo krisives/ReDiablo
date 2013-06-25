@@ -1,0 +1,134 @@
+Crystalion patch - Minimal toHit for monsters
+
+'Original' Hellfire :
+
+:0042F723 83FB0A                  cmp ebx, 0000000A		if Tohit < 10
+:0042F726 7D03                    jge 0042F72B				Tohit := 10
+:0042F728 6A0A                    push 0000000A
+:0042F72A 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F726(C)
+|
+:0042F72B A0D8B16000              mov al, byte ptr [0060B1D8]
+:0042F730 3C0E                    cmp al, 0E			if dlvl = 14, Tohit := 20
+:0042F732 7508                    jne 0042F73C
+:0042F734 83FB14                  cmp ebx, 00000014
+:0042F737 7D03                    jge 0042F73C
+:0042F739 6A14                    push 00000014
+:0042F73B 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042F732(C), :0042F737(C)
+|
+:0042F73C 3C0F                    cmp al, 0F			if dlvl = 15, Tohit := 25
+:0042F73E 7508                    jne 0042F748
+:0042F740 83FB19                  cmp ebx, 00000019
+:0042F743 7D03                    jge 0042F748
+:0042F745 6A19                    push 00000019
+:0042F747 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042F73E(C), :0042F743(C)
+|
+:0042F748 3C10                    cmp al, 10			if dlvl = 16, Tohit := 30
+:0042F74A 7508                    jne 0042F754
+:0042F74C 83FB1E                  cmp ebx, 0000001E
+:0042F74F 7D03                    jge 0042F754
+:0042F751 6A1E                    push 0000001E
+:0042F753 5B                      pop ebx
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0042F74A(C), :0042F74F(C)
+|
+
+
+
+
+Crystalion fix:
+
+* Referenced by a CALL at Addresses:
+|:0042F729   , :0043E237   		Called from Missile- & Melee-vs-Player
+|
+:0042F730 33C0                    xor eax, eax
+:0042F732 80FAFF                  cmp dl, FF
+:0042F735 7418                    je 0042F74F
+:0042F737 6BD272                  imul edx, 00000072
+:0042F73A 0FB6841248DD6900        movzx eax, byte ptr [edx+edx+0069DD48]
+:0042F742 0FB691B8010000          movzx edx, byte ptr [ecx+000001B8]
+:0042F749 0FAFC2                  imul eax, edx
+:0042F74C 8D0480                  lea eax, dword ptr [eax+4*eax]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F735(C)
+|
+:0042F74F E9EAEA0000              jmp 0043E23E
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F74F(U)
+|
+:0043E23E C1E809                  shr eax, 09
+:0043E241 50                      push eax
+:0043E242 51                      push ecx
+:0043E243 E8AE53FEFF              call 004235F6
+:0043E248 59                      pop ecx
+:0043E249 5A                      pop edx
+:0043E24A 03C2                    add eax, edx
+:0043E24C 3BD8                    cmp ebx, eax
+:0043E24E 7D02                    jge 0043E252
+:0043E250 8BD8                    mov ebx, eax
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0043E24E(C)
+|
+:0043E252 C3                      ret
+:0043E253 90                      nop
+:0043E254 90                      nop
+:0043E255 90                      nop
+:0043E256 90                      nop
+:0043E257 90                      nop
+:0043E258 90                      nop
+:0043E259 90                      nop
+:0043E25A 90                      nop
+:0043E25B 90                      nop
+:0043E25C 90                      nop
+:0043E25D 90                      nop
+:0043E25E 90                      nop
+:0043E25F 90                      nop
+:0043E260 90                      nop
+:0043E261 90                      nop
+:0043E262 90                      nop
+:0043E263 90                      nop
+:0043E264 90                      nop
+
+
+
+'Originele' Hellfire routine 004235F6 :
+
+* Referenced by a CALL at Addresses:
+|:004236BD   , :004259BF   , :00426DCD   , :00426EBD   , :00427203   
+|:0042754E   , :004275F1   , :0042770F   , :00427788   , :00427BDC   
+|:00427D29   , :00427DD8   , :0042B813   , :0042B9C8   , :0043E243   
+|
+:004235F6 8A0DD8B16000            mov cl, byte ptr [0060B1D8]
+:004235FC 0FB6D1                  movzx edx, cl			edx := dlvl
+:004235FF 80F911                  cmp cl, 11
+:00423602 8BC2                    mov eax, edx			eax := dlvl
+:00423604 7208                    jb 0042360E			jump if dlvl > 17
+:00423606 80F914                  cmp cl, 14
+:00423609 7703                    ja 0042360E
+:0042360B 8D42F8                  lea eax, dword ptr [edx-08]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00423604(C), :00423609(C)
+|
+:0042360E 80F915                  cmp cl, 15
+:00423611 7208                    jb 0042361B			jump if dlvl > 21
+:00423613 80F918                  cmp cl, 18
+:00423616 7703                    ja 0042361B
+:00423618 8D42F9                  lea eax, dword ptr [edx-07]
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:00423611(C), :00423616(C)
+|
+:0042361B C3                      ret

@@ -1,0 +1,139 @@
+Character Starting coordinates
+
+000B45F8 0000 0000 0200 0000 0000 0000 0200 0000 ................
+changed into
+000B45F8 EAFF FFFF E5FF FFFF EBFF FFFF E6FF FFFF ................
+
+000B4620 0000 0000 0200 0000 0200 0000 0000 0000 ................
+changed into
+000B4620 EDFF FFFF EDFF FFFF EDFF FFFF EDFF FFFF ................
+
+
+Character Restarting coordinates:
+
+file offset 00074CA2
+
+:004758A2 C70534F361004B000000    mov dword ptr [0061F334], 0000004B
+:004758AC C70538F3610044000000    mov dword ptr [0061F338], 00000044
+changed into
+:004758A2 C70534F3610038000000    mov dword ptr [0061F334], 00000038
+:004758AC C70538F361004D000000    mov dword ptr [0061F338], 0000004D
+
+
+Relocating Farnham:
+
+File Offset 00075525
+
+:00476125 6A40                    push 00000040
+:00476127 6A4D                    push 0000004D
+changed into
+:00476125 6A26                    push 00000026
+:00476127 6A43                    push 00000043
+
+
+Relocating Wirt:
+
+File Offset 0007535C
+
+:00475F5C 6A26                    push 00000026
+:00475F5E 6A43                    push 00000043
+changed into
+:00475F5C 6A47                    push 00000047
+:00475F5E 6A4B                    push 0000004B
+
+
+Relocating Cain:
+
+File Offset 0007548E
+
+:0047608E 6A47                    push 00000047
+:00476090 6A3E                    push 0000003E
+changed into
+:0047608E 6A48                    push 00000048
+:00476090 6A3D                    push 0000003D
+
+
+Extra cow, and different locations:
+
+File Offset 000756F3
+
+:004762F3 83FB0C                  cmp ebx, 0000000C
+changed into
+:004762F3 83FB10                  cmp ebx, 00000010
+
+000C9BE8 3A00 0000 3800 0000 3B00 0000 0000 0000 :...8...;.......
+000C9BF8 1000 0000 0E00 0000 1400 0000 0000 0000 ................
+000C9C08 0100 0000 0300 0000 0400 0000 0000 0000 ................
+changed into
+000C9BE8 4300 0000 4000 0000 4300 0000 4100 0000 C...@...C...A...
+000C9BF8 2000 0000 1C00 0000 1500 0000 2100 0000  ...........!...
+000C9C08 0100 0000 0300 0000 0700 0000 0000 0000 ................
+
+
+
+Information: routine that places characters at start of game
+
+* Referenced by a CALL at Address: 0044B417
+   
+:0044B580 53                      push ebx
+:0044B581 33DB                    xor ebx, ebx
+:0044B583 391DBC535700            cmp dword ptr [005753BC], ebx
+:0044B589 56                      push esi
+:0044B58A 7409                    je 0044B595
+:0044B58C 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0044B593 7612                    jbe 0044B5A7
+:0044B595 881DD8B16000            mov byte ptr [0060B1D8], bl
+:0044B59B 881DD4B16000            mov byte ptr [0060B1D4], bl
+:0044B5A1 881D14F36100            mov byte ptr [0061F314], bl
+:0044B5A7 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B5AD 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B5B3 8B0495F85B4B00          mov eax, dword ptr [4*edx+004B5BF8]
+:0044B5BA 8B0C95205C4B00          mov ecx, dword ptr [4*edx+004B5C20]
+:0044B5C1 69D2C8550000            imul edx, 000055C8
+:0044B5C7 83C04B                  add eax, 0000004B
+:0044B5CA 83C144                  add ecx, 00000044
+:0044B5CD 89443238                mov dword ptr [edx+esi+38], eax
+:0044B5D1 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B5D7 69D2C8550000            imul edx, 000055C8
+:0044B5DD 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B5E3 894C323C                mov dword ptr [edx+esi+3C], ecx
+:0044B5E7 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B5ED 69D2C8550000            imul edx, 000055C8
+:0044B5F3 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B5F9 89443240                mov dword ptr [edx+esi+40], eax
+:0044B5FD 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B603 69D2C8550000            imul edx, 000055C8
+:0044B609 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B60F 894C3244                mov dword ptr [edx+esi+44], ecx
+:0044B613 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B619 69D2C8550000            imul edx, 000055C8
+:0044B61F 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B625 89443248                mov dword ptr [edx+esi+48], eax
+:0044B629 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B62E 69C0C8550000            imul eax, 000055C8
+:0044B634 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044B63A 5E                      pop esi
+:0044B63B 894C104C                mov dword ptr [eax+edx+4C], ecx
+:0044B63F 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0044B645 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:0044B64C 69C9C8550000            imul ecx, 000055C8
+:0044B652 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044B658 89441134                mov dword ptr [ecx+edx+34], eax
+:0044B65C A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B661 69C0C8550000            imul eax, 000055C8
+:0044B667 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B66D C684083F01000001        mov byte ptr [eax+ecx+0000013F], 01
+:0044B675 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B67A 69C0C8550000            imul eax, 000055C8
+:0044B680 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B686 889C086A550000          mov byte ptr [eax+ecx+0000556A], bl
+:0044B68D A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B692 69C0C8550000            imul eax, 000055C8
+:0044B698 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B69E 5B                      pop ebx
+:0044B69F C704080A000000          mov dword ptr [eax+ecx], 0000000A
+:0044B6A6 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B6AB 69C0C8550000            imul eax, 000055C8
+:0044B6B1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B6B7 834C0820FF              or dword ptr [eax+ecx+20], FFFFFFFF
+:0044B6BC C3                      ret

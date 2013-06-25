@@ -1,0 +1,43 @@
+In the dark : 46bf64/6b364
+
+
+
+I noticed a section of the spell code which appeared to set a spell's casting cost to the character's base max mana if the initial mana to cast the spell was set to 255.
+
+However, the section of the code didn't work. It seems there was a flaw in it. I've made a patch for the section for those who want to enable it.
+
+00458C9B: (0005809B)
+
+from: 14 bytes
+
+7509 jne 00458CA6
+0FB68820796800 movzx ecx, byte ptr [eax+00687920]
+EB03 jmp 00458CA9
+0FB6C9 movzx ecx, cl
+
+to: 14 bytes
+
+0FB6C9 movzx ecx, cl
+7509 jne 00458CA9
+8B8820796800 mov ecx, dword ptr [eax+00687920]
+C1E906 shr ecx, 6
+
+Note that it sets the spells cost to base max mana before the modifications for additional spell levels, so you can either set the level-up bonus to 0 or allow the spell to cost a bit less with each level.
+
+However, I don't think that base max mana is really the right choice. I would think that modified max mana would be better. For modified max mana, change the new....
+
+8B882(0)796800 mov ecx, dword ptr [eax+00687920]
+
+.... to ....
+
+8B882(8)796800 mov ecx, dword ptr [eax+00687928]
+
+Or, if you want to make it the mage's current mana (so they can cast it regardless of their mana (as long as they have at least the minimum):
+
+8B882(4)796800 mov ecx, dword ptr [eax+00687924]
+
+I leave it to you to decided what spells you would want to apply this to. Note that the code changes, by themselves, won't do anything unless you set some spells to have an initial mana cost to 255. It will not show the 255 based cost in the spell book but the character's mana based cost instead.
+
+Dr. Zed
+
+

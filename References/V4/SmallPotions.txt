@@ -1,0 +1,65 @@
+Adjusting Life and Mana gain from small potions:
+
+Quantity gained is now 2/8 to 5/8 of total for all characters, which is slightly less (maximum) for Barbarian and Sorcerer, but more for others. This removes the Rejuvenation bug for Monk and Bard.
+
+
+Life:
+
+File Offset 00028F75
+
+:00429B75 8D3C47                  lea edi, dword ptr [edi+2*eax]
+:00429B78 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00429B7D 03C6                    add eax, esi
+:00429B7F C1E705                  shl edi, 05
+:00429B82 8A8860010000            mov cl, byte ptr [eax+00000160]
+:00429B88 84C9                    test cl, cl
+:00429B8A 7405                    je 00429B91
+wordt
+:00429B75 E802000000              call 00429B7C
+:00429B7A EB22                    jmp 00429B9E
+:00429B7C 03F8                    add edi, eax
+:00429B7E D1F8                    sar eax, 1
+:00429B80 03F8                    add edi, eax
+:00429B82 C1E706                  shl edi, 06
+:00429B85 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00429B8A 03C6                    add eax, esi
+:00429B8C C3                      ret
+:00429B8D 9090                    2*nop
+
+Now free space from 00429B8D to 00429B9E (17 byte).
+
+File Offset 0002927F
+
+:00429E7F 8D3C47                  lea edi, dword ptr [edi+2*eax]
+:00429E82 A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:00429E7F E8F8FCFFFF              call 00429B7C
+:00429E84 EB2C                    jmp 00429EB2
+:00429E86 90                      nop
+
+Now free space from 00429E86 to 00429EB2 (44 byte).
+
+
+Mana:
+
+File Offset 00028D5A
+
+:0042995A 8D3C47                  lea edi, dword ptr [edi+2*eax]
+:0042995D A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:0042995A E81D020000              call 00429B7C
+:0042995F EB27                    jmp 00429988
+:00429961 90                      nop
+
+Now free space from 00429961 to 00429988 (39 byte).
+
+File Offset 0002900F
+
+:00429C0F 8D3C47                  lea edi, dword ptr [edi+2*eax]
+:00429C12 A114AE6E00              mov eax, dword ptr [006EAE14]
+wordt
+:00429C0F E868FFFFFF              call 00429B7C
+:00429C14 EB1E                    jmp 00429C34
+:00429C16 90                      nop
+
+Now free space from 00429C16 to 00429C34 (30 byte).

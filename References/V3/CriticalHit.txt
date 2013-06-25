@@ -1,0 +1,110 @@
+()Nu met RND100 routine, die ook voor andere dingen bruikbaar zal zijn.
+
+
+()Critical Hit - Melee
+
+Warrior/Barbarian : clvl % for double damage (als vanouds)
+Monk :            clvl/2 % for double damage 
+
+:0045BA6D 8A8160010000            mov al, byte ptr [ecx+00000160]
+:0045BA73 84C0                    test al, al
+:0045BA75 7404                    je 0045BA7B
+:0045BA77 3C05                    cmp al, 05
+:0045BA79 7517                    jne 0045BA92
+:0045BA7B 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0045BA82 6A64                    push 00000064
+:0045BA84 B106                    mov cl, 06
+:0045BA86 5A                      pop edx
+:0045BA87 E8CEE4FBFF              call 00419F5A
+:0045BA8C 3BC3                    cmp eax, ebx
+:0045BA8E 7D02                    jge 0045BA92
+:0045BA90 D1E7                    shl edi, 1		
+wordt
+:0045BA6D 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0045BA74 8A8160010000            mov al, byte ptr [ecx+00000160]
+:0045BA7A 84C0                    test al, al
+:0045BA7C 740A                    je 0045BA88
+:0045BA7E 3C05                    cmp al, 05
+:0045BA80 7406                    je 0045BA88
+:0045BA82 3C03                    cmp al, 03
+:0045BA84 750C                    jne 0045BA92
+:0045BA86 D1FB                    sar ebx, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0045BA7C(C), :0045BA80(C)
+|
+:0045BA88 E8A828FEFF              call 0043E335
+:0045BA8D 90                      nop
+:0045BA8E 90                      nop
+:0045BA8F 90                      nop
+:0045BA90 90                      nop
+:0045BA91 90                      nop
+
+()Critical Hit - Archers
+
+Warrior/Rogue : clvl/2 % for double damage 
+
+:0042F4AB 80B96001000001          cmp byte ptr [ecx+00000160], 01
+:0042F4B2 7508                    jne 0042F4BC
+:0042F4B4 03B988010000            add edi, dword ptr [ecx+00000188]
+:0042F4BA EB0A                    jmp 0042F4C6
+:0042F4BC 8B8188010000            mov eax, dword ptr [ecx+00000188]	
+:0042F4C2 D1F8                    sar eax, 1		
+:0042F4C4 03F8                    add edi, eax
+wordt
+:0042F4AB 8B8188010000            mov eax, dword ptr [ecx+00000188]
+:0042F4B1 80B96001000001          cmp byte ptr [ecx+00000160], 01
+:0042F4B8 7402                    je 0042F4BC
+:0042F4BA D1F8                    sar eax, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0042F4B8(C)
+|
+:0042F4BC 03F8                    add edi, eax
+:0042F4BE E860EE0000              call 0043E323
+:0042F4C3 90                      nop
+:0042F4C4 90                      nop
+:0042F4C5 90                      nop
+
+Routines geplaatst op oude Reflect_with_Block code:
+
+CRITICAL_HIT_ARROWS
+
+* Referenced by a CALL at Address:
+|:0042F4BE   
+|
+:0043E323 80B96001000001          cmp byte ptr [ecx+00000160], 01
+:0043E32A 7F14                    jg 0043E340
+:0043E32C 0FBE99B8010000          movsx ebx, byte ptr [ecx+000001B8]
+:0043E333 D1FB                    sar ebx, 1
+
+CRITICAL_HIT
+
+* Referenced by a CALL at Address:
+|:0045BA88   
+|
+:0043E335 E807000000              call 0043E341
+:0043E33A 3BC3                    cmp eax, ebx
+:0043E33C 7D02                    jge 0043E340
+:0043E33E D1E7                    shl edi, 1
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Addresses:
+|:0043E32A(C), :0043E33C(C)
+|
+:0043E340 C3                      ret
+
+
+RND100
+
+* Referenced by a CALL at Address:
+|:0043E335   
+|
+:0043E341 52                      push edx
+:0043E342 6A64                    push 00000064
+:0043E344 B106                    mov cl, 06
+:0043E346 5A                      pop edx
+:0043E347 E80EBCFDFF              call 00419F5A
+:0043E34C 5A                      pop edx
+:0043E34D C3                      ret
+
+:0043E34E 90                      nop

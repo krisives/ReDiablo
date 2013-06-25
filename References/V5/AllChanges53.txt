@@ -1,0 +1,166 @@
+Changes The Dark 5.2 revision Q
+
+Version change (this version is identical to 5.3)
+Squire prefix is renamed to Monk's.
+Higher AC bonus for Black Mail and Ethereal Crown.
+Modified base AC for most armors.
+
+
+Changes The Dark 5.2 revision P
+
+Version change
+Restored Vile Crawlers to their original colour.
+New colours for mercenary bosses in the Cornerstone Room.
+Fixed old issue with (summoned) Golems getting killed by other monsters.
+Modifications to objects appearing in Hell and Church levels.
+Fixed Flash spell to really attack all positions around the caster.
+Increased chances for Barbarians with axes to receive half melee damage.
+Penalty to AC for plated Monks is now applied for all plates.
+Lower AC for Splint and Heavy Mail.
+More Fire damage for Fire Song
+Higher price for Wyrm Blood.
+
+
+Changes The Dark 5.2 revision N
+
+Version change
+Improved Butcher
+Corrected special minion-type for Blacktongue
+Black Knights appear slightly more often, Doom Guards slightly less
+Golems of any type can no longer be stunned or knocked back.
+Modifications to objects appearing in Hell and Butcher's room
+Weapons will only be auto-equipped if characters are unable to pick them up otherwise.
+Automap will display locations for all characters.
+Warriors using a bow will automatically have Knockback.
+Triple-shot and adjusted description for Flamethrower crossbow
+Crystalline suffix is replaced by (a second) Fine suffix
+Wider range of possible locations for Escape spell.
+
+
+Changes The Dark 5.2 revision M
+
+Version change
+Changed trap distribution
+New trap type (summons Golem) in Hell
+Maximum resistances will show '75%' (in gold) on character screens
+Modified several tiles in Caves to not allow walking and/or shooting over.
+Modified Ethereal Crown
+Higher price for Wyrm Blood
+New colours for several monsters
+Doom Guards no longer appear on 13
+More HP for Titan (Golem boss in Abyss)
+Rustweaver (Doom Guard boss in Hell), Magnat and Anvil (Golem bosses in Abyss) no longer exist
+Two new bosses (Fallen Rogue and Renegade Warrior) in Cornerstone Room
+Renegade Warrior boss for Black Knights in Hell 
+Renegade Warriors appear together with Fallen Rogues in Abyss
+No stun, and slower walking speed for Golems (in Abyss)
+Lower MLVL for Diablo (in Hell) to limit his item drops
+All barrels in Church may now contain Corpse Axe skeletons
+All barrels in Catacombs may now contain Unseen
+Charm will only work on Animals that are idle or walking
+Charm will no longer work on Viper types
+
+
+Changes The Dark 5.2 revision L
+
+Version change
+Piles with 10000 Gold now have a distinct image
+Wyrm Blood will now also restore some Mana and Life
+Earlier Accuracy Oils, and later Sharpness Oils
+Slightly improved Ring of Engagement
+Characters have a slightly smaller standard light radius
+Characters now have a built-in Evasion, which lowers a monster's maximum chance to hit with arrows or spells by DEX/8%
+Evasion from items will lower a monster's maximum chance to hit with arrows or spells by 32% (and absorb 25% damage, as before)
+Spiked Balls are not stopped when a monster is hit
+Activated monsters will alert all other monsters nearby
+Monsters can be stunned by traps, even if the damage is resisted
+Escape spell has improved range, but will not cause jumps over walls
+Fixed Phasing immunity for Zhar the Mad (in SP)
+Modified melee monster against monster, to better avoid attacks on already dying monsters
+No actual hits for Fire and Lightning Wall spells, to prevent sounds of pain
+Corrected walkable state for several Cave tiles
+The bloody walls in Butcher's room can no longer become transparent
+Changed monsters that appear in special locations on level 15 and 16
+Placed the Executioner before the Dark Lord's Abyss room
+Removed old Drake-charge related modifications
+Improved chances for Warcries
+Devil Kin Brutes have slightly lower AC but can do Warcries now
+Gargoyles appear earlier
+Removed Bone Lords (they only appeared on 16)
+Removed one type of Hork Spawn
+Acid Puddles for dying Hork Spawns
+Small changes to some Knight types
+Small changes to Fallen Rogues
+New monster: Renegade Warrior (temporary appearing in Abys)
+Sir Gorash is now a Renegade Warrior
+
+
+Changes The Dark 5.2 revision K (there is no revision I or J)
+
+Version change
+Fixed bug that disrupted the trap viewing from 52H
+Hit recovery duration for Fallen Rogues is now 4 frames
+Durability warning icons will now appear for values lower as 5 (yellow), and for 1 point (red).
+Light-reducing suffixes no longer exist
+Revenge and Harmony are more common
+Minor modifications to some unique items
+Increassed damage from traps
+
+
+Changes The Dark 5.2 revision H
+
+Version change
+New Idle animation for Defiler
+New Stun animation for Fallen Rogues
+Devil Kin Brutes can now also appear on 11
+Bottle of Fury is replaced by Wyrm Blood (temporary increases Mana)
+Added hotkey indications to spell hotkeys in the speed book
+Fixed various issues with Rage
+Modified Mana cost for Blood Wave, Telekinesis, Bone Spirit and Barrier
+Sanctuary now affects all Undead and Demons, but never Animals (nor Humans)
+Retreating Stalking Death are no longer immune to Holy Bolt
+Tohit for traps against Monsters is now always 90%
+The Defiler, summoned Golems and Fallen Rogues will ignore Fire and Lightning Walls, as if immune
+Some traps will be easier, and some will be harder to detect
+Minor modifications to some unique items
+
+
+Changes The Dark 5.2 revision G
+
+Version change
+Fixed Walls that blocked missiles in Hell Levels (Irrelevant to Invisible Walls)
+Added more hotkeys
+Replaced Ressurect suffix by Mana suffix, and Identify by Inferno:
+Non-varying manacost for Nova, Immolation and Arcane Destruction
+
+
+Changes The Dark 5.2 revision F 
+
+Version change
+Higher price for Rage scrolls
+Fire Damage instead of Increased Mana Regeneration for Swan Song, now renamed to Fire Song
+Ring of Truth with Increased Mana Regeneration instead of Mana charges
+
+
+Changes The Dark 5.2 revision E
+
+Version change
+Rage will give Multi-Arrow ability to bows while active 
+
+
+Changes The Dark 5.2 revision D
+
+Version change
+Test Version for testing experimental gfx (NSanct)
+
+
+Changes The Dark 5.2 revisions A, B and C
+
+Version change
+New MPQ file
+Lower speed for BloodWave Spell
+New Spell Icon for Blood Wave (both SpeedBook and SpellBook)
+New animation for BloodWave
+New Mainmenu Background graphics
+New Portrait for Bard in Hero Selection Screen
+New flip animation for jewels (with shadow)

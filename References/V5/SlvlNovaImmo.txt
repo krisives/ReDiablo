@@ -1,0 +1,46 @@
+Setting Slvl for Nova and Immolation from Runes
+
+not sure yet, this is needed: not implemented
+
+
+:00459CD0 8B9430A4000000          mov edx, dword ptr [eax+esi+000000A4]
+:00459CD7 E87953FDFF              call 0042F055
+
+:0042F055 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:0042F05B 56                      push esi
+:0042F05C 7522                    jne 0042F080
+:0042F05E 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0042F064 69C9C8550000            imul ecx, 000055C8
+:0042F06A 03D6                    add edx, esi
+:0042F06C 0FBE840AC1000000        movsx eax, byte ptr [edx+ecx+000000C1]
+:0042F074 0FBE8C0E48550000        movsx ecx, byte ptr [esi+ecx+00005548]
+:0042F07C 03C1                    add eax, ecx
+:0042F07E EB03                    jmp 0042F083
+:0042F080 6A01                    push 00000001
+:0042F082 58                      pop eax
+:0042F083 85C0                    test eax, eax
+:0042F085 7D02                    jge 0042F089
+:0042F087 33C0                    xor eax, eax
+:0042F089 5E                      pop esi
+:0042F08A C3                      ret
+
+
+
+:0046BFFC 3B0DE8AD6E00            cmp ecx, dword ptr [006EADE8]
+:0046C002 56                      push esi
+:0046C003 7568                    jne 0046C06D
+:0046C005 8BF1                    mov esi, ecx
+:0046C007 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0046C00C 69F6C8550000            imul esi, 000055C8
+:0046C012 0FBE8430A8000000        movsx eax, byte ptr [eax+esi+000000A8]
+:0046C01A 83E800                  sub eax, 00000000
+:0046C01D 744E                    je 0046C06D
+:0046C01F 48                      dec eax
+:0046C020 7414                    je 0046C036
+:0046C022 48                      dec eax
+:0046C023 740A                    je 0046C02F
+:0046C025 48                      dec eax
+:0046C026 7545                    jne 0046C06D
+:0046C028 E85C6CFBFF              call 00422C89
+:0046C02D 5E                      pop esi
+:0046C02E C3                      ret

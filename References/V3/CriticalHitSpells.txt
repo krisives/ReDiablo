@@ -1,0 +1,39 @@
+Critical Hit for Spells
+
+
+All spells will have clvl/2 % chance of doing extra damage.
+
+
+File Offset 0002E8D1
+
+:0042F4D1 E85EDF0000              call 0043D434
+wordt
+:0042F4D1 E8AFDF0000              call 0043D485
+
+
+Over oude DiabloDeath routine, bijna op het eind:
+
+File Offset 0003C885
+
+:0043D485 90                      nop
+:0043D486 8B8F00DD6900            mov ecx, dword ptr [edi+0069DD00]
+:0043D48C C1E010                  shl eax, 10
+:0043D48F DB45FC                  fild dword ptr [ebp-04]
+:0043D492 898704DD6900            mov dword ptr [edi+0069DD04], eax
+:0043D498 8B87A8DC6900            mov eax, dword ptr [edi+0069DCA8]
+:0043D49E C1E010                  shl eax, 10
+:0043D4A1 2BC8                    sub ecx, eax
+wordt
+:0043D485 807D1300                cmp byte ptr [ebp+13], 00
+:0043D489 7411                    je 0043D49C
+:0043D48B 57                      push edi
+:0043D48C 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0043D48F E8F3B60400              call 00488B87		call GET_CLVL
+:0043D494 8BDA                    mov ebx, edx
+:0043D496 5F                      pop edi
+:0043D497 E8960E0000              call 0043E332		call CRITICALHIT
+:0043D49C E893FFFFFF              call 0043D434		call REDUCE_FOR_RESISTANCE
+:0043D4A1 C3                      ret
+:0043D4A2 90                      nop
+
+Nog steeds ruimte over.

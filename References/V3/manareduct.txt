@@ -1,0 +1,33 @@
+Manacost reductie code: 
+
+Make mana cost 50% for magic user 
+0046BFAC 
+mov al, byte ptr [esi+00000160] 
+cmp al, 02 
+jne 0046BFBA 
+sar ecx, 01 
+jmp 0046BFCD 
+
+Make mana cost 75% for rogue, monk & bard 
+0046BFBA 
+cmp al, 01 
+je 0046BFC6 
+cmp al, 03 
+je 0046BFC6 
+cmp al, 04 
+jne 0046BFCD 
+
+0046BFC6 
+mov eax, ecx 
+sar eax, 02 
+sub ecx, eax 
+
+0046BFC6 
+movzx eax, byte ptr [ebx+004B760D] 
+mov edx, ecx 
+sar edx, 06 
+cmp eax, edx 
+jle 0046BFE2 
+shl eax, 06 
+mov ecx, eax 
+

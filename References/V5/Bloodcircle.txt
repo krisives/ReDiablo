@@ -1,0 +1,95 @@
+New Ring of Blood spell creates a circle at targetted location that repels all monsters.
+
+This works, but Blood circle never ends.
+
+Adjusting the unused Rune of Stone spell effect #93 to call unused (Lightning) ring effect #28:
+
+file offset 0002F709
+
+:00430309 C786E87A69001E000000    mov dword ptr [esi+00697AE8], 0000001E
+changed into
+:00430309 C786E87A69001C000000    mov dword ptr [esi+00697AE8], 0000001C
+
+
+Spell effect 1Ch (#28)
+
+000A6678 1C00 0000 7B49 4300 438D 4300 0000 0000 ....{IC.C.C.....
+000A6688 0102 0300 FFFF FFFF FFFF FFFF           ............
+changed into
+000A6689 00FF                                    ..
+000A668C 6200 0000                               b...
+
+Using spell effect 11h (old Blood spell) for a Magic 'flame' patch:
+
+000A6544 1100 0000 AC34 4300 9E82 4300 0100 0000 .....4C...C.....
+000A6554 0200 0A00 6100 0000 6200 0000           ....a...b...
+changed into
+000A6544 1100 0000 E01C 4300 6166 4300 0100 0000 ......C.afC.....
+000A6554 0103 0A00 6200 0000 6200 0000           ....b...b...
+
+
+000A6544 1100 0000 E01C 4300 6166 4300 0100 0000 ......C.afC.....
+000A6554 0103 3600 6200 0000 6200 0000           ..6.b...b...
+  
+
+******************************
+2F	Trap Disarm
+A688C	2F00 0000 794E 4300 B19F
+	4100 0000 0000 0200 FF00
+	8E00 0000 FFFF FFFF
+
+05	Fire Trap (used by Fire Wall/Ring)
+A63F4	0500 0000 E01C 4300 6166			35061
+	4300 0100 0000 0101 0400
+	9100 0000 7000 0000
+
+11	Blood (Monster Dead?)
+A6544	1100 0000 AC34 4300 9E82
+	4300 0100 0000 0200 0A00
+	6100 0000 6200 0000		uses blodstar.wav
+
+00 DWORD	Effect number
+04 DWORD	Init Effect Pointer (Points to DW)
+08 DWORD	Update Effect Pointer (Points to DW)
+0C DWORD	Graphics Boolean
+		(00 = Effect has no image, 01 = Effect has an image)
+10 BYTE		Type (00 = Arrow, uses missle to-hit system; I don't recall the different
+		between 01 and 02.  Perhaps one is static and one is kinetic).
+11 BYTE		Type  (00 = None, 01 = Fire, 02 = Lightning, 03 = Magic)
+12 BYTE		Image  (FF = None)
+13 BYTE		Zero  (00)
+14 DWORD	Sound
+18 DWORD	2nd Sound
+***********************************
+
+
+Calling ... spell effect for ring 1Ch:
+
+File Offset 0002E066
+
+:0042EC66 8B8E587A6900            mov ecx, dword ptr [esi+00697A58]
+:0042EC6C 83E91C                  sub ecx, 0000001C
+:0042EC6F 6A04                    push 00000004
+:0042EC71 59                      pop ecx
+:0042EC72 7401                    je 0042EC75
+:0042EC74 41                      inc ecx
+:0042EC75 C3                      ret
+:0042EC76 90909090                4*nop
+changed into
+:0042EC66 83BE587A69001C          cmp dword ptr [esi+00697A58], 0000001C
+:0042EC6D 7404                    je 0042EC73
+:0042EC6F 6A05                    push 00000005					Fire
+:0042EC71 59                      pop ecx
+:0042EC72 C3                      ret
+:0042EC73 6A11                    push 00000011					...
+:0042EC75 59                      pop ecx
+:0042EC76 C3                      ret
+:0042EC77 909090                  3*nop
+
+
+Test: firebolt = circle
+
+000B6041 01                                      .
+changed into
+000B6041 5D                                      ]
+

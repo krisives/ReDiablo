@@ -1,0 +1,286 @@
+Improving Monster's life in Nightmare and Hell
+
+
+Nightmare	3*Normal + 100		->	4*Normal + 100
+Hell		4*Normal + 200		->	6*Normal + 200
+
+
+
+Normal monsters in Nightmare:
+
+File Offset 0003A811
+
+:0043B411 898618DD6900            mov dword ptr [esi+0069DD18], eax
+wordt
+:0043B411 E8F1F40300              call 0047A907
+:0043B416 90                      nop
+
+
+Normal monsters in Hell:
+
+File Offset 0003A8BA
+
+:0043B4BA 898618DD6900            mov dword ptr [esi+0069DD18], eax
+wordt
+:0043B4BA E806F40300              call 0047A8C5
+:0043B4BF 90                      nop
+
+
+Filling various small spaces to increase normal monster's life:
+
+File Offset 00079CC5
+
+:0047A8C5 90                      nop
+:0047A8C6 90                      nop
+:0047A8C7 90                      nop
+:0047A8C8 90                      nop
+:0047A8C9 90                      nop
+:0047A8CA 90                      nop
+:0047A8CB 90                      nop
+:0047A8CC 90                      nop
+:0047A8CD 90                      nop
+:0047A8CE 90                      nop
+:0047A8CF 90                      nop
+wordt
+:0047A8C5 038618DD6900            add eax, dword ptr [esi+0069DD18]
+:0047A8CB EB3A                    jmp 0047A907
+:0047A8CD
+
+File Offset 00079D07
+
+:0047A907 90                      nop
+:0047A908 90                      nop
+:0047A909 90                      nop
+:0047A90A 90                      nop
+:0047A90B 90                      nop
+:0047A90C 90                      nop
+:0047A90D 90                      nop
+:0047A90E 90                      nop
+:0047A90F 90                      nop
+wordt
+:0047A907 038618DD6900            add eax, dword ptr [esi+0069DD18]
+:0047A90D EB16                    jmp 0047A925
+:0047A90F 
+
+File Offset 00079D25
+
+:0047A925 90                      nop
+:0047A926 90                      nop
+:0047A927 90                      nop
+:0047A928 90                      nop
+:0047A929 90                      nop
+:0047A92A 90                      nop
+:0047A92B 90                      nop
+wordt
+:0047A925 898618DD6900            mov dword ptr [esi+0069DD18], eax
+:0047A92B C3                      ret
+
+
+
+Bosses in Nightmare:
+
+File Offset 0003B21C
+
+:0043BE1C 898690000000            mov dword ptr [esi+00000090], eax
+wordt
+:0043BE1C E8ACC6FEFF              call 004284CD
+:0043BE21 90                      nop
+
+
+Bosses in Hell:
+
+File Offset 0003B2A3
+
+:0043BEA3 898690000000            mov dword ptr [esi+00000090], eax
+wordt
+:0043BEA3 E81FC6FEFF              call 004284C7
+:0043BEA8 90                      nop
+
+
+Using space from Oil of Skill:
+
+File Offset 000278C7
+
+:004284C7 90                      nop
+:004284C8 2AC8                    sub cl, al
+:004284CA 880A                    mov byte ptr [edx], cl
+:004284CC EB02                    jmp 004284D0
+:004284CE 881A                    mov byte ptr [edx], bl
+:004284D0 8A8E62010000            mov cl, byte ptr [esi+00000162]
+:004284D6 8D9662010000            lea edx, dword ptr [esi+00000162]
+wordt
+:004284C7 038690000000            add eax, dword ptr [esi+00000090]
+:004284CD 038690000000            add eax, dword ptr [esi+00000090]
+:004284D3 898690000000            mov dword ptr [esi+00000090], eax
+:004284D9 C3                      ret
+:004284DA 9090                    2*nop
+
+
+Adjusting individual Boss HitPoints:
+
+pos name                      type                  attacktype        sub  pack  dlvl  mlvl(f)  mlvl(i)  HP   damage  MFL   
+
+  0 Gharbad the Weak          Flesh Clan            18 Gharbad          3   3Y     4*      8        9   120    8- 16  -I-      1 Skeleton King             Skeleton King         10 Skeleton King    3   1Y     0*     20       15   500   20- 30  RRI    
+  2 Zhar the Mad              Counselor             22 Zhar the Mad     3  11Y     8*     16       25   392   16- 40  -IR   													360
+
+  3 Snotspill                 Dark One              23 Snotspil         3  11Y     4*      8        7   220   10- 18  I-R      4 Arch-Bishop Lazarus       Advocate              28 Lazarus          3   0Y     0*     35       30  1000   30- 50  RII   												       1200
+
+  5 Red Vex                   Hell Spawn            29 Succubi at Laz   3  11Y     0*     33       28   800   30- 50  IRR   												       1000
+
+  6 BlackJade                 Hell Spawn            29 Succubi at Laz   3  11Y     0*     33       28   800   30- 50  RRR   												       1100
+
+  7 Lachdanan                 Black Knight          30 Lachdanan        3   3Y    14*     28       24   500    0-  0  III      8 Warlord of Blood          Steel Lord            31 Warlord          3  11Y    13*     26       29   850   40- 55  RRI      9 The Butcher               The Butcher           13 Butcher          3  11Y     0*     15       10   300   10- 15  RIR     10 King of the Nest          Hork Demon             2 Skeleton         5  11Y    H3*     30       30  1000   40- 60  RII   
+												       2000
+
+ 11 Red Horror                Reality Weaver        15 Hidden           3  11Y    16*     32       29   850   30- 60  RIR   													950
+
+ 12 The Dark Ghost            The Dark Ghost        27 Diablo           4  11      0*     65       60  6000   58- 62  RIR   
+												       5000
+
+ 13 Aguinara                  Soul Burner           14 Succubi          3  11Y    C1      26       31   832   21- 56  RRR   													850		
+
+ 14 The Cursed Captain        Ghost Warrior         15 Hidden           3  11Y    C2      28       30  1331   25- 60  RRI   												       1330
+
+ 15 Titan                     Mithril Golem         24 Viper            5  11Y    C3      30       31  2600   33- 60  -II   												       2900
+
+ 16 Master of the Storm       Thunder Lord          16 Lightning Demon  5  11Y    C2      28       28   928   33- 60  RRI   													920
+
+ 17 Wrathfire                 Slayer                26 Balrog           6  11Y    12      24       20   678   21- 32  RI-   													670
+
+ 18 Keeper of the Void        Unraveler              2 Skeleton         3  11Y     7      14       10   416    8- 18  -II   													390
+
+ 19 Andariel                  Hell Burner           14 Succubi          3  11Y    C3      30       32  1442   42- 60  IRR   												       1370
+
+ 20 The Torturer              Pain Master            2 Skeleton         3  11Y    12      24       17   450   27- 27  RII     21 Exeter                    Storm Master          16 Lightning Demon  4  11     15      30       25   750   30- 50  RRI     22 Xorine                    Devil Spawn           14 Succubi          3  11Y    C2      28       30  1014   31- 53  RRR   												       1020
+
+ 23 Bilefroth                 Toad Demon             1 Overlord         2  11Y     8      16       16   550   19- 25  RRI     24 Winglord                  Death Wing            12 Gargoyle         3  11Y    13      26       26   784   33- 45  RIR   													720
+
+ 25 Izual                     Fallen Angel          27 Diablo           0   1     16$     32       32  1355   48- 62  RII   												       1600
+
+ 26 Wraith of Izual           Fallen Angel          27 Diablo           3   1Y    C3      30       32  1824   54- 62  RII   												       2000
+
+ 27 The Beholder              Scowler               37 Psychorb         3  11Y    H2      28       26   727   30- 49  IRR   													730
+
+ 28 The Mutant Lord           Mutant Demon           2 Skeleton         3  11Y    12      24       14   512   26- 35  RRR   													510
+
+ 29 The Killing Brute         Devil Kin Brute       24 Viper            3  11Y    12      24       21   380   25- 30  IRR     30 Shadow Queen              Dark Spawn            14 Succubi          3  11Y    H4      32       29   832   20- 50  RRR   												       1000
+
+ 31 Warlord of Blood          Steel Lord            24 Viper            5  11Y    15      30       29  1205   42- 62  RRI   												       1250
+
+ 32 Wrathraven                Blink                 11 Winged Fiend     1  11Y     5      10        7   135    9- 22  IRI   													220
+
+ 33 Red Terror                Reality Weaver        15 Hidden           3  11Y    16      32       29   850   30- 60  RIR   
+													900
+
+ 34 Doomskull the Unholy      Dark Servant           0 Zombie           3  11Y    C3      30       29  1200   39- 55  III   
+ 35 Shadowcrow                Brave One             15 Hidden           2  11Y     3       6        8   150   12- 25  IRR   
+ 36 Gharbad the Weak          Satyr Lord             2 Skeleton         4  11      9      18       16   768   16- 40  RIR   													710
+
+ 37 The Demon Fleshdoom       Champion              13 Butcher          3  11Y    C3      30       32  1456   54- 60  RRI   												       1750
+
+ 38 Grim Reaper               Reaper                13 Butcher          3  11Y    14      28       30   895   40- 60  RIR   												       1000
+
+ 39 Foulwing                  Gloom                 11 Winged Fiend     2  11Y     5      10        9   246   12- 28  IRI   													260			
+ 40 Shadowdrinker             Horror Captain        15 Hidden           2  11Y     6      12        8   300   20- 30  RII     41 Hazeshifter               Unseen                15 Hidden           3  11Y     7      14       11   285   18- 30  -IR   													290
+
+ 42 Doomhowler                Doomspitter           20 Fast Spit        3  11Y    C2      28       28   512   28- 45  IRR   													540
+
+ 43 Bloodgutter               Fire Clan             13 Butcher          2  11Y     6      12       13   315   24- 34  RIR   													320
+
+ 44 Deathshade Fleshmaul      Stone Clan             5 Horned Demon     2  11Y     6      12       11   276   12- 24  -IR   													310
+
+ 45 Warmaggot the Mad         Fire Drake            24 Viper            2  11Y    14      28       23   767   37- 60  II-   													770
+
+ 46 Glasskull the Jagged      Hellstorm             16 Lightning Demon  5  11Y    C1      26       26   800   30- 60  RRI   
+ 47 Blightfire                Fire Clan             14 Succubi          2  11Y     8      16       12   321   13- 21  RI-   													340
+
+ 48 Nightwing the Cold        Gargoyle              12 Gargoyle         1  11Y     7      14       13   342   18- 26  -IR   
+													320
+
+ 49 Gorestone                 Night Clan             7 Goat Archer      3  11Y     9      18       14   303   10- 20  RIR   													330
+
+ 50 Bronzefist Firestone      Hell Stone             9 Magma Demon      2  11Y     9      18       16   360   30- 36  -IR     51 The Warp Lord             Warp Demon             2 Skeleton         4  11     14      28       28   900   25- 40  RRR   													710
+
+ 52 Grimfang the Golden       Blood Drake           24 Viper            5  11Y    C3      30       31  1024   47- 60  IRR   												       1110
+
+ 53 Baron Sludge              Mud Man               15 Hidden           2  11Y     8      16       14   465   25- 34  RRR   													520
+
+ 54 Blighthorn Steelmace      Night Clan             5 Horned Demon     3  11Y     7      14       15   350   25- 35  RIR     55 Chaoshowler               Poison Spitter        20 Fast Spit        1  11Y     8      16       15   240   12- 20  IRR   													280
+
+ 56 Tomb Crusher              Gravedigger            2 Skeleton         3  11Y    12      24       18   300   18- 26  RRI   													560
+
+ 57 Madburner                 Familiar              11 Winged Fiend     3  11Y     7      14       13   416   20- 40  I-I   													320
+
+ 58 The Executioner of Hell   Black Prince           2 Skeleton         5  11Y    C4      32       32  2287   58- 62  IRI   												       3000
+
+ 59 Skullcreeper              Stalking Death        15 Hidden           3  11Y    14      28       21   735   15- 34  RII   													740
+
+ 60 Anvil                     Iron Golem            24 Viper            4  11     C2      28       29  2000   35- 56  -II   												       2300
+
+ 61 Zhar the Mad              Wizard                28 Lazarus          3  11Y    C2      28       31   600   40- 60  RIR   													900
+
+ 62 Horazon the Summoner      Lich                  36 Arch lich        3  11Y    C4      32       32  2000   42- 60  III   
+ 63 Magnat                    Copper Golem          24 Viper            3  11Y    C1      26       27  1400   37- 48  -II   												       1700
+
+ 64 Goldblight of the Flame   Blood Claw            12 Gargoyle         0  11     10      20       19   405   15- 35  -IR   													420
+
+ 65 Blackstorm                Obsidian Lord          5 Horned Demon     3  11Y    11      22       20   525   20- 40  IIR   													530
+
+ 66 Doomfist                  Cave Lord              9 Magma Demon      3  11Y    12      24       25   750   50- 60  RIR   
+ 67 The Flayer                Storm Rider           16 Lightning Demon  1  11Y    10      20       20   501   20- 35  -RI   													460
+
+ 68 Bluehorn                  Frost Charger          5 Horned Demon     2  11Y    11      22       17   477   25- 30  IRR   													480
+
+ 69 Howlingire the Shade      Illusion Weaver       15 Hidden           3  11Y     9      18       13   501   22- 31  RIR   													470
+
+ 70 Fangspeir                 Cave Viper            24 Viper            1  11Y    11      22       21   444   15- 32  IR-   													410
+
+ 71 Bloodhowler               Lava Maw              20 Fast Spit        2  11Y    13      26       25   324   20- 37  IRR   													360
+
+ 72 Lionskull the Bent        Undead Balrog         26 Balrog          15  11Y    C1      26       29  1200   40- 60  RII   
+ 73 Blacktongue               Counselor             25 Mage             3  11Y    13      26       25   360   15- 30  RIR   
+ 74 Viletouch                 Fell Wing             12 Gargoyle         3  11Y    12      24       23   525   20- 40  RIR   													520
+
+ 75 Viperflame                Fire Drake            24 Viper            2  11Y    12      24       23   570   25- 35  IRR     76 Fangskin                  Gold Viper            24 Viper            3  11Y    14      28       25   681   15- 50  IRR   													680
+
+ 77 Witchfire the Unholy      Succubus              14 Succubi          3  11Y    13      26       25   700   10- 20  RRR   													400
+
+ 78 Blackskull                Balrog                26 Balrog           7  11Y    14      28       27   832   32- 48  RIR   													820
+
+ 79 Soulslash                 Lava Lord              9 Magma Demon      2  11Y    11      22       18   706   47- 58  -IR   													660
+
+ 80 Lord Obese                Flayed One             1 Overlord         3  11Y    11      22       20   711   35- 40  RRR   													720
+
+ 81 Lord of the Pit           Azure Drake           24 Viper            4  11     15      30       30   858   41- 58  IRR   													890
+
+ 82 Rustweaver                Doom Guard             2 Skeleton         3  11Y    13      26       26   400    1- 60  RRI   													480
+
+ 83 Festerskull               Blood Stone            9 Magma Demon      0  11      9      18       14   450   40- 47  -I-   
+ 84 Doomcloud                 Maelstorm             16 Lightning Demon  3  11Y    13      26       24   612    1- 60  -RI   													610
+
+ 85 Darkwing                  Guardian              26 Balrog           6  11Y    13      26       22   684   15- 48  RI-   													690
+
+ 86 Witchmoon                 Snow Witch            14 Succubi          3  11Y    14      28       26   310   30- 40  RRR   													600
+
+ 87 Gorefeast                 Vortex Lord           26 Balrog           7  11Y    13      26       24   771   20- 55  RIR   													760
+
+ 88 Doomdrake the Dark        Azure Drake           24 Viper            4  11     C1      26       30   752   33- 50  IRR   													860
+
+ 89 Dreadjudge                Magistrate            25 Mage             3  11Y    14      28       27   540   30- 40  -IR     90 Scissorclaw               Chimera                6 Goat Man         5  11Y    H3      30       31  1000   20- 40  IRI   												       1400
+
+ 91 Archmage Naj              Dark Mage             28 Lazarus          3  11Y    C3      30       32   933   41- 62  RII   													990
+
+ 92 Sir Gorash                Blood Knight           5 Horned Demon     3  11Y    15      30       30  1306   45- 62  RRI   												       1220
+
+ 93 Trampler                  Hell Beast             5 Horned Demon     5  11Y    15      30       21  1000   35- 50  IIR   
+ 94 Zamphir                   Advocate              28 Lazarus          3  11Y    16      32       30   939   32- 62  RII   												       1000
+
+ 95 Bloodlust                 Hell Spawn            14 Succubi          3  11Y    15      30       28   825   20- 55  RRR   													800
+
+ 96 The Skulker               Shadow                15 Hidden           3  11Y    C4      32       31  1334   48- 60  RIR   												       1280
+
+ 97 The Defiler               The Defiler            2 Skeleton         5   0Y    H4#     32       32  3000   60- 62  RRR   												       3600
+
+ 98 Grimspike                 Horned Death           5 Horned Demon     5  11Y    C4      32       32  1700   58- 60  IIR   												       1900
+
+ 99 Doomlock                  Storm Lord            16 Lightning Demon  2  11Y    12      24       22   534   35- 55  RRI   													480

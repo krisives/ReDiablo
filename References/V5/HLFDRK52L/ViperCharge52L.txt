@@ -1,0 +1,36 @@
+Restored checks on Drakes in the Charge spell effect, to avoid issues with unselectable Drakes in certain situations. This will have no effect on their charge-attack, as it doesn't work properly anyway.
+
+
+File offset 0043B8B
+
+:0044478B 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:00444791 8B00                    mov eax, dword ptr [eax]
+:00444793 83F859                  cmp eax, 00000059
+:00444796 EB09                    jmp 004447A1
+:00444798 83F85C                  cmp eax, 0000005C
+:0044479B 0F8E59010000            jle 004448FA
+changed into
+:0044478B 80BE9800000018          cmp byte ptr [esi+00000098], 18
+:00444792 0F8462010000            je 004448FA					exit if Viper attacktype
+:00444798 EB07                    jmp 004447A1
+:0044479A 90909090909090          7*nop
+
+
+File offset 0043C8F
+
+:0044488F 8B86DC000000            mov eax, dword ptr [esi+000000DC]
+:00444895 8B00                    mov eax, dword ptr [eax]
+:00444897 83F859                  cmp eax, 00000059
+:0044489A EB05                    jmp 004448A1
+:0044489C 83F85C                  cmp eax, 0000005C
+:0044489F 7E59                    jle 004448FA
+changed into
+:0044488F 80BE9800000018          cmp byte ptr [esi+00000098], 18
+:00444896 7462                    je 004448FA					exit if Viper attacktype
+:00444898 EB07                    jmp 004448A1
+:0044489A 90909090909090          7*nop
+
+
+
+
+

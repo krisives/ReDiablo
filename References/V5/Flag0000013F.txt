@@ -1,0 +1,316 @@
+"13F" flag
+
+
+
+Player initialization:
+
+:0040B5AB A114AE6E00              mov eax, dword ptr [006EAE14]
+:0040B5B0 03C6                    add eax, esi
+:0040B5B2 80781D00                cmp byte ptr [eax+1D], 00
+:0040B5B6 7466                    je 0040B61E
+:0040B5B8 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:0040B5BF 394834                  cmp dword ptr [eax+34], ecx
+:0040B5C2 755A                    jne 0040B61E					skip if on other level
+:0040B5C4 80B83F01000000          cmp byte ptr [eax+0000013F], 00
+:0040B5CB 7408                    je 0040B5D5					never skip if 13F=0
+:0040B5CD 3B1DE8AD6E00            cmp ebx, dword ptr [006EADE8]
+:0040B5D3 7549                    jne 0040B61E					skip if not local player
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0040B5CB(C)
+|
+:0040B5D5 83B89801000000          cmp dword ptr [eax+00000198], 00000000
+:0040B5DC 7E28                    jle 0040B606
+:0040B5DE 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0040B5E5 7516                    jne 0040B5FD					skip if not SP
+:0040B5E7 8B5038                  mov edx, dword ptr [eax+38]			char coordinate
+:0040B5EA 8ACB                    mov cl, bl
+:0040B5EC FEC1                    inc cl
+:0040B5EE 6BD270                  imul edx, 00000070
+:0040B5F1 8B403C                  mov eax, dword ptr [eax+3C]			char coordinate
+:0040B5F4 888C10E8FE6000          mov byte ptr [eax+edx+0060FEE8], cl
+:0040B5FB EB21                    jmp 0040B61E
+
+
+
+TP update code:
+
+:004375D2 A114AE6E00              mov eax, dword ptr [006EAE14]
+:004375D7 03C7                    add eax, edi
+:004375D9 80781D00                cmp byte ptr [eax+1D], 00
+:004375DD 7460                    je 0043763F
+:004375DF 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:004375E6 3B4834                  cmp ecx, dword ptr [eax+34]
+:004375E9 7554                    jne 0043763F
+:004375EB 80B83F01000000          cmp byte ptr [eax+0000013F], 00
+:004375F2 754B                    jne 0043763F
+:004375F4 833800                  cmp dword ptr [eax], 00000000
+:004375F7 7546                    jne 0043763F
+:004375F9 8B4838                  mov ecx, dword ptr [eax+38]
+:004375FC 3B8E5C7A6900            cmp ecx, dword ptr [esi+00697A5C]
+:00437602 753B                    jne 0043763F
+:00437604 8B403C                  mov eax, dword ptr [eax+3C]
+:00437607 3B86607A6900            cmp eax, dword ptr [esi+00697A60]
+:0043760D 7530                    jne 0043763F
+:0043760F 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:00437612 E81C680200              call 0045DE33
+:00437617 8B45FC                  mov eax, dword ptr [ebp-04]
+:0043761A 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:00437620 751D                    jne 0043763F
+:00437622 668B86CC7A6900          mov ax, word ptr [esi+00697ACC]
+:00437629 B21F                    mov dl, 1F
+:0043762B 50                      push eax
+:0043762C 8BCB                    mov ecx, ebx
+:0043762E E883F80000              call 00446EB6
+:00437633 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00437638 C704380A000000          mov dword ptr [eax+edi], 0000000A
+
+
+Target selection:
+
+:0043C90F A114AE6E00              mov eax, dword ptr [006EAE14]
+:0043C914 03C7                    add eax, edi
+:0043C916 80781D00                cmp byte ptr [eax+1D], 00
+:0043C91A 0F84EE000000            je 0043CA0E
+:0043C920 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:0043C927 3B4834                  cmp ecx, dword ptr [eax+34]
+:0043C92A 0F85DE000000            jne 0043CA0E
+:0043C930 80B83F01000000          cmp byte ptr [eax+0000013F], 00
+:0043C937 0F85D1000000            jne 0043CA0E
+:0043C93D F78098010000C0FFFFFF    test dword ptr [ebx+00000198], FFFFFFC0
+:0043C947 0F84C1000000            je 0043CA0E
+
+
+Player joining:
+
+:00449D45 8BF7                    mov esi, edi
+:00449D47 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00449D4C 69F6C8550000            imul esi, 000055C8
+:00449D52 33DB                    xor ebx, ebx
+:00449D54 889C303F010000          mov byte ptr [eax+esi+0000013F], bl
+:00449D5B A114AE6E00              mov eax, dword ptr [006EAE14]
+:00449D60 03C6                    add eax, esi
+:00449D62 389840010000            cmp byte ptr [eax+00000140], bl
+:00449D68 7431                    je 00449D9B
+:00449D6A 38581D                  cmp byte ptr [eax+1D], bl
+:00449D6D 752C                    jne 00449D9B
+:00449D6F C6401D01                mov [eax+1D], 01
+:00449D73 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00449D78 FE0590CF6D00            inc byte ptr [006DCF90]
+:00449D7E 03C6                    add eax, esi
+:00449D80 0FBE88B8010000          movsx ecx, byte ptr [eax+000001B8]
+:00449D87 0540010000              add eax, 00000140
+:00449D8C 51                      push ecx
+:00449D8D 50                      push eax
+* Possible StringData Ref from Data Obj ->"   '%s' (level %d) joined you in the Dark"
+:00449D8E 687C3B4B00              push 004B3B7C
+:00449D93 E8A7520100              call 0045F03F
+:00449D98 83C40C                  add esp, 0000000C
+
+
+Unknown:
+
+:0044AB0C 3B05E8AD6E00            cmp eax, dword ptr [006EADE8]
+:0044AB12 0F84EB020000            je 0044AE03
+:0044AB18 69C0C8550000            imul eax, 000055C8
+:0044AB1E 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044AB24 8B4E04                  mov ecx, dword ptr [esi+04]
+:0044AB27 898C1098010000          mov dword ptr [eax+edx+00000198], ecx
+:0044AB2E 8B45FC                  mov eax, dword ptr [ebp-04]
+:0044AB31 69C0C8550000            imul eax, 000055C8
+:0044AB37 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044AB3D 8B4E08                  mov ecx, dword ptr [esi+08]
+:0044AB40 898C109C010000          mov dword ptr [eax+edx+0000019C], ecx
+:0044AB47 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0044AB4A 0FB6460C                movzx eax, byte ptr [esi+0C]
+:0044AB4E 69C9C8550000            imul ecx, 000055C8
+:0044AB54 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044AB5A 89841168010000          mov dword ptr [ecx+edx+00000168], eax
+:0044AB61 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0044AB64 0FB6460D                movzx eax, byte ptr [esi+0D]
+:0044AB68 69C9C8550000            imul ecx, 000055C8
+:0044AB6E 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044AB74 89841170010000          mov dword ptr [ecx+edx+00000170], eax
+:0044AB7B 8B4DFC                  mov ecx, dword ptr [ebp-04]
+:0044AB7E 0FB6460E                movzx eax, byte ptr [esi+0E]
+:0044AB82 69C9C8550000            imul ecx, 000055C8
+:0044AB88 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044AB8E 89841178010000          mov dword ptr [ecx+edx+00000178], eax
+:0044AB95 803D14AB6D0001          cmp byte ptr [006DAB14], 01
+:0044AB9C 0F8461020000            je 0044AE03
+:0044ABA2 8B45FC                  mov eax, dword ptr [ebp-04]
+:0044ABA5 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044ABAB 69C0C8550000            imul eax, 000055C8
+:0044ABB1 03C1                    add eax, ecx
+:0044ABB3 80781D00                cmp byte ptr [eax+1D], 00
+:0044ABB7 0F8446020000            je 0044AE03
+:0044ABBD 83B89801000000          cmp dword ptr [eax+00000198], 00000000
+:0044ABC4 0F8439020000            je 0044AE03
+:0044ABCA 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:0044ABD1 3B4834                  cmp ecx, dword ptr [eax+34]
+:0044ABD4 0F85B1010000            jne 0044AD8B
+:0044ABDA 80B83F01000000          cmp byte ptr [eax+0000013F], 00
+:0044ABE1 0F85A4010000            jne 0044AD8B
+:0044ABE7 0FB60E                  movzx ecx, byte ptr [esi]
+:0044ABEA 8B4038                  mov eax, dword ptr [eax+38]
+:0044ABED 2BC1                    sub eax, ecx
+:0044ABEF 50                      push eax
+:0044ABF0 E8DBFF0200              call 0047ABD0
+:0044ABF5 8BF8                    mov edi, eax
+:0044ABF7 8B45FC                  mov eax, dword ptr [ebp-04]
+:0044ABFA 69C0C8550000            imul eax, 000055C8
+:0044AC00 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044AC06 59                      pop ecx
+:0044AC07 0FB64E01                movzx ecx, byte ptr [esi+01]
+:0044AC0B 8B44103C                mov eax, dword ptr [eax+edx+3C]
+:0044AC0F 2BC1                    sub eax, ecx
+:0044AC11 50                      push eax
+:0044AC12 E8B9FF0200              call 0047ABD0
+:0044AC17 83FF03                  cmp edi, 00000003
+:0044AC1A 59                      pop ecx
+:0044AC1B 7F09                    jg 0044AC26
+:0044AC1D 83F803                  cmp eax, 00000003
+:0044AC20 0F8EDA000000            jle 0044AD00
+
+
+Some initializing:
+
+* Referenced by a CALL at Address:0044B417   
+:0044B580 53                      push ebx
+:0044B581 33DB                    xor ebx, ebx
+:0044B583 391DBC535700            cmp dword ptr [005753BC], ebx
+:0044B589 56                      push esi
+:0044B58A 7409                    je 0044B595
+:0044B58C 803DC8DF6D0001          cmp byte ptr [006DDFC8], 01
+:0044B593 7612                    jbe 0044B5A7
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044B58A(C)
+|
+:0044B595 881DD8B16000            mov byte ptr [0060B1D8], bl
+:0044B59B 881DD4B16000            mov byte ptr [0060B1D4], bl
+:0044B5A1 881D14F36100            mov byte ptr [0061F314], bl
+
+* Referenced by a (U)nconditional or (C)onditional Jump at Address:
+|:0044B593(C)
+|
+:0044B5A7 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B5AD 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B5B3 8B0495F85B4B00          mov eax, dword ptr [4*edx+004B5BF8]
+:0044B5BA 8B0C95205C4B00          mov ecx, dword ptr [4*edx+004B5C20]
+:0044B5C1 69D2C8550000            imul edx, 000055C8
+:0044B5C7 83C04B                  add eax, 0000004B
+:0044B5CA 83C144                  add ecx, 00000044
+:0044B5CD 89443238                mov dword ptr [edx+esi+38], eax
+:0044B5D1 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B5D7 69D2C8550000            imul edx, 000055C8
+:0044B5DD 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B5E3 894C323C                mov dword ptr [edx+esi+3C], ecx
+:0044B5E7 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B5ED 69D2C8550000            imul edx, 000055C8
+:0044B5F3 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B5F9 89443240                mov dword ptr [edx+esi+40], eax
+:0044B5FD 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B603 69D2C8550000            imul edx, 000055C8
+:0044B609 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B60F 894C3244                mov dword ptr [edx+esi+44], ecx
+:0044B613 8B15E8AD6E00            mov edx, dword ptr [006EADE8]
+:0044B619 69D2C8550000            imul edx, 000055C8
+:0044B61F 8B3514AE6E00            mov esi, dword ptr [006EAE14]
+:0044B625 89443248                mov dword ptr [edx+esi+48], eax
+:0044B629 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B62E 69C0C8550000            imul eax, 000055C8
+:0044B634 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044B63A 5E                      pop esi
+:0044B63B 894C104C                mov dword ptr [eax+edx+4C], ecx
+:0044B63F 8B0DE8AD6E00            mov ecx, dword ptr [006EADE8]
+:0044B645 0FB605D8B16000          movzx eax, byte ptr [0060B1D8]
+:0044B64C 69C9C8550000            imul ecx, 000055C8
+:0044B652 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:0044B658 89441134                mov dword ptr [ecx+edx+34], eax
+:0044B65C A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B661 69C0C8550000            imul eax, 000055C8
+:0044B667 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B66D C684083F01000001        mov byte ptr [eax+ecx+0000013F], 01
+:0044B675 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B67A 69C0C8550000            imul eax, 000055C8
+:0044B680 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B686 889C086A550000          mov byte ptr [eax+ecx+0000556A], bl
+:0044B68D A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B692 69C0C8550000            imul eax, 000055C8
+:0044B698 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B69E 5B                      pop ebx
+:0044B69F C704080A000000          mov dword ptr [eax+ecx], 0000000A
+:0044B6A6 A1E8AD6E00              mov eax, dword ptr [006EADE8]
+:0044B6AB 69C0C8550000            imul eax, 000055C8
+:0044B6B1 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0044B6B7 834C0820FF              or dword ptr [eax+ecx+20], FFFFFFFF
+:0044B6BC C3                      ret
+
+
+
+Unknown:
+
+:00458231 8B1514AE6E00            mov edx, dword ptr [006EAE14]
+:00458237 40                      inc eax
+:00458238 49                      dec ecx
+:00458239 889C020C020000          mov byte ptr [edx+eax+0000020C], bl
+:00458240 75EF                    jne 00458231
+:00458242 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458247 8B4C2414                mov ecx, dword ptr [esp+14]
+:0045824B 889C303F010000          mov byte ptr [eax+esi+0000013F], bl
+:00458252 A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458257 889C3068550000          mov byte ptr [eax+esi+00005568], bl
+:0045825E A114AE6E00              mov eax, dword ptr [006EAE14]
+:00458263 889C306A550000          mov byte ptr [eax+esi+0000556A], bl
+:0045826A A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045826F 899C3088550000          mov dword ptr [eax+esi+00005588], ebx
+:00458276 A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045827B 66899C3070550000        mov word ptr [eax+esi+00005570], bx
+:00458283 E8D1680000              call 0045EB59
+:00458288 8B4C2414                mov ecx, dword ptr [esp+14]
+:0045828C E854CAFCFF              call 00424CE5
+:00458291 33C9                    xor ecx, ecx
+:00458293 E88F1CFCFF              call 00419F27
+:00458298 5F                      pop edi
+:00458299 5E                      pop esi
+:0045829A 5D                      pop ebp
+:0045829B 5B                      pop ebx
+:0045829C 59                      pop ecx
+:0045829D 59                      pop ecx
+:0045829E C3                      ret
+
+
+Unknown:
+
+:0045AE3C 8BCE                    mov ecx, esi
+:0045AE3E E8F02F0000              call 0045DE33
+:0045AE43 8BC6                    mov eax, esi
+:0045AE45 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045AE4B 69C0C8550000            imul eax, 000055C8
+:0045AE51 834C0120FF              or dword ptr [ecx+eax+20], FFFFFFFF
+:0045AE56 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045AE5C C684013F01000001        mov byte ptr [ecx+eax+0000013F], 01
+:0045AE64 3B35E8AD6E00            cmp esi, dword ptr [006EADE8]
+:0045AE6A 750E                    jne 0045AE7A
+:0045AE6C 8B0D14AE6E00            mov ecx, dword ptr [006EAE14]
+:0045AE72 C684016A5500000A        mov byte ptr [ecx+eax+0000556A], 0A
+
+
+Process player:
+
+:0045DB6E A114AE6E00              mov eax, dword ptr [006EAE14]
+:0045DB73 03C6                    add eax, esi
+:0045DB75 80781D00                cmp byte ptr [eax+1D], 00
+:0045DB79 0F84DB010000            je 0045DD5A
+:0045DB7F 0FB60DD8B16000          movzx ecx, byte ptr [0060B1D8]
+:0045DB86 3B4834                  cmp ecx, dword ptr [eax+34]
+:0045DB89 0F85CB010000            jne 0045DD5A
+:0045DB8F 3B2DE8AD6E00            cmp ebp, dword ptr [006EADE8]
+:0045DB95 740D                    je 0045DBA4
+:0045DB97 80B83F01000000          cmp byte ptr [eax+0000013F], 00
+:0045DB9E 0F85B6010000            jne 0045DD5A
+
+
+
+

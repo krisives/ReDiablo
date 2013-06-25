@@ -1,0 +1,2 @@
+Is me al gelukt, ik heb nog een plek gevonden waar de skill opgegeven moet worden(op 00406D, 00407D, 00408D, 00409D, 0040AD, 0040BD voor elk character). Dit is de relatie naar het eerste vak van het boek) 
+Spellicons beginnen op 93610 en de icons in het boek op 93768 - 937F0 

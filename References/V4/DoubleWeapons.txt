@@ -1,0 +1,31 @@
+Enable Barbarians to use double weapons like Bards
+
+File Offset 0001F38B
+
+:0041FF8B 755F                    jne 0041FFEC
+wordt
+:0041FF8B 7C5F                    jl 0041FFEC
+
+File Offset 0001F3DE
+
+:0041FFDE 750C                    jne 0041FFEC
+wordt
+:0041FFDE 7C0C                    jl 0041FFEC
+
+File Offset 0001FC5B
+
+:0042085B 755E                    jne 004208BB
+wordt
+:0042085B 7C5E                    jl 004208BB
+
+File Offset 0001FCAD
+
+:004208AD 750C                    jne 004208BB
+wordt
+:004208AD 7C0C                    jl 004208BB
+
+File Offset 00020E84
+
+:00421A84 7538                    jne 00421ABE
+wordt
+:00421A84 7C38                    jl 00421ABE

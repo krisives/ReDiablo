@@ -1,0 +1,42 @@
+In Diablo v1.08, at 4097F8, you'll find:
+mov eax, dword ptr [004BAC54] ; highlighted monster
+
+What I changed to protect golem from clicks was replace that line (which is conveniently five bytes) with a call to free code space, where I put this:
+
+
+code:
+--------------------------------------------------------------------------------
+
+mov eax, dword ptr [004BAC54]
+cmp eax, 04
+jb +1
+or eax, FFFFFFFF
+ret
+
+--------------------------------------------------------------------------------
+
+The following has no effect in Hellfire, and not implemented:
+
+
+File Offset 00004C5B
+
+:0040585B A12C164D00              mov eax, dword ptr [004D162C]
+wordt
+:0040585B E8FCAC0200              call 0043055C
+:00405860
+
+Using free space from Charm spell:
+
+File Offset 0002F95C
+
+:0043055C 0FB68650DD6900          movzx eax, byte ptr [esi+0069DD50]
+:00430563 DC0DB8004900            fmul qword ptr [004900B8]
+:00430569 8945F8                  mov dword ptr [ebp-08], eax
+wordt
+:0043055C A12C164D00              mov eax, dword ptr [004D162C]
+:00430561 83F804                  cmp eax, 00000004
+:00430564 7203                    jb 00430569
+:00430566 83C8FF                  or eax, FFFFFFFF
+:00430569 C3                      ret
+:0043056A 9090                    2*nop
+

@@ -1,0 +1,14 @@
+Warpers and Blink stun
+
+
+The following enables the Blink-effect for any damage, not just when it is high enough to stun.
+
+File Offset 0003C6EE
+
+:0043D2EE 33C0                    xor eax, eax		No Hiddens found
+:0043D2F0 C3                      ret
+wordt
+:0043D2EE EB30                    jmp 0043D320		jmp to Warpers/Blink check
+:0043D2F0 90                      nop
+
+Er zijn nu 9 vrije bytes te maken, indien nodig.

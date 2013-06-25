@@ -1,0 +1,83 @@
+Modifications regarding Golem and Charmed monsters
+
+
+Disabling old modification that made all missile spells from monsters or spells fully piercing towards monsters. Now such spells terminate again when they succesfully hit Golems and Charmed monsters (This kills them faster with splash spells, but increases their decoy value against ranged attackers):
+
+file offset 0002E673
+
+:0042F273 6A00                    push 00000000
+changed into
+:0042F273 6A01                    push 00000001
+
+
+Increasing life drain on Golem (to compensate the higher duration from Golem's increased life):
+
+File Offset 00042C7A
+
+:0044387A 6AFC                    push FFFFFFFC
+changed into
+:0044387A 6AF7                    push FFFFFFF7
+
+Adjusting the lower limit for regeneration:
+
+File Offset 00042C55
+
+:00443855 83F843                  cmp eax, 00000043
+changed into
+:00443855 83F848                  cmp eax, 00000048
+
+
+Excluding all dogs and spiders from being Charmed:
+
+file offset 0002F86F
+
+:0043046F EB19                    jmp 0043048A
+:00430471 90                      nop
+:00430472 90                      nop
+:00430473 90                      nop
+:00430474 90                      nop
+:00430475 90                      nop
+:00430476 90                      nop
+:00430477 90                      nop
+:00430478 90                      nop
+:00430479 90                      nop
+:0043047A 90                      nop
+:0043047B 90                      nop
+:0043047C 6A03                    push 00000003
+:0043047E B163                    mov cl, 63
+:00430480 5A                      pop edx
+:00430481 E8D49AFEFF              call 00419F5A
+:00430486 85C0                    test eax, eax
+:00430488 7409                    je 00430493
+changed into
+:0043046F 8BC7                    mov eax, edi
+:00430471 E8DEF30000              call 0043F854
+:00430476 741B                    je 00430493
+:00430478 EB10                    jmp 0043048A
+:0043047A ...
+
+Now 16 bytes free codespace left, from 0043047A to 0043048A.
+
+Using free space from improved bosspack behaviour:
+
+file offset 0003EC54
+
+:0043F854 90                      nop
+:0043F855 ...
+changed into
+:0043F854 0520DD6900              add eax, 0069DD20
+:0043F859 803813                  cmp byte ptr [eax], 13			Spit attack
+:0043F85C 7411                    je 0043F86F
+:0043F85E 803814                  cmp byte ptr [eax], 14			Fastspit attack
+:0043F861 740C                    je 0043F86F
+:0043F863 8B4044                  mov eax, dword ptr [eax+44]
+:0043F866 833873                  cmp dword ptr [eax], 00000073			GiantSpider
+:0043F869 7404                    je 0043F86F
+:0043F86B 33C0                    xor eax, eax
+:0043F86D EB03                    jmp 0043F872
+:0043F86F 6A01                    push 00000001
+:0043F871 58                      pop eax
+:0043F872 85C0                    test eax, eax
+:0043F874 C3                      ret
+:0043F875 9090                    2*nop
+

@@ -1,0 +1,168 @@
+Base Item locations in Hellfire v1.01, 76 bytes between
+
+a05c8 - Gold
+a0614 - short sword (one warrior starts with)
+a0660 - Buckler (one warrior starts with)
+a06ac - club (one warrior starts with)
+a06f8 - short bow (one rogue starts with)
+a0744 - Staff of Mana (one mage starts out with)
+a0790 - Cleaver
+a07dc - The Undead Crown
+a0828 - Empryean Band
+a0874 - Magic Rock
+a08c0 - Optic Amulet
+a090c - Ring of Truth
+a0958 - Tavern Sign
+a09a4 - Harleguin Crest
+a09f0 - Veil of Steel
+aoa3c - Golden Elixir
+a0a88 - Anvil of Fury
+a0ad4 - Black Mushroom
+a0b20 - Brain
+a0b6c - Fungal Tome
+a0bb8 - Spectral Elixir
+a0c04 - Blood Stone
+a0c50 - Cathedral Map
+a0c9c - Heart
+a0ce8 - Potion of Healing
+a0d34 - Potion of Mana
+a0d80 - Scroll of Identify
+a0dcc - Scroll of Town Portal
+a0e18 - Arkaine's Valor
+a0e64 - Potion of Full Healing
+a0eb0 - Potion of Full Mana
+a0efc - Griswold's Edge
+a0f48 - Bovine Plate
+a0f94 - Staff of Lazarus
+a0fe0 - Scroll of Resurrect
+a102c - Blacksmith Oil
+a1078 - Short Staff
+a10c4 - Sword (one bard starts with)
+a1110 - Dagger (one bard starts with)
+a115c - Rune Bomb
+a11a8 - Theodore
+a11f4 - Auric Amulet
+a1240 - Torn Note 1
+a128c - Torn Note 2
+a12d8 - Torn Note 3
+a1324 - Reconstructed Note
+a1370 - Brown Suit
+a13bc - Grey Suit
+a1408 - Cap
+a1454 - Skull Cap
+a14a0 - Helm
+a14ec - Full Helm
+a1538 - Crown
+a1584 - Great Helm
+a15d0 - Cape
+a161c - Rags
+a1668 - Cloak
+a16b4 - Robe
+a1700 - Quilted Armor
+a174c - Leather Armor
+a1798 - Hard Leather
+a17e4 - Studded Leather
+a1830 - Ring Mail
+a187c - Chain Mail
+a18c8 - Scale Mail
+a1914 - Breast Plate
+a1960 - Splint Mail
+a19ac - Plate Mail
+a19f8 - Field Plate
+a1a44 - Gothic Plate
+a1a90 - Full Plate Mail
+a1adc - Buckler
+a1b28 - Small Shield
+a1b74 - Large Shield
+a1bc0 - Kite Shield
+a1c0c - Tower Shield
+a1c58 - Gothic Shield
+a1ca4 - Potion of Healing
+a1cf0 - Potion of Full Healing
+a1d3c - Potion of Mana
+a1d88 - Potion of Full Mana
+a1dd4 - Potion of Rejuvenation
+a1e20 - Potion of Full Rejuvenation
+a1e6c - Blacksmith Oil
+a1eb8 - Oil of Accuracy
+a1f04 - Oil of Sharpness
+a1f50 - Oil
+a1f9c - Elixir of Strength
+a1fe8 - Elixir of Magic
+a2034 - Elixir of Dexterity
+a2080 - Elixir of Vitality
+a20cc - Scroll of Healing
+a2118 - Scroll of Search
+a2164 - Scroll of Lightning
+a21b0 - Scroll of Identify
+a21fc - Scroll of Resurrect
+a2248 - Scroll of Fire Wall
+a2294 - Scroll of Inferno
+a22e0 - Scroll of Town Portal
+a232c - Scroll of Flash
+a2378 - Scroll of Infravision
+a23c4 - Scroll of Phasing
+a2410 - Scroll of Mana Shield
+a245c - Scroll of Flame Wave
+a24a8 - Scroll of Fireball
+a24f4 - Scroll of Stone Curse
+a2540 - Scroll of Chain Lightning
+a258c - Scroll of Guardian
+a25d8 - Non Item
+a2624 - Scroll of Nova
+a2670 - Scroll of Golem
+a26bc - Scroll of None
+a2708 - Scroll of Teleport
+a2754 - Scroll of Apocalypse
+a27a0 - Book of
+a27ec - Book of
+a2838 - Book of
+a2884 - Book of
+a28d0 - Dagger
+a291c - Short Sword
+a2968 - Falchion
+a29b4 - Scimitar
+a2a00 - Claymore
+a2a4c - Blade
+a2a98 - Sabre
+a2ae4 - Long Sword
+a2b30 - Broad Sword
+a2b7c - Bastard Sword
+a2bc8 - Two-Handed Sword
+a2c14 - Great Sword
+a2c60 - Small Axe
+a2cac - Axe
+ascf8 - Large Axe
+a2d44 - Broad Axe
+a2d90 - Battle Axe
+a2ddc - Great Axe
+a2e28 - Mace
+a2e74 - Morning Star
+a2ec0 - War Hammer
+a2f0c - Spiked Club
+a2f58 - Club
+a2fa4 - Flail
+a2ff0 - Maul
+a303c - Short Bow
+a3088 - Hunter's Bow
+a30d4 - Long Bow
+a3120 - Composite Bow
+a316c - Short Battle Bow
+a31b8 - Long Battle Bow
+a3204 - Short War Bow
+a3250 - Long War Bow
+a329c - Short Staff
+a32e8 - Long Staff
+a3334 - Composite Staff
+a3380 - Quarter Staff
+a33cc - War Staff
+a3418 - Ring
+a3464 - Ring
+a34b0 - Ring
+a34fc - Amulet
+a3548 - Amulet
+a3594 - Rune of Fire
+a35e0 - Rune of Lightning
+a362c - Greater Rune of Fire
+a3678 - Greater Rune of Lightning
+a36c4 - Rune of Stone
